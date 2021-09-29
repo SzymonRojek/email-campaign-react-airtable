@@ -21,9 +21,9 @@ const App = () => (
         <CreateCampaign />
       </Route>
 
-      <Route exact path="/add-subscriber">
+      {/* <Route exact path="/add-subscriber">
         <AddSubscriber />
-      </Route>
+      </Route> */}
 
       <Route path="/">
         <Subscribers />

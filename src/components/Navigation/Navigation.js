@@ -21,7 +21,7 @@ const Navigation = () => {
               Subscribers
             </NavLink>
           </li>
-          <li
+          {/* <li
             className={`header-link ${
               splitLocation[1] === "add-subscriber" ? "active" : ""
             }`}
@@ -29,7 +29,7 @@ const Navigation = () => {
             <NavLink to="/add-subscriber" className="link">
               Add Subscriber
             </NavLink>
-          </li>
+          </li> */}
           <li
             className={`header-link ${
               splitLocation[1] === "campaigns" ? "active" : ""
