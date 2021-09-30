@@ -1,10 +1,10 @@
-import { Paper, Button, Box } from "@mui/material";
+import { Paper, Button, Box, TextField } from "@mui/material";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { TextInput } from "../components/TextInput";
-
-import { Typography, TextField } from "@mui/material";
+import { Grid } from "@material-ui/core";
+import { Typography } from "@mui/material";
 
 const AddSubscriber = () => {
   const validationSchema = Yup.object().shape({
@@ -15,33 +15,85 @@ const AddSubscriber = () => {
     email: Yup.string().required("Email is required").email("Email is invalid"),
   });
 
-  const methods = useForm({
-    resolver: yupResolver(validationSchema),
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({ resolver: yupResolver(validationSchema) });
 
-  const currentName = methods.watch("name");
-
-  const onSubmit = () => (data) => {
+  const onSubmit = (data) => {
     console.log(data);
+    reset();
   };
 
   return (
     <Paper elevation={6}>
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <TextInput />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Box px={3} py={4}>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <TextField
+                required
+                id="name"
+                name="name"
+                label="Name"
+                fullWidth
+                margin="dense"
+                error={!!errors?.name}
+                {...register("name")}
+              />
 
-          <Box mt={3}>
-            <Button variant="contained" color="primary" type="submit">
-              Add Subscriber
-            </Button>
-          </Box>
-        </form>
-      </FormProvider>
+              <Typography variant="inherit" color="textSecondary">
+                {errors.name?.message ?? ""}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                required
+                id="surname"
+                surname="surname"
+                label="Surname"
+                fullWidth
+                margin="dense"
+                error={!!errors?.surname}
+                {...register("surname")}
+              />
+
+              <Typography variant="inherit" color="textSecondary">
+                {errors.surname?.message ?? ""}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                required
+                id="email"
+                email="email"
+                label="Email"
+                fullWidth
+                margin="dense"
+                // type="email"
+                error={!!errors?.email}
+                {...register("email")}
+              />
+
+              <Typography variant="inherit" color="textSecondary">
+                {errors.email?.message ?? ""}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
+
+        <Box mt={3}>
+          <Button variant="contained" color="primary" type="submit">
+            Add Subscriber
+          </Button>
+        </Box>
+      </form>
     </Paper>
   );
 };
 
 export default AddSubscriber;
-
-// type="email"
