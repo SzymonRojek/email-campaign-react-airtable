@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SubscribersTable = ({ dataSubscribers }) => {
+const SubscribersList = ({ dataSubscribers }) => {
   const classes = useStyles();
 
   return (
@@ -69,6 +69,6 @@ const SubscribersTable = ({ dataSubscribers }) => {
   );
 };
 
-export default SubscribersTable;
+export default SubscribersList;
 
 // do not forget about :hover (fix it)
