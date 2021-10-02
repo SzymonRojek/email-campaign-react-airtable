@@ -1,20 +1,24 @@
+import { useEffect, useState } from "react";
 import {
   BrowserRouter as Switch,
   Route,
   Link as RouterLink,
 } from "react-router-dom";
-import { AddSubscriber } from ".";
-import { apiConfig, getSubscribers } from "./../api/api";
-import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
+
+import AddSubscriber from "./AddSubscriber";
 import { SubscribersTable } from "../components/SubscribersTable";
+
+import api from "./../api";
 
 const Subscribers = () => {
   const [dataSubscribers, setDataSubscribers] = useState([]);
-  const { subscribers } = apiConfig;
+  const endpoint = "/subscribers";
 
   const getData = async () => {
-    const data = await getSubscribers(subscribers);
+    const data = await api.get(endpoint).catch((err) => {
+      console.log(err);
+    });
     setDataSubscribers(data);
   };
 
@@ -40,7 +44,7 @@ const Subscribers = () => {
                 variant="contained"
                 color="secondary"
               >
-                Add New Subsribers
+                Add New Subscribers
               </Button>
             </>
           )}
