@@ -1,8 +1,7 @@
 const { REACT_APP_DB_ID, REACT_APP_API_KEY } = process.env;
 const API_URL = `https://api.airtable.com/v0/${REACT_APP_DB_ID}`;
 
-async function request(endpoint, method = "GET", data = null) {
-  const url = `${API_URL}${endpoint}`;
+const request = async (endpoint, method = "GET", data = null) => {
   const requestConfig = {
     method,
     headers: {
@@ -11,14 +10,17 @@ async function request(endpoint, method = "GET", data = null) {
     },
   };
 
-  if (method === "POST" || method === "PATCH")
-    return (requestConfig.body = JSON.stringify(data));
+  if (method === "POST" || method === "PATCH") {
+    requestConfig.body = JSON.stringify(data);
+  }
+
+  const url = `${API_URL}${endpoint}`;
 
   const response = await fetch(url, requestConfig);
   const responsedData = await response.json();
 
   return responsedData.records;
-}
+};
 
 const get = (endpoint) => request(endpoint);
 

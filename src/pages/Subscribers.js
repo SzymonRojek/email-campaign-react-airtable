@@ -4,10 +4,10 @@ import {
   Route,
   Link as RouterLink,
 } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, Box } from "@mui/material";
 
 import AddSubscriber from "./AddSubscriber";
-import { SubscribersTable } from "../components/SubscribersTable";
+import { SubscribersList } from "../components/SubscribersList";
 
 import api from "./../api";
 
@@ -16,9 +16,7 @@ const Subscribers = () => {
   const endpoint = "/subscribers";
 
   const getData = async () => {
-    const data = await api.get(endpoint).catch((err) => {
-      console.log(err);
-    });
+    const data = await api.get(endpoint);
     setDataSubscribers(data);
   };
 
@@ -36,16 +34,18 @@ const Subscribers = () => {
           path="/"
           render={() => (
             <>
-              <SubscribersTable dataSubscribers={dataSubscribers} />
+              <SubscribersList dataSubscribers={dataSubscribers} />
 
-              <Button
-                component={RouterLink}
-                to="/add-subscriber"
-                variant="contained"
-                color="secondary"
-              >
-                Add New Subscribers
-              </Button>
+              <Box px={3} py={4} mt={3}>
+                <Button
+                  component={RouterLink}
+                  to="/add-subscriber"
+                  variant="contained"
+                  color="secondary"
+                >
+                  Add New Subscribers
+                </Button>
+              </Box>
             </>
           )}
         />
