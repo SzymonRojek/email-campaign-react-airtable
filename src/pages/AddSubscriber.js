@@ -1,20 +1,14 @@
-import { Paper, Button, Box, TextField } from "@mui/material";
-import { useForm, FormProvider } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
-import { TextInput } from "../components/TextInput";
+import { Paper, Button, Box, TextField, Typography } from "@mui/material";
 import { Grid } from "@material-ui/core";
-import { Typography } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Link as RouterLink } from "react-router-dom";
+
+import { validationSchema } from "./../helpers";
+
+import api from "./../api";
 
 const AddSubscriber = () => {
-  const validationSchema = Yup.object().shape({
-    name: Yup.string()
-      .required("Username is required")
-      .min(6, "Username must be at least 6 characters")
-      .max(20, "Username must not exceed 20 characters"),
-    email: Yup.string().required("Email is required").email("Email is invalid"),
-  });
-
   const {
     register,
     handleSubmit,
@@ -22,8 +16,17 @@ const AddSubscriber = () => {
     reset,
   } = useForm({ resolver: yupResolver(validationSchema) });
 
+  const endpoint = "/subscribers";
+
   const onSubmit = (data) => {
-    console.log(data);
+    api.post(endpoint, {
+      fields: {
+        name: data.name,
+        surname: data.surname,
+        email: data.email,
+        status: ["pending"],
+      },
+    });
     reset();
   };
 
