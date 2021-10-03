@@ -4,20 +4,25 @@ import {
   Route,
   Link as RouterLink,
 } from "react-router-dom";
+
 import { Button, Box } from "@mui/material";
-
 import AddSubscriber from "./AddSubscriber";
-import { SubscribersList } from "../components/SubscribersList";
 
+import { SubscribersList } from "../components/SubscribersList";
+import { Popup } from "../components/Popup";
+import SubscriberDetails from "./SubscriberDetails";
 import api from "./../api";
 
 const Subscribers = () => {
   const [dataSubscribers, setDataSubscribers] = useState([]);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [textContentPopup, setTextContentPopup] = useState("");
+
   const endpoint = "/subscribers";
 
   const getData = async () => {
     const data = await api.get(endpoint);
-    setDataSubscribers(data);
+    setDataSubscribers(data.records);
   };
 
   useEffect(() => {
@@ -31,10 +36,21 @@ const Subscribers = () => {
 
         <Route
           exact
-          path="/"
+          path="/subscribers/:id"
+          render={(props) => <SubscriberDetails {...props} />}
+        />
+
+        <Route
+          exact
+          path="/subscribers"
           render={() => (
             <>
-              <SubscribersList dataSubscribers={dataSubscribers} />
+              <SubscribersList
+                dataSubscribers={dataSubscribers}
+                openPopup={openPopup}
+                setOpenPopup={setOpenPopup}
+                setTextContentPopup={setTextContentPopup}
+              />
 
               <Box px={3} py={4} mt={3}>
                 <Button
@@ -50,6 +66,12 @@ const Subscribers = () => {
           )}
         />
       </Switch>
+
+      <Popup
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+        textContentPopup={textContentPopup}
+      />
     </>
   );
 };
