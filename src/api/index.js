@@ -19,7 +19,7 @@ const request = async (endpoint, method = "GET", data = null) => {
   const response = await fetch(url, requestConfig);
   const responsedData = await response.json();
 
-  return responsedData.records;
+  return responsedData;
 };
 
 const get = (endpoint) => request(endpoint);
