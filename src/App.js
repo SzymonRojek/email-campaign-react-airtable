@@ -1,12 +1,7 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import { Navigation } from "./components/Navigation";
-import {
-  Subscribers,
-  AddSubscriber,
-  CreateCampaign,
-  ListCampaigns,
-} from "./pages";
+import { Subscribers, CreateCampaign, ListCampaigns } from "./pages";
 
 const App = () => (
   <BrowserRouter>
@@ -20,10 +15,6 @@ const App = () => (
       <Route path="/new-campaign">
         <CreateCampaign />
       </Route>
-
-      {/* <Route exact path="/add-subscriber">
-        <AddSubscriber />
-      </Route> */}
 
       <Route path="/">
         <Subscribers />
