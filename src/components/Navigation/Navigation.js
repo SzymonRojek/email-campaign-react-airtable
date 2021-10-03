@@ -15,7 +15,9 @@ const Navigation = () => {
       <Menu>
         <ul className="header-list">
           <li
-            className={`header-link ${splitLocation[1] === "" ? "active" : ""}`}
+            className={`header-link ${
+              splitLocation[1] === "subscribers" ? "active" : ""
+            }`}
           >
             <NavLink to="/subscribers" className="link">
               Subscribers
@@ -37,6 +39,13 @@ const Navigation = () => {
           >
             <NavLink to="/new-campaign" className="link">
               New Campaign
+            </NavLink>
+          </li>
+          <li
+            className={`header-link ${splitLocation[1] === "" ? "active" : ""}`}
+          >
+            <NavLink to="/" className="link">
+              Home
             </NavLink>
           </li>
         </ul>
