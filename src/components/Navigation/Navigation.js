@@ -17,19 +17,10 @@ const Navigation = () => {
           <li
             className={`header-link ${splitLocation[1] === "" ? "active" : ""}`}
           >
-            <NavLink to="/" className="link">
+            <NavLink to="/subscribers" className="link">
               Subscribers
             </NavLink>
           </li>
-          {/* <li
-            className={`header-link ${
-              splitLocation[1] === "add-subscriber" ? "active" : ""
-            }`}
-          >
-            <NavLink to="/add-subscriber" className="link">
-              Add Subscriber
-            </NavLink>
-          </li> */}
           <li
             className={`header-link ${
               splitLocation[1] === "campaigns" ? "active" : ""

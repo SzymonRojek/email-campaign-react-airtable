@@ -2,7 +2,7 @@
   margin: 0 0 50px 0;
   width: 100%;
   background-color: white;
-  border-bottom: 2px solid rgba(92, 92, 224, 0.877);
+  border-bottom: 2px solid #303f9f;
 }
 
 .header-list {
@@ -27,7 +27,7 @@
   padding: 10px 15px;
   font-size: 20px;
   font-weight: 600;
-  color: rgb(20, 176, 207);
+  color: #303f9f;
   letter-spacing: 1px;
   text-decoration: none;
   border-radius: 4px;
@@ -36,10 +36,10 @@
 
 .link:hover {
   color: #fff;
-  background-color: rgba(92, 92, 224, 0.877);
+  background-color: #303f9f;
 }
 
 .active .link {
   color: #fff;
-  background-color: rgba(92, 92, 224, 0.877);
+  background-color: #303f9f;
 }
