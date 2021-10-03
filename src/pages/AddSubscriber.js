@@ -3,9 +3,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Paper, Button, Box } from "@mui/material";
 import { Grid } from "@material-ui/core";
 
+import api from "./../api";
 import { TextInput } from "./../components/TextInput";
 import { validationSchema } from "./../helpers";
-import api from "./../api";
 
 const AddSubscriber = () => {
   const {
@@ -23,7 +23,7 @@ const AddSubscriber = () => {
         name: data.name,
         surname: data.surname,
         email: data.email,
-        status: ["pending"],
+        status: "pending",
       },
     });
 
@@ -35,13 +35,30 @@ const AddSubscriber = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box px={3} py={4}>
           <Grid container spacing={1}>
-            <TextInput value="name" register={register} errors={errors} />
-            <TextInput value="surname" register={register} errors={errors} />
-            <TextInput value="email" register={register} errors={errors} />
+            <TextInput
+              value="name"
+              register={register}
+              error={!!errors?.name}
+              message={errors.name?.message ?? ""}
+            />
+
+            <TextInput
+              value="surname"
+              register={register}
+              error={!!errors?.surname}
+              message={errors.surname?.message ?? ""}
+            />
+
+            <TextInput
+              value="email"
+              register={register}
+              error={!!errors?.email}
+              message={errors.email?.message ?? ""}
+            />
           </Grid>
         </Box>
 
-        <Box px={3} py={4} mt={3}>
+        <Box mt={3}>
           <Button variant="contained" color="primary" type="submit">
             Add Subscriber
           </Button>
