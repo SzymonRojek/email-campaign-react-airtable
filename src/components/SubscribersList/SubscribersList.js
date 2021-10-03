@@ -31,19 +31,18 @@ const useStyles = makeStyles((theme) => ({
     padding: "3px 10px",
     display: "inline-block",
   },
-  hover: {
-    "&:hover": {
-      backgroundColor: "rgb(7, 177, 77, 0.42)",
-    },
-  },
 }));
 
-const SubscribersList = ({ dataSubscribers }) => {
+const SubscribersList = ({
+  dataSubscribers,
+  setOpenPopup,
+  setTextContentPopup,
+}) => {
   const classes = useStyles();
 
   return (
     <TableContainer component={Paper} className={classes.tableContainer}>
-      <Table aria-label="simple table">
+      <Table aria-label="subscribers table">
         <TableHead>
           <TableRow>
             <TableCell className={classes.tableHeaderCell}>No</TableCell>
@@ -54,15 +53,19 @@ const SubscribersList = ({ dataSubscribers }) => {
             <TableCell className={classes.tableHeaderCell}>Created</TableCell>
           </TableRow>
         </TableHead>
+
         <TableBody>
-          {dataSubscribers.map((person, index) => (
-            <Subscriber
-              key={`id-${person.id}`}
-              person={person}
-              index={index}
-              classes={classes}
-            />
-          ))}
+          {dataSubscribers &&
+            dataSubscribers.map((person, index) => (
+              <Subscriber
+                key={`id-${person.id}`}
+                person={person}
+                index={index}
+                classes={classes}
+                setOpenPopup={setOpenPopup}
+                setTextContentPopup={setTextContentPopup}
+              />
+            ))}
         </TableBody>
       </Table>
     </TableContainer>
