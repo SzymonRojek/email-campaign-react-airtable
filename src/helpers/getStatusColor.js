@@ -1,6 +1,6 @@
 const statusColor = (data) =>
-  (data.join() === "active" && "green") ||
-  (data.join() === "pending" && "orange") ||
-  (data.join() && "crimson");
+  (data === "active" && "green") ||
+  (data === "pending" && "orange") ||
+  (data && "crimson");
 
 export default statusColor;
