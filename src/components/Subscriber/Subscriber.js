@@ -12,25 +12,22 @@ import {
   getFormattedData,
   getStatusColor,
   setTextPopup,
-  isStatusActive,
 } from "./../../helpers";
 
 const Subscriber = (props) => {
-  let { person, index, classes, setOpenPopup, setTextContentPopup } = props;
+  let { person, index, classes, setOpenPopup, setContentPopup } = props;
   const history = useHistory();
-  const handleRowClick = () => history.push(`/subscribers/${person.id}`);
+
+  const handleRowClick = () =>
+    person.fields.status === "active"
+      ? history.push(`/subscribers/${person.id}`)
+      : setOpenPopup(true);
 
   return (
     <TableRow
       onClick={() => {
-        setTextPopup(
-          person.fields.status,
-          person.fields.name,
-          setTextContentPopup
-        );
-        setOpenPopup(() =>
-          isStatusActive(person.fields.status, handleRowClick)
-        );
+        setTextPopup(person.fields.status, person.fields.name, setContentPopup);
+        handleRowClick();
       }}
       key={`id-${person.id}`}
       sx={{
