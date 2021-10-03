@@ -16,7 +16,7 @@ import api from "./../api";
 const Subscribers = () => {
   const [dataSubscribers, setDataSubscribers] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
-  const [textContentPopup, setTextContentPopup] = useState("");
+  const [textContentPopup, setContentPopup] = useState("");
 
   const endpoint = "/subscribers";
 
@@ -40,31 +40,25 @@ const Subscribers = () => {
           render={(props) => <SubscriberDetails {...props} />}
         />
 
-        <Route
-          exact
-          path="/subscribers"
-          render={() => (
-            <>
-              <SubscribersList
-                dataSubscribers={dataSubscribers}
-                openPopup={openPopup}
-                setOpenPopup={setOpenPopup}
-                setTextContentPopup={setTextContentPopup}
-              />
+        <Route exact path="/subscribers">
+          <SubscribersList
+            dataSubscribers={dataSubscribers}
+            openPopup={openPopup}
+            setOpenPopup={setOpenPopup}
+            setContentPopup={setContentPopup}
+          />
 
-              <Box px={3} py={4} mt={3}>
-                <Button
-                  component={RouterLink}
-                  to="/add-subscriber"
-                  variant="contained"
-                  color="secondary"
-                >
-                  Add New Subscribers
-                </Button>
-              </Box>
-            </>
-          )}
-        />
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <Button
+              component={RouterLink}
+              to="/add-subscriber"
+              variant="contained"
+              color="secondary"
+            >
+              Add New Subscribers
+            </Button>
+          </Box>
+        </Route>
       </Switch>
 
       <Popup

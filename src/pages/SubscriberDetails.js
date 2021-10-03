@@ -52,7 +52,6 @@ const SubscriberDetails = ({ match }) => {
     setSubscriber([data]);
   };
 
-  console.log(subscriber);
   useEffect(() => {
     getSubscriber();
   }, []);

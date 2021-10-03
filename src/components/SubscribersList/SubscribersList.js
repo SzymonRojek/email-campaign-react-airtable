@@ -14,7 +14,7 @@ import Subscriber from "../Subscriber/Subscriber";
 const useStyles = makeStyles((theme) => ({
   tableContainer: {
     borderRadius: 15,
-    margin: "10px 10px",
+    margin: "100px auto",
     maxWidth: 950,
   },
   tableHeaderCell: {
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 const SubscribersList = ({
   dataSubscribers,
   setOpenPopup,
-  setTextContentPopup,
+  setContentPopup,
 }) => {
   const classes = useStyles();
 
@@ -63,7 +63,7 @@ const SubscribersList = ({
                 index={index}
                 classes={classes}
                 setOpenPopup={setOpenPopup}
-                setTextContentPopup={setTextContentPopup}
+                setContentPopup={setContentPopup}
               />
             ))}
         </TableBody>
@@ -75,3 +75,6 @@ const SubscribersList = ({
 export default SubscribersList;
 
 // do not forget about :hover (fix it)
+// think about the row of the table - when ic clicked could be added a border or change bgc etc.
+// pagination
+// resarcher ??

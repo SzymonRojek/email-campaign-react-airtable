@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import { Navigation } from "./components/Navigation";
-import { Subscribers, CreateCampaign, ListCampaigns } from "./pages";
+import { Subscribers, CreateCampaign, ListCampaigns, Home } from "./pages";
 
 const App = () => (
   <BrowserRouter>
@@ -12,12 +12,16 @@ const App = () => (
         <ListCampaigns />
       </Route>
 
-      <Route path="/new-campaign">
+      <Route exact path="/new-campaign">
         <CreateCampaign />
       </Route>
 
-      <Route path="/">
+      <Route exact path="/subscribers">
         <Subscribers />
+      </Route>
+
+      <Route exact path="/">
+        <Home />
       </Route>
     </Switch>
   </BrowserRouter>
