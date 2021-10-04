@@ -1,74 +1,63 @@
-import { makeStyles } from "@material-ui/core/styles";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@material-ui/core";
+import { TableCell } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
-import Subscriber from "../Subscriber/Subscriber";
+import { ContainerTable, HeadTable, BodyTable } from "../common/Table";
+import { RowSubscriber } from "../common/Table";
+import { setTextPopup } from "./../../helpers";
 
-const useStyles = makeStyles((theme) => ({
-  tableContainer: {
-    borderRadius: 15,
-    margin: "100px auto",
-    maxWidth: 950,
-  },
-  tableHeaderCell: {
-    fontWeight: "bold",
-    backgroundColor: theme.palette.primary.dark,
-    color: theme.palette.getContrastText(theme.palette.primary.dark),
-  },
-  status: {
-    fontWeight: "bold",
-    fontSize: "0.75rem",
-    color: "white",
-    backgroundColor: "#ddd",
-    borderRadius: 8,
-    padding: "3px 10px",
-    display: "inline-block",
-  },
-}));
+const dataTableCell = ["No", "Name", "Surname", "Email", "Status", "Created"];
 
 const SubscribersList = ({
-  dataSubscribers,
-  setOpenPopup,
+  subscribersData,
   setContentPopup,
+  setOpenPopup,
 }) => {
-  const classes = useStyles();
+  const history = useHistory();
 
   return (
-    <TableContainer component={Paper} className={classes.tableContainer}>
-      <Table aria-label="subscribers table">
-        <TableHead>
-          <TableRow>
-            <TableCell className={classes.tableHeaderCell}>No</TableCell>
-            <TableCell className={classes.tableHeaderCell}>Name</TableCell>
-            <TableCell className={classes.tableHeaderCell}>Surname</TableCell>
-            <TableCell className={classes.tableHeaderCell}>Email</TableCell>
-            <TableCell className={classes.tableHeaderCell}>Status</TableCell>
-            <TableCell className={classes.tableHeaderCell}>Created</TableCell>
-          </TableRow>
-        </TableHead>
+    <ContainerTable>
+      <HeadTable data={dataTableCell} />
 
-        <TableBody>
-          {dataSubscribers &&
-            dataSubscribers.map((person, index) => (
-              <Subscriber
-                key={`id-${person.id}`}
-                person={person}
+      <BodyTable>
+        {subscribersData &&
+          subscribersData.map((subscriber, index) => {
+            const handleRowClick = () =>
+              subscriber.fields.status === "active"
+                ? history.push(`/subscribers/${subscriber.id}`)
+                : "";
+
+            const handleOpenPopup = () =>
+              subscriber.fields.status === "pending" ||
+              subscriber.fields.status === "blocked"
+                ? setOpenPopup(true)
+                : null;
+
+            return (
+              <RowSubscriber
+                children={
+                  <TableCell component="th" scope="row">
+                    {++index}.
+                  </TableCell>
+                }
+                key={`id-${subscriber.id}`}
+                subscriber={subscriber}
                 index={index}
-                classes={classes}
-                setOpenPopup={setOpenPopup}
                 setContentPopup={setContentPopup}
+                setOpenPopup={setOpenPopup}
+                onClick={() => {
+                  handleRowClick();
+                  setTextPopup(
+                    subscriber.fields.status,
+                    subscriber.fields.name,
+                    setContentPopup
+                  );
+                  handleOpenPopup();
+                }}
               />
-            ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            );
+          })}
+      </BodyTable>
+    </ContainerTable>
   );
 };
 
