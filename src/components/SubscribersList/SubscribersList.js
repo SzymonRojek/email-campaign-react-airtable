@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { ContainerTable, HeadTable, BodyTable } from "../common/Table";
 import { RowSubscriber } from "../common/Table";
 import { setTextPopup } from "./../../helpers";
+import handlers from "./../../helpers/handlers";
 
 const dataTableCell = ["No", "Name", "Surname", "Email", "Status", "Created"];
 
@@ -14,50 +15,99 @@ const SubscribersList = ({
 }) => {
   const history = useHistory();
 
+  const runHandlersClick = (subscriber) => {
+    handlers.handleRowClick(subscriber, history);
+    setTextPopup(
+      subscriber.fields.status,
+      subscriber.fields.name,
+      setContentPopup
+    );
+    handlers.handleOpenPopup(subscriber, setOpenPopup);
+  };
+
   return (
-    <ContainerTable>
-      <HeadTable data={dataTableCell} />
+    <>
+      {subscribersData.some((el) => el.fields.status === "active") && (
+        <ContainerTable>
+          <HeadTable data={dataTableCell} />
 
-      <BodyTable>
-        {subscribersData &&
-          subscribersData.map((subscriber, index) => {
-            const handleRowClick = () =>
-              subscriber.fields.status === "active"
-                ? history.push(`/subscribers/${subscriber.id}`)
-                : "";
+          <BodyTable>
+            {subscribersData &&
+              subscribersData
+                .filter((subscriber) => subscriber.fields.status === "active")
+                .map((subscriber, index) => (
+                  <RowSubscriber
+                    children={
+                      <TableCell component="th" scope="row">
+                        {++index}.
+                      </TableCell>
+                    }
+                    key={`id-${subscriber.id}`}
+                    subscriber={subscriber}
+                    index={index}
+                    setContentPopup={setContentPopup}
+                    setOpenPopup={setOpenPopup}
+                    onClick={() => runHandlersClick(subscriber)}
+                  />
+                ))}
+          </BodyTable>
+        </ContainerTable>
+      )}
 
-            const handleOpenPopup = () =>
-              subscriber.fields.status === "pending" ||
-              subscriber.fields.status === "blocked"
-                ? setOpenPopup(true)
-                : null;
+      {subscribersData.some((el) => el.fields.status === "pending") && (
+        <ContainerTable>
+          <HeadTable data={dataTableCell} />
 
-            return (
-              <RowSubscriber
-                children={
-                  <TableCell component="th" scope="row">
-                    {++index}.
-                  </TableCell>
-                }
-                key={`id-${subscriber.id}`}
-                subscriber={subscriber}
-                index={index}
-                setContentPopup={setContentPopup}
-                setOpenPopup={setOpenPopup}
-                onClick={() => {
-                  handleRowClick();
-                  setTextPopup(
-                    subscriber.fields.status,
-                    subscriber.fields.name,
-                    setContentPopup
-                  );
-                  handleOpenPopup();
-                }}
-              />
-            );
-          })}
-      </BodyTable>
-    </ContainerTable>
+          <BodyTable>
+            {subscribersData &&
+              subscribersData
+                .filter((subscriber) => subscriber.fields.status === "pending")
+                .map((subscriber, index) => (
+                  <RowSubscriber
+                    children={
+                      <TableCell component="th" scope="row">
+                        {++index}.
+                      </TableCell>
+                    }
+                    key={`id-${subscriber.id}`}
+                    subscriber={subscriber}
+                    index={index}
+                    setContentPopup={setContentPopup}
+                    setOpenPopup={setOpenPopup}
+                    onClick={() => runHandlersClick(subscriber)}
+                  />
+                ))}
+          </BodyTable>
+        </ContainerTable>
+      )}
+
+      {subscribersData.some((el) => el.fields.status === "blocked") && (
+        <ContainerTable>
+          <HeadTable data={dataTableCell} />
+
+          <BodyTable>
+            {subscribersData &&
+              subscribersData
+                .filter((subscriber) => subscriber.fields.status === "blocked")
+                .map((subscriber, index) => (
+                  <RowSubscriber
+                    children={
+                      <TableCell component="th" scope="row">
+                        {++index}.
+                      </TableCell>
+                    }
+                    key={`id-${subscriber.id}`}
+                    subscriber={subscriber}
+                    index={index}
+                    setContentPopup={setContentPopup}
+                    setOpenPopup={setOpenPopup}
+                    onClick={() => runHandlersClick(subscriber)}
+                  />
+                ))}
+          </BodyTable>
+        </ContainerTable>
+      )}
+    </>
   );
 };
 
