@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { TableBody } from "@material-ui/core";
+
+import { TableBody, TableCell, TableRow, Typography } from "@material-ui/core";
 
 import api from "../api";
 import {
@@ -23,22 +24,66 @@ const SubscriberDetails = ({ match }) => {
     getSubscriber();
   }, []);
 
-  const dataTableCell = ["Name", "Surname", "Email", "Status", "Created"];
-  return (
-    <ContainerTable>
-      <HeadTable data={dataTableCell} />
+  const generalDataHeadTable = [
+    "Name",
+    "Surname",
+    "Email",
+    "Status",
+    "Created",
+  ];
 
-      <TableBody>
-        {subscriberData &&
-          subscriberData.map((subscriber, index) => (
-            <RowSubscriber
-              key={`id-${subscriber.id}`}
-              subscriber={subscriber}
-              index={index}
-            />
-          ))}
-      </TableBody>
-    </ContainerTable>
+  const detailsDataHeadTable = ["Profession", "Salary", "Telephone", "Address"];
+
+  return (
+    <>
+      <ContainerTable>
+        <HeadTable data={generalDataHeadTable} />
+
+        <TableBody>
+          {subscriberData &&
+            subscriberData.map((subscriber, index) => (
+              <RowSubscriber
+                key={`id-${subscriber.id}`}
+                subscriber={subscriber}
+                index={index}
+              />
+            ))}
+        </TableBody>
+      </ContainerTable>
+
+      {/* Table Subscriber Details */}
+      <ContainerTable>
+        <HeadTable data={detailsDataHeadTable} />
+
+        <TableBody>
+          {subscriberData &&
+            subscriberData.map((subscriber, index) => (
+              <TableRow key={`i-${index}`}>
+                <TableCell>
+                  <Typography color="textSecondary" variant="body2">
+                    {subscriber.fields.profession}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography color="textSecondary" variant="body2">
+                    {subscriber.fields.salary}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography color="textSecondary" variant="body2">
+                    {subscriber.fields.telephone}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography color="textSecondary" variant="body2">
+                    {subscriber.fields.address}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </ContainerTable>
+    </>
   );
 };
 
