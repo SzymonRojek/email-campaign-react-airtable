@@ -14,8 +14,10 @@ const HeadTable = ({ data }) => {
   return (
     <TableHead>
       <TableRow>
-        {data.map((cell) => (
-          <TableCell className={classes.tableHeaderCell}>{cell}</TableCell>
+        {data.map((cell, index) => (
+          <TableCell key={`i-${index}`} className={classes.tableHeaderCell}>
+            {cell}
+          </TableCell>
         ))}
       </TableRow>
     </TableHead>
