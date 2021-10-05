@@ -7,7 +7,12 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { isEven, getFormattedData, getStatusColor } from "./../../../helpers";
+import {
+  isEven,
+  getFormattedData,
+  getStatusColor,
+  capitalizeFirstLetter,
+} from "./../../../helpers";
 
 const useStyles = makeStyles((theme) => ({
   status: {
@@ -44,19 +49,19 @@ const RowSubscriber = (props) => {
                 backgroundColor: getStatusColor(subscriber.fields.status),
               }}
             >
-              {subscriber.fields.name[0]}
+              {capitalizeFirstLetter(subscriber.fields.name[0])}
             </Avatar>
           </Grid>
           <Grid item>
             <Typography color="textSecondary" variant="body2">
-              {subscriber.fields.name}
+              {capitalizeFirstLetter(subscriber.fields.name)}
             </Typography>
           </Grid>
         </Grid>
       </TableCell>
       <TableCell>
         <Typography color="textSecondary" variant="body2">
-          {subscriber.fields.surname}
+          {capitalizeFirstLetter(subscriber.fields.surname)}
         </Typography>
       </TableCell>
       <TableCell>
