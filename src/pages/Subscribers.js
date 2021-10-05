@@ -11,6 +11,7 @@ import AddSubscriber from "./AddSubscriber";
 import SubscriberDetails from "./SubscriberDetails";
 import { SubscribersList } from "../components/SubscribersList";
 import { Popup } from "../components/Popup";
+import { sortDataAlphabetically } from "../helpers";
 
 const Subscribers = () => {
   const [subscribersData, setsubscribersData] = useState([]);
@@ -21,6 +22,7 @@ const Subscribers = () => {
 
   const getData = async () => {
     const data = await api.get(endpoint);
+    sortDataAlphabetically(data.records);
     setsubscribersData(data.records);
   };
 
@@ -59,6 +61,7 @@ const Subscribers = () => {
           </Box>
         </Route>
       </Switch>
+
       <Popup
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
