@@ -5,13 +5,7 @@ const sortDataAlphabetically = (data) => {
     const valueA = nestedPropertyRetriever(a);
     const valueB = nestedPropertyRetriever(b);
 
-    if (valueA < valueB) {
-      return -1;
-    } else if (valueA > valueB) {
-      return 1;
-    } else {
-      return 0;
-    }
+    return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
   });
 };
 
