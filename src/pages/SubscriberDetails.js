@@ -10,7 +10,7 @@ import {
 } from "../components/common/Table";
 
 const SubscriberDetails = ({ match }) => {
-  const [subscriberData, setSubscriberData] = useState([]);
+  const [subscriberData, setSubscriberData] = useState(null);
 
   const id = match.params.id;
   const endpoint = `/subscribers/${id}`;
