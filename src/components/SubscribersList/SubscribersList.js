@@ -1,10 +1,15 @@
-import { TableCell } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+import {
+  BrowserRouter as Switch,
+  Route,
+  Link as RouterLink,
+} from "react-router-dom";
+import { Button, Box } from "@mui/material";
 
-import { ContainerTable, HeadTable, BodyTable } from "../common/Table";
-import { RowSubscriber } from "../common/Table";
 import { setTextPopup } from "./../../helpers";
 import handlers from "./../../helpers/handlers";
+import FilteredStatusSubscribers from "./FilteredStatusSubscribers";
+import UnfilteredSubscribersList from "./UnfilteredSubscribersList";
 
 const dataTableCell = ["No", "Name", "Surname", "Email", "Status", "Created"];
 
@@ -26,88 +31,69 @@ const SubscribersList = ({
   };
 
   return (
-    <>
-      {subscribersData.some((el) => el.fields.status === "active") && (
-        <ContainerTable>
-          <HeadTable data={dataTableCell} />
+    <Switch>
+      <Route
+        exact
+        path="/filtered-status"
+        render={() => (
+          <>
+            <FilteredStatusSubscribers
+              dataTableCell={dataTableCell}
+              subscribersData={subscribersData}
+              status="active"
+              setContentPopup={setContentPopup}
+              setOpenPopup={setOpenPopup}
+              runHandlersClick={runHandlersClick}
+            />
 
-          <BodyTable>
-            {subscribersData &&
-              subscribersData
-                .filter((subscriber) => subscriber.fields.status === "active")
-                .map((subscriber, index) => (
-                  <RowSubscriber
-                    children={
-                      <TableCell component="th" scope="row">
-                        {++index}.
-                      </TableCell>
-                    }
-                    key={`id-${subscriber.id}`}
-                    subscriber={subscriber}
-                    index={index}
-                    setContentPopup={setContentPopup}
-                    setOpenPopup={setOpenPopup}
-                    onClick={() => runHandlersClick(subscriber)}
-                  />
-                ))}
-          </BodyTable>
-        </ContainerTable>
-      )}
+            <FilteredStatusSubscribers
+              dataTableCell={dataTableCell}
+              subscribersData={subscribersData}
+              status="pending"
+              setContentPopup={setContentPopup}
+              setOpenPopup={setOpenPopup}
+              runHandlersClick={runHandlersClick}
+            />
 
-      {subscribersData.some((el) => el.fields.status === "pending") && (
-        <ContainerTable>
-          <HeadTable data={dataTableCell} />
+            <FilteredStatusSubscribers
+              dataTableCell={dataTableCell}
+              subscribersData={subscribersData}
+              status="blocked"
+              setContentPopup={setContentPopup}
+              setOpenPopup={setOpenPopup}
+              runHandlersClick={runHandlersClick}
+            />
+          </>
+        )}
+      />
 
-          <BodyTable>
-            {subscribersData &&
-              subscribersData
-                .filter((subscriber) => subscriber.fields.status === "pending")
-                .map((subscriber, index) => (
-                  <RowSubscriber
-                    children={
-                      <TableCell component="th" scope="row">
-                        {++index}.
-                      </TableCell>
-                    }
-                    key={`id-${subscriber.id}`}
-                    subscriber={subscriber}
-                    index={index}
-                    setContentPopup={setContentPopup}
-                    setOpenPopup={setOpenPopup}
-                    onClick={() => runHandlersClick(subscriber)}
-                  />
-                ))}
-          </BodyTable>
-        </ContainerTable>
-      )}
+      <Route
+        exact
+        path="/subscribers"
+        render={() => (
+          <>
+            <UnfilteredSubscribersList
+              dataTableCell={dataTableCell}
+              subscribersData={subscribersData}
+              setContentPopup={setContentPopup}
+              setOpenPopup={setOpenPopup}
+              runHandlersClick={runHandlersClick}
+            />
 
-      {subscribersData.some((el) => el.fields.status === "blocked") && (
-        <ContainerTable>
-          <HeadTable data={dataTableCell} />
-
-          <BodyTable>
-            {subscribersData &&
-              subscribersData
-                .filter((subscriber) => subscriber.fields.status === "blocked")
-                .map((subscriber, index) => (
-                  <RowSubscriber
-                    children={
-                      <TableCell component="th" scope="row">
-                        {++index}.
-                      </TableCell>
-                    }
-                    key={`id-${subscriber.id}`}
-                    subscriber={subscriber}
-                    index={index}
-                    setContentPopup={setContentPopup}
-                    setOpenPopup={setOpenPopup}
-                    onClick={() => runHandlersClick(subscriber)}
-                  />
-                ))}
-          </BodyTable>
-        </ContainerTable>
-      )}
-    </>
+            <Box display="flex" justifyContent="center" alignItems="center">
+              <Button
+                component={RouterLink}
+                to="/filtered-status"
+                variant="contained"
+                color="secondary"
+              >
+                Filter By Status
+              </Button>
+            </Box>
+          </>
+        )}
+      />
+    </Switch>
   );
 };
 
@@ -117,3 +103,4 @@ export default SubscribersList;
 // think about the row of the table - when ic clicked could be added a border or change bgc etc.
 // pagination
 // resarcher ??
+// filter by alphabeth
