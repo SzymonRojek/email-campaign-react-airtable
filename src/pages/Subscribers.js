@@ -14,7 +14,7 @@ import { Popup } from "../components/Popup";
 import { sortDataAlphabetically } from "../helpers";
 
 const Subscribers = () => {
-  const [subscribersData, setsubscribersData] = useState([]);
+  const [subscribersData, setSubscribersData] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
   const [textContentPopup, setContentPopup] = useState("");
 
@@ -23,12 +23,20 @@ const Subscribers = () => {
   const getData = async () => {
     const data = await api.get(endpoint);
     sortDataAlphabetically(data.records);
-    setsubscribersData(data.records);
+    setSubscribersData(data.records);
   };
 
   useEffect(() => {
     getData();
   }, []);
+
+  const handleRemoveSubscriber = async (id) => {
+    const removeSubscriber = subscribersData.filter(
+      (subscriber) => subscriber.id === id
+    )[0].id;
+    await api.delete(`/subscribers/${removeSubscriber}`);
+    getData();
+  };
 
   return (
     <>
@@ -47,6 +55,7 @@ const Subscribers = () => {
             openPopup={openPopup}
             setOpenPopup={setOpenPopup}
             setContentPopup={setContentPopup}
+            removeSubscriber={handleRemoveSubscriber}
           />
 
           <Box display="flex" justifyContent="center" alignItems="center">
@@ -56,7 +65,7 @@ const Subscribers = () => {
               variant="contained"
               color="secondary"
             >
-              Add New Subscribers
+              Add New Subscriber
             </Button>
           </Box>
         </Route>
