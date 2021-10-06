@@ -1,3 +1,3 @@
-const isEven = (index) => (index % 2 ? "#F5F5F5" : "");
+const isEven = (index, color) => (index % 2 ? color : "");
 
 export default isEven;
