@@ -24,7 +24,7 @@ const Popup = ({ openPopup, setOpenPopup, textContentPopup }) => {
       <DialogTitle>
         <div style={{ display: "flex" }}>
           <Typography variant="h6" style={{ flexGrow: 1 }}>
-            Oh no!
+            {textContentPopup.title}
           </Typography>
           <Button variant="contained" color="error" onClick={handleClosePopup}>
             X
@@ -32,7 +32,7 @@ const Popup = ({ openPopup, setOpenPopup, textContentPopup }) => {
         </div>
       </DialogTitle>
       <DialogContent dividers>
-        <p>{textContentPopup}</p>
+        <Typography>{textContentPopup.text}</Typography>
       </DialogContent>
     </Dialog>
   );
