@@ -32,7 +32,7 @@ const FilteredStatusSubscribers = (props) => {
                   key={`id-${subscriber.id}`}
                   subscriber={subscriber}
                   index={index}
-                  onClick={() => handlePopup(subscriber)}
+                  handlePopup={handlePopup}
                   removeSubscriber={removeSubscriber}
                 />
               ))}
