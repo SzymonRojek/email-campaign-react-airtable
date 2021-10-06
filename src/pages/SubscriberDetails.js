@@ -27,12 +27,13 @@ const SubscriberDetails = ({ match }) => {
   const generalDataHeadTable = [
     "Name",
     "Surname",
-    "Email",
+    "Profession",
     "Status",
     "Created",
+    id ? null : "Delete",
   ];
 
-  const detailsDataHeadTable = ["Profession", "Salary", "Telephone", "Address"];
+  const detailsDataHeadTable = ["Email", "Salary", "Telephone", "Address"];
 
   return (
     <>
@@ -54,14 +55,13 @@ const SubscriberDetails = ({ match }) => {
       {/* Table Subscriber Details */}
       <ContainerTable>
         <HeadTable data={detailsDataHeadTable} />
-
         <TableBody>
           {subscriberData &&
             subscriberData.map((subscriber, index) => (
               <TableRow key={`i-${index}`}>
                 <TableCell>
                   <Typography color="textSecondary" variant="body2">
-                    {subscriber.fields.profession}
+                    {subscriber.fields.email}
                   </Typography>
                 </TableCell>
                 <TableCell>
