@@ -4,13 +4,8 @@ import { ContainerTable, HeadTable, BodyTable } from "../common/Table";
 import { RowSubscriber } from "../common/Table";
 
 const UnfilteredSubscribersList = (props) => {
-  const {
-    dataTableCell,
-    subscribersData,
-    setContentPopup,
-    setOpenPopup,
-    runHandlersClick,
-  } = props;
+  const { dataTableCell, subscribersData, handlePopup, removeSubscriber } =
+    props;
 
   return (
     <ContainerTable>
@@ -28,9 +23,8 @@ const UnfilteredSubscribersList = (props) => {
               key={`id-${subscriber.id}`}
               subscriber={subscriber}
               index={index}
-              setContentPopup={setContentPopup}
-              setOpenPopup={setOpenPopup}
-              onClick={() => runHandlersClick(subscriber)}
+              handlePopup={handlePopup}
+              removeSubscriber={removeSubscriber}
             />
           ))}
       </BodyTable>
