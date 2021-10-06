@@ -1,3 +1,8 @@
+import { useLocation } from "react-router-dom";
+import { Button } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DetailsIcon from "@mui/icons-material/Details";
+
 import {
   TableCell,
   TableRow,
@@ -27,17 +32,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RowSubscriber = (props) => {
-  let { subscriber, index, onClick, children } = props;
+  let { subscriber, index, children, handlePopup, removeSubscriber } = props;
   const classes = useStyles();
+
+  const location = useLocation();
 
   return (
     <TableRow
-      onClick={onClick}
-      key={`id-${subscriber.id}`}
+      key={`${subscriber.id}`}
       sx={{
         "&:last-child td, &:last-child th": { border: 0 },
       }}
-      style={{ backgroundColor: isEven(index) }}
+      style={{ backgroundColor: isEven(index, "#F5F5F5") }}
     >
       {children}
       <TableCell>
@@ -66,7 +72,7 @@ const RowSubscriber = (props) => {
       </TableCell>
       <TableCell>
         <Typography color="textSecondary" variant="body2">
-          {subscriber.fields.email}
+          {subscriber.fields.profession}
         </Typography>
       </TableCell>
       <TableCell>
@@ -87,6 +93,25 @@ const RowSubscriber = (props) => {
           {getFormattedData(subscriber.createdTime)}
         </Typography>
       </TableCell>
+      {location.pathname === "/subscribers" ||
+      location.pathname === "/filtered-status" ? (
+        <>
+          <TableCell>
+            <Button
+              variant="outlined"
+              startIcon={<DetailsIcon />}
+              onClick={() => handlePopup(subscriber)}
+            />
+          </TableCell>
+          <TableCell>
+            <Button
+              variant="outlined"
+              startIcon={<DeleteIcon />}
+              onClick={() => removeSubscriber(subscriber.id)}
+            />
+          </TableCell>
+        </>
+      ) : null}
     </TableRow>
   );
 };
