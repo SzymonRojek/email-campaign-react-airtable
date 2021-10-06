@@ -22,6 +22,7 @@ const AddSubscriber = () => {
       fields: {
         name: data.name,
         surname: data.surname,
+        profession: data.profession,
         email: data.email,
         status: "pending",
       },
@@ -60,6 +61,13 @@ const AddSubscriber = () => {
                 register={register}
                 error={!!errors?.surname}
                 message={errors.surname?.message ?? ""}
+              />
+
+              <TextInput
+                value="profession"
+                register={register}
+                error={!!errors?.profession}
+                message={errors.profession?.message ?? ""}
               />
 
               <TextInput
