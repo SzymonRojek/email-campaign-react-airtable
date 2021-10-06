@@ -3,11 +3,7 @@ import { useEffect, useState } from "react";
 import { TableBody, TableCell, TableRow, Typography } from "@material-ui/core";
 
 import api from "../api";
-import {
-  ContainerTable,
-  HeadTable,
-  RowSubscriber,
-} from "../components/common/Table";
+import { ContainerTable, HeadTable, RowSubscriber } from "../common/Table";
 
 const SubscriberDetails = ({ match }) => {
   const [subscriberData, setSubscriberData] = useState(null);

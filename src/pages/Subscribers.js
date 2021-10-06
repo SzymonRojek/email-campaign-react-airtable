@@ -16,7 +16,7 @@ import { sortDataAlphabetically } from "../helpers";
 const Subscribers = () => {
   const [subscribersData, setSubscribersData] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
-  const [textContentPopup, setContentPopup] = useState("");
+  const [textContentPopup, setContentPopup] = useState({});
 
   const endpoint = "/subscribers";
 
@@ -41,7 +41,13 @@ const Subscribers = () => {
   return (
     <>
       <Switch>
-        <Route exact path="/add-subscriber" render={() => <AddSubscriber />} />
+        <Route exact path="/add-subscriber">
+          <AddSubscriber
+            openPopup={openPopup}
+            setOpenPopup={setOpenPopup}
+            setContentPopup={setContentPopup}
+          />
+        </Route>
 
         <Route
           exact

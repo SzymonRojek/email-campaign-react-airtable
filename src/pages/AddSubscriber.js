@@ -5,9 +5,10 @@ import { Grid, Typography } from "@material-ui/core";
 
 import api from "./../api";
 import { TextInput } from "./../components/TextInput";
-import { validationSchema } from "./../helpers";
+import { capitalizeFirstLetter, validationSchema } from "./../helpers";
+import { useEffect } from "react";
 
-const AddSubscriber = () => {
+const AddSubscriber = ({ setOpenPopup, setContentPopup }) => {
   const {
     register,
     handleSubmit,
@@ -29,7 +30,22 @@ const AddSubscriber = () => {
     });
 
     reset();
+    setContentPopup({
+      title: "Done!",
+      text: `Subscriber ${capitalizeFirstLetter(
+        data.name
+      )} has been added to the data :D`,
+    });
+    setOpenPopup(true);
   };
+
+  useEffect(() => {
+    const intervalID = setInterval(() => {
+      setOpenPopup(false);
+    }, 3_000);
+
+    return () => clearInterval(intervalID);
+  });
 
   return (
     <Box display="flex" justifyContent="center" alignItems="center">
