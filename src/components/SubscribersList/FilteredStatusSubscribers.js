@@ -8,9 +8,8 @@ const FilteredStatusSubscribers = (props) => {
     subscribersData,
     dataTableCell,
     status,
-    setContentPopup,
-    setOpenPopup,
-    runHandlersClick,
+    handlePopup,
+    removeSubscriber,
   } = props;
 
   return (
@@ -33,9 +32,8 @@ const FilteredStatusSubscribers = (props) => {
                   key={`id-${subscriber.id}`}
                   subscriber={subscriber}
                   index={index}
-                  setContentPopup={setContentPopup}
-                  setOpenPopup={setOpenPopup}
-                  onClick={() => runHandlersClick(subscriber)}
+                  onClick={() => handlePopup(subscriber)}
+                  removeSubscriber={removeSubscriber}
                 />
               ))}
         </BodyTable>
