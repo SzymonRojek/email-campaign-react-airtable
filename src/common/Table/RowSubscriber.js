@@ -17,7 +17,7 @@ import {
   getFormattedData,
   getStatusColor,
   capitalizeFirstLetter,
-} from "./../../../helpers";
+} from "../../helpers";
 
 const useStyles = makeStyles((theme) => ({
   status: {
@@ -98,14 +98,16 @@ const RowSubscriber = (props) => {
         <>
           <TableCell>
             <Button
-              variant="outlined"
+              color="success"
+              variant="contained"
               startIcon={<DetailsIcon />}
               onClick={() => handlePopup(subscriber)}
             />
           </TableCell>
           <TableCell>
             <Button
-              variant="outlined"
+              color="error"
+              variant="contained"
               startIcon={<DeleteIcon />}
               onClick={() => removeSubscriber(subscriber.id)}
             />
