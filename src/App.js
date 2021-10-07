@@ -8,21 +8,13 @@ const App = () => (
     <Navigation />
 
     <Switch>
-      <Route exact path="/campaigns">
-        <ListCampaigns />
-      </Route>
+      <Route exact path="/campaigns" component={ListCampaigns} />
 
-      <Route exact path="/new-campaign">
-        <CreateCampaign />
-      </Route>
+      <Route exact path="/new-campaign" component={CreateCampaign} />
 
-      <Route exact path="/subscribers">
-        <Subscribers />
-      </Route>
+      <Route exact path="/subscribers" component={Subscribers} />
 
-      <Route exact path="/">
-        <Home />
-      </Route>
+      <Route exact path="/" component={Home} />
     </Switch>
   </BrowserRouter>
 );
