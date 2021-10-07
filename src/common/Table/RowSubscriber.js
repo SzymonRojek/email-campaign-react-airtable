@@ -32,7 +32,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RowSubscriber = (props) => {
-  let { subscriber, index, children, handlePopup, removeSubscriber } = props;
+  let {
+    subscriber,
+    index,
+    children,
+    handlePopup,
+    setOpenConfirmPopup,
+    setIdClickedSubscriber,
+  } = props;
   const classes = useStyles();
 
   const location = useLocation();
@@ -109,7 +116,10 @@ const RowSubscriber = (props) => {
               color="error"
               variant="contained"
               startIcon={<DeleteIcon />}
-              onClick={() => removeSubscriber(subscriber.id)}
+              onClick={() => {
+                setOpenConfirmPopup(true);
+                setIdClickedSubscriber(subscriber.id);
+              }}
             />
           </TableCell>
         </>
@@ -119,3 +129,4 @@ const RowSubscriber = (props) => {
 };
 
 export default RowSubscriber;
+// onClick={() => removeSubscriber(subscriber.id)}

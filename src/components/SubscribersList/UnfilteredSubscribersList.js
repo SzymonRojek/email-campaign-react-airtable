@@ -4,8 +4,14 @@ import { ContainerTable, HeadTable, BodyTable } from "../../common/Table";
 import { RowSubscriber } from "../../common/Table";
 
 const UnfilteredSubscribersList = (props) => {
-  const { dataTableCell, subscribersData, handlePopup, removeSubscriber } =
-    props;
+  const {
+    dataTableCell,
+    subscribersData,
+    handlePopup,
+    removeSubscriber,
+    setOpenConfirmPopup,
+    setIdClickedSubscriber,
+  } = props;
 
   return (
     <ContainerTable>
@@ -23,7 +29,9 @@ const UnfilteredSubscribersList = (props) => {
               key={`id-${subscriber.id}`}
               subscriber={subscriber}
               index={index}
+              setOpenConfirmPopup={setOpenConfirmPopup}
               handlePopup={handlePopup}
+              setIdClickedSubscriber={setIdClickedSubscriber}
               removeSubscriber={removeSubscriber}
             />
           ))}

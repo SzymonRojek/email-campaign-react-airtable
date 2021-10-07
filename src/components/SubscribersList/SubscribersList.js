@@ -23,8 +23,14 @@ const dataTableCell = [
 ];
 
 const SubscribersList = (props) => {
-  const { subscribersData, setContentPopup, setOpenPopup, removeSubscriber } =
-    props;
+  const {
+    subscribersData,
+    setContentPopup,
+    setOpenInfoPopup,
+    setOpenConfirmPopup,
+    setIdClickedSubscriber,
+    removeSubscriber,
+  } = props;
   const history = useHistory();
 
   const handlePopup = (subscriber) => {
@@ -34,7 +40,7 @@ const SubscribersList = (props) => {
       capitalizeFirstLetter(subscriber.fields.name),
       setContentPopup
     );
-    handlers.handleOpenPopup(subscriber, setOpenPopup);
+    handlers.handleOpenPopup(subscriber, setOpenInfoPopup);
   };
 
   return (
@@ -49,6 +55,8 @@ const SubscribersList = (props) => {
               subscribersData={subscribersData}
               status="active"
               handlePopup={handlePopup}
+              setOpenConfirmPopup={setOpenConfirmPopup}
+              setIdClickedSubscriber={setIdClickedSubscriber}
               removeSubscriber={removeSubscriber}
             />
 
@@ -57,6 +65,8 @@ const SubscribersList = (props) => {
               subscribersData={subscribersData}
               status="pending"
               handlePopup={handlePopup}
+              setOpenConfirmPopup={setOpenConfirmPopup}
+              setIdClickedSubscriber={setIdClickedSubscriber}
               removeSubscriber={removeSubscriber}
             />
 
@@ -65,6 +75,8 @@ const SubscribersList = (props) => {
               subscribersData={subscribersData}
               status="blocked"
               handlePopup={handlePopup}
+              setOpenConfirmPopup={setOpenConfirmPopup}
+              setIdClickedSubscriber={setIdClickedSubscriber}
               removeSubscriber={removeSubscriber}
             />
           </>
@@ -80,6 +92,8 @@ const SubscribersList = (props) => {
               dataTableCell={dataTableCell}
               subscribersData={subscribersData}
               handlePopup={handlePopup}
+              setOpenConfirmPopup={setOpenConfirmPopup}
+              setIdClickedSubscriber={setIdClickedSubscriber}
               removeSubscriber={removeSubscriber}
             />
 

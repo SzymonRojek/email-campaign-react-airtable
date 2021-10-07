@@ -9,6 +9,8 @@ const FilteredStatusSubscribers = (props) => {
     dataTableCell,
     status,
     handlePopup,
+    setOpenConfirmPopup,
+    setIdClickedSubscriber,
     removeSubscriber,
   } = props;
 
@@ -33,6 +35,8 @@ const FilteredStatusSubscribers = (props) => {
                   subscriber={subscriber}
                   index={index}
                   handlePopup={handlePopup}
+                  setOpenConfirmPopup={setOpenConfirmPopup}
+                  setIdClickedSubscriber={setIdClickedSubscriber}
                   removeSubscriber={removeSubscriber}
                 />
               ))}
