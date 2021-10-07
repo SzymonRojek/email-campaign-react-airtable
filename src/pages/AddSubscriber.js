@@ -6,9 +6,8 @@ import { Grid, Typography } from "@material-ui/core";
 import api from "./../api";
 import { TextInput } from "./../components/TextInput";
 import { capitalizeFirstLetter, validationSchema } from "./../helpers";
-import { useEffect } from "react";
 
-const AddSubscriber = ({ setOpenPopup, setContentPopup }) => {
+const AddSubscriber = ({ setOpenInfoPopup, setContentPopup }) => {
   const {
     register,
     handleSubmit,
@@ -36,16 +35,12 @@ const AddSubscriber = ({ setOpenPopup, setContentPopup }) => {
         data.name
       )} has been added to the data :D`,
     });
-    setOpenPopup(true);
-  };
+    setOpenInfoPopup(true);
 
-  useEffect(() => {
-    const intervalID = setInterval(() => {
-      setOpenPopup(false);
+    setTimeout(() => {
+      setOpenInfoPopup(false);
     }, 3_000);
-
-    return () => clearInterval(intervalID);
-  });
+  };
 
   return (
     <Box display="flex" justifyContent="center" alignItems="center">
