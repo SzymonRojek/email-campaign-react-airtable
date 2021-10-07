@@ -10,13 +10,15 @@ import api from "./../api";
 import AddSubscriber from "./AddSubscriber";
 import SubscriberDetails from "./SubscriberDetails";
 import { SubscribersList } from "../components/SubscribersList";
-import { Popup } from "../components/Popup";
+import { InfoPopup, ConfirmPopup } from "../components/Popup";
 import { sortDataAlphabetically } from "../helpers";
 
 const Subscribers = () => {
   const [subscribersData, setSubscribersData] = useState([]);
-  const [openPopup, setOpenPopup] = useState(false);
+  const [openInfoPopup, setOpenInfoPopup] = useState(false);
   const [textContentPopup, setContentPopup] = useState({});
+  const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
+  const [idClickedSubscriber, setIdClickedSubscriber] = useState("");
 
   const endpoint = "/subscribers";
 
@@ -30,12 +32,15 @@ const Subscribers = () => {
     getData();
   }, []);
 
-  const handleRemoveSubscriber = async (id) => {
+  const handleRemoveSubscriber = async () => {
     const removeSubscriber = subscribersData.filter(
-      (subscriber) => subscriber.id === id
+      (subscriber) => subscriber.id === idClickedSubscriber
     )[0].id;
+
     await api.delete(`/subscribers/${removeSubscriber}`);
     getData();
+
+    setOpenConfirmPopup(false);
   };
 
   return (
@@ -43,8 +48,8 @@ const Subscribers = () => {
       <Switch>
         <Route exact path="/add-subscriber">
           <AddSubscriber
-            openPopup={openPopup}
-            setOpenPopup={setOpenPopup}
+            openInfoPopup={openInfoPopup}
+            setOpenInfoPopup={setOpenInfoPopup}
             setContentPopup={setContentPopup}
           />
         </Route>
@@ -58,10 +63,10 @@ const Subscribers = () => {
         <Route exact path="/subscribers">
           <SubscribersList
             subscribersData={subscribersData}
-            openPopup={openPopup}
-            setOpenPopup={setOpenPopup}
+            setOpenInfoPopup={setOpenInfoPopup}
+            setOpenConfirmPopup={setOpenConfirmPopup}
             setContentPopup={setContentPopup}
-            removeSubscriber={handleRemoveSubscriber}
+            setIdClickedSubscriber={setIdClickedSubscriber}
           />
 
           <Box display="flex" justifyContent="center" alignItems="center">
@@ -77,10 +82,18 @@ const Subscribers = () => {
         </Route>
       </Switch>
 
-      <Popup
-        openPopup={openPopup}
-        setOpenPopup={setOpenPopup}
+      <InfoPopup
+        openInfoPopup={openInfoPopup}
+        setOpenInfoPopup={setOpenInfoPopup}
         textContentPopup={textContentPopup}
+      />
+
+      <ConfirmPopup
+        openConfirmPopup={openConfirmPopup}
+        setOpenConfirmPopup={setOpenConfirmPopup}
+        idClickedSubscriber={idClickedSubscriber}
+        setIdClickedSubscriber={setIdClickedSubscriber}
+        removeSubscriber={handleRemoveSubscriber}
       />
     </>
   );
