@@ -10,14 +10,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Popup = ({ openPopup, setOpenPopup, textContentPopup }) => {
+const InfoPopup = ({ openInfoPopup, setOpenInfoPopup, textContentPopup }) => {
   const classes = useStyles();
-
-  const handleClosePopup = () => setOpenPopup(false);
 
   return (
     <Dialog
-      open={openPopup}
+      open={openInfoPopup}
       maxWidth="sm"
       classes={{ paper: classes.dialogWrapper }}
     >
@@ -26,7 +24,11 @@ const Popup = ({ openPopup, setOpenPopup, textContentPopup }) => {
           <Typography variant="h6" style={{ flexGrow: 1 }}>
             {textContentPopup.title}
           </Typography>
-          <Button variant="contained" color="error" onClick={handleClosePopup}>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => setOpenInfoPopup(false)}
+          >
             X
           </Button>
         </div>
@@ -38,4 +40,4 @@ const Popup = ({ openPopup, setOpenPopup, textContentPopup }) => {
   );
 };
 
-export default Popup;
+export default InfoPopup;
