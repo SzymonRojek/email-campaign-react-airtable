@@ -1,13 +1,13 @@
 const setTextPopup = (status, subscriber, callback) => {
   status === "pending"
     ? callback({
-        title: "Oh no!",
-        text: `${subscriber}'s status is pending at the moment. Please wait until the status will be confirmed by admin.`,
+        title: "Please wait...",
+        text: `${subscriber}'s status is pending at the moment - subscription has to be confirmed by an admin.`,
       })
     : status === "blocked"
     ? callback({
         title: "Unfortunately...",
-        text: `${subscriber}'s status is blocked. You can not get an access to more details.`,
+        text: `${subscriber}'s status is blocked - can not get an access to more details.`,
       })
     : callback("");
 };
