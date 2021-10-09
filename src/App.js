@@ -15,11 +15,8 @@ import {
   FilteredStatusSubscribers,
   SubscriberDetails,
 } from "./pages";
-// import { MainNavigation, SubscribersNavigation } from "./components/Navigation";
-
 import { MainNavigation } from "./components/Navigation/MainNavigation";
-import { SubscribersNavigation } from "./components/Navigation/SubscribersNavigation";
-import { EmailNavigation } from "./components/Navigation/EmailNavigation";
+import { SubNavigation } from "./components/Navigation/SubNavigation";
 import { InfoPopup, ConfirmPopup } from "./components/Popup";
 import api from "./api";
 import {
@@ -42,6 +39,7 @@ const Routing = () => {
 
   const getData = async () => {
     const data = await api.get(endpoint);
+
     sortDataAlphabetically(data.records);
     setSubscribersData(data.records);
   };
@@ -62,7 +60,7 @@ const Routing = () => {
   };
 
   const handlePopup = (subscriber) => {
-    handlers.handleRowClick(subscriber, navigate);
+    handlers.handleSubcriberDetailsClick(subscriber, navigate);
     setTextPopup(
       subscriber.fields.status,
       capitalizeFirstLetter(subscriber.fields.name),
@@ -71,10 +69,44 @@ const Routing = () => {
     handlers.handleOpenPopup(subscriber, setOpenInfoPopup);
   };
 
+  const emailDataLinksNavigation = [
+    {
+      to: "",
+      exact: true,
+      name: "Campaigns List",
+    },
+    {
+      to: "filter",
+      name: "Filter by status",
+    },
+    {
+      to: "add-email",
+      name: "New Campaign",
+    },
+  ];
+
+  const subscribersDataLinksNavigation = [
+    {
+      to: "",
+      exact: true,
+      name: "Subscribers List",
+    },
+    {
+      to: "filter",
+      name: "Filter by status",
+    },
+    {
+      to: "add-subscriber",
+      name: "New Subscriber",
+    },
+  ];
+
   const routes = [
     {
       path: "/subscribers",
-      element: <SubscribersNavigation />,
+      element: (
+        <SubNavigation dataLinksNavigation={subscribersDataLinksNavigation} />
+      ),
       children: [
         {
           path: "/",
@@ -116,8 +148,6 @@ const Routing = () => {
             <SubscriberDetails
               setOpenInfoPopup={setOpenInfoPopup}
               setContentPopup={setContentPopup}
-              getData={getData}
-              idClickedSubscriber={idClickedSubscriber}
             />
           ),
         },
@@ -125,7 +155,7 @@ const Routing = () => {
     },
     {
       path: "/campaigns",
-      element: <EmailNavigation />,
+      element: <SubNavigation dataLinksNavigation={emailDataLinksNavigation} />,
       children: [
         { path: "", element: <EmailCampaignsList /> },
         { path: "/filter", element: <FilterStatusEmail /> },

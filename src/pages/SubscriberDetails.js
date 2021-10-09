@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { TableBody, TableCell, TableRow, Typography } from "@material-ui/core";
 
 import api from "../api";
 import { ContainerTable, HeadTable, RowSubscriber } from "../common/Table";
 
-const SubscriberDetails = ({ idClickedSubscriber }) => {
+const SubscriberDetails = () => {
+  const { id } = useParams();
   const [subscriberData, setSubscriberData] = useState(null);
-  const endpoint = `/subscribers/${idClickedSubscriber}`;
+
+  const endpoint = `/subscribers/${id}`;
 
   const getSubscriber = async () => {
     const data = await api.get(endpoint);
