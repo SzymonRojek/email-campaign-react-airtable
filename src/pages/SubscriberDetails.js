@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
-
 import { TableBody, TableCell, TableRow, Typography } from "@material-ui/core";
 
 import api from "../api";
 import { ContainerTable, HeadTable, RowSubscriber } from "../common/Table";
 
-const SubscriberDetails = ({ match }) => {
+const SubscriberDetails = ({ idClickedSubscriber }) => {
   const [subscriberData, setSubscriberData] = useState(null);
-
-  const id = match.params.id;
-  const endpoint = `/subscribers/${id}`;
+  const endpoint = `/subscribers/${idClickedSubscriber}`;
 
   const getSubscriber = async () => {
     const data = await api.get(endpoint);
@@ -26,13 +23,24 @@ const SubscriberDetails = ({ match }) => {
     "Profession",
     "Status",
     "Created",
-    id ? null : "Delete",
   ];
 
   const detailsDataHeadTable = ["Email", "Salary", "Telephone", "Address"];
 
   return (
     <>
+      <h1
+        style={{
+          textAlign: "center",
+          marginTop: 100,
+          fontSize: 40,
+          color: "#303f9f",
+          letterSpacing: 2,
+          wordSpacing: 15,
+        }}
+      >
+        Subscriber Details
+      </h1>
       <ContainerTable>
         <HeadTable data={generalDataHeadTable} />
 
@@ -48,7 +56,6 @@ const SubscriberDetails = ({ match }) => {
         </TableBody>
       </ContainerTable>
 
-      {/* Table Subscriber Details */}
       <ContainerTable>
         <HeadTable data={detailsDataHeadTable} />
         <TableBody>
@@ -57,22 +64,22 @@ const SubscriberDetails = ({ match }) => {
               <TableRow key={`i-${index}`}>
                 <TableCell>
                   <Typography color="textSecondary" variant="body2">
-                    {subscriber.fields.email}
+                    {subscriber.fields?.email}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   <Typography color="textSecondary" variant="body2">
-                    {subscriber.fields.salary}
+                    {subscriber.fields?.salary}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   <Typography color="textSecondary" variant="body2">
-                    {subscriber.fields.telephone}
+                    {subscriber.fields?.telephone}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   <Typography color="textSecondary" variant="body2">
-                    {subscriber.fields.address}
+                    {subscriber.fields?.address}
                   </Typography>
                 </TableCell>
               </TableRow>
