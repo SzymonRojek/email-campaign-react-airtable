@@ -1,4 +1,4 @@
-const handleRowClick = (subscriber, callback) =>
+const handleSubcriberDetailsClick = (subscriber, callback) =>
   subscriber.fields.status === "active"
     ? callback(`/subscribers/${subscriber.id}`)
     : "";
@@ -11,6 +11,6 @@ const handleOpenPopup = (subscriber, callback) =>
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  handleRowClick,
+  handleSubcriberDetailsClick,
   handleOpenPopup,
 };
