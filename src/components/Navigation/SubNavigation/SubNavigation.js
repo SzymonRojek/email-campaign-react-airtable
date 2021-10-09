@@ -27,30 +27,12 @@ const inactive = {
   ...common,
 };
 
-const subscribersNavigationLinksData = [
-  {
-    to: "",
-    exact: true,
-    name: "Subscribers List",
-  },
-  {
-    to: "filter",
-    exact: false,
-    name: "Filter by status",
-  },
-  {
-    to: "add-subscriber",
-    exact: false,
-    name: "New Subscriber",
-  },
-];
-
-const SubscribersNavigation = () => (
+const SubNavigation = ({ dataLinksNavigation }) => (
   <>
     <div className="header-subNavigation">
       <Menu>
         <ul className="header-list">
-          {subscribersNavigationLinksData.map(({ to, exact, name }) => (
+          {dataLinksNavigation.map(({ to, exact, name }) => (
             <li key={name}>
               <NavLink
                 to={to}
@@ -71,4 +53,4 @@ const SubscribersNavigation = () => (
   </>
 );
 
-export default SubscribersNavigation;
+export default SubNavigation;
