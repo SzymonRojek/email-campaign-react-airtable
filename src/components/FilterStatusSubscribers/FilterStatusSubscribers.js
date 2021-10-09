@@ -3,7 +3,7 @@ import { TableCell } from "@material-ui/core";
 import { ContainerTable, HeadTable, BodyTable } from "../../common/Table";
 import { RowSubscriber } from "../../common/Table";
 
-const FilteredStatusSubscribers = (props) => {
+const FilterStatusSubscribers = (props) => {
   const {
     subscribersData,
     dataTableCell,
@@ -46,4 +46,4 @@ const FilteredStatusSubscribers = (props) => {
   );
 };
 
-export default FilteredStatusSubscribers;
+export default FilterStatusSubscribers;
