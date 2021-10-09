@@ -7,8 +7,7 @@ import NavLink from "../NavLink/NavLink";
 
 const mainNavigationLinksData = [
   { to: "/subscribers", name: "Subscribers" },
-  { to: "campaigns", name: "Campaigns" },
-  { to: "/new-campaign", name: "New Campaign" },
+  { to: "campaigns", name: "Email Campaigns" },
   { to: "/home", name: "Home" },
 ];
 
