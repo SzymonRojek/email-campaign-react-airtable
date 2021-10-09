@@ -12,8 +12,12 @@ import {
   Home,
   AddSubscriber,
   FilteredStatusSubscribers,
+  SubscriberDetails,
 } from "./pages";
-import { MainNavigation, SubscribersNav } from "./components/Navigation";
+// import { MainNavigation, SubscribersNavigation } from "./components/Navigation";
+
+import { MainNavigation } from "./components/Navigation/MainNavigation";
+import { SubscribersNavigation } from "./components/Navigation/SubscribersNavigation";
 import { InfoPopup, ConfirmPopup } from "./components/Popup";
 import api from "./api";
 import {
@@ -29,6 +33,7 @@ const Routing = () => {
   const [textContentPopup, setContentPopup] = useState({});
   const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
   const [idClickedSubscriber, setIdClickedSubscriber] = useState("");
+
   const navigate = useNavigate();
 
   const endpoint = "/subscribers";
@@ -49,8 +54,8 @@ const Routing = () => {
     )[0].id;
 
     await api.delete(`/subscribers/${idSubscriber}`);
-    getData();
 
+    getData();
     setOpenConfirmPopup(false);
   };
 
@@ -67,7 +72,7 @@ const Routing = () => {
   const routes = [
     {
       path: "/subscribers",
-      element: <SubscribersNav />,
+      element: <SubscribersNavigation />,
       children: [
         {
           path: "/",
@@ -100,6 +105,17 @@ const Routing = () => {
               setOpenConfirmPopup={setOpenConfirmPopup}
               setIdClickedSubscriber={setIdClickedSubscriber}
               handlePopup={handlePopup}
+            />
+          ),
+        },
+        {
+          path: "/:id",
+          element: (
+            <SubscriberDetails
+              setOpenInfoPopup={setOpenInfoPopup}
+              setContentPopup={setContentPopup}
+              getData={getData}
+              idClickedSubscriber={idClickedSubscriber}
             />
           ),
         },
