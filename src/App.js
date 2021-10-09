@@ -7,8 +7,9 @@ import {
 
 import {
   SubscribersList,
-  CreateCampaign,
-  ListCampaigns,
+  NewEmailCampaign,
+  EmailCampaignsList,
+  FilterStatusEmail,
   Home,
   AddSubscriber,
   FilteredStatusSubscribers,
@@ -18,6 +19,7 @@ import {
 
 import { MainNavigation } from "./components/Navigation/MainNavigation";
 import { SubscribersNavigation } from "./components/Navigation/SubscribersNavigation";
+import { EmailNavigation } from "./components/Navigation/EmailNavigation";
 import { InfoPopup, ConfirmPopup } from "./components/Popup";
 import api from "./api";
 import {
@@ -121,8 +123,16 @@ const Routing = () => {
         },
       ],
     },
-    { path: "/campaigns", element: <ListCampaigns /> },
-    { path: "/new-campaign", element: <CreateCampaign /> },
+    {
+      path: "/campaigns",
+      element: <EmailNavigation />,
+      children: [
+        { path: "", element: <EmailCampaignsList /> },
+        { path: "/filter-emails", element: <FilterStatusEmail /> },
+        { path: "/add-email", element: <NewEmailCampaign /> },
+      ],
+    },
+
     { path: "/home", element: <Home /> },
   ];
 
