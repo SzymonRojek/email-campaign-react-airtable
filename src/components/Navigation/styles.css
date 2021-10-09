@@ -8,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0;
+  padding: 20px;
   margin: 0;
   list-style: none;
 }
@@ -18,12 +18,12 @@
 }
 
 .header-link {
-  padding: 20px;
+  /* padding: 40px; */
   text-decoration: none;
 }
 
-.link {
-  margin: 0;
+/* .link {
+  margin: 15px;
   padding: 10px 15px;
   font-size: 20px;
   font-weight: 600;
@@ -32,14 +32,14 @@
   text-decoration: none;
   border-radius: 4px;
   transition: background-color 0.3s linear;
-}
+} */
 
 .link:hover {
   color: #fff;
   background-color: #303f9f;
 }
 
-.active .link {
+/* .active .link {
   color: #fff;
   background-color: #303f9f;
-}
+} */
