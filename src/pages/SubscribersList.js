@@ -38,7 +38,6 @@ const SubscribersList = ({
               setOpenConfirmPopup={setOpenConfirmPopup}
               handlePopup={handlePopup}
               setIdClickedSubscriber={setIdClickedSubscriber}
-              // removeSubscriber={removeSubscriber}
             />
           ))}
       </BodyTable>
