@@ -33,13 +33,18 @@ const inactive = {
   ...common,
 };
 
-const MainNavigation = () => (
+const Navigation = () => (
   <div className="header-container">
     <Menu>
       <ul className="header-list">
-        {mainNavigationLinksData.map(({ to, name }) => (
+        {mainNavigationLinksData.map(({ to, name, exact }) => (
           <li key={name}>
-            <NavLink to={to} active={active} inactive={inactive}>
+            <NavLink
+              to={to}
+              exact={exact ? exact : ""}
+              active={active}
+              inactive={inactive}
+            >
               {name}
             </NavLink>
           </li>
@@ -49,4 +54,4 @@ const MainNavigation = () => (
   </div>
 );
 
-export default MainNavigation;
+export default Navigation;
