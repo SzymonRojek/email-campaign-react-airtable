@@ -34,7 +34,7 @@ const subscribersNavigationLinksData = [
     name: "Campaigns List",
   },
   {
-    to: "filter-emails",
+    to: "filter",
     exact: false,
     name: "Filter by status",
   },

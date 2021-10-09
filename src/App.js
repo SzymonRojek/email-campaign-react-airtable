@@ -128,7 +128,7 @@ const Routing = () => {
       element: <EmailNavigation />,
       children: [
         { path: "", element: <EmailCampaignsList /> },
-        { path: "/filter-emails", element: <FilterStatusEmail /> },
+        { path: "/filter", element: <FilterStatusEmail /> },
         { path: "/add-email", element: <NewEmailCampaign /> },
       ],
     },
