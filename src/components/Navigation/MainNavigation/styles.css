@@ -1,0 +1,15 @@
+.header-container {
+  width: 100%;
+  background-color: white;
+  border-bottom: 2px solid #303f9f;
+}
+
+.header-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  margin: 0;
+  list-style: none;
+  color: #b2b7d7;
+}
