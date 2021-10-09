@@ -2,7 +2,6 @@ import { useLocation } from "react-router-dom";
 import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DetailsIcon from "@mui/icons-material/Details";
-
 import {
   TableCell,
   TableRow,
@@ -100,22 +99,25 @@ const RowSubscriber = (props) => {
           {getFormattedData(subscriber.createdTime)}
         </Typography>
       </TableCell>
-      {location.pathname === "/subscribers" ||
-      location.pathname === "/filtered-status" ? (
+      {location.pathname !== `/subscribers/${subscriber.id}` && (
         <>
           <TableCell>
             <Button
               color="success"
               variant="contained"
-              startIcon={<DetailsIcon />}
-              onClick={() => handlePopup(subscriber)}
+              startIcon={<DetailsIcon style={{ marginLeft: 10 }} />}
+              onClick={() => {
+                setIdClickedSubscriber(subscriber.id);
+                handlePopup(subscriber);
+              }}
             />
           </TableCell>
           <TableCell>
             <Button
+              aria-label="delete"
               color="error"
               variant="contained"
-              startIcon={<DeleteIcon />}
+              startIcon={<DeleteIcon style={{ marginLeft: 10 }} />}
               onClick={() => {
                 setOpenConfirmPopup(true);
                 setIdClickedSubscriber(subscriber.id);
@@ -123,10 +125,9 @@ const RowSubscriber = (props) => {
             />
           </TableCell>
         </>
-      ) : null}
+      )}
     </TableRow>
   );
 };
 
 export default RowSubscriber;
-// onClick={() => removeSubscriber(subscriber.id)}
