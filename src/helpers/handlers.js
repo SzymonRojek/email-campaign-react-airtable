@@ -1,6 +1,6 @@
-const handleRowClick = (subscriber, history) =>
+const handleRowClick = (subscriber, callback) =>
   subscriber.fields.status === "active"
-    ? history.push(`/subscribers/${subscriber.id}`)
+    ? callback(`/subscribers/${subscriber.id}`)
     : "";
 
 const handleOpenPopup = (subscriber, callback) =>
