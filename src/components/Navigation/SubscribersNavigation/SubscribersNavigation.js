@@ -34,7 +34,7 @@ const subscribersNavigationLinksData = [
     name: "Subscribers List",
   },
   {
-    to: "filtered-status",
+    to: "filter",
     exact: false,
     name: "Filter by status",
   },

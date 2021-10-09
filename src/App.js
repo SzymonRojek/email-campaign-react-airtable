@@ -98,7 +98,7 @@ const Routing = () => {
           ),
         },
         {
-          path: "/filtered-status",
+          path: "/filter",
           element: (
             <FilteredStatusSubscribers
               subscribersData={subscribersData}
