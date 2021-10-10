@@ -1,15 +1,5 @@
 import { FilterStatusSubscribers } from "../../components/FilterStatusSubscribers";
-
-const dataTableCell = [
-  "No",
-  "Name",
-  "Surname",
-  "Profession",
-  "Status",
-  "Created",
-  "Details",
-  "Delete",
-];
+import { generalDataHeadTable } from "../../data/dataHeadTable";
 
 const FilteredStatusSubscribers = (props) => {
   const {
@@ -22,7 +12,7 @@ const FilteredStatusSubscribers = (props) => {
   return (
     <>
       <FilterStatusSubscribers
-        dataTableCell={dataTableCell}
+        generalDataHeadTable={generalDataHeadTable}
         subscribersData={subscribersData}
         status="active"
         setOpenConfirmPopup={setOpenConfirmPopup}
@@ -31,7 +21,7 @@ const FilteredStatusSubscribers = (props) => {
       />
 
       <FilterStatusSubscribers
-        dataTableCell={dataTableCell}
+        generalDataHeadTable={generalDataHeadTable}
         subscribersData={subscribersData}
         status="pending"
         setOpenConfirmPopup={setOpenConfirmPopup}
@@ -40,7 +30,7 @@ const FilteredStatusSubscribers = (props) => {
       />
 
       <FilterStatusSubscribers
-        dataTableCell={dataTableCell}
+        generalDataHeadTable={generalDataHeadTable}
         subscribersData={subscribersData}
         status="blocked"
         setOpenConfirmPopup={setOpenConfirmPopup}

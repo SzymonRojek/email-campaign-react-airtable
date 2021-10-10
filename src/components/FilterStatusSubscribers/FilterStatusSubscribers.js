@@ -6,7 +6,7 @@ import { RowSubscriber } from "../Table";
 const FilterStatusSubscribers = (props) => {
   const {
     subscribersData,
-    dataTableCell,
+    generalDataHeadTable,
     status,
     handlePopup,
     setOpenConfirmPopup,
@@ -18,7 +18,7 @@ const FilterStatusSubscribers = (props) => {
     subscribersData &&
     subscribersData.some((el) => el.fields.status === status) && (
       <ContainerTable>
-        <HeadTable data={dataTableCell} />
+        <HeadTable data={generalDataHeadTable} />
 
         <BodyTable>
           {subscribersData &&

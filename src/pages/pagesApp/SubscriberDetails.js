@@ -8,6 +8,10 @@ import {
   HeadTable,
   RowSubscriber,
 } from "../../components/Table";
+import {
+  detailsDataHeadTableFirst,
+  detailsDataHeadTableSecond,
+} from "../../data/dataHeadTable";
 
 const SubscriberDetails = () => {
   const { id } = useParams();
@@ -24,16 +28,6 @@ const SubscriberDetails = () => {
     getSubscriber();
   }, []);
 
-  const generalDataHeadTable = [
-    "Name",
-    "Surname",
-    "Profession",
-    "Status",
-    "Created",
-  ];
-
-  const detailsDataHeadTable = ["Email", "Salary", "Telephone", "Address"];
-
   return (
     <>
       <h1
@@ -49,7 +43,7 @@ const SubscriberDetails = () => {
         Subscriber Details
       </h1>
       <ContainerTable>
-        <HeadTable data={generalDataHeadTable} />
+        <HeadTable data={detailsDataHeadTableFirst} />
 
         <TableBody>
           {subscriberData &&
@@ -64,7 +58,7 @@ const SubscriberDetails = () => {
       </ContainerTable>
 
       <ContainerTable>
-        <HeadTable data={detailsDataHeadTable} />
+        <HeadTable data={detailsDataHeadTableSecond} />
         <TableBody>
           {subscriberData &&
             subscriberData.map((subscriber, index) => (
