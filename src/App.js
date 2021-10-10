@@ -3,9 +3,9 @@ import {
   BrowserRouter as Router,
   useRoutes,
   useNavigate,
-  Redirect,
 } from "react-router-dom";
 
+import api from "./api";
 import {
   SubscribersList,
   NewEmailCampaign,
@@ -16,16 +16,19 @@ import {
   FilteredStatusSubscribers,
   SubscriberDetails,
 } from "./pages";
-
-import { Navigation } from "./components/Navigation/Navigation";
+import { Navigation } from "./components/Navigation";
 import { InfoPopup, ConfirmPopup } from "./components/Popup";
-import api from "./api";
 import {
   sortDataAlphabetically,
   capitalizeFirstLetter,
   setContentPopup,
 } from "./helpers";
 import handlers from "./helpers/handlers";
+import {
+  mainLinksNavigation,
+  subscribersLinksNavigation,
+  emailLinksNavigation,
+} from "./data/dataLinksNavigation";
 
 const Routing = () => {
   const [subscribersData, setSubscribersData] = useState([]);
@@ -70,49 +73,11 @@ const Routing = () => {
     handlers.handleOpenPopup(subscriber, setOpenInfoPopup);
   };
 
-  const emailDataLinksNavigation = [
-    {
-      to: "",
-      exact: true,
-      name: "Campaigns List",
-    },
-    {
-      to: "filter",
-      name: "Filter by status",
-    },
-    {
-      to: "add-email",
-      name: "New Campaign",
-    },
-  ];
-
-  const subscribersDataLinksNavigation = [
-    {
-      to: "",
-      exact: true,
-      name: "Subscribers List",
-    },
-    {
-      to: "filter",
-      name: "Filter by status",
-    },
-    {
-      to: "add-subscriber",
-      name: "New Subscriber",
-    },
-  ];
-
-  const mainNavigationLinksData = [
-    { to: "/subscribers", name: "Subscribers" },
-    { to: "/campaigns", name: "Email Campaigns" },
-    { to: "/", exact: true, name: "Home" },
-  ];
-
   const routes = [
     { path: "/", element: <Home /> },
     {
       path: "/subscribers",
-      element: <Navigation dataLinks={subscribersDataLinksNavigation} />,
+      element: <Navigation dataLinks={subscribersLinksNavigation} />,
       children: [
         {
           path: "/",
@@ -161,7 +126,7 @@ const Routing = () => {
     },
     {
       path: "/campaigns",
-      element: <Navigation dataLinks={emailDataLinksNavigation} />,
+      element: <Navigation dataLinks={emailLinksNavigation} />,
       children: [
         { path: "", element: <EmailCampaignsList /> },
         { path: "/filter", element: <FilterStatusEmail /> },
@@ -176,7 +141,7 @@ const Routing = () => {
     <>
       <Navigation
         className="header-container"
-        dataLinks={mainNavigationLinksData}
+        dataLinks={mainLinksNavigation}
       />
 
       <InfoPopup
