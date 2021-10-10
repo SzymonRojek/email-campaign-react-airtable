@@ -1,6 +1,10 @@
 import { TableCell } from "@material-ui/core";
-import { ContainerTable, HeadTable, BodyTable } from "../components/Table";
-import { RowSubscriber } from "../components/Table";
+import {
+  ContainerTable,
+  HeadTable,
+  BodyTable,
+  RowSubscriber,
+} from "../../components/Table";
 
 const SubscribersList = ({
   subscribersData,

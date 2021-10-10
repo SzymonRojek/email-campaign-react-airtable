@@ -1,4 +1,4 @@
-import { FilterStatusSubscribers } from "../components/FilterStatusSubscribers";
+import { FilterStatusSubscribers } from "../../components/FilterStatusSubscribers";
 
 const dataTableCell = [
   "No",
@@ -52,10 +52,3 @@ const FilteredStatusSubscribers = (props) => {
 };
 
 export default FilteredStatusSubscribers;
-
-// do not forget about :hover (fix it)
-// think about the row of the table - when ic clicked could be added a border or change bgc etc.
-// pagination
-// resarcher ??
-// check the head of the table - it is a differ betwen head and table container => fix it!
-// in the Pop use the function capitalize
