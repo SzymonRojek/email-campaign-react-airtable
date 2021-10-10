@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   useRoutes,
   useNavigate,
+  Redirect,
 } from "react-router-dom";
 
 import {
@@ -15,8 +16,8 @@ import {
   FilteredStatusSubscribers,
   SubscriberDetails,
 } from "./pages";
-import { MainNavigation } from "./components/Navigation/MainNavigation";
-import { SubNavigation } from "./components/Navigation/SubNavigation";
+
+import { Navigation } from "./components/Navigation/Navigation";
 import { InfoPopup, ConfirmPopup } from "./components/Popup";
 import api from "./api";
 import {
@@ -101,12 +102,17 @@ const Routing = () => {
     },
   ];
 
+  const mainNavigationLinksData = [
+    { to: "/subscribers", name: "Subscribers" },
+    { to: "/campaigns", name: "Email Campaigns" },
+    { to: "/", exact: true, name: "Home" },
+  ];
+
   const routes = [
+    { path: "/", element: <Home /> },
     {
       path: "/subscribers",
-      element: (
-        <SubNavigation dataLinksNavigation={subscribersDataLinksNavigation} />
-      ),
+      element: <Navigation dataLinks={subscribersDataLinksNavigation} />,
       children: [
         {
           path: "/",
@@ -155,22 +161,23 @@ const Routing = () => {
     },
     {
       path: "/campaigns",
-      element: <SubNavigation dataLinksNavigation={emailDataLinksNavigation} />,
+      element: <Navigation dataLinks={emailDataLinksNavigation} />,
       children: [
         { path: "", element: <EmailCampaignsList /> },
         { path: "/filter", element: <FilterStatusEmail /> },
         { path: "/add-email", element: <NewEmailCampaign /> },
       ],
     },
-
-    { path: "/home", element: <Home /> },
   ];
 
   const routing = useRoutes(routes);
 
   return (
     <>
-      <MainNavigation />
+      <Navigation
+        className="header-container"
+        dataLinks={mainNavigationLinksData}
+      />
 
       <InfoPopup
         openInfoPopup={openInfoPopup}
