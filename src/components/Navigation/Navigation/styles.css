@@ -1,0 +1,10 @@
+.header-container {
+  border-bottom: #303f9f;
+}
+
+.header-list {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 20px;
+}

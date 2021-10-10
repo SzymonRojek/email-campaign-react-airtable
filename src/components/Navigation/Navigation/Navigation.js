@@ -1,8 +1,8 @@
-import React from "react";
-import NavLink from "../NavLink/NavLink";
 import { Outlet } from "react-router-dom";
 
+import "./styles.css";
 import Menu from "../Menu/Menu";
+import NavLink from "../NavLink/NavLink";
 
 const common = {
   margin: 15,
@@ -23,16 +23,16 @@ const active = {
 
 const inactive = {
   color: "#fff",
-  backgroundColor: "#ccc",
+  backgroundColor: "#303f9f",
   ...common,
 };
 
-const SubNavigation = ({ dataLinksNavigation }) => (
+const Navigation = ({ dataLinks, className }) => (
   <>
-    <div className="header-subNavigation">
+    <div className={className}>
       <Menu>
         <ul className="header-list">
-          {dataLinksNavigation.map(({ to, exact, name }) => (
+          {dataLinks.map(({ to, exact, name }) => (
             <li key={name}>
               <NavLink
                 to={to}
@@ -53,4 +53,4 @@ const SubNavigation = ({ dataLinksNavigation }) => (
   </>
 );
 
-export default SubNavigation;
+export default Navigation;
