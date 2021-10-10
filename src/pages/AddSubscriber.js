@@ -34,6 +34,7 @@ const AddSubscriber = ({ setOpenInfoPopup, setContentPopup, getData }) => {
       text: `Subscriber ${capitalizeFirstLetter(
         data.name
       )} has been added to the data :D`,
+      colorButton: "success",
     });
 
     getData();

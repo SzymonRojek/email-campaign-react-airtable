@@ -26,7 +26,7 @@ const InfoPopup = ({ openInfoPopup, setOpenInfoPopup, textContentPopup }) => {
           </Typography>
           <Button
             variant="contained"
-            color="error"
+            color={textContentPopup.colorButton}
             onClick={() => setOpenInfoPopup(false)}
           >
             X
