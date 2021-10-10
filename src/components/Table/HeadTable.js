@@ -9,12 +9,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const HeadTable = ({ data }) => {
+const HeadTable = ({ dataHeadTable }) => {
   const classes = useStyles();
+
   return (
     <TableHead>
       <TableRow>
-        {data.map((cell, index) => (
+        {dataHeadTable.map((cell, index) => (
           <TableCell key={`i-${index}`} className={classes.tableHeaderCell}>
             {cell}
           </TableCell>

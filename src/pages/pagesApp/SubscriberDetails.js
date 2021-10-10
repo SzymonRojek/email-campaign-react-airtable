@@ -43,7 +43,7 @@ const SubscriberDetails = () => {
         Subscriber Details
       </h1>
       <ContainerTable>
-        <HeadTable data={detailsDataHeadTableFirst} />
+        <HeadTable dataHeadTable={detailsDataHeadTableFirst} />
 
         <TableBody>
           {subscriberData &&
@@ -58,7 +58,8 @@ const SubscriberDetails = () => {
       </ContainerTable>
 
       <ContainerTable>
-        <HeadTable data={detailsDataHeadTableSecond} />
+        <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
+
         <TableBody>
           {subscriberData &&
             subscriberData.map((subscriber, index) => (

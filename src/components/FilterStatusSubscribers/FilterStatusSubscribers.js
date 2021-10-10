@@ -18,7 +18,7 @@ const FilterStatusSubscribers = (props) => {
     subscribersData &&
     subscribersData.some((el) => el.fields.status === status) && (
       <ContainerTable>
-        <HeadTable data={generalDataHeadTable} />
+        <HeadTable dataHeadTable={generalDataHeadTable} />
 
         <BodyTable>
           {subscribersData &&
