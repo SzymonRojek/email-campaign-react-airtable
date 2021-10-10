@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { TableBody, TableCell, TableRow, Typography } from "@material-ui/core";
 
 import api from "../api";
-import { ContainerTable, HeadTable, RowSubscriber } from "../common/Table";
+import { ContainerTable, HeadTable, RowSubscriber } from "../components/Table";
 
 const SubscriberDetails = () => {
   const { id } = useParams();
