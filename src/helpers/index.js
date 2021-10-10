@@ -5,3 +5,4 @@ export { default as validationSchema } from "./validationSchema";
 export { default as setContentPopup } from "./setContentPopup";
 export { default as sortDataAlphabetically } from "./sortDataAlphabetically";
 export { default as capitalizeFirstLetter } from "./capitalizeFirstLetter";
+export { default as getLatestAddedSubscriber } from "./getLatestAddedSubscriber";
