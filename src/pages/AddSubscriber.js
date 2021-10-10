@@ -7,7 +7,7 @@ import api from "../api";
 import { TextInput } from "../components/TextInput";
 import { capitalizeFirstLetter, validationSchema } from "../helpers";
 
-const AddSubscriber = ({ setOpenInfoPopup, setContentPopup, getData }) => {
+const AddSubscriber = ({ setOpenInfoPopup, setContentInfoPopup, getData }) => {
   const {
     register,
     handleSubmit,
@@ -29,7 +29,7 @@ const AddSubscriber = ({ setOpenInfoPopup, setContentPopup, getData }) => {
     });
 
     reset();
-    setContentPopup({
+    setContentInfoPopup({
       title: "Done!",
       text: `Subscriber ${capitalizeFirstLetter(
         data.name

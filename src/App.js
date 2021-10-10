@@ -23,14 +23,14 @@ import api from "./api";
 import {
   sortDataAlphabetically,
   capitalizeFirstLetter,
-  setTextPopup,
+  setContentPopup,
 } from "./helpers";
 import handlers from "./helpers/handlers";
 
 const Routing = () => {
   const [subscribersData, setSubscribersData] = useState([]);
   const [openInfoPopup, setOpenInfoPopup] = useState(false);
-  const [textContentPopup, setContentPopup] = useState({});
+  const [contentInfoPopup, setContentInfoPopup] = useState({});
   const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
   const [idClickedSubscriber, setIdClickedSubscriber] = useState("");
 
@@ -62,10 +62,10 @@ const Routing = () => {
 
   const handlePopup = (subscriber) => {
     handlers.handleSubcriberDetailsClick(subscriber, navigate);
-    setTextPopup(
+    setContentPopup(
       subscriber.fields.status,
       capitalizeFirstLetter(subscriber.fields.name),
-      setContentPopup
+      setContentInfoPopup
     );
     handlers.handleOpenPopup(subscriber, setOpenInfoPopup);
   };
@@ -130,7 +130,7 @@ const Routing = () => {
           element: (
             <AddSubscriber
               setOpenInfoPopup={setOpenInfoPopup}
-              setContentPopup={setContentPopup}
+              setContentInfoPopup={setContentInfoPopup}
               getData={getData}
             />
           ),
@@ -140,7 +140,7 @@ const Routing = () => {
           element: (
             <FilteredStatusSubscribers
               subscribersData={subscribersData}
-              setContentPopup={setContentPopup}
+              setContentInfoPopup={setContentInfoPopup}
               setOpenInfoPopup={setOpenInfoPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
               setIdClickedSubscriber={setIdClickedSubscriber}
@@ -153,7 +153,7 @@ const Routing = () => {
           element: (
             <SubscriberDetails
               setOpenInfoPopup={setOpenInfoPopup}
-              setContentPopup={setContentPopup}
+              setContentInfoPopup={setContentInfoPopup}
             />
           ),
         },
@@ -182,7 +182,7 @@ const Routing = () => {
       <InfoPopup
         openInfoPopup={openInfoPopup}
         setOpenInfoPopup={setOpenInfoPopup}
-        textContentPopup={textContentPopup}
+        contentInfoPopup={contentInfoPopup}
       />
 
       <ConfirmPopup

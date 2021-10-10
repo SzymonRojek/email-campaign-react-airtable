@@ -1,4 +1,4 @@
-const setTextPopup = (status, subscriber, callback) => {
+const setContentPopup = (status, subscriber, callback) => {
   status === "pending"
     ? callback({
         title: "Please wait...",
@@ -14,4 +14,4 @@ const setTextPopup = (status, subscriber, callback) => {
     : callback("");
 };
 
-export default setTextPopup;
+export default setContentPopup;

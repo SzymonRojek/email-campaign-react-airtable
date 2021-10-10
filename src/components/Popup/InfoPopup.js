@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const InfoPopup = ({ openInfoPopup, setOpenInfoPopup, textContentPopup }) => {
+const InfoPopup = ({ openInfoPopup, setOpenInfoPopup, contentInfoPopup }) => {
   const classes = useStyles();
 
   return (
@@ -22,11 +22,11 @@ const InfoPopup = ({ openInfoPopup, setOpenInfoPopup, textContentPopup }) => {
       <DialogTitle>
         <div style={{ display: "flex" }}>
           <Typography variant="h6" style={{ flexGrow: 1 }}>
-            {textContentPopup.title}
+            {contentInfoPopup.title}
           </Typography>
           <Button
             variant="contained"
-            color={textContentPopup.colorButton}
+            color={contentInfoPopup.colorButton}
             onClick={() => setOpenInfoPopup(false)}
           >
             X
@@ -34,7 +34,7 @@ const InfoPopup = ({ openInfoPopup, setOpenInfoPopup, textContentPopup }) => {
         </div>
       </DialogTitle>
       <DialogContent dividers>
-        <Typography>{textContentPopup.text}</Typography>
+        <Typography>{contentInfoPopup.text}</Typography>
       </DialogContent>
     </Dialog>
   );
