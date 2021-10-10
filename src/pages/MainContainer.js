@@ -18,6 +18,7 @@ import {
   sortDataAlphabetically,
   capitalizeFirstLetter,
   setContentPopup,
+  getLatestAddedSubscriber,
 } from "../helpers";
 import handlers from "../helpers/handlers";
 import {
@@ -27,7 +28,7 @@ import {
 } from "../data/dataLinksNavigation";
 
 const MainContainer = () => {
-  const [subscribersData, setSubscribersData] = useState([]);
+  const [subscribersData, setSubscribersData] = useState({});
   const [openInfoPopup, setOpenInfoPopup] = useState(false);
   const [contentInfoPopup, setContentInfoPopup] = useState({});
   const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
@@ -40,8 +41,13 @@ const MainContainer = () => {
   const getData = async () => {
     const data = await api.get(endpoint);
 
-    sortDataAlphabetically(data.records);
-    setSubscribersData(data.records);
+    const dataRecords = data.records;
+
+    sortDataAlphabetically(dataRecords);
+    setSubscribersData({
+      dataRecords,
+      latestSubscriber: getLatestAddedSubscriber(dataRecords),
+    });
   };
 
   useEffect(() => {
@@ -49,7 +55,7 @@ const MainContainer = () => {
   }, []);
 
   const handleRemoveSubscriber = async () => {
-    const idSubscriber = subscribersData.filter(
+    const idSubscriber = subscribersData.dataRecords.filter(
       (subscriber) => subscriber.id === idClickedSubscriber
     )[0].id;
 
@@ -79,10 +85,11 @@ const MainContainer = () => {
           path: "/",
           element: (
             <SubscribersList
-              subscribersData={subscribersData}
+              subscribersData={subscribersData.dataRecords}
               setOpenConfirmPopup={setOpenConfirmPopup}
               handlePopup={handlePopup}
               setIdClickedSubscriber={setIdClickedSubscriber}
+              latestAddedSubscriber={subscribersData.latestSubscriber}
             />
           ),
         },
@@ -100,7 +107,7 @@ const MainContainer = () => {
           path: "/filter",
           element: (
             <FilteredStatusSubscribers
-              subscribersData={subscribersData}
+              subscribersData={subscribersData.dataRecords}
               setContentInfoPopup={setContentInfoPopup}
               setOpenInfoPopup={setOpenInfoPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
