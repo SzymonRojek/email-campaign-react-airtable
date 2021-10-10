@@ -1,10 +1,10 @@
-const mainLinksNavigation = [
+export const mainLinksNavigation = [
   { to: "/subscribers", name: "Subscribers" },
   { to: "/campaigns", name: "Email Campaigns" },
   { to: "/", exact: true, name: "Home" },
 ];
 
-const subscribersLinksNavigation = [
+export const subscribersLinksNavigation = [
   {
     to: "",
     exact: true,
@@ -20,7 +20,7 @@ const subscribersLinksNavigation = [
   },
 ];
 
-const emailLinksNavigation = [
+export const emailLinksNavigation = [
   {
     to: "",
     exact: true,
@@ -35,9 +35,3 @@ const emailLinksNavigation = [
     name: "New Campaign",
   },
 ];
-
-export {
-  mainLinksNavigation,
-  subscribersLinksNavigation,
-  emailLinksNavigation,
-};
