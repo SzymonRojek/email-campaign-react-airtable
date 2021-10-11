@@ -28,7 +28,11 @@ import {
 } from "../data/dataLinksNavigation";
 
 const MainContainer = () => {
-  const [subscribersData, setSubscribersData] = useState({});
+  const [subscribersData, setSubscribersData] = useState({
+    data: null,
+    status: "loading",
+    latestSubscriber: null,
+  });
   const [openInfoPopup, setOpenInfoPopup] = useState(false);
   const [contentInfoPopup, setContentInfoPopup] = useState({});
   const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
@@ -39,23 +43,30 @@ const MainContainer = () => {
   const endpoint = "/subscribers";
 
   const getData = async () => {
-    const data = await api.get(endpoint);
+    try {
+      const data = await api.get(endpoint);
 
-    const dataRecords = data.records;
-
-    sortDataAlphabetically(dataRecords);
-    setSubscribersData({
-      dataRecords,
-      latestSubscriber: getLatestAddedSubscriber(dataRecords),
-    });
+      sortDataAlphabetically(data);
+      setSubscribersData({
+        data,
+        latestSubscriber: getLatestAddedSubscriber(data),
+        status: "success",
+      });
+    } catch (error) {
+      setSubscribersData({
+        status: "error",
+      });
+    }
   };
 
   useEffect(() => {
-    getData();
+    const delayGetData = setTimeout(getData, 3_000);
+
+    return () => clearTimeout(delayGetData);
   }, []);
 
   const handleRemoveSubscriber = async () => {
-    const idSubscriber = subscribersData.dataRecords.filter(
+    const idSubscriber = subscribersData.data.filter(
       (subscriber) => subscriber.id === idClickedSubscriber
     )[0].id;
 
@@ -85,11 +96,10 @@ const MainContainer = () => {
           path: "/",
           element: (
             <SubscribersList
-              subscribersData={subscribersData.dataRecords}
+              subscribersData={subscribersData}
               setOpenConfirmPopup={setOpenConfirmPopup}
               handlePopup={handlePopup}
               setIdClickedSubscriber={setIdClickedSubscriber}
-              latestAddedSubscriber={subscribersData.latestSubscriber}
             />
           ),
         },
@@ -107,7 +117,7 @@ const MainContainer = () => {
           path: "/filter",
           element: (
             <FilteredStatusSubscribers
-              subscribersData={subscribersData.dataRecords}
+              subscribersData={subscribersData.data}
               setContentInfoPopup={setContentInfoPopup}
               setOpenInfoPopup={setOpenInfoPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
