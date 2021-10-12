@@ -10,25 +10,22 @@ const request = async (endpoint, method = "GET", data = null) => {
     },
   };
 
-  if (method === "POST" || method === "PATCH") {
+  if (method === "POST" || method === "PATCH")
     requestConfig.body = JSON.stringify(data);
-  }
 
   const url = `${API_URL}${endpoint}`;
 
   const response = await fetch(url, requestConfig);
 
-  if (!response.ok) {
-    throw new Error(response.statusText);
-  }
+  if (!response.ok) throw new Error(response.statusText);
 
-  const { records } = await response.json();
+  const getData = await response.json();
 
-  if (!records) {
-    throw new Error("Something happened - no data");
-  }
+  // if (!getData.records) {
+  //   throw new Error("Something happened - no data");
+  // }
 
-  return records;
+  return getData;
 };
 
 const get = (endpoint) => request(endpoint);
@@ -46,45 +43,3 @@ export default {
   patch,
   delete: _delete,
 };
-
-// const request = async (endpoint, method = "GET", data = null) => {
-//   const dataApi = {
-//     status: "loading",
-//     data: null,
-//   };
-//   const requestConfig = {
-//     method,
-//     headers: {
-//       Authorization: `Bearer ${REACT_APP_API_KEY}`,
-//       "Content-Type": "application/json",
-//     },
-//   };
-
-//   if (method === "POST" || method === "PATCH") {
-//     requestConfig.body = JSON.stringify(data);
-//   }
-
-//   const url = `${API_URL}${endpoint}`;
-
-//   const response = await fetch(url, requestConfig);
-
-//   try {
-//     if (!response.ok) {
-//       throw new Error(response.statusText);
-//     }
-
-//     const { records } = await response.json();
-
-//     if (!records) {
-//       throw new Error("Something happened - no data");
-//     }
-
-//     dataApi.data = records;
-//     dataApi.status = "succes";
-//   } catch (error) {
-//     dataApi.status = "error";
-//   }
-
-//   // console.log(dataApi);
-//   return dataApi;
-// };
