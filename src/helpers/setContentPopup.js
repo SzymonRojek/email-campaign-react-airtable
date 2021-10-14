@@ -1,4 +1,6 @@
 const setContentPopup = (status, subscriber, callback) => {
+  if (!subscriber) return;
+
   status === "pending"
     ? callback({
         title: "Please wait...",
