@@ -20,7 +20,6 @@ import {
   setContentPopup,
   getLatestAddedSubscriber,
 } from "../helpers";
-import handlers from "../helpers/handlers";
 import {
   mainLinksNavigation,
   subscribersLinksNavigation,
@@ -28,29 +27,28 @@ import {
 } from "../data/dataLinksNavigation";
 
 const MainContainer = () => {
+  const navigate = useNavigate();
   const [subscribersData, setSubscribersData] = useState({
-    data: null,
     status: "loading",
+    data: null,
     latestSubscriber: null,
   });
   const [openInfoPopup, setOpenInfoPopup] = useState(false);
   const [contentInfoPopup, setContentInfoPopup] = useState({});
   const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
-  const [idClickedSubscriber, setIdClickedSubscriber] = useState("");
-
-  const navigate = useNavigate();
+  const [idClickedSubscriber, setIdClickedSubscriber] = useState(null);
 
   const endpoint = "/subscribers";
 
   const getData = async () => {
     try {
-      const data = await api.get(endpoint);
+      const { records } = await api.get(endpoint);
 
-      sortDataAlphabetically(data);
+      sortDataAlphabetically(records);
       setSubscribersData({
-        data,
-        latestSubscriber: getLatestAddedSubscriber(data),
         status: "success",
+        data: records,
+        latestSubscriber: getLatestAddedSubscriber(records),
       });
     } catch (error) {
       setSubscribersData({
@@ -60,7 +58,7 @@ const MainContainer = () => {
   };
 
   useEffect(() => {
-    const delayGetData = setTimeout(getData, 3_000);
+    const delayGetData = setTimeout(getData, 1500);
 
     return () => clearTimeout(delayGetData);
   }, []);
@@ -74,16 +72,29 @@ const MainContainer = () => {
 
     getData();
     setOpenConfirmPopup(false);
+
+    if (subscribersData.data.length === 0) setOpenInfoPopup(true);
   };
 
+  const handleSubcriberDetailsOnClick = (subscriber) =>
+    subscriber.fields.status === "active"
+      ? navigate(`/subscribers/${subscriber.id}`)
+      : "";
+
+  const handleOpenPopup = (subscriber) =>
+    subscriber.fields.status === "pending" ||
+    subscriber.fields.status === "blocked"
+      ? setOpenInfoPopup(true)
+      : null;
+
   const handlePopup = (subscriber) => {
-    handlers.handleSubcriberDetailsClick(subscriber, navigate);
+    handleSubcriberDetailsOnClick(subscriber);
     setContentPopup(
       subscriber.fields.status,
       capitalizeFirstLetter(subscriber.fields.name),
       setContentInfoPopup
     );
-    handlers.handleOpenPopup(subscriber, setOpenInfoPopup);
+    handleOpenPopup(subscriber);
   };
 
   const routes = [
@@ -97,6 +108,8 @@ const MainContainer = () => {
           element: (
             <SubscribersList
               subscribersData={subscribersData}
+              setOpenInfoPopup={setOpenInfoPopup}
+              setContentInfoPopup={setContentPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
               handlePopup={handlePopup}
               setIdClickedSubscriber={setIdClickedSubscriber}
@@ -117,7 +130,7 @@ const MainContainer = () => {
           path: "/filter",
           element: (
             <FilteredStatusSubscribers
-              subscribersData={subscribersData.data}
+              subscribersData={subscribersData}
               setContentInfoPopup={setContentInfoPopup}
               setOpenInfoPopup={setOpenInfoPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
