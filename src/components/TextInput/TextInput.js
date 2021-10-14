@@ -10,6 +10,7 @@ const TextInput = ({ error, register, value, message }) => {
         name={value}
         label={value}
         fullWidth
+        variant="filled"
         margin="dense"
         {...register(value)}
         error={error}
