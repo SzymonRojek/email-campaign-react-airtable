@@ -1,0 +1,40 @@
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 200px;
+}
+
+.error-text {
+  font-size: 2em;
+  letter-spacing: 2px;
+  word-spacing: 4px;
+  font-weight: 600;
+  color: #303f9f;
+  opacity: 0;
+  animation: fadeIn ease-in 1;
+  animation-fill-mode: forwards;
+  animation-duration: 1s;
+  animation-delay: 0.5s;
+}
+
+.error-mainText {
+  color: crimson;
+}
+
+.error-subText {
+  animation: fadeIn ease-in 1;
+  animation-fill-mode: forwards;
+  animation-duration: 1s;
+  animation-delay: 1.2s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
