@@ -36,6 +36,11 @@
   word-spacing: 4px;
   font-weight: 500;
   color: #303f9f;
+  opacity: 0; /* Initial opacity. */
+  animation: fadeIn ease-in 1; /* Animation definition. */
+  animation-fill-mode: forwards; /* Maintain visibility after complete. */
+  animation-duration: 1s;
+  animation-delay: 0.5s;
 }
 
 @keyframes rotate {
@@ -53,5 +58,14 @@
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
