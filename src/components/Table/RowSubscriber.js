@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RowSubscriber = (props) => {
-  let {
+  const {
     subscriber,
     index,
     children,
