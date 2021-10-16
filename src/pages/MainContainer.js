@@ -14,12 +14,7 @@ import {
 } from "./pagesApp";
 import { Navigation } from "../components/Navigation";
 import { InfoPopup, ConfirmPopup } from "../components/Popup";
-import {
-  sortDataAlphabetically,
-  capitalizeFirstLetter,
-  setContentPopup,
-  getLatestAddedSubscriber,
-} from "../helpers";
+import { sortDataAlphabetically, getLatestAddedSubscriber } from "../helpers";
 import {
   mainLinksNavigation,
   subscribersLinksNavigation,
@@ -33,16 +28,21 @@ const MainContainer = () => {
     data: null,
     latestSubscriber: null,
   });
+  const [campaignsData, setCampaignsData] = useState({
+    status: "loading",
+    data: null,
+  });
   const [openInfoPopup, setOpenInfoPopup] = useState(false);
-  const [contentInfoPopup, setContentInfoPopup] = useState({});
+  const [contentPopup, setContentPopup] = useState({});
   const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
-  const [idClickedSubscriber, setIdClickedSubscriber] = useState(null);
+  const [idClickedItem, setIdClickedItem] = useState(null);
 
-  const endpoint = "/subscribers";
+  const endpointSubscribers = "/subscribers";
+  const endpointCampaign = "/campaigns";
 
-  const getData = async () => {
+  const getSubscribersData = async () => {
     try {
-      const { records } = await api.get(endpoint);
+      const { records } = await api.get(endpointSubscribers);
 
       sortDataAlphabetically(records);
       setSubscribersData({
@@ -58,44 +58,57 @@ const MainContainer = () => {
   };
 
   useEffect(() => {
-    const delayGetData = setTimeout(getData, 1500);
+    const delayGetSubscribersData = setTimeout(getSubscribersData, 1500);
 
-    return () => clearTimeout(delayGetData);
+    return () => clearTimeout(delayGetSubscribersData);
   }, []);
 
-  const handleRemoveSubscriber = async () => {
-    const idSubscriber = subscribersData.data.filter(
-      (subscriber) => subscriber.id === idClickedSubscriber
-    )[0].id;
+  const getCampaignsData = async () => {
+    try {
+      const data = await api.get(endpointCampaign);
 
-    await api.delete(`/subscribers/${idSubscriber}`);
-
-    getData();
-    setOpenConfirmPopup(false);
-
-    if (subscribersData.data.length === 0) setOpenInfoPopup(true);
+      const dataRecords = data.records;
+      sortDataAlphabetically(dataRecords);
+      setCampaignsData({
+        status: "success",
+        data: dataRecords,
+      });
+    } catch (error) {
+      setCampaignsData({
+        status: "error",
+      });
+    }
   };
 
-  const handleSubcriberDetailsOnClick = (subscriber) =>
-    subscriber.fields.status === "active"
-      ? navigate(`/subscribers/${subscriber.id}`)
-      : "";
+  useEffect(() => {
+    const delayGetCampaignData = setTimeout(getCampaignsData, 1500);
 
-  const handleOpenPopup = (subscriber) =>
+    return () => clearTimeout(delayGetCampaignData);
+  }, []);
+
+  const handlerRemoveItem = async (selectedData, endpoint) => {
+    const idSubscriber = selectedData.data.filter(
+      (item) => item.id === idClickedItem
+    )[0].id;
+
+    await api.delete(`/${endpoint}/${idSubscriber}`);
+
+    selectedData === subscribersData
+      ? getSubscribersData()
+      : getCampaignsData();
+
+    setOpenConfirmPopup(false);
+
+    if (selectedData.data.length === 0) setOpenInfoPopup(true);
+  };
+
+  const handleSubscriberDetails = (subscriber) =>
     subscriber.fields.status === "pending" ||
     subscriber.fields.status === "blocked"
       ? setOpenInfoPopup(true)
-      : null;
-
-  const handlePopup = (subscriber) => {
-    handleSubcriberDetailsOnClick(subscriber);
-    setContentPopup(
-      subscriber.fields.status,
-      capitalizeFirstLetter(subscriber.fields.name),
-      setContentInfoPopup
-    );
-    handleOpenPopup(subscriber);
-  };
+      : subscriber.fields.status === "active"
+      ? navigate(`/subscribers/${subscriber.id}`)
+      : "";
 
   const routes = [
     { path: "/", element: <Home /> },
@@ -108,11 +121,11 @@ const MainContainer = () => {
           element: (
             <SubscribersList
               subscribersData={subscribersData}
+              setIdClickedItem={setIdClickedItem}
+              handleSubscriberDetails={handleSubscriberDetails}
+              setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
-              setContentInfoPopup={setContentPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
-              handlePopup={handlePopup}
-              setIdClickedSubscriber={setIdClickedSubscriber}
             />
           ),
         },
@@ -120,9 +133,9 @@ const MainContainer = () => {
           path: "/add-subscriber",
           element: (
             <AddSubscriber
+              getSubscribersData={getSubscribersData}
+              setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
-              setContentInfoPopup={setContentInfoPopup}
-              getData={getData}
             />
           ),
         },
@@ -131,11 +144,11 @@ const MainContainer = () => {
           element: (
             <FilteredStatusSubscribers
               subscribersData={subscribersData}
-              setContentInfoPopup={setContentInfoPopup}
+              handleSubscriberDetails={handleSubscriberDetails}
+              setIdClickedItem={setIdClickedItem}
+              setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
-              setIdClickedSubscriber={setIdClickedSubscriber}
-              handlePopup={handlePopup}
             />
           ),
         },
@@ -143,8 +156,8 @@ const MainContainer = () => {
           path: "/:id",
           element: (
             <SubscriberDetails
+              setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
-              setContentInfoPopup={setContentInfoPopup}
             />
           ),
         },
@@ -154,7 +167,17 @@ const MainContainer = () => {
       path: "/campaigns",
       element: <Navigation dataLinks={emailLinksNavigation} />,
       children: [
-        { path: "", element: <EmailCampaignsList /> },
+        {
+          path: "",
+          element: (
+            <EmailCampaignsList
+              campaignsData={campaignsData}
+              setIdClickedItem={setIdClickedItem}
+              setContentPopup={setContentPopup}
+              setOpenConfirmPopup={setOpenConfirmPopup}
+            />
+          ),
+        },
         { path: "/filter", element: <FilterStatusEmail /> },
         { path: "/add-email", element: <NewEmailCampaign /> },
       ],
@@ -171,17 +194,20 @@ const MainContainer = () => {
       />
 
       <InfoPopup
+        contentPopup={contentPopup}
         openInfoPopup={openInfoPopup}
         setOpenInfoPopup={setOpenInfoPopup}
-        contentInfoPopup={contentInfoPopup}
       />
 
       <ConfirmPopup
+        subscribersData={subscribersData}
+        campaignsData={campaignsData}
+        idClickedItem={idClickedItem}
+        setIdClickedItem={setIdClickedItem}
+        removeItem={handlerRemoveItem}
+        contentPopup={contentPopup}
         openConfirmPopup={openConfirmPopup}
         setOpenConfirmPopup={setOpenConfirmPopup}
-        idClickedSubscriber={idClickedSubscriber}
-        setIdClickedSubscriber={setIdClickedSubscriber}
-        removeSubscriber={handleRemoveSubscriber}
       />
       <div>{routing}</div>
     </>
