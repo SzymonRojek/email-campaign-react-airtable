@@ -6,11 +6,10 @@ import { generalDataHeadTable } from "../../data/dataHeadTable";
 const SubscribersList = (props) => {
   const {
     subscribersData,
-    setOpenInfoPopup,
     setOpenConfirmPopup,
-    setContentInfoPopup,
-    handlePopup,
-    setIdClickedSubscriber,
+    setIdClickedItem,
+    setContentPopup,
+    handleSubscriberDetails,
   } = props;
 
   return (
@@ -22,19 +21,20 @@ const SubscribersList = (props) => {
           {subscribersData.status === "success" &&
           !subscribersData.data.length ? (
             <Error
-              titleOne="There aren't subscribers added yet."
-              titleTwo="Please add a new subscriber"
+              titleOne="There are not subscribers added yet."
+              titleTwo="Please add a new subscriber."
             />
           ) : (
             <ContainerTableSubscribers
               dataHeadTable={generalDataHeadTable}
               subscribersData={subscribersData.data}
+              setIdClickedItem={setIdClickedItem}
+              handleSubscriberDetails={handleSubscriberDetails}
+              setContentPopup={setContentPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
-              handlePopup={handlePopup}
-              setIdClickedSubscriber={setIdClickedSubscriber}
             />
           )}
-          {/* condition for details */}
+
           {subscribersData.data.length > 1 ? (
             <>
               <h2
@@ -49,9 +49,10 @@ const SubscribersList = (props) => {
               <ContainerTableSubscribers
                 dataHeadTable={generalDataHeadTable}
                 subscribersData={subscribersData.latestSubscriber}
+                setIdClickedItem={setIdClickedItem}
+                handleSubscriberDetails={handleSubscriberDetails}
+                setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
-                handlePopup={handlePopup}
-                setIdClickedSubscriber={setIdClickedSubscriber}
               />
             </>
           ) : (
@@ -70,11 +71,3 @@ const SubscribersList = (props) => {
 };
 
 export default SubscribersList;
-
-// subscribersData.data.length === 0 ? (
-//   (setOpenInfoPopup(true),
-//   setContentInfoPopup({
-//     title: "",
-//     text: "There are no subscribers added yet",
-//     // colorButton: "error",
-//   }))

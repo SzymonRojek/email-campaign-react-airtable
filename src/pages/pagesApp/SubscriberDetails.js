@@ -64,8 +64,8 @@ const SubscriberDetails = () => {
                 [subscriberData.data].map((subscriber, index) => (
                   <RowSubscriber
                     key={`id-${subscriber.id}`}
-                    subscriber={subscriber}
                     index={index}
+                    subscriber={subscriber}
                   />
                 ))}
             </TableBody>

@@ -7,8 +7,9 @@ const FilteredStatusSubscribers = (props) => {
   const {
     subscribersData,
     setOpenConfirmPopup,
-    setIdClickedSubscriber,
-    handlePopup,
+    setIdClickedItem,
+    setContentPopup,
+    handleSubscriberDetails,
   } = props;
 
   return (
@@ -29,25 +30,28 @@ const FilteredStatusSubscribers = (props) => {
                 generalDataHeadTable={generalDataHeadTable}
                 subscribersData={subscribersData.data}
                 status="active"
+                setIdClickedItem={setIdClickedItem}
+                handleSubscriberDetails={handleSubscriberDetails}
+                setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
-                setIdClickedSubscriber={setIdClickedSubscriber}
-                handlePopup={handlePopup}
               />
               <FilterStatusSubscribers
                 generalDataHeadTable={generalDataHeadTable}
                 subscribersData={subscribersData.data}
                 status="pending"
+                setIdClickedItem={setIdClickedItem}
+                handleSubscriberDetails={handleSubscriberDetails}
+                setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
-                setIdClickedSubscriber={setIdClickedSubscriber}
-                handlePopup={handlePopup}
               />
               <FilterStatusSubscribers
                 generalDataHeadTable={generalDataHeadTable}
                 subscribersData={subscribersData.data}
                 status="blocked"
+                setIdClickedItem={setIdClickedItem}
+                handleSubscriberDetails={handleSubscriberDetails}
+                setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
-                setIdClickedSubscriber={setIdClickedSubscriber}
-                handlePopup={handlePopup}
               />
             </>
           )}
