@@ -6,10 +6,10 @@ import {
   SubscribersList,
   NewEmailCampaign,
   EmailCampaignsList,
-  FilterStatusEmail,
   Home,
   AddSubscriber,
   FilteredStatusSubscribers,
+  FilteredStatusCampaigns,
   SubscriberDetails,
 } from "./pagesApp";
 import { Navigation } from "../components/Navigation";
@@ -179,7 +179,18 @@ const MainContainer = () => {
             />
           ),
         },
-        { path: "/filter", element: <FilterStatusEmail /> },
+        {
+          path: "/filter",
+          element: (
+            <FilteredStatusCampaigns
+              campaignsData={campaignsData}
+              setIdClickedItem={setIdClickedItem}
+              setContentPopup={setContentPopup}
+              setOpenInfoPopup={setOpenInfoPopup}
+              setOpenConfirmPopup={setOpenConfirmPopup}
+            />
+          ),
+        },
         { path: "/add-email", element: <NewEmailCampaign /> },
       ],
     },
