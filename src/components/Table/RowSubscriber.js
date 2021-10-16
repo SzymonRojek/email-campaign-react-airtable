@@ -35,13 +35,29 @@ const RowSubscriber = (props) => {
     subscriber,
     index,
     children,
-    handlePopup,
+    setIdClickedItem,
+    handleSubscriberDetails,
+    setContentPopup,
     setOpenConfirmPopup,
-    setIdClickedSubscriber,
   } = props;
   const classes = useStyles();
 
   const location = useLocation();
+
+  const setTextPopupByStatus = () =>
+    subscriber.fields.status === "pending"
+      ? setContentPopup({
+          title: "Please wait...",
+          text: `${subscriber.fields.name}'s status is pending at the moment - subscription has to be confirmed by an admin.`,
+          colorButton: "error",
+        })
+      : subscriber.fields.status === "blocked"
+      ? setContentPopup({
+          title: "Unfortunately...",
+          text: `${subscriber.fields.name}'s status is blocked - can not get an access to more details.`,
+          colorButton: "error",
+        })
+      : {};
 
   return (
     <TableRow
@@ -107,8 +123,9 @@ const RowSubscriber = (props) => {
               variant="contained"
               startIcon={<DetailsIcon style={{ marginLeft: 10 }} />}
               onClick={() => {
-                setIdClickedSubscriber(subscriber.id);
-                handlePopup(subscriber);
+                setIdClickedItem(subscriber.id);
+                handleSubscriberDetails(subscriber);
+                setTextPopupByStatus();
               }}
             />
           </TableCell>
@@ -120,7 +137,10 @@ const RowSubscriber = (props) => {
               startIcon={<DeleteIcon style={{ marginLeft: 10 }} />}
               onClick={() => {
                 setOpenConfirmPopup(true);
-                setIdClickedSubscriber(subscriber.id);
+                setIdClickedItem(subscriber.id);
+                setContentPopup({
+                  title: "Are you sure you want to remove this subscriber?",
+                });
               }}
             />
           </TableCell>
