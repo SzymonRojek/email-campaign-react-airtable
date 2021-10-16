@@ -8,10 +8,11 @@ const FilterStatusSubscribers = (props) => {
     subscribersData,
     generalDataHeadTable,
     status,
-    handlePopup,
+    setIdClickedItem,
+    handleSubscriberDetails,
+    removeItem,
+    setContentPopup,
     setOpenConfirmPopup,
-    setIdClickedSubscriber,
-    removeSubscriber,
   } = props;
 
   return subscribersData &&
@@ -33,10 +34,11 @@ const FilterStatusSubscribers = (props) => {
                 key={`id-${subscriber.id}`}
                 subscriber={subscriber}
                 index={index}
-                handlePopup={handlePopup}
+                setIdClickedItem={setIdClickedItem}
+                handleSubscriberDetails={handleSubscriberDetails}
+                removeItem={removeItem}
+                setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
-                setIdClickedSubscriber={setIdClickedSubscriber}
-                removeSubscriber={removeSubscriber}
               />
             ))}
       </BodyTable>

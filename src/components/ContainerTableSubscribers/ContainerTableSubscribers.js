@@ -5,13 +5,13 @@ import { ContainerTable, HeadTable, BodyTable, RowSubscriber } from "../Table";
 const ContainerTableSubscribers = ({
   dataHeadTable,
   subscribersData,
+  setIdClickedItem,
+  handleSubscriberDetails,
+  setContentPopup,
   setOpenConfirmPopup,
-  handlePopup,
-  setIdClickedSubscriber,
 }) => (
   <ContainerTable>
     <HeadTable dataHeadTable={dataHeadTable} />
-
     <BodyTable>
       {subscribersData &&
         subscribersData.map((subscriber, index) => (
@@ -24,9 +24,10 @@ const ContainerTableSubscribers = ({
             key={`id-${subscriber.id}`}
             subscriber={subscriber}
             index={index}
+            setIdClickedItem={setIdClickedItem}
+            handleSubscriberDetails={handleSubscriberDetails}
+            setContentPopup={setContentPopup}
             setOpenConfirmPopup={setOpenConfirmPopup}
-            handlePopup={handlePopup}
-            setIdClickedSubscriber={setIdClickedSubscriber}
           />
         ))}
     </BodyTable>
