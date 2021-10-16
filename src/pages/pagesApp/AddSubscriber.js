@@ -7,7 +7,11 @@ import api from "../../api";
 import { TextInput } from "../../components/TextInput";
 import { capitalizeFirstLetter, validationSchema } from "../../helpers";
 
-const AddSubscriber = ({ setOpenInfoPopup, setContentInfoPopup, getData }) => {
+const AddSubscriber = ({
+  setOpenInfoPopup,
+  setContentPopup,
+  getSubscribersData,
+}) => {
   const {
     register,
     handleSubmit,
@@ -29,15 +33,14 @@ const AddSubscriber = ({ setOpenInfoPopup, setContentInfoPopup, getData }) => {
     });
 
     reset();
-    setContentInfoPopup({
-      title: "Done!",
+    setContentPopup({
       text: `Subscriber ${capitalizeFirstLetter(
         data.name
       )} has been added to the data :D`,
       colorButton: "success",
     });
 
-    getData();
+    getSubscribersData();
     setOpenInfoPopup(true);
 
     setTimeout(() => {
@@ -55,6 +58,7 @@ const AddSubscriber = ({ setOpenInfoPopup, setContentInfoPopup, getData }) => {
             marginTop: 100,
             textAlign: "center",
             borderRadius: 8,
+            // backgroundColor: "#303f9f",
           }}
         >
           <form onSubmit={handleSubmit(onSubmit)}>
