@@ -1,41 +1,66 @@
-import { TableCell } from "@material-ui/core";
 import { dataHeadEmailTable } from "../../data/dataHeadEmailTable";
-
-import {
-  ContainerTable,
-  HeadTable,
-  BodyTable,
-  RowCampaign,
-} from "../../components/Table";
+import { ContainerCampaigns } from "../../components/ContainerCampaigns";
+import { Loader } from "../../components/Loader";
+import { Error } from "../../components/Error";
 
 const EmailCampaignsList = ({
   campaignsData,
   setIdClickedItem,
-  setOpenConfirmPopup,
   setContentPopup,
+  setOpenConfirmPopup,
 }) => {
   return (
-    <ContainerTable>
-      <HeadTable dataHeadTable={dataHeadEmailTable} />
-      <BodyTable>
-        {campaignsData.data &&
-          campaignsData.data.map((campaign, index) => (
-            <RowCampaign
-              children={
-                <TableCell component="th" scope="row">
-                  {++index}.
-                </TableCell>
-              }
-              key={`id-${campaign.id}`}
-              campaign={campaign}
-              index={index}
-              setOpenConfirmPopup={setOpenConfirmPopup}
+    <>
+      {campaignsData.status === "loading" ? (
+        <Loader title="Campaigns Data List is loading..." />
+      ) : campaignsData.status === "success" ? (
+        <>
+          {campaignsData.status === "success" && !campaignsData.data.length ? (
+            <Error
+              titleOne="There are not campaigns added yet."
+              titleTwo="Please add a new subscriber."
+            />
+          ) : (
+            <ContainerCampaigns
+              dataHeadEmailTable={dataHeadEmailTable}
+              campaignsData={campaignsData.data}
               setIdClickedItem={setIdClickedItem}
               setContentPopup={setContentPopup}
+              setOpenConfirmPopup={setOpenConfirmPopup}
             />
-          ))}
-      </BodyTable>
-    </ContainerTable>
+          )}
+
+          {campaignsData.data.length > 1 ? (
+            <>
+              <h2
+                style={{
+                  textAlign: "center",
+                  marginBottom: -40,
+                  color: "#303f9f",
+                }}
+              >
+                Latest added subscriber:
+              </h2>
+              <ContainerCampaigns
+                dataHeadEmailTable={dataHeadEmailTable}
+                campaignsData={campaignsData.latestCampaign}
+                setIdClickedItem={setIdClickedItem}
+                setContentPopup={setContentPopup}
+                setOpenConfirmPopup={setOpenConfirmPopup}
+              />
+            </>
+          ) : (
+            ""
+          )}
+        </>
+      ) : (
+        <Error
+          titleOne="ERROR MESSAGE"
+          titleTwo="Probably there is no an access to the internet."
+          titleThree="Contact with your internet provider."
+        />
+      )}
+    </>
   );
 };
 
