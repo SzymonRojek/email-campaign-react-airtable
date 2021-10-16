@@ -1,4 +1,4 @@
-import { ContainerTableSubscribers } from "../../components/ContainerTableSubscribers";
+import { ContainerSubscribers } from "../../components/ContainerSubscribers";
 import { Loader } from "../../components/Loader";
 import { Error } from "../../components/Error";
 import { generalDataHeadTable } from "../../data/dataHeadTable";
@@ -25,7 +25,7 @@ const SubscribersList = (props) => {
               titleTwo="Please add a new subscriber."
             />
           ) : (
-            <ContainerTableSubscribers
+            <ContainerSubscribers
               dataHeadTable={generalDataHeadTable}
               subscribersData={subscribersData.data}
               setIdClickedItem={setIdClickedItem}
@@ -46,7 +46,7 @@ const SubscribersList = (props) => {
               >
                 Latest added subscriber:
               </h2>
-              <ContainerTableSubscribers
+              <ContainerSubscribers
                 dataHeadTable={generalDataHeadTable}
                 subscribersData={subscribersData.latestSubscriber}
                 setIdClickedItem={setIdClickedItem}
@@ -63,7 +63,7 @@ const SubscribersList = (props) => {
         <Error
           titleOne="ERROR MESSAGE"
           titleTwo="Probably there is no an access to the internet."
-          titleThree="Contact with your support team."
+          titleThree="Contact with your internet provider."
         />
       )}
     </>
