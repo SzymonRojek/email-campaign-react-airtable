@@ -1,5 +1,8 @@
 const sortDataAlphabetically = (data) => {
-  const nestedPropertyRetriever = (obj) => obj.fields.name.toLowerCase();
+  const isName = data.map((x) => x.fields.name).filter(Boolean).length > 0;
+
+  const nestedPropertyRetriever = (obj) =>
+    isName ? obj.fields.name.toLowerCase() : obj.fields.title.toLowerCase();
 
   data.sort((a, b) => {
     const valueA = nestedPropertyRetriever(a);
