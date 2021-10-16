@@ -16,9 +16,17 @@ const useStyles = makeStyles((theme) => ({
 const ConfirmPopup = ({
   openConfirmPopup,
   setOpenConfirmPopup,
-  removeSubscriber,
+  subscribersData,
+  campaignsData,
+  removeItem,
+  idClickedItem,
+  contentPopup,
 }) => {
   const classes = useStyles();
+
+  const isItemFromSubscribersData = subscribersData.data
+    ? !!subscribersData.data.filter((item) => item.id === idClickedItem).length
+    : null;
 
   return (
     <Dialog
@@ -29,7 +37,7 @@ const ConfirmPopup = ({
       <DialogTitle>
         <div>
           <Typography variant="h6" className={classes.typography}>
-            Are you sure you want to remove a subscriber?
+            {contentPopup.title}
           </Typography>
         </div>
       </DialogTitle>
@@ -44,7 +52,11 @@ const ConfirmPopup = ({
         <Button
           variant="contained"
           color="error"
-          onClick={() => removeSubscriber()}
+          onClick={() =>
+            isItemFromSubscribersData
+              ? removeItem(subscribersData, "subscribers")
+              : removeItem(campaignsData, "campaigns")
+          }
         >
           YES
         </Button>
