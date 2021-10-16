@@ -1,6 +1,6 @@
 const statusColor = (data) =>
-  (data === "active" && "green") ||
-  (data === "pending" && "orange") ||
+  ((data === "active" || data === "sent") && "green") ||
+  ((data === "pending" || data === "draft") && "orange") ||
   (data && "crimson");
 
 export default statusColor;
