@@ -70,16 +70,6 @@ const RowSubscriber = (props) => {
       {children}
       <TableCell>
         <Grid container alignItems="center">
-          <Grid item sm={4}>
-            <Avatar
-              alt={`Image of ${subscriber.fields.name}'s`}
-              style={{
-                backgroundColor: getStatusColor(subscriber.fields.status),
-              }}
-            >
-              {capitalizeFirstLetter(subscriber.fields.name[0])}
-            </Avatar>
-          </Grid>
           <Grid item>
             <Typography color="textSecondary" variant="body2">
               {capitalizeFirstLetter(subscriber.fields.name)}
