@@ -3,7 +3,7 @@ import { Loader } from "../../components/Loader";
 import { Error } from "../../components/Error";
 import { dataHeadEmailTable } from "../../data/dataHeadEmailTable";
 
-const FilteredStatusCampaigns = (props) => {
+const FilteredCampaignsList = (props) => {
   const {
     campaignsData,
     setOpenConfirmPopup,
@@ -34,6 +34,7 @@ const FilteredStatusCampaigns = (props) => {
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
+
               <FilterStatusCampaigns
                 dataHeadEmailTable={dataHeadEmailTable}
                 campaignsData={campaignsData.data}
@@ -57,4 +58,4 @@ const FilteredStatusCampaigns = (props) => {
   );
 };
 
-export default FilteredStatusCampaigns;
+export default FilteredCampaignsList;

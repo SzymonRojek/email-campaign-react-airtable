@@ -8,8 +8,8 @@ import {
   EmailCampaignsList,
   Home,
   AddSubscriber,
-  FilteredStatusSubscribers,
-  FilteredStatusCampaigns,
+  FilteredCampaignsList,
+  FilteredSubscribersList,
   SubscriberDetails,
 } from "./pagesApp";
 import { Navigation } from "../components/Navigation";
@@ -143,7 +143,7 @@ const MainContainer = () => {
         {
           path: "/filter",
           element: (
-            <FilteredStatusSubscribers
+            <FilteredSubscribersList
               subscribersData={subscribersData}
               handleSubscriberDetails={handleSubscriberDetails}
               setIdClickedItem={setIdClickedItem}
@@ -182,7 +182,7 @@ const MainContainer = () => {
         {
           path: "/filter",
           element: (
-            <FilteredStatusCampaigns
+            <FilteredCampaignsList
               campaignsData={campaignsData}
               setIdClickedItem={setIdClickedItem}
               setContentPopup={setContentPopup}

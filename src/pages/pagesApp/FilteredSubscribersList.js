@@ -3,7 +3,7 @@ import { Loader } from "../../components/Loader";
 import { Error } from "../../components/Error";
 import { generalDataHeadTable } from "../../data/dataHeadTable";
 
-const FilteredStatusSubscribers = (props) => {
+const FilteredSubscribersList = (props) => {
   const {
     subscribersData,
     setOpenConfirmPopup,
@@ -35,6 +35,7 @@ const FilteredStatusSubscribers = (props) => {
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
+
               <FilterStatusSubscribers
                 generalDataHeadTable={generalDataHeadTable}
                 subscribersData={subscribersData.data}
@@ -44,6 +45,7 @@ const FilteredStatusSubscribers = (props) => {
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
+
               <FilterStatusSubscribers
                 generalDataHeadTable={generalDataHeadTable}
                 subscribersData={subscribersData.data}
@@ -67,4 +69,4 @@ const FilteredStatusSubscribers = (props) => {
   );
 };
 
-export default FilteredStatusSubscribers;
+export default FilteredSubscribersList;
