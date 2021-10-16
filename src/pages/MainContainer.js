@@ -72,6 +72,7 @@ const MainContainer = () => {
       setCampaignsData({
         status: "success",
         data: dataRecords,
+        latestCampaign: getLatestAddedSubscriber(dataRecords),
       });
     } catch (error) {
       setCampaignsData({
