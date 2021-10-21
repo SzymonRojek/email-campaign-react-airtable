@@ -195,6 +195,7 @@ const App = () => {
           element: (
             <FilteredCampaignsList
               campaignsData={campaignsData}
+              handleDraftCampaign={handleDraftCampaign}
               setIdClickedItem={setIdClickedItem}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
