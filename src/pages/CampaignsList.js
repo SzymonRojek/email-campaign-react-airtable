@@ -25,8 +25,8 @@ const CampaignsList = ({
             <ContainerCampaigns
               dataHeadEmailTable={dataHeadEmailTable}
               campaignsData={campaignsData.data}
-              handleDraftCampaign={handleDraftCampaign}
               setIdClickedItem={setIdClickedItem}
+              handleDraftCampaign={handleDraftCampaign}
               setContentPopup={setContentPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
             />
@@ -47,6 +47,7 @@ const CampaignsList = ({
                 dataHeadEmailTable={dataHeadEmailTable}
                 campaignsData={campaignsData.latestCampaign}
                 setIdClickedItem={setIdClickedItem}
+                handleDraftCampaign={handleDraftCampaign}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
