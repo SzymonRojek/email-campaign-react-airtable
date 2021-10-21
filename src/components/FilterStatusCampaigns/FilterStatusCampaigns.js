@@ -9,6 +9,7 @@ const FilterStatusCampaigns = (props) => {
     dataHeadEmailTable,
     status,
     setIdClickedItem,
+    handleDraftCampaign,
     removeItem,
     setContentPopup,
     setOpenConfirmPopup,
@@ -34,6 +35,7 @@ const FilterStatusCampaigns = (props) => {
                 campaign={campaign}
                 index={index}
                 setIdClickedItem={setIdClickedItem}
+                handleDraftCampaign={handleDraftCampaign}
                 removeItem={removeItem}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
