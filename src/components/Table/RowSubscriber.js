@@ -103,6 +103,7 @@ const RowSubscriber = (props) => {
         <>
           <TableCell>
             <Button
+              aria-label="subscriber-details"
               color="success"
               variant="contained"
               startIcon={<DetailsIcon style={{ marginLeft: 10 }} />}
