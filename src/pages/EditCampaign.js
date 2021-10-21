@@ -1,36 +1,22 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
 import { useParams } from "react-router-dom";
-
-import api from "../api";
-import { capitalizeFirstLetter } from "../helpers";
-import { FormCampaign } from "../components/FormCampaign";
 import { useNavigate } from "react-router";
 
-const validationSchemaCampaign = Yup.object().shape({
-  title: Yup.string()
-    .required("Name is required")
-    .matches(/^[aA-zZ\s]+$/, "Only letters are required")
-    .min(3, "Name must be at least 3 characters")
-    .max(20, "Name must not exceed 20 characters"),
-  description: Yup.string()
-    .required("Name is required")
-    .matches(/^[aA-zZ\s]+$/, "Only letters are required")
-    .min(3, "Name must be at least 3 characters")
-    .max(60, "Name must not exceed 60 characters"),
-});
+import api from "../api";
+import { capitalizeFirstLetter, validationCampaign } from "../helpers";
+import { FormCampaign } from "../components/FormCampaign";
 
 const EditCampaign = ({
-  setOpenInfoPopup,
-  setContentPopup,
   draftCampaign,
   getCampaignsData,
+  setOpenInfoPopup,
+  setContentPopup,
 }) => {
   const editCampaignData = {
-    title: draftCampaign ? draftCampaign.fields?.title : "",
-    description: draftCampaign ? draftCampaign.fields?.description : "",
+    title: draftCampaign ? draftCampaign.fields.title : "",
+    description: draftCampaign ? draftCampaign.fields.description : "",
   };
 
   const {
@@ -38,7 +24,7 @@ const EditCampaign = ({
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(validationSchemaCampaign),
+    resolver: yupResolver(validationCampaign),
     defaultValues: editCampaignData,
   });
 
@@ -49,19 +35,31 @@ const EditCampaign = ({
   const endpoint = `/campaigns/${id}`;
 
   const onSubmit = (data) => {
-    api.patch(endpoint, {
-      fields: {
-        title: data.title,
-        description: data.description,
-        status: actionStatus,
-      },
-    });
+    const isCampaignChanged =
+      (data.title !== draftCampaign.fields.title &&
+        data.description !== draftCampaign.fields.description) ||
+      actionStatus === "sent"
+        ? true
+        : false;
+
+    if (isCampaignChanged || actionStatus === "sent") {
+      api.patch(endpoint, {
+        fields: {
+          title: capitalizeFirstLetter(data.title),
+          description: capitalizeFirstLetter(data.description),
+          status: actionStatus,
+        },
+      });
+    }
 
     setContentPopup({
-      text: `Campaign ${capitalizeFirstLetter(
-        data.title
-      )} has been added to the data.`,
+      text: isCampaignChanged
+        ? "Campaign has been changed"
+        : `Campaign has not been changed ${
+            actionStatus !== "sent" ? "and status is still draft" : ""
+          }.`,
       colorButton: "success",
+      switch: navigate("/campaigns"),
     });
 
     getCampaignsData();
