@@ -27,7 +27,10 @@ const InfoPopup = ({ openInfoPopup, setOpenInfoPopup, contentPopup }) => {
           <Button
             variant="contained"
             color={contentPopup.colorButton}
-            onClick={() => setOpenInfoPopup(false)}
+            onClick={() => {
+              setOpenInfoPopup(false);
+              if (contentPopup.switch) return contentPopup.switch;
+            }}
           >
             X
           </Button>
