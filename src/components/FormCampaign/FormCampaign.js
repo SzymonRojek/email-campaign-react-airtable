@@ -2,8 +2,6 @@ import { Paper, Button, Box } from "@mui/material";
 import { Grid, Typography } from "@material-ui/core";
 
 import { TextInput } from "../../components/TextInput";
-import { useNavigate } from "react-router";
-import { useLocation } from "react-router-dom";
 
 const FormCampaign = ({
   handleSubmit,
@@ -13,14 +11,6 @@ const FormCampaign = ({
   setActionStatus,
   getCampaignsData,
 }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const backToCampaignList = () => {
-    if (location.pathname === "/campaigns/recMG0MqjnfCdY0yG")
-      navigate("/campaigns");
-  };
-
   return (
     <Box display="flex" justifyContent="center" alignItems="center">
       <Paper
@@ -80,7 +70,6 @@ const FormCampaign = ({
               type="submit"
               onClick={() => {
                 setActionStatus("draft");
-                getCampaignsData();
               }}
             >
               Draft
