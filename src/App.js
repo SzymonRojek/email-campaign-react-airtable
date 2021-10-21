@@ -8,7 +8,7 @@ import {
   FilteredSubscribersList,
   NewSubscriber,
   SubscriberDetails,
-  EmailCampaignsList,
+  CampaignsList,
   FilteredCampaignsList,
   EditCampaign,
   NewCampaign,
@@ -40,8 +40,7 @@ const App = () => {
   const [draftCampaign, setDraftCampaign] = useState({});
 
   const endpointSubscribers = "/subscribers";
-
-  const endpointCampaign = "/campaigns";
+  const endpointCampaigns = "/campaigns";
 
   const getSubscribersData = async () => {
     try {
@@ -68,14 +67,13 @@ const App = () => {
 
   const getCampaignsData = async () => {
     try {
-      const data = await api.get(endpointCampaign);
+      const { records } = await api.get(endpointCampaigns);
 
-      const dataRecords = data.records;
-      sortDataAlphabetically(dataRecords);
+      sortDataAlphabetically(records);
       setCampaignsData({
         status: "success",
-        data: dataRecords,
-        latestCampaign: getLatestAddedSubscriber(dataRecords),
+        data: records,
+        latestCampaign: getLatestAddedSubscriber(records),
       });
     } catch (error) {
       setCampaignsData({
@@ -90,12 +88,12 @@ const App = () => {
     return () => clearTimeout(delayGetCampaignData);
   }, []);
 
-  const handlerRemoveItem = async (selectedData, endpoint) => {
-    const idSubscriber = selectedData.data.filter(
+  const handleRemoveItem = async (selectedData, endpoint) => {
+    const idItemToRemove = selectedData.data.filter(
       (item) => item.id === idClickedItem
     )[0].id;
 
-    await api.delete(`/${endpoint}/${idSubscriber}`);
+    await api.delete(`/${endpoint}/${idItemToRemove}`);
 
     selectedData === subscribersData
       ? getSubscribersData()
@@ -107,12 +105,9 @@ const App = () => {
   };
 
   const handleSubscriberDetails = (subscriber) =>
-    subscriber.fields.status === "pending" ||
-    subscriber.fields.status === "blocked"
-      ? setOpenInfoPopup(true)
-      : subscriber.fields.status === "active"
+    subscriber.fields.status === "active"
       ? navigate(`/subscribers/${subscriber.id}`)
-      : "";
+      : setOpenInfoPopup(true);
 
   const handleDraftCampaign = (id) =>
     setDraftCampaign(
@@ -181,7 +176,7 @@ const App = () => {
         {
           path: "",
           element: (
-            <EmailCampaignsList
+            <CampaignsList
               campaignsData={campaignsData}
               setIdClickedItem={setIdClickedItem}
               handleDraftCampaign={handleDraftCampaign}
@@ -246,7 +241,7 @@ const App = () => {
         campaignsData={campaignsData}
         idClickedItem={idClickedItem}
         setIdClickedItem={setIdClickedItem}
-        removeItem={handlerRemoveItem}
+        removeItem={handleRemoveItem}
         contentPopup={contentPopup}
         openConfirmPopup={openConfirmPopup}
         setOpenConfirmPopup={setOpenConfirmPopup}
