@@ -1,24 +1,10 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
 
 import api from "../api";
-import { capitalizeFirstLetter } from "../helpers";
+import { capitalizeFirstLetter, validationCampaign } from "../helpers";
 import { FormCampaign } from "../components/FormCampaign";
-
-const validationSchemaCampaign = Yup.object().shape({
-  title: Yup.string()
-    .required("Name is required")
-    .matches(/^[aA-zZ\s]+$/, "Only letters are required")
-    .min(3, "Name must be at least 6 characters")
-    .max(10, "Name must not exceed 10 characters"),
-  description: Yup.string()
-    .required("Name is required")
-    .matches(/^[aA-zZ\s]+$/, "Only letters are required")
-    .min(3, "Name must be at least 3 characters")
-    .max(30, "Name must not exceed 30 characters"),
-});
 
 const NewCampaign = ({
   setOpenInfoPopup,
@@ -30,7 +16,7 @@ const NewCampaign = ({
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm({ resolver: yupResolver(validationSchemaCampaign) });
+  } = useForm({ resolver: yupResolver(validationCampaign) });
   const [actionStatus, setActionStatus] = useState("");
 
   const endpoint = "/campaigns";
@@ -38,8 +24,8 @@ const NewCampaign = ({
   const onSubmit = (data) => {
     api.post(endpoint, {
       fields: {
-        title: data.title,
-        description: data.description,
+        title: capitalizeFirstLetter(data.title),
+        description: capitalizeFirstLetter(data.description),
         status: actionStatus,
       },
     });
