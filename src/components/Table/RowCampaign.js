@@ -1,9 +1,10 @@
-import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Button, Tooltip } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { TableCell, TableRow, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+
 import successIcon from "./success.png";
-import { useNavigate } from "react-router-dom";
 
 import {
   isEven,
@@ -89,11 +90,13 @@ const RowCampaign = (props) => {
           </Button>
         ) : (
           <div>
-            <img
-              src={successIcon}
-              alt="success-icon"
-              style={{ height: "50px", width: "50px" }}
-            />
+            <Tooltip title="No edit" placement="right-start">
+              <img
+                src={successIcon}
+                alt="success-icon"
+                style={{ height: "50px", width: "50px" }}
+              />
+            </Tooltip>
           </div>
         )}
       </TableCell>
