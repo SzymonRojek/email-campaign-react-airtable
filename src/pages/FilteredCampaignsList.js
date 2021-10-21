@@ -6,10 +6,10 @@ import { dataHeadEmailTable } from "../data/dataHeadEmailTable";
 const FilteredCampaignsList = (props) => {
   const {
     campaignsData,
+    handleDraftCampaign,
     setOpenConfirmPopup,
     setIdClickedItem,
     setContentPopup,
-    handleSubscriberDetails,
   } = props;
 
   return (
@@ -30,7 +30,7 @@ const FilteredCampaignsList = (props) => {
                 campaignsData={campaignsData.data}
                 status="sent"
                 setIdClickedItem={setIdClickedItem}
-                handleSubscriberDetails={handleSubscriberDetails}
+                handleDraftCampaign={handleDraftCampaign}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
@@ -40,7 +40,7 @@ const FilteredCampaignsList = (props) => {
                 campaignsData={campaignsData.data}
                 status="draft"
                 setIdClickedItem={setIdClickedItem}
-                handleSubscriberDetails={handleSubscriberDetails}
+                handleDraftCampaign={handleDraftCampaign}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
