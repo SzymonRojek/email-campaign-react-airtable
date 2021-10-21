@@ -2,13 +2,7 @@ import { useLocation } from "react-router-dom";
 import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DetailsIcon from "@mui/icons-material/Details";
-import {
-  TableCell,
-  TableRow,
-  Avatar,
-  Grid,
-  Typography,
-} from "@material-ui/core";
+import { TableCell, TableRow, Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import {
