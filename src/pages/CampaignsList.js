@@ -3,7 +3,7 @@ import { ContainerCampaigns } from "../components/ContainerCampaigns";
 import { Loader } from "../components/Loader";
 import { Error } from "../components/Error";
 
-const EmailCampaignsList = ({
+const CampaignsList = ({
   campaignsData,
   setIdClickedItem,
   handleDraftCampaign,
@@ -66,4 +66,4 @@ const EmailCampaignsList = ({
   );
 };
 
-export default EmailCampaignsList;
+export default CampaignsList;
