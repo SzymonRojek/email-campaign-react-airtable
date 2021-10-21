@@ -1,9 +1,9 @@
-import { useLocation } from "react-router-dom";
 import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { TableCell, TableRow, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import successIcon from "./success.png";
+import { useNavigate } from "react-router-dom";
 
 import {
   isEven,
@@ -29,14 +29,14 @@ const RowCampaign = (props) => {
     campaign,
     index,
     children,
-    setOpenConfirmPopup,
     setIdClickedItem,
+    handleDraftCampaign,
+    setOpenConfirmPopup,
     setContentPopup,
   } = props;
+  const navigate = useNavigate();
   const classes = useStyles();
 
-  //   const location = useLocation();
-  //   console.log(campaign);
   return (
     <TableRow
       key={`${campaign.id}`}
@@ -53,7 +53,7 @@ const RowCampaign = (props) => {
       </TableCell>
       <TableCell>
         <Typography color="textSecondary" variant="body2">
-          {campaign.fields.content}
+          {campaign.fields.description}
         </Typography>
       </TableCell>
       <TableCell>
@@ -80,10 +80,10 @@ const RowCampaign = (props) => {
             aria-label="edit"
             color="success"
             variant="contained"
-            // onClick={() => {
-            //   setOpenConfirmPopup(true);
-            //   setIdClickedItem(campaign.id);
-            // }}
+            onClick={() => {
+              handleDraftCampaign(campaign.id);
+              navigate(`/campaigns/${campaign.id}`);
+            }}
           >
             Edit
           </Button>
@@ -117,3 +117,18 @@ const RowCampaign = (props) => {
 };
 
 export default RowCampaign;
+
+/*
+
+--> kiedy kliknę w "edit" mam przenieść się do edytowanego formularzu:
+- dane są widoczne w polach formularzu;
+- mam dostęp do edytowanego obiektu;
+- po wysłaniu edytuje istniejący obiekt, więc muszę uwzględnić metodę PATCH,
+czyli muszę sprawdzić czy pole formularza jest puste lub nie jest
+i zaktualizować obiekt;
+
+kiedy klikam w edit otrzymuję ponownie istniejący obiekt
+ustawiam wartości formularza
+poprzez naciśnięcie send uaktualniam obiekt
+
+*/
