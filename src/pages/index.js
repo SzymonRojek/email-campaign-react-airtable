@@ -2,7 +2,7 @@ export { default as SubscribersList } from "./SubscribersList";
 export { default as Home } from "./Home";
 export { default as FilteredSubscribersList } from "./FilteredSubscribersList";
 export { default as FilteredCampaignsList } from "./FilteredCampaignsList";
-export { default as AddSubscriber } from "./AddSubscriber";
+export { default as NewSubscriber } from "./NewSubscriber";
 export { default as SubscriberDetails } from "./SubscriberDetails";
 export { default as EmailCampaignsList } from "./EmailCampaignsList";
 export { default as NewCampaign } from "./NewCampaign";

@@ -3,15 +3,15 @@ import { useRoutes, useNavigate } from "react-router-dom";
 
 import api from "./api";
 import {
-  SubscribersList,
-  NewCampaign,
-  EmailCampaignsList,
   Home,
-  AddSubscriber,
-  FilteredCampaignsList,
+  SubscribersList,
   FilteredSubscribersList,
+  NewSubscriber,
   SubscriberDetails,
+  EmailCampaignsList,
+  FilteredCampaignsList,
   EditCampaign,
+  NewCampaign,
 } from "./pages";
 import { Navigation } from "./components/Navigation";
 import { InfoPopup, ConfirmPopup } from "./components/Popup";
@@ -143,7 +143,7 @@ const App = () => {
         {
           path: "/add-subscriber",
           element: (
-            <AddSubscriber
+            <NewSubscriber
               getSubscribersData={getSubscribersData}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
