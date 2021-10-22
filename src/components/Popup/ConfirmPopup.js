@@ -18,14 +18,14 @@ const ConfirmPopup = ({
   setOpenConfirmPopup,
   subscribersData,
   campaignsData,
-  removeItem,
-  idClickedItem,
+  selectedData,
+  handleRemoveItem,
   contentPopup,
 }) => {
   const classes = useStyles();
 
   const isItemFromSubscribersData = subscribersData.data
-    ? !!subscribersData.data.filter((item) => item.id === idClickedItem).length
+    ? !!subscribersData.data.filter((item) => item.id === selectedData).length
     : null;
 
   return (
@@ -54,8 +54,8 @@ const ConfirmPopup = ({
           color="error"
           onClick={() =>
             isItemFromSubscribersData
-              ? removeItem(subscribersData, "subscribers")
-              : removeItem(campaignsData, "campaigns")
+              ? handleRemoveItem(subscribersData, "subscribers")
+              : handleRemoveItem(campaignsData, "campaigns")
           }
         >
           YES
