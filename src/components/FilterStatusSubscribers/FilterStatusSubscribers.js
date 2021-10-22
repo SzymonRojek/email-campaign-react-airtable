@@ -8,7 +8,7 @@ const FilterStatusSubscribers = (props) => {
     subscribersData,
     generalDataHeadTable,
     status,
-    setIdClickedItem,
+    setSelectedData,
     handleSubscriberDetails,
     removeItem,
     setContentPopup,
@@ -34,7 +34,7 @@ const FilterStatusSubscribers = (props) => {
                 key={`id-${subscriber.id}`}
                 subscriber={subscriber}
                 index={index}
-                setIdClickedItem={setIdClickedItem}
+                setSelectedData={setSelectedData}
                 handleSubscriberDetails={handleSubscriberDetails}
                 removeItem={removeItem}
                 setContentPopup={setContentPopup}

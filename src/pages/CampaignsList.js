@@ -5,7 +5,7 @@ import { Error } from "../components/Error";
 
 const CampaignsList = ({
   campaignsData,
-  setIdClickedItem,
+  setSelectedData,
   handleDraftCampaign,
   setContentPopup,
   setOpenConfirmPopup,
@@ -25,7 +25,7 @@ const CampaignsList = ({
             <ContainerCampaigns
               dataHeadEmailTable={dataHeadEmailTable}
               campaignsData={campaignsData.data}
-              setIdClickedItem={setIdClickedItem}
+              setSelectedData={setSelectedData}
               handleDraftCampaign={handleDraftCampaign}
               setContentPopup={setContentPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
@@ -46,7 +46,7 @@ const CampaignsList = ({
               <ContainerCampaigns
                 dataHeadEmailTable={dataHeadEmailTable}
                 campaignsData={campaignsData.latestCampaign}
-                setIdClickedItem={setIdClickedItem}
+                setSelectedData={setSelectedData}
                 handleDraftCampaign={handleDraftCampaign}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}

@@ -30,7 +30,7 @@ const RowCampaign = (props) => {
     campaign,
     index,
     children,
-    setIdClickedItem,
+    setSelectedData,
     handleDraftCampaign,
     setOpenConfirmPopup,
     setContentPopup,
@@ -108,7 +108,7 @@ const RowCampaign = (props) => {
           startIcon={<DeleteIcon style={{ marginLeft: 10 }} />}
           onClick={() => {
             setOpenConfirmPopup(true);
-            setIdClickedItem(campaign.id);
+            setSelectedData(campaign);
             setContentPopup({
               title: "Are you sure you want to remove this email campaign?",
             });
@@ -120,18 +120,3 @@ const RowCampaign = (props) => {
 };
 
 export default RowCampaign;
-
-/*
-
---> kiedy kliknę w "edit" mam przenieść się do edytowanego formularzu:
-- dane są widoczne w polach formularzu;
-- mam dostęp do edytowanego obiektu;
-- po wysłaniu edytuje istniejący obiekt, więc muszę uwzględnić metodę PATCH,
-czyli muszę sprawdzić czy pole formularza jest puste lub nie jest
-i zaktualizować obiekt;
-
-kiedy klikam w edit otrzymuję ponownie istniejący obiekt
-ustawiam wartości formularza
-poprzez naciśnięcie send uaktualniam obiekt
-
-*/

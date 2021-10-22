@@ -8,7 +8,7 @@ const FilteredCampaignsList = (props) => {
     campaignsData,
     handleDraftCampaign,
     setOpenConfirmPopup,
-    setIdClickedItem,
+    setSelectedData,
     setContentPopup,
   } = props;
 
@@ -29,7 +29,7 @@ const FilteredCampaignsList = (props) => {
                 dataHeadEmailTable={dataHeadEmailTable}
                 campaignsData={campaignsData.data}
                 status="sent"
-                setIdClickedItem={setIdClickedItem}
+                setSelectedData={setSelectedData}
                 handleDraftCampaign={handleDraftCampaign}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
@@ -39,7 +39,7 @@ const FilteredCampaignsList = (props) => {
                 dataHeadEmailTable={dataHeadEmailTable}
                 campaignsData={campaignsData.data}
                 status="draft"
-                setIdClickedItem={setIdClickedItem}
+                setSelectedData={setSelectedData}
                 handleDraftCampaign={handleDraftCampaign}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}

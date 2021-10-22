@@ -29,7 +29,7 @@ const RowSubscriber = (props) => {
     subscriber,
     index,
     children,
-    setIdClickedItem,
+    setSelectedData,
     handleSubscriberDetails,
     setContentPopup,
     setOpenConfirmPopup,
@@ -108,7 +108,7 @@ const RowSubscriber = (props) => {
               variant="contained"
               startIcon={<DetailsIcon style={{ marginLeft: 10 }} />}
               onClick={() => {
-                setIdClickedItem(subscriber.id);
+                setSelectedData(subscriber);
                 handleSubscriberDetails(subscriber);
                 setTextPopupByStatus();
               }}
@@ -122,7 +122,8 @@ const RowSubscriber = (props) => {
               startIcon={<DeleteIcon style={{ marginLeft: 10 }} />}
               onClick={() => {
                 setOpenConfirmPopup(true);
-                setIdClickedItem(subscriber.id);
+                setSelectedData(subscriber);
+                setSelectedData(subscriber);
                 setContentPopup({
                   title: "Are you sure you want to remove this subscriber?",
                 });

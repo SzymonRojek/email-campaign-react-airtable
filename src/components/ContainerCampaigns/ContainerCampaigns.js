@@ -10,7 +10,7 @@ const ContainerCampaigns = ({
   dataHeadEmailTable,
   campaignsData,
   handleDraftCampaign,
-  setIdClickedItem,
+  setSelectedData,
   setContentPopup,
   setOpenConfirmPopup,
 }) => {
@@ -28,11 +28,11 @@ const ContainerCampaigns = ({
               }
               key={`id-${campaign.id}`}
               campaign={campaign}
-              handleDraftCampaign={handleDraftCampaign}
               index={index}
-              setOpenConfirmPopup={setOpenConfirmPopup}
-              setIdClickedItem={setIdClickedItem}
+              setSelectedData={setSelectedData}
+              handleDraftCampaign={handleDraftCampaign}
               setContentPopup={setContentPopup}
+              setOpenConfirmPopup={setOpenConfirmPopup}
             />
           ))}
       </BodyTable>

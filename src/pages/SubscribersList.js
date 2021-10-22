@@ -7,7 +7,7 @@ const SubscribersList = (props) => {
   const {
     subscribersData,
     setOpenConfirmPopup,
-    setIdClickedItem,
+    setSelectedData,
     setContentPopup,
     handleSubscriberDetails,
   } = props;
@@ -28,7 +28,7 @@ const SubscribersList = (props) => {
             <ContainerSubscribers
               dataHeadTable={generalDataHeadTable}
               subscribersData={subscribersData.data}
-              setIdClickedItem={setIdClickedItem}
+              setSelectedData={setSelectedData}
               handleSubscriberDetails={handleSubscriberDetails}
               setContentPopup={setContentPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
@@ -49,7 +49,7 @@ const SubscribersList = (props) => {
               <ContainerSubscribers
                 dataHeadTable={generalDataHeadTable}
                 subscribersData={subscribersData.latestSubscriber}
-                setIdClickedItem={setIdClickedItem}
+                setSelectedData={setSelectedData}
                 handleSubscriberDetails={handleSubscriberDetails}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}

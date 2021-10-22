@@ -7,7 +7,7 @@ const FilteredSubscribersList = (props) => {
   const {
     subscribersData,
     setOpenConfirmPopup,
-    setIdClickedItem,
+    setSelectedData,
     setContentPopup,
     handleSubscriberDetails,
   } = props;
@@ -30,7 +30,7 @@ const FilteredSubscribersList = (props) => {
                 generalDataHeadTable={generalDataHeadTable}
                 subscribersData={subscribersData.data}
                 status="active"
-                setIdClickedItem={setIdClickedItem}
+                setSelectedData={setSelectedData}
                 handleSubscriberDetails={handleSubscriberDetails}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
@@ -40,7 +40,7 @@ const FilteredSubscribersList = (props) => {
                 generalDataHeadTable={generalDataHeadTable}
                 subscribersData={subscribersData.data}
                 status="pending"
-                setIdClickedItem={setIdClickedItem}
+                setSelectedData={setSelectedData}
                 handleSubscriberDetails={handleSubscriberDetails}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
@@ -50,7 +50,7 @@ const FilteredSubscribersList = (props) => {
                 generalDataHeadTable={generalDataHeadTable}
                 subscribersData={subscribersData.data}
                 status="blocked"
-                setIdClickedItem={setIdClickedItem}
+                setSelectedData={setSelectedData}
                 handleSubscriberDetails={handleSubscriberDetails}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}

@@ -5,7 +5,7 @@ import { ContainerTable, HeadTable, BodyTable, RowSubscriber } from "../Table";
 const ContainerSubscribers = ({
   dataHeadTable,
   subscribersData,
-  setIdClickedItem,
+  setSelectedData,
   handleSubscriberDetails,
   setContentPopup,
   setOpenConfirmPopup,
@@ -24,7 +24,7 @@ const ContainerSubscribers = ({
             key={`id-${subscriber.id}`}
             subscriber={subscriber}
             index={index}
-            setIdClickedItem={setIdClickedItem}
+            setSelectedData={setSelectedData}
             handleSubscriberDetails={handleSubscriberDetails}
             setContentPopup={setContentPopup}
             setOpenConfirmPopup={setOpenConfirmPopup}
