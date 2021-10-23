@@ -21,9 +21,9 @@ const request = async (endpoint, method = "GET", data = null) => {
 
   const getData = await response.json();
 
-  // if (!getData.records) {
-  //   throw new Error("Something happened - no data");
-  // }
+  if (!getData) {
+    throw new Error("Something happened - no data");
+  }
 
   return getData;
 };
