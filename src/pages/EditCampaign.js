@@ -5,18 +5,22 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
 
 import api from "../api";
+import { emailMessage } from "../mailgun/app";
 import { capitalizeFirstLetter, validationCampaign } from "../helpers";
 import { FormCampaign } from "../components/FormCampaign";
 
 const EditCampaign = ({
-  draftCampaign,
+  subscribersData,
+  selectedData,
   getCampaignsData,
   setOpenInfoPopup,
   setContentPopup,
 }) => {
   const editCampaignData = {
-    title: draftCampaign ? draftCampaign.fields.title : "",
-    description: draftCampaign ? draftCampaign.fields.description : "",
+    title: selectedData ? selectedData.fields.title : "",
+    description: selectedData
+      ? `Hello {{name}}! \n \n${selectedData.fields.description}`
+      : "",
   };
 
   const {
@@ -35,9 +39,22 @@ const EditCampaign = ({
   const endpoint = `/campaigns/${id}`;
 
   const onSubmit = (data) => {
+    if (actionStatus === "sent") {
+      subscribersData.data
+        .filter((subscriber) => subscriber.fields.status === "active")
+        .forEach((subscriber) => {
+          emailMessage(
+            subscriber.fields.email,
+            subscriber.fields.name,
+            data.title,
+            data.description
+          );
+        });
+    }
+
     const isCampaignChanged =
-      (data.title !== draftCampaign.fields.title &&
-        data.description !== draftCampaign.fields.description) ||
+      data.title !== selectedData.fields.title ||
+      data.description !== selectedData.fields.description ||
       actionStatus === "sent"
         ? true
         : false;
@@ -52,6 +69,8 @@ const EditCampaign = ({
       });
     }
 
+    getCampaignsData();
+
     setContentPopup({
       text: isCampaignChanged
         ? "Campaign has been changed"
@@ -62,7 +81,6 @@ const EditCampaign = ({
       switch: navigate("/campaigns"),
     });
 
-    getCampaignsData();
     setOpenInfoPopup(true);
 
     setTimeout(() => {
