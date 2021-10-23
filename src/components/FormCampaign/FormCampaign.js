@@ -70,6 +70,7 @@ const FormCampaign = ({
               type="submit"
               onClick={() => {
                 setActionStatus("draft");
+                getCampaignsData();
               }}
             >
               Draft
