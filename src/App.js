@@ -36,8 +36,7 @@ const App = () => {
   const [openInfoPopup, setOpenInfoPopup] = useState(false);
   const [contentPopup, setContentPopup] = useState({});
   const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
-  const [idClickedItem, setIdClickedItem] = useState(null);
-  const [draftCampaign, setDraftCampaign] = useState({});
+  const [selectedData, setSelectedData] = useState({});
 
   const endpointSubscribers = "/subscribers";
   const endpointCampaigns = "/campaigns";
@@ -88,20 +87,15 @@ const App = () => {
     return () => clearTimeout(delayGetCampaignData);
   }, []);
 
-  const handleRemoveItem = async (selectedData, endpoint) => {
-    const idItemToRemove = selectedData.data.filter(
-      (item) => item.id === idClickedItem
-    )[0].id;
+  const handleRemoveItem = async (data, endpoint) => {
+    await api.delete(`/${endpoint}/${selectedData.id}`);
 
-    await api.delete(`/${endpoint}/${idItemToRemove}`);
-
-    selectedData === subscribersData
-      ? getSubscribersData()
-      : getCampaignsData();
+    data === subscribersData ? getSubscribersData() : getCampaignsData();
 
     setOpenConfirmPopup(false);
 
-    if (selectedData.data.length === 0) setOpenInfoPopup(true);
+    if (data.data.length === 0) setOpenInfoPopup(true);
+    getSubscribersData();
   };
 
   const handleSubscriberDetails = (subscriber) =>
@@ -109,8 +103,8 @@ const App = () => {
       ? navigate(`/subscribers/${subscriber.id}`)
       : setOpenInfoPopup(true);
 
-  const handleDraftCampaign = (id) =>
-    setDraftCampaign(
+  const handleEditCampaign = (id) =>
+    setSelectedData(
       campaignsData.data
         ? campaignsData.data.filter((item) => item.id === id)[0]
         : null
@@ -127,7 +121,7 @@ const App = () => {
           element: (
             <SubscribersList
               subscribersData={subscribersData}
-              setIdClickedItem={setIdClickedItem}
+              setSelectedData={setSelectedData}
               handleSubscriberDetails={handleSubscriberDetails}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
@@ -150,8 +144,8 @@ const App = () => {
           element: (
             <FilteredSubscribersList
               subscribersData={subscribersData}
+              setSelectedData={setSelectedData}
               handleSubscriberDetails={handleSubscriberDetails}
-              setIdClickedItem={setIdClickedItem}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
@@ -160,12 +154,7 @@ const App = () => {
         },
         {
           path: "/:id",
-          element: (
-            <SubscriberDetails
-              setContentPopup={setContentPopup}
-              setOpenInfoPopup={setOpenInfoPopup}
-            />
-          ),
+          element: <SubscriberDetails />,
         },
       ],
     },
@@ -178,8 +167,8 @@ const App = () => {
           element: (
             <CampaignsList
               campaignsData={campaignsData}
-              setIdClickedItem={setIdClickedItem}
-              handleDraftCampaign={handleDraftCampaign}
+              setSelectedData={setSelectedData}
+              handleEditCampaign={handleEditCampaign}
               setContentPopup={setContentPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
             />
@@ -190,8 +179,8 @@ const App = () => {
           element: (
             <FilteredCampaignsList
               campaignsData={campaignsData}
-              handleDraftCampaign={handleDraftCampaign}
-              setIdClickedItem={setIdClickedItem}
+              setSelectedData={setSelectedData}
+              handleEditCampaign={handleEditCampaign}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
@@ -203,6 +192,7 @@ const App = () => {
           element: (
             <NewCampaign
               getCampaignsData={getCampaignsData}
+              subscribersData={subscribersData}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
             />
@@ -212,9 +202,10 @@ const App = () => {
           path: "/:id",
           element: (
             <EditCampaign
+              subscribersData={subscribersData}
               setOpenInfoPopup={setOpenInfoPopup}
               setContentPopup={setContentPopup}
-              draftCampaign={draftCampaign}
+              selectedData={selectedData}
               getCampaignsData={getCampaignsData}
             />
           ),
@@ -239,9 +230,8 @@ const App = () => {
       <ConfirmPopup
         subscribersData={subscribersData}
         campaignsData={campaignsData}
-        idClickedItem={idClickedItem}
-        setIdClickedItem={setIdClickedItem}
-        removeItem={handleRemoveItem}
+        selectedData={selectedData}
+        handleRemoveItem={handleRemoveItem}
         contentPopup={contentPopup}
         openConfirmPopup={openConfirmPopup}
         setOpenConfirmPopup={setOpenConfirmPopup}
