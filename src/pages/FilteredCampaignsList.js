@@ -6,7 +6,7 @@ import { dataHeadEmailTable } from "../data/dataHeadEmailTable";
 const FilteredCampaignsList = (props) => {
   const {
     campaignsData,
-    handleDraftCampaign,
+    handleEditCampaign,
     setOpenConfirmPopup,
     setSelectedData,
     setContentPopup,
@@ -30,7 +30,7 @@ const FilteredCampaignsList = (props) => {
                 campaignsData={campaignsData.data}
                 status="sent"
                 setSelectedData={setSelectedData}
-                handleDraftCampaign={handleDraftCampaign}
+                handleEditCampaign={handleEditCampaign}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
@@ -40,7 +40,7 @@ const FilteredCampaignsList = (props) => {
                 campaignsData={campaignsData.data}
                 status="draft"
                 setSelectedData={setSelectedData}
-                handleDraftCampaign={handleDraftCampaign}
+                handleEditCampaign={handleEditCampaign}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />

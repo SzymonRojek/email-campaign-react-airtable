@@ -31,7 +31,7 @@ const RowCampaign = (props) => {
     index,
     children,
     setSelectedData,
-    handleDraftCampaign,
+    handleEditCampaign,
     setOpenConfirmPopup,
     setContentPopup,
   } = props;
@@ -82,7 +82,7 @@ const RowCampaign = (props) => {
             color="success"
             variant="contained"
             onClick={() => {
-              handleDraftCampaign(campaign.id);
+              handleEditCampaign(campaign.id);
               navigate(`/campaigns/${campaign.id}`);
             }}
           >

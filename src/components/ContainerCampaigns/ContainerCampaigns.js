@@ -9,7 +9,7 @@ import {
 const ContainerCampaigns = ({
   dataHeadEmailTable,
   campaignsData,
-  handleDraftCampaign,
+  handleEditCampaign,
   setSelectedData,
   setContentPopup,
   setOpenConfirmPopup,
@@ -30,7 +30,7 @@ const ContainerCampaigns = ({
               campaign={campaign}
               index={index}
               setSelectedData={setSelectedData}
-              handleDraftCampaign={handleDraftCampaign}
+              handleEditCampaign={handleEditCampaign}
               setContentPopup={setContentPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
             />
