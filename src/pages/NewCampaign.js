@@ -27,18 +27,18 @@ const NewCampaign = ({
   const endpoint = "/campaigns";
 
   const onSubmit = (data) => {
-    if (actionStatus === "sent") {
-      subscribersData.data
-        .filter((subscriber) => subscriber.fields.status === "active")
-        .forEach((subscriber) => {
-          emailMessage(
-            subscriber.fields.email,
-            subscriber.fields.name,
-            data.title,
-            data.description
-          );
-        });
-    }
+    // if (actionStatus === "sent") {
+    //   subscribersData.data
+    //     .filter((subscriber) => subscriber.fields.status === "active")
+    //     .forEach((subscriber) => {
+    //       emailMessage(
+    //         subscriber.fields.email,
+    //         subscriber.fields.name,
+    //         data.title,
+    //         data.description
+    //       );
+    //     });
+    // }
 
     api.post(endpoint, {
       fields: {

@@ -39,18 +39,18 @@ const EditCampaign = ({
   const endpoint = `/campaigns/${id}`;
 
   const onSubmit = (data) => {
-    if (actionStatus === "sent") {
-      subscribersData.data
-        .filter((subscriber) => subscriber.fields.status === "active")
-        .forEach((subscriber) => {
-          emailMessage(
-            subscriber.fields.email,
-            subscriber.fields.name,
-            data.title,
-            data.description
-          );
-        });
-    }
+    // if (actionStatus === "sent") {
+    //   subscribersData.data
+    //     .filter((subscriber) => subscriber.fields.status === "active")
+    //     .forEach((subscriber) => {
+    //       emailMessage(
+    //         subscriber.fields.email,
+    //         subscriber.fields.name,
+    //         data.title,
+    //         data.description
+    //       );
+    //     });
+    // }
 
     const isCampaignChanged =
       data.title !== selectedData.fields.title ||
