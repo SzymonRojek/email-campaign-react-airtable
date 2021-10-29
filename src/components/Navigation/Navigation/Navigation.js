@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import "./styles.css";
 import Menu from "../Menu/Menu";
 import NavLink from "../NavLink/NavLink";
-import { DrawerMenu } from "../../DrawerMenu";
+// import { DrawerMenu } from "../../DrawerMenu";
 
 const common = {
   margin: 15,
@@ -52,7 +52,7 @@ const Navigation = ({ dataLinks, className }) => (
       <Outlet />
     </div>
 
-    <DrawerMenu />
+    {/* <DrawerMenu /> */}
   </>
 );
 
