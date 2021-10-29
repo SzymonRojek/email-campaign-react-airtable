@@ -1,17 +1,5 @@
 import { Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import Button from "@mui/material/Button";
-
-const useStyles = makeStyles((theme) => ({
-  dialogWrapper: {
-    position: "absolute",
-    bottom: 100,
-    left: 0,
-  },
-  typography: {
-    padding: 35,
-  },
-}));
 
 const ConfirmPopup = ({
   openConfirmPopup,
@@ -22,23 +10,15 @@ const ConfirmPopup = ({
   handleRemoveItem,
   contentPopup,
 }) => {
-  const classes = useStyles();
-
   const isItemFromSubscribersData = subscribersData.data
     ? !!subscribersData.data.filter((item) => item.id === selectedData).length
     : null;
 
   return (
-    <Dialog
-      open={openConfirmPopup}
-      maxWidth="sm"
-      classes={{ paper: classes.dialogWrapper }}
-    >
+    <Dialog open={openConfirmPopup} maxWidth="sm">
       <DialogTitle>
         <div>
-          <Typography variant="h6" className={classes.typography}>
-            {contentPopup.title}
-          </Typography>
+          <Typography variant="h6">{contentPopup.title}</Typography>
         </div>
       </DialogTitle>
       <DialogContent
