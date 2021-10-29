@@ -5,11 +5,11 @@ export const mainLinksNavigation = [
 ];
 
 export const subscribersLinksNavigation = [
-  {
-    to: "",
-    exact: true,
-    name: "Subscribers List",
-  },
+  // {
+  //   to: "",
+  //   exact: true,
+  //   name: "Subscribers List",
+  // },
   {
     to: "filter",
     name: "Filter by status",
@@ -20,12 +20,12 @@ export const subscribersLinksNavigation = [
   },
 ];
 
-export const emailLinksNavigation = [
-  {
-    to: "",
-    exact: true,
-    name: "Campaigns List",
-  },
+export const campaignsLinksNavigation = [
+  // {
+  //   to: "",
+  //   exact: true,
+  //   name: "Campaigns List",
+  // },
   {
     to: "filter",
     name: "Filter by status",
