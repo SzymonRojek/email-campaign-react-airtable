@@ -1,5 +1,6 @@
 import { Paper, Button, Box } from "@mui/material";
 import { Grid, Typography } from "@material-ui/core";
+// import { Container } from "@material-ui/core";
 
 import { TextInput } from "../../components/TextInput";
 
@@ -82,3 +83,5 @@ const FormCampaign = ({
 };
 
 export default FormCampaign;
+
+// maybe add container instead of the box

@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Paper, Button, Box } from "@mui/material";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography, Container } from "@material-ui/core";
 
 import api from "../../api";
 import { TextInput } from "../../components/TextInput";
@@ -49,7 +49,7 @@ const AddSubscriber = ({
   };
 
   return (
-    <div style={{ margin: 20 }}>
+    <Container>
       <Box display="flex" justifyContent="center" alignItems="center">
         <Paper
           elevation={6}
@@ -106,7 +106,7 @@ const AddSubscriber = ({
           </form>
         </Paper>
       </Box>
-    </div>
+    </Container>
   );
 };
 

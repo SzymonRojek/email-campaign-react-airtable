@@ -1,11 +1,13 @@
+import { Container } from "@material-ui/core";
+
 import { Navigation } from "../../components/Navigation";
 import { campaignsLinksNavigation } from "../../data/dataLinksNavigation";
 
 const Campaigns = () => {
   return (
-    <div style={{ marginTop: 100 }}>
+    <Container>
       <Navigation dataLinks={campaignsLinksNavigation} />;
-    </div>
+    </Container>
   );
 };
 

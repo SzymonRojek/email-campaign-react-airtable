@@ -2,6 +2,7 @@ import { ContainerSubscribers } from "../../components/ContainerSubscribers";
 import { Loader } from "../../components/Loader";
 import { Error } from "../../components/Error";
 import { generalDataHeadTable } from "../../data/dataHeadTable";
+import { Container } from "@material-ui/core";
 
 const SubscribersList = (props) => {
   const {
@@ -13,7 +14,7 @@ const SubscribersList = (props) => {
   } = props;
 
   return (
-    <div style={{ margin: 20 }}>
+    <Container>
       {subscribersData.status === "loading" ? (
         <Loader title="Subscribers Data List is loading..." />
       ) : subscribersData.status === "success" ? (
@@ -66,7 +67,7 @@ const SubscribersList = (props) => {
           titleThree="Contact with your internet provider."
         />
       )}
-    </div>
+    </Container>
   );
 };
 
