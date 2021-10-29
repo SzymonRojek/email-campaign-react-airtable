@@ -2,13 +2,17 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TableBody, TableCell, TableRow, Typography } from "@material-ui/core";
 
-import api from "../api";
-import { ContainerTable, HeadTable, RowSubscriber } from "../components/Table";
+import api from "../../api";
+import {
+  ContainerTable,
+  HeadTable,
+  RowSubscriber,
+} from "../../components/Table";
 import {
   detailsDataHeadTableFirst,
   detailsDataHeadTableSecond,
-} from "../data/dataHeadTable";
-import { Loader } from "../components/Loader";
+} from "../../data/dataHeadTable";
+import { Loader } from "../../components/Loader";
 
 const SubscriberDetails = () => {
   const [subscriberData, setSubscriberData] = useState({

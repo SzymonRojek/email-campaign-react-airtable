@@ -1,7 +1,7 @@
-import { FilterStatusSubscribers } from "../components/FilterStatusSubscribers";
-import { Loader } from "../components/Loader";
-import { Error } from "../components/Error";
-import { generalDataHeadTable } from "../data/dataHeadTable";
+import { FilterStatusSubscribers } from "../../components/FilterStatusSubscribers";
+import { Loader } from "../../components/Loader";
+import { Error } from "../../components/Error";
+import { generalDataHeadTable } from "../../data/dataHeadTable";
 
 const FilteredSubscribersList = (props) => {
   const {

@@ -1,7 +1,7 @@
-import { ContainerSubscribers } from "../components/ContainerSubscribers";
-import { Loader } from "../components/Loader";
-import { Error } from "../components/Error";
-import { generalDataHeadTable } from "../data/dataHeadTable";
+import { ContainerSubscribers } from "../../components/ContainerSubscribers";
+import { Loader } from "../../components/Loader";
+import { Error } from "../../components/Error";
+import { generalDataHeadTable } from "../../data/dataHeadTable";
 
 const SubscribersList = (props) => {
   const {

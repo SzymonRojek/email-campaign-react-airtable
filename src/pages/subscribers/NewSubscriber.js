@@ -3,9 +3,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Paper, Button, Box } from "@mui/material";
 import { Grid, Typography } from "@material-ui/core";
 
-import api from "../api";
-import { TextInput } from "../components/TextInput";
-import { capitalizeFirstLetter, validationSchema } from "../helpers";
+import api from "../../api";
+import { TextInput } from "../../components/TextInput";
+import { capitalizeFirstLetter, validationSchema } from "../../helpers";
 
 const AddSubscriber = ({
   setOpenInfoPopup,

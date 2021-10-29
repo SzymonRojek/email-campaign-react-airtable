@@ -4,10 +4,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
 
-import api from "../api";
-import { emailMessage } from "../mailgun/app";
-import { capitalizeFirstLetter, validationCampaign } from "../helpers";
-import { FormCampaign } from "../components/FormCampaign";
+import api from "../../api";
+import { emailMessage } from "../../mailgun/app";
+import { capitalizeFirstLetter, validationCampaign } from "../../helpers";
+import { FormCampaign } from "../../components/FormCampaign";
 
 const EditCampaign = ({
   subscribersData,

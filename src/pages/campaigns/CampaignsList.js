@@ -1,7 +1,7 @@
-import { dataHeadEmailTable } from "../data/dataHeadEmailTable";
-import { ContainerCampaigns } from "../components/ContainerCampaigns";
-import { Loader } from "../components/Loader";
-import { Error } from "../components/Error";
+import { dataHeadEmailTable } from "../../data/dataHeadEmailTable";
+import { ContainerCampaigns } from "../../components/ContainerCampaigns";
+import { Loader } from "../../components/Loader";
+import { Error } from "../../components/Error";
 
 const CampaignsList = ({
   campaignsData,

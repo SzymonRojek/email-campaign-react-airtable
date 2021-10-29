@@ -1,9 +1,0 @@
-export { default as Home } from "./Home";
-export { default as SubscribersList } from "./SubscribersList";
-export { default as FilteredSubscribersList } from "./FilteredSubscribersList";
-export { default as SubscriberDetails } from "./SubscriberDetails";
-export { default as NewSubscriber } from "./NewSubscriber";
-export { default as CampaignsList } from "./CampaignsList";
-export { default as FilteredCampaignsList } from "./FilteredCampaignsList";
-export { default as EditCampaign } from "./EditCampaign";
-export { default as NewCampaign } from "./NewCampaign";

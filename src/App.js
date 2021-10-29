@@ -2,17 +2,19 @@ import { useEffect, useState } from "react";
 import { useRoutes, useNavigate } from "react-router-dom";
 
 import api from "./api";
+import { Home } from "./pages/home";
 import {
-  Home,
   SubscribersList,
   FilteredSubscribersList,
   NewSubscriber,
   SubscriberDetails,
-  CampaignsList,
-  FilteredCampaignsList,
+} from "./pages/subscribers";
+import {
   EditCampaign,
   NewCampaign,
-} from "./pages";
+  CampaignsList,
+  FilteredCampaignsList,
+} from "./pages/campaigns";
 import { Navigation } from "./components/Navigation";
 import { InfoPopup, ConfirmPopup } from "./components/Popup";
 import { sortDataAlphabetically, getLatestAddedSubscriber } from "./helpers";

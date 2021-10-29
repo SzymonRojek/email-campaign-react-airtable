@@ -1,7 +1,7 @@
-import { FilterStatusCampaigns } from "../components/FilterStatusCampaigns";
-import { Loader } from "../components/Loader";
-import { Error } from "../components/Error";
-import { dataHeadEmailTable } from "../data/dataHeadEmailTable";
+import { FilterStatusCampaigns } from "../../components/FilterStatusCampaigns";
+import { Loader } from "../../components/Loader";
+import { Error } from "../../components/Error";
+import { dataHeadEmailTable } from "../../data/dataHeadEmailTable";
 
 const FilteredCampaignsList = (props) => {
   const {

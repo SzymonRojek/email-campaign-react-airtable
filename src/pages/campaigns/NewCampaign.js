@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import api from "../api";
-import { capitalizeFirstLetter, validationCampaign } from "../helpers";
-import { FormCampaign } from "../components/FormCampaign";
-import { emailMessage } from "../mailgun/app";
+import api from "../../api";
+import { capitalizeFirstLetter, validationCampaign } from "../../helpers";
+import { FormCampaign } from "../../components/FormCampaign";
+import { emailMessage } from "../../mailgun/app";
 
 const NewCampaign = ({
   subscribersData,
