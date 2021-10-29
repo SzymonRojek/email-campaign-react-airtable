@@ -9,12 +9,14 @@ import {
   FilteredSubscribersList,
   NewSubscriber,
   SubscriberDetails,
+  Subscribers,
 } from "./pages/subscribers";
 import {
   EditCampaign,
   NewCampaign,
   CampaignsList,
   FilteredCampaignsList,
+  Campaigns,
 } from "./pages/campaigns";
 import { Navigation } from "./components/Navigation";
 import { InfoPopup, ConfirmPopup } from "./components/Popup";
@@ -22,7 +24,7 @@ import { sortDataAlphabetically, getLatestAddedSubscriber } from "./helpers";
 import {
   mainLinksNavigation,
   subscribersLinksNavigation,
-  emailLinksNavigation,
+  campaignsLinksNavigation,
 } from "./data/dataLinksNavigation";
 
 const App = () => {
@@ -117,7 +119,7 @@ const App = () => {
     { path: "/", element: <Home /> },
     {
       path: "/subscribers",
-      element: <Navigation dataLinks={subscribersLinksNavigation} />,
+      element: <Subscribers />,
       children: [
         {
           path: "/",
@@ -163,7 +165,7 @@ const App = () => {
     },
     {
       path: "/campaigns",
-      element: <Navigation dataLinks={emailLinksNavigation} />,
+      element: <Campaigns />,
       children: [
         {
           path: "",
