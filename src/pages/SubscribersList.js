@@ -13,7 +13,7 @@ const SubscribersList = (props) => {
   } = props;
 
   return (
-    <>
+    <div style={{ margin: 20 }}>
       {subscribersData.status === "loading" ? (
         <Loader title="Subscribers Data List is loading..." />
       ) : subscribersData.status === "success" ? (
@@ -66,7 +66,7 @@ const SubscribersList = (props) => {
           titleThree="Contact with your internet provider."
         />
       )}
-    </>
+    </div>
   );
 };
 

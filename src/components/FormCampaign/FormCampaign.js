@@ -17,10 +17,9 @@ const FormCampaign = ({
         elevation={6}
         style={{
           maxWidth: 500,
-          marginTop: 100,
+          margin: "100px 20px 20px 20px",
           textAlign: "center",
           borderRadius: 8,
-          // backgroundColor: "#303f9f",
         }}
       >
         <form onSubmit={handleSubmit(onSubmit)}>

@@ -49,7 +49,7 @@ const AddSubscriber = ({
   };
 
   return (
-    <>
+    <div style={{ margin: 20 }}>
       <Box display="flex" justifyContent="center" alignItems="center">
         <Paper
           elevation={6}
@@ -106,7 +106,7 @@ const AddSubscriber = ({
           </form>
         </Paper>
       </Box>
-    </>
+    </div>
   );
 };
 

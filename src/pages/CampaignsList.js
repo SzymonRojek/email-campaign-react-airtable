@@ -11,7 +11,7 @@ const CampaignsList = ({
   setOpenConfirmPopup,
 }) => {
   return (
-    <>
+    <div style={{ margin: 20 }}>
       {campaignsData.status === "loading" ? (
         <Loader title="Campaigns Data List is loading..." />
       ) : campaignsData.status === "success" ? (
@@ -63,7 +63,7 @@ const CampaignsList = ({
           titleThree="Contact with your internet provider."
         />
       )}
-    </>
+    </div>
   );
 };
 

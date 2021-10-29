@@ -35,7 +35,7 @@ const SubscriberDetails = () => {
   }, []);
 
   return (
-    <>
+    <div style={{ margin: 20 }}>
       {subscriberData.status === "loading" ? (
         <Loader title={`Subscriber's details are loading...`} />
       ) : (
@@ -100,7 +100,7 @@ const SubscriberDetails = () => {
           </ContainerTable>
         </>
       )}
-    </>
+    </div>
   );
 };
 

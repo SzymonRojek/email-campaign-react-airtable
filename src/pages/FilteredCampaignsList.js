@@ -13,7 +13,7 @@ const FilteredCampaignsList = (props) => {
   } = props;
 
   return (
-    <>
+    <div style={{ margin: 20 }}>
       {campaignsData.status === "loading" ? (
         <Loader title="Subscribers Data List is loading..." />
       ) : campaignsData.status === "success" ? (
@@ -54,7 +54,7 @@ const FilteredCampaignsList = (props) => {
           titleThree="Contact with your internet provider."
         />
       )}
-    </>
+    </div>
   );
 };
 
