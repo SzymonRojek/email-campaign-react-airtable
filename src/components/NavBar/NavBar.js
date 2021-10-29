@@ -7,6 +7,11 @@ import {
   Toolbar,
   Menu,
 } from "@material-ui/core";
+import { GoMailRead } from "react-icons/go";
+import { BsFillPersonPlusFill } from "react-icons/bs";
+import { AiFillMail } from "react-icons/ai";
+import { AiFillHome } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 function NavBar() {
   const [value, setValue] = useState();
@@ -17,14 +22,27 @@ function NavBar() {
     <>
       <AppBar color="primary">
         <Toolbar>
+          <Typography>
+            <GoMailRead />
+          </Typography>
           <Tabs
             onChange={handleClickTab}
             indicatorColor="secondary"
             value={value}
           >
-            <Tab disableRipple label="subscribers" />
-            <Tab disableRipple label="campaigns" />
-            <Tab disableRipple label="home" />
+            <Link to="/subscribers">
+              <Tab
+                icon={<BsFillPersonPlusFill />}
+                disableRipple
+                label="subscribers"
+              />
+            </Link>
+            <Link exact to="/campaigns">
+              <Tab icon={<AiFillMail />} disableRipple label="campaigns" />
+            </Link>
+            <Link to="/">
+              <Tab icon={<AiFillHome />} disableRipple label="home" />
+            </Link>
           </Tabs>
         </Toolbar>
       </AppBar>
