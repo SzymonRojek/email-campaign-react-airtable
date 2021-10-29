@@ -11,12 +11,15 @@ import { GoMailRead } from "react-icons/go";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 function NavBar() {
-  const [value, setValue] = useState();
+  const navigate = useNavigate();
+  const [value, setValue] = useState(0);
 
-  const handleClickTab = (newValue) => setValue(newValue);
+  const handleClickTab = (e, newValue) => setValue(newValue);
+
+  const handleTabClick = (pageURL) => navigate(pageURL);
 
   return (
     <>
@@ -30,24 +33,29 @@ function NavBar() {
             indicatorColor="secondary"
             value={value}
           >
-            <Link to="/subscribers">
-              <Tab
-                icon={<BsFillPersonPlusFill />}
-                disableRipple
-                label="subscribers"
-              />
-            </Link>
-            <Link exact to="/campaigns">
-              <Tab icon={<AiFillMail />} disableRipple label="campaigns" />
-            </Link>
-            <Link to="/">
-              <Tab icon={<AiFillHome />} disableRipple label="home" />
-            </Link>
+            <Tab
+              icon={<BsFillPersonPlusFill />}
+              disableRipple
+              label="subscribers"
+              onClick={() => handleTabClick("/subscribers")}
+            />
+
+            <Tab
+              icon={<AiFillMail />}
+              disableRipple
+              label="campaigns"
+              onClick={() => handleTabClick("/campaigns")}
+            />
+
+            <Tab
+              icon={<AiFillHome />}
+              disableRipple
+              label="home"
+              onClick={() => handleTabClick("/")}
+            />
           </Tabs>
         </Toolbar>
       </AppBar>
-
-      <Menu></Menu>
     </>
   );
 }
