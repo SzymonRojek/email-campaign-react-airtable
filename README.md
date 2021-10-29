@@ -1,5 +1,6 @@
 # Getting Started with Create React App
 
+Check [link demo](https://szymonrojek.github.io/email-campaign-react-airtable/)
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Set env variables
