@@ -1,6 +1,6 @@
 export const mainLinksNavigation = [
   { to: "/subscribers", name: "Subscribers" },
-  { to: "/campaigns", name: "Email Campaigns" },
+  { to: "/campaigns", name: "Campaigns" },
   { to: "/", exact: true, name: "Home" },
 ];
 
