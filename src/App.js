@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRoutes, useNavigate } from "react-router-dom";
 
+import { NavBar } from "./components/NavBar";
 import api from "./api";
 import { Home } from "./pages/home";
 import {
@@ -220,10 +221,11 @@ const App = () => {
 
   return (
     <>
-      <Navigation
+      {/* <Navigation
         className="header-container"
         dataLinks={mainLinksNavigation}
-      />
+      /> */}
+      <NavBar />
       <InfoPopup
         contentPopup={contentPopup}
         openInfoPopup={openInfoPopup}
