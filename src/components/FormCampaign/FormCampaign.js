@@ -16,7 +16,7 @@ const FormCampaign = ({
     <Paper
       elevation={6}
       style={{
-        maxWidth: 500,
+        maxWidth: 600,
         margin: "100px auto",
         borderRadius: 8,
       }}
@@ -47,7 +47,7 @@ const FormCampaign = ({
             </Grid>
           </Grid>
           <Grid container spacing={3}>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <StyledButton
                 label="send"
                 ariaLabel="send"
@@ -58,7 +58,7 @@ const FormCampaign = ({
                 }}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <StyledButton
                 type="submit"
                 ariaLabel="draft"
