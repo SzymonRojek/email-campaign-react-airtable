@@ -5,6 +5,7 @@ import { Grid, Typography, Container } from "@material-ui/core";
 
 import api from "../../api";
 import { TextInput } from "../../components/TextInput";
+import { StyledButton } from "../../components/StyledButton";
 import { capitalizeFirstLetter, validationSchema } from "../../helpers";
 
 const AddSubscriber = ({
@@ -49,64 +50,54 @@ const AddSubscriber = ({
   };
 
   return (
-    <Container>
-      <Box display="flex" justifyContent="center" alignItems="center">
-        <Paper
-          elevation={6}
-          style={{
-            maxWidth: 500,
-            marginTop: 100,
-            textAlign: "center",
-            borderRadius: 8,
-            // backgroundColor: "#303f9f",
-          }}
-        >
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Box px={3} py={4}>
-              <Grid container spacing={1}>
-                <Typography color="textSecondary" variant="body2">
-                  *Field required
-                </Typography>
+    <Paper
+      elevation={6}
+      style={{
+        maxWidth: 600,
+        margin: "100px auto",
+        borderRadius: 8,
+      }}
+    >
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Box px={3} py={3}>
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <Typography color="textSecondary" variant="body2">
+                *Fields required
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextInput
+                value="name"
+                register={register}
+                error={!!errors?.name}
+                message={errors.name?.message ?? ""}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextInput
+                value="surname"
+                register={register}
+                error={!!errors?.surname}
+                message={errors.surname?.message ?? ""}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextInput
+                value="profession"
+                register={register}
+                error={!!errors?.profession}
+                message={errors.profession?.message ?? ""}
+              />
+            </Grid>
 
-                <TextInput
-                  value="name"
-                  register={register}
-                  error={!!errors?.name}
-                  message={errors.name?.message ?? ""}
-                />
-
-                <TextInput
-                  value="surname"
-                  register={register}
-                  error={!!errors?.surname}
-                  message={errors.surname?.message ?? ""}
-                />
-
-                <TextInput
-                  value="profession"
-                  register={register}
-                  error={!!errors?.profession}
-                  message={errors.profession?.message ?? ""}
-                />
-
-                <TextInput
-                  value="email"
-                  register={register}
-                  error={!!errors?.email}
-                  message={errors.email?.message ?? ""}
-                />
-              </Grid>
-            </Box>
-
-            <Box mt={3}>
-              <Button variant="contained" color="primary" type="submit">
-                Add Subscriber
-              </Button>
-            </Box>
-          </form>
-        </Paper>
-      </Box>
-    </Container>
+            <Grid item xs={12} md={12}>
+              <StyledButton label="add" ariaLabel="add" type="submit" />
+            </Grid>
+          </Grid>
+        </Box>
+      </form>
+    </Paper>
   );
 };
 
