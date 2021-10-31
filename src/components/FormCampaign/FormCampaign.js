@@ -1,8 +1,8 @@
-import { Paper, Button, Box } from "@mui/material";
+import { Paper, Box } from "@mui/material";
 import { Grid, Typography } from "@material-ui/core";
-// import { Container } from "@material-ui/core";
 
 import { TextInput } from "../../components/TextInput";
+import { StyledButton } from "../StyledButton";
 
 const FormCampaign = ({
   handleSubmit,
@@ -13,30 +13,29 @@ const FormCampaign = ({
   getCampaignsData,
 }) => {
   return (
-    <Box display="flex" justifyContent="center" alignItems="center">
-      <Paper
-        elevation={6}
-        style={{
-          maxWidth: 500,
-          margin: "100px 20px 20px 20px",
-          textAlign: "center",
-          borderRadius: 8,
-        }}
-      >
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Box px={3} py={4}>
-            <Grid container spacing={1}>
+    <Paper
+      elevation={6}
+      style={{
+        maxWidth: 500,
+        margin: "100px auto",
+        borderRadius: 8,
+      }}
+    >
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Box px={3} py={3}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
               <Typography color="textSecondary" variant="body2">
-                *Field required
+                *Fields required
               </Typography>
-
+            </Grid>
+            <Grid item xs={12}>
               <TextInput
                 value="title"
                 register={register}
                 error={!!errors?.title}
                 message={errors.title?.message ?? ""}
               />
-
               <TextInput
                 multiline
                 rows={5}
@@ -46,42 +45,35 @@ const FormCampaign = ({
                 message={errors.description?.message ?? ""}
               />
             </Grid>
-          </Box>
-
-          <Box mt={3}>
-            <Button
-              aria-label="sent"
-              variant="contained"
-              color="primary"
-              type="submit"
-              onClick={() => {
-                setActionStatus("sent");
-                getCampaignsData();
-              }}
-            >
-              Send
-            </Button>
-          </Box>
-          <Box mt={3}>
-            <Button
-              aria-label="draft"
-              variant="contained"
-              color="primary"
-              type="submit"
-              onClick={() => {
-                setActionStatus("draft");
-                getCampaignsData();
-              }}
-            >
-              Draft
-            </Button>
-          </Box>
-        </form>
-      </Paper>
-    </Box>
+          </Grid>
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              <StyledButton
+                label="send"
+                ariaLabel="send"
+                type="submit"
+                onClick={() => {
+                  setActionStatus("sent");
+                  getCampaignsData();
+                }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <StyledButton
+                type="submit"
+                ariaLabel="draft"
+                label="draft"
+                onClick={() => {
+                  setActionStatus("draft");
+                  getCampaignsData();
+                }}
+              />
+            </Grid>
+          </Grid>
+        </Box>
+      </form>
+    </Paper>
   );
 };
 
 export default FormCampaign;
-
-// maybe add container instead of the box
