@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import { useRoutes, useNavigate } from "react-router-dom";
 
@@ -168,7 +169,7 @@ const App = () => {
       element: <Campaigns />,
       children: [
         {
-          path: "",
+          path: "/",
           element: (
             <CampaignsList
               campaignsData={campaignsData}
@@ -227,7 +228,9 @@ const App = () => {
         className="header-container"
         dataLinks={mainLinksNavigation}
       /> */}
-      <NavBar />
+      <React.StrictMode>
+        <NavBar />
+      </React.StrictMode>
       <InfoPopup
         contentPopup={contentPopup}
         openInfoPopup={openInfoPopup}
