@@ -44,16 +44,24 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 //     zIndex: 0,
 // }));
 
+const checkUrl = (string) => window.location.href.indexOf(string) > -1;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
   menuButton: {
     marginRight: theme.spacing(2),
+    marginLeft: 20,
   },
   title: {
+    fontSize: 30,
+    paddingTop: 20,
+    margin: "0 0 10px 20px",
     [theme.breakpoints.down("xs")]: {
       flexGrow: 1,
+      paddingTop: 20,
+      margin: "0 0 10px 20px",
     },
   },
   headerOptions: {
@@ -92,18 +100,24 @@ function NavBar() {
     navigateLinksOnReload(value);
   }, []);
 
+  // const menuItems = [
+  //   { id: 1, menuTitle: "Home", pageURL: "/" },
+  //   {
+  //     id: 2,
+  //     menuTitle: "Campaigns",
+  //     pageURL: "/campaigns",
+  //   },
+  //   {
+  //     id: 3,
+  //     menuTitle: "Subscribers",
+  //     pageURL: "/subscribers",
+  //   },
+  // ];
+
   const menuItems = [
-    { id: 1, menuTitle: "Home", pageURL: "/" },
-    {
-      id: 2,
-      menuTitle: "Campaigns",
-      pageURL: "/campaigns",
-    },
-    {
-      id: 3,
-      menuTitle: "Subscribers",
-      pageURL: "/subscribers",
-    },
+    { to: "/subscribers", name: "Subscribers" },
+    { to: "/campaigns", name: "Campaigns" },
+    { to: "/", exact: true, name: "Home" },
   ];
 
   const handleTabClick = (pageURL) => navigate(pageURL);
@@ -146,10 +160,10 @@ function NavBar() {
                 onClose={() => setAnchorEl(null)}
               >
                 {menuItems.map((menuItem) => {
-                  const { menuTitle, pageURL, id } = menuItem;
+                  const { name, to } = menuItem;
                   return (
-                    <MenuItem key={id} onClick={() => handleMenuClick(pageURL)}>
-                      {menuTitle}
+                    <MenuItem onClick={() => handleMenuClick(to)}>
+                      {name}
                     </MenuItem>
                   );
                 })}
