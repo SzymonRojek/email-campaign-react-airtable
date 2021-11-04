@@ -10,20 +10,17 @@ import {
   FilteredSubscribersList,
   NewSubscriber,
   SubscriberDetails,
-  Subscribers,
 } from "./pages/subscribers";
 import {
   EditCampaign,
   NewCampaign,
   CampaignsList,
   FilteredCampaignsList,
-  Campaigns,
 } from "./pages/campaigns";
 import { Navigation } from "./components/Navigation";
 import { InfoPopup, ConfirmPopup } from "./components/Popup";
 import { sortDataAlphabetically, getLatestAddedSubscriber } from "./helpers";
 import {
-  mainLinksNavigation,
   subscribersLinksNavigation,
   campaignsLinksNavigation,
 } from "./data/dataLinksNavigation";
@@ -120,7 +117,7 @@ const App = () => {
     { path: "/", element: <Home /> },
     {
       path: "/subscribers",
-      element: <Subscribers />,
+      element: <Navigation dataLinks={subscribersLinksNavigation} />,
       children: [
         {
           path: "/",
@@ -136,7 +133,7 @@ const App = () => {
           ),
         },
         {
-          path: "/add-subscriber",
+          path: "/add",
           element: (
             <NewSubscriber
               getSubscribersData={getSubscribersData}
@@ -166,7 +163,7 @@ const App = () => {
     },
     {
       path: "/campaigns",
-      element: <Campaigns />,
+      element: <Navigation dataLinks={campaignsLinksNavigation} />,
       children: [
         {
           path: "/",
@@ -194,7 +191,7 @@ const App = () => {
           ),
         },
         {
-          path: "/add-email",
+          path: "/add",
           element: (
             <NewCampaign
               getCampaignsData={getCampaignsData}
@@ -224,13 +221,8 @@ const App = () => {
 
   return (
     <>
-      {/* <Navigation
-        className="header-container"
-        dataLinks={mainLinksNavigation}
-      /> */}
-      <React.StrictMode>
-        <NavBar />
-      </React.StrictMode>
+      <NavBar />
+
       <InfoPopup
         contentPopup={contentPopup}
         openInfoPopup={openInfoPopup}
