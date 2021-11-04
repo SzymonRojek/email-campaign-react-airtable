@@ -7,8 +7,7 @@ import NavLink from "../NavLink/NavLink";
 
 const common = {
   padding: "10px 15px",
-  fontSize: 20,
-  fontWeight: 600,
+  fontSize: 17,
   letterSpacing: 1,
   textDecoration: "none",
 };
@@ -33,7 +32,7 @@ const Navigation = ({ dataLinks }) => (
       <Grid
         style={{
           margin: "90px auto",
-          maxWidth: 950,
+          maxWidth: 600,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-around",
@@ -44,13 +43,7 @@ const Navigation = ({ dataLinks }) => (
       >
         {dataLinks.map(({ to, exact, name }) => (
           <Grid item key={name} xs={12} md={3}>
-            <NavLink
-              to={to}
-              exact={exact}
-              active={active}
-              inactive={inactive}
-              className="link"
-            >
+            <NavLink to={to} exact={exact} active={active} inactive={inactive}>
               {name}
             </NavLink>
           </Grid>
