@@ -40,7 +40,7 @@ const Navigation = ({ dataLinks }) => (
         }}
         container
         className="header-list"
-        spacing={3}
+        spacing={5}
       >
         {dataLinks.map(({ to, exact, name }) => (
           <Grid item key={name} xs={12} md={3}>
