@@ -4,34 +4,18 @@ export const mainLinksNavigation = [
   { to: "/", exact: true, name: "Home" },
 ];
 
-export const subscribersLinksNavigation = [
-  // {
-  //   to: "",
-  //   exact: true,
-  //   name: "Subscribers List",
-  // },
+export const subLinksNavigation = [
+  {
+    to: "",
+    exact: true,
+    name: "List",
+  },
   {
     to: "filter",
-    name: "Filter by status",
+    name: "Status",
   },
   {
-    to: "add-subscriber",
-    name: "New Subscriber",
-  },
-];
-
-export const campaignsLinksNavigation = [
-  // {
-  //   to: "",
-  //   exact: true,
-  //   name: "Campaigns List",
-  // },
-  {
-    to: "filter",
-    name: "Filter by status",
-  },
-  {
-    to: "add-email",
-    name: "New Campaign",
+    to: "add",
+    name: "Add",
   },
 ];

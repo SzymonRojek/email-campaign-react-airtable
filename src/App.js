@@ -20,10 +20,7 @@ import {
 import { Navigation } from "./components/Navigation";
 import { InfoPopup, ConfirmPopup } from "./components/Popup";
 import { sortDataAlphabetically, getLatestAddedSubscriber } from "./helpers";
-import {
-  subscribersLinksNavigation,
-  campaignsLinksNavigation,
-} from "./data/dataLinksNavigation";
+import { subLinksNavigation } from "./data/dataLinksNavigation";
 
 const App = () => {
   const navigate = useNavigate();
@@ -117,7 +114,7 @@ const App = () => {
     { path: "/", element: <Home /> },
     {
       path: "/subscribers",
-      element: <Navigation dataLinks={subscribersLinksNavigation} />,
+      element: <Navigation dataLinks={subLinksNavigation} />,
       children: [
         {
           path: "/",
@@ -163,7 +160,7 @@ const App = () => {
     },
     {
       path: "/campaigns",
-      element: <Navigation dataLinks={campaignsLinksNavigation} />,
+      element: <Navigation dataLinks={subLinksNavigation} />,
       children: [
         {
           path: "/",
