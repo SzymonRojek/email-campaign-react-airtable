@@ -22,14 +22,14 @@ const NavLink = ({ to, exact, style, active, inactive, name, ...rest }) => {
             ? {
                 color: "#003049",
                 width: 100,
-                "&.MuiButtonBase-root:hover": {
+                "&.MuiButtonBaseRoot:hover": {
                   backgroundColor: "transparent",
                 },
               }
             : {
                 color: "#fff",
                 width: 100,
-                "&.MuiButtonBase-root:hover": {
+                "&.MuiButtonBaseRoot:hover": {
                   backgroundColor: "transparent",
                 },
               }
