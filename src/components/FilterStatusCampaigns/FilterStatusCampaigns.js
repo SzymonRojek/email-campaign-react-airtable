@@ -5,6 +5,7 @@ import { RowCampaign } from "../Table";
 
 const FilterStatusCampaigns = (props) => {
   const {
+    heading,
     campaignsData,
     dataHeadEmailTable,
     status,
@@ -17,32 +18,44 @@ const FilterStatusCampaigns = (props) => {
 
   return campaignsData &&
     campaignsData.some((el) => el.fields.status === status) ? (
-    <ContainerTable>
-      <HeadTable dataHeadTable={dataHeadEmailTable} />
+    <>
+      <h2
+        style={{
+          textAlign: "center",
+          marginBottom: -40,
+          color: "#003049",
+          letterSpacing: 2,
+        }}
+      >
+        {heading}
+      </h2>
+      <ContainerTable>
+        <HeadTable dataHeadTable={dataHeadEmailTable} />
 
-      <BodyTable>
-        {campaignsData &&
-          campaignsData
-            .filter((subscriber) => subscriber.fields.status === status)
-            .map((campaign, index) => (
-              <RowCampaign
-                children={
-                  <TableCell component="th" scope="row">
-                    {++index}.
-                  </TableCell>
-                }
-                key={`id-${campaign.id}`}
-                campaign={campaign}
-                index={index}
-                setSelectedData={setSelectedData}
-                handleEditCampaign={handleEditCampaign}
-                removeItem={removeItem}
-                setContentPopup={setContentPopup}
-                setOpenConfirmPopup={setOpenConfirmPopup}
-              />
-            ))}
-      </BodyTable>
-    </ContainerTable>
+        <BodyTable>
+          {campaignsData &&
+            campaignsData
+              .filter((subscriber) => subscriber.fields.status === status)
+              .map((campaign, index) => (
+                <RowCampaign
+                  children={
+                    <TableCell component="th" scope="row">
+                      {++index}.
+                    </TableCell>
+                  }
+                  key={`id-${campaign.id}`}
+                  campaign={campaign}
+                  index={index}
+                  setSelectedData={setSelectedData}
+                  handleEditCampaign={handleEditCampaign}
+                  removeItem={removeItem}
+                  setContentPopup={setContentPopup}
+                  setOpenConfirmPopup={setOpenConfirmPopup}
+                />
+              ))}
+        </BodyTable>
+      </ContainerTable>
+    </>
   ) : (
     ""
   );

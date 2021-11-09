@@ -1,5 +1,5 @@
-import { Paper, Box } from "@mui/material";
-import { Grid, Typography, Container } from "@material-ui/core";
+import { Paper, Box, Container } from "@mui/material";
+import { Grid, Typography } from "@material-ui/core";
 
 import { TextInput } from "../../components/TextInput";
 import { StyledButton } from "../StyledButton";

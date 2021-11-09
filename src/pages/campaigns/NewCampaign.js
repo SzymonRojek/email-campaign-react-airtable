@@ -8,7 +8,6 @@ import { FormCampaign } from "../../components/FormCampaign";
 import { emailMessage } from "../../mailgun/app";
 
 const NewCampaign = ({
-  subscribersData,
   setOpenInfoPopup,
   setContentPopup,
   getCampaignsData,
@@ -20,7 +19,6 @@ const NewCampaign = ({
     reset,
   } = useForm({
     resolver: yupResolver(validationCampaign),
-    defaultValues: { description: `Hello {{name}}! \n\n` },
   });
   const [actionStatus, setActionStatus] = useState("");
 
@@ -67,14 +65,26 @@ const NewCampaign = ({
   };
 
   return (
-    <FormCampaign
-      handleSubmit={handleSubmit}
-      onSubmit={onSubmit}
-      register={register}
-      errors={errors}
-      setActionStatus={setActionStatus}
-      getCampaignsData={getCampaignsData}
-    />
+    <>
+      <h1
+        style={{
+          textAlign: "center",
+          marginBottom: -100,
+          color: "#003049",
+          letterSpacing: 2,
+        }}
+      >
+        Add New Campaign:
+      </h1>
+      <FormCampaign
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        register={register}
+        errors={errors}
+        setActionStatus={setActionStatus}
+        getCampaignsData={getCampaignsData}
+      />
+    </>
   );
 };
 

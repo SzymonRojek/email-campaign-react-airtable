@@ -28,6 +28,7 @@ const FilteredCampaignsList = (props) => {
           ) : (
             <>
               <FilterStatusCampaigns
+                heading="Sent Status:"
                 dataHeadEmailTable={dataHeadEmailTable}
                 campaignsData={campaignsData.data}
                 status="sent"
@@ -38,6 +39,7 @@ const FilteredCampaignsList = (props) => {
               />
 
               <FilterStatusCampaigns
+                heading="Draft Status:"
                 dataHeadEmailTable={dataHeadEmailTable}
                 campaignsData={campaignsData.data}
                 status="draft"
