@@ -162,7 +162,7 @@ function NavBar() {
                 {menuItems.map((menuItem) => {
                   const { name, to } = menuItem;
                   return (
-                    <MenuItem onClick={() => handleMenuClick(to)}>
+                    <MenuItem onClick={() => handleMenuClick(to)} divider>
                       {name}
                     </MenuItem>
                   );
