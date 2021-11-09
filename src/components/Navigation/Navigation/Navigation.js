@@ -10,19 +10,19 @@ const common = {
   fontSize: 17,
   letterSpacing: 1,
   textDecoration: "none",
+  borderRadius: 4,
 };
 
 const active = {
   color: "#003049",
-  borderRadius: 0,
-  borderBottom: "3px solid #003049",
+  border: "3px solid #003049",
   ...common,
 };
 
 const inactive = {
   color: "#fff",
   backgroundColor: "#003049",
-  borderRadius: 4,
+  border: "3px solid transparent",
   ...common,
 };
 
@@ -39,13 +39,17 @@ const Navigation = ({ dataLinks }) => (
         }}
         container
         className="header-list"
-        spacing={5}
+        spacing={4}
       >
         {dataLinks.map(({ to, exact, name }) => (
           <Grid item key={name} xs={12} md={3}>
-            <NavLink to={to} exact={exact} active={active} inactive={inactive}>
-              {name}
-            </NavLink>
+            <NavLink
+              to={to}
+              exact={exact}
+              active={active}
+              inactive={inactive}
+              name={name}
+            />
           </Grid>
         ))}
       </Grid>
