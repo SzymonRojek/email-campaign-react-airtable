@@ -51,6 +51,7 @@ const NewCampaign = ({
     reset();
 
     setContentPopup({
+      title: "Yeah 🎊",
       text: `Campaign ${capitalizeFirstLetter(data.title)} has been ${
         actionStatus === "draft" ? "drafted and add" : "send"
       } to the data.`,

@@ -39,6 +39,7 @@ const AddSubscriber = ({
     reset();
 
     setContentPopup({
+      title: "Yeah 🎊",
       text: (
         <>
           Subscriber
