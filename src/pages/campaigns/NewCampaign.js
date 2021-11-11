@@ -70,12 +70,13 @@ const NewCampaign = ({
       <h1
         style={{
           textAlign: "center",
-          marginBottom: -100,
+          margin: "100px 0 60px 0",
           color: "#003049",
           letterSpacing: 2,
+          wordSpacing: 15,
         }}
       >
-        Add New Campaign:
+        Add Campaign:
       </h1>
       <FormCampaign
         handleSubmit={handleSubmit}
