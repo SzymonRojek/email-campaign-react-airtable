@@ -55,13 +55,14 @@ const SubscriberDetails = () => {
               textAlign: "center",
               marginTop: 100,
               fontSize: 40,
-              color: "#303f9f",
+              color: "#003049",
               letterSpacing: 2,
               wordSpacing: 15,
             }}
           >
-            Subscriber Details
+            Subscriber Details:
           </h1>
+
           <ContainerTable>
             <HeadTable dataHeadTable={detailsDataHeadTableFirst} />
 

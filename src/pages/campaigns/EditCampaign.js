@@ -5,31 +5,26 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
 
 import api from "../../api";
-import { emailMessage } from "../../mailgun/app";
+// import { emailMessage } from "../../mailgun/app";
 import { capitalizeFirstLetter, validationCampaign } from "../../helpers";
 import { FormCampaign } from "../../components/FormCampaign";
 
 const EditCampaign = ({
-  subscribersData,
   selectedData,
   getCampaignsData,
   setOpenInfoPopup,
   setContentPopup,
 }) => {
-  const editCampaignData = {
-    title: selectedData ? selectedData.fields.title : "",
-    description: selectedData
-      ? `Hello {{name}}! \n \n${selectedData.fields.description}`
-      : "",
-  };
-
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationCampaign),
-    defaultValues: editCampaignData,
+    defaultValues: {
+      title: selectedData ? selectedData.fields.title : "",
+      description: selectedData ? selectedData.fields.description : "",
+    },
   });
 
   const [actionStatus, setActionStatus] = useState("");
@@ -90,14 +85,26 @@ const EditCampaign = ({
   };
 
   return (
-    <FormCampaign
-      handleSubmit={handleSubmit}
-      onSubmit={onSubmit}
-      register={register}
-      errors={errors}
-      setActionStatus={setActionStatus}
-      getCampaignsData={getCampaignsData}
-    />
+    <>
+      <h1
+        style={{
+          textAlign: "center",
+          marginBottom: -100,
+          color: "#003049",
+          letterSpacing: 2,
+        }}
+      >
+        Edit Campaign Data:
+      </h1>
+      <FormCampaign
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        register={register}
+        errors={errors}
+        setActionStatus={setActionStatus}
+        getCampaignsData={getCampaignsData}
+      />
+    </>
   );
 };
 
