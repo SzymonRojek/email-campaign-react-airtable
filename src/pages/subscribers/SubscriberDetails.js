@@ -53,8 +53,7 @@ const SubscriberDetails = () => {
           <h1
             style={{
               textAlign: "center",
-              marginTop: 100,
-              fontSize: 40,
+              margin: "100px 0 60px 0",
               color: "#003049",
               letterSpacing: 2,
               wordSpacing: 15,
@@ -63,7 +62,7 @@ const SubscriberDetails = () => {
             Subscriber Details:
           </h1>
 
-          <ContainerTable>
+          <ContainerTable subHeading="General:">
             <HeadTable dataHeadTable={detailsDataHeadTableFirst} />
 
             <TableBody>
@@ -78,7 +77,7 @@ const SubscriberDetails = () => {
             </TableBody>
           </ContainerTable>
 
-          <ContainerTable>
+          <ContainerTable subHeading="Details:">
             <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
 
             <TableBody>
