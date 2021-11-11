@@ -18,7 +18,7 @@ const FormCampaign = ({
         elevation={6}
         style={{
           maxWidth: 600,
-          margin: "0 auto",
+          margin: "20px auto 40px auto",
           borderRadius: 8,
         }}
       >
