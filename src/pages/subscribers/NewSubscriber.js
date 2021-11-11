@@ -65,12 +65,13 @@ const AddSubscriber = ({
       <h1
         style={{
           textAlign: "center",
-          marginBottom: -40,
+          margin: "100px 0 60px 0",
           color: "#003049",
           letterSpacing: 2,
+          wordSpacing: 15,
         }}
       >
-        Add New Subscriber:
+        Add Subscriber:
       </h1>
       <Container>
         <Paper
