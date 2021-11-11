@@ -30,14 +30,16 @@ const SubscribersList = (props) => {
               <h1
                 style={{
                   textAlign: "center",
-                  marginBottom: -40,
+                  margin: "100px 0 60px 0",
                   color: "#003049",
                   letterSpacing: 2,
+                  wordSpacing: 15,
                 }}
               >
-                Subscribers List:
+                Subscribers:
               </h1>
               <ContainerSubscribers
+                subHeading="List:"
                 dataHeadTable={generalDataHeadTable}
                 subscribersData={subscribersData.data}
                 setSelectedData={setSelectedData}
@@ -49,25 +51,15 @@ const SubscribersList = (props) => {
           )}
 
           {subscribersData.data.length > 1 ? (
-            <>
-              <h2
-                style={{
-                  textAlign: "center",
-                  marginBottom: -40,
-                  color: "#003049",
-                }}
-              >
-                Latest added subscriber:
-              </h2>
-              <ContainerSubscribers
-                dataHeadTable={generalDataHeadTable}
-                subscribersData={subscribersData.latestSubscriber}
-                setSelectedData={setSelectedData}
-                handleSubscriberDetails={handleSubscriberDetails}
-                setContentPopup={setContentPopup}
-                setOpenConfirmPopup={setOpenConfirmPopup}
-              />
-            </>
+            <ContainerSubscribers
+              subHeading="Latest added Subscriber:"
+              dataHeadTable={generalDataHeadTable}
+              subscribersData={subscribersData.latestSubscriber}
+              setSelectedData={setSelectedData}
+              handleSubscriberDetails={handleSubscriberDetails}
+              setContentPopup={setContentPopup}
+              setOpenConfirmPopup={setOpenConfirmPopup}
+            />
           ) : (
             ""
           )}
