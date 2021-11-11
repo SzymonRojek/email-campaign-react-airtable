@@ -7,7 +7,7 @@ import { Grid, Typography } from "@material-ui/core";
 import api from "../../api";
 import { TextInput } from "../../components/TextInput";
 import { StyledButton } from "../../components/StyledButton";
-import { capitalizeFirstLetter, validationSchema } from "../../helpers";
+import { capitalizeFirstLetter, validationSubscriber } from "../../helpers";
 
 const AddSubscriber = ({
   setOpenInfoPopup,
@@ -19,7 +19,9 @@ const AddSubscriber = ({
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm({ resolver: yupResolver(validationSchema) });
+  } = useForm({
+    resolver: yupResolver(validationSubscriber),
+  });
 
   const endpoint = "/subscribers";
 
@@ -35,6 +37,7 @@ const AddSubscriber = ({
     });
 
     reset();
+
     setContentPopup({
       text: `Subscriber ${capitalizeFirstLetter(
         data.name
@@ -103,7 +106,14 @@ const AddSubscriber = ({
                     message={errors.profession?.message ?? ""}
                   />
                 </Grid>
-
+                <Grid item xs={12}>
+                  <TextInput
+                    value="email"
+                    register={register}
+                    error={!!errors?.email}
+                    message={errors.email?.message ?? ""}
+                  />
+                </Grid>
                 <Grid item xs={12} md={12}>
                   <StyledButton label="add" ariaLabel="add" type="submit" />
                 </Grid>
