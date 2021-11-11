@@ -41,7 +41,7 @@ const FilteredSubscribersList = (props) => {
             ) : (
               <>
                 <FilterStatusSubscribers
-                  subHeading="Active Status:"
+                  subHeading="Active:"
                   generalDataHeadTable={generalDataHeadTable}
                   subscribersData={subscribersData.data}
                   status="active"
@@ -52,7 +52,7 @@ const FilteredSubscribersList = (props) => {
                 />
 
                 <FilterStatusSubscribers
-                  subHeading="Pending Status:"
+                  subHeading="Pending:"
                   generalDataHeadTable={generalDataHeadTable}
                   subscribersData={subscribersData.data}
                   status="pending"
@@ -63,7 +63,7 @@ const FilteredSubscribersList = (props) => {
                 />
 
                 <FilterStatusSubscribers
-                  subHeading="Blocked Status:"
+                  subHeading="Blocked:"
                   generalDataHeadTable={generalDataHeadTable}
                   subscribersData={subscribersData.data}
                   status="blocked"
