@@ -34,8 +34,8 @@ const RowSubscriber = (props) => {
     setContentPopup,
     setOpenConfirmPopup,
   } = props;
-  const classes = useStyles();
 
+  const classes = useStyles();
   const location = useLocation();
 
   const setTextPopupByStatus = () =>
