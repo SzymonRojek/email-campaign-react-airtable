@@ -24,14 +24,26 @@ const CampaignsList = ({
               titleTwo="Please add a new subscriber."
             />
           ) : (
-            <ContainerCampaigns
-              dataHeadEmailTable={dataHeadEmailTable}
-              campaignsData={campaignsData.data}
-              setSelectedData={setSelectedData}
-              handleEditCampaign={handleEditCampaign}
-              setContentPopup={setContentPopup}
-              setOpenConfirmPopup={setOpenConfirmPopup}
-            />
+            <>
+              <h1
+                style={{
+                  textAlign: "center",
+                  marginBottom: -40,
+                  color: "#003049",
+                  letterSpacing: 2,
+                }}
+              >
+                Campaigns List:
+              </h1>
+              <ContainerCampaigns
+                dataHeadEmailTable={dataHeadEmailTable}
+                campaignsData={campaignsData.data}
+                setSelectedData={setSelectedData}
+                handleEditCampaign={handleEditCampaign}
+                setContentPopup={setContentPopup}
+                setOpenConfirmPopup={setOpenConfirmPopup}
+              />
+            </>
           )}
 
           {campaignsData.data.length > 1 ? (
@@ -40,10 +52,10 @@ const CampaignsList = ({
                 style={{
                   textAlign: "center",
                   marginBottom: -40,
-                  color: "#303f9f",
+                  color: "#003049",
                 }}
               >
-                Latest added campaign:
+                Latest added Campaign:
               </h2>
               <ContainerCampaigns
                 dataHeadEmailTable={dataHeadEmailTable}
