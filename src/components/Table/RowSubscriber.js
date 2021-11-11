@@ -48,7 +48,7 @@ const RowSubscriber = (props) => {
               <span style={{ color: "orange" }}>
                 <strong> pending </strong>
               </span>
-              at the moment - subscription has to be confirmed by an admin.
+              at the moment - subscription has to be confirmed by an admin 🙂
             </>
           ),
           colorButton: "error",
@@ -62,7 +62,7 @@ const RowSubscriber = (props) => {
               <span style={{ color: "#d32f2f" }}>
                 <strong> blocked </strong>
               </span>
-              - can not get an access to more details.
+              - can not get an access to more details 🙁
             </>
           ),
           colorButton: "error",
