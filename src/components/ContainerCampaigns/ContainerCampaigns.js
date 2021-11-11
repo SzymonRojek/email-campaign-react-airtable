@@ -7,6 +7,7 @@ import {
 } from "../../components/Table";
 
 const ContainerCampaigns = ({
+  subHeading,
   dataHeadEmailTable,
   campaignsData,
   handleEditCampaign,
@@ -15,7 +16,7 @@ const ContainerCampaigns = ({
   setOpenConfirmPopup,
 }) => {
   return (
-    <ContainerTable>
+    <ContainerTable subHeading={subHeading}>
       <HeadTable dataHeadTable={dataHeadEmailTable} />
       <BodyTable>
         {campaignsData &&
