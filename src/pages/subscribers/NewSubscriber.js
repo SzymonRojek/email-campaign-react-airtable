@@ -39,9 +39,15 @@ const AddSubscriber = ({
     reset();
 
     setContentPopup({
-      text: `Subscriber ${capitalizeFirstLetter(
-        data.name
-      )} has been added to the data :D`,
+      text: (
+        <>
+          Subscriber
+          <span style={{ color: "green" }}>
+            <strong> {capitalizeFirstLetter(data.name)} </strong>
+          </span>
+          has been added to the data 😁
+        </>
+      ),
       colorButton: "success",
     });
 
