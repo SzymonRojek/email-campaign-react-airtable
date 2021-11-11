@@ -4,11 +4,27 @@ export const mainLinksNavigation = [
   { to: "/", exact: true, name: "Home" },
 ];
 
-export const subLinksNavigation = [
+export const subscribersLinksNavigation = [
   {
     to: "",
     exact: true,
-    name: "List",
+    name: "Subscribers",
+  },
+  {
+    to: "filter",
+    name: "Status",
+  },
+  {
+    to: "add",
+    name: "Add",
+  },
+];
+
+export const campaignsLinksNavigation = [
+  {
+    to: "",
+    exact: true,
+    name: "Campaigns",
   },
   {
     to: "filter",
