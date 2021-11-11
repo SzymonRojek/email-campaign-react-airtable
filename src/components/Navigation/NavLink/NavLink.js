@@ -1,9 +1,20 @@
 import { Link, useLocation, useResolvedLocation } from "react-router-dom";
 import { Button } from "@mui/material";
+import { makeStyles } from "@material-ui/core";
+
+const useStyles = makeStyles(() => ({
+  root: {
+    "&:hover": {
+      backgroundColor: "transparent !important",
+    },
+    width: 100,
+  },
+}));
 
 const NavLink = ({ to, exact, style, active, inactive, name, ...rest }) => {
   const location = useLocation();
   const resolvedLocation = useResolvedLocation(to);
+  const classes = useStyles();
 
   let isActive;
   if (exact) {
@@ -17,21 +28,16 @@ const NavLink = ({ to, exact, style, active, inactive, name, ...rest }) => {
       <Button
         disableRipple
         disableElevation
+        classes={{ root: classes.root }}
         style={
           isActive
             ? {
                 color: "#003049",
-                width: 100,
-                "&.MuiButtonBaseRoot:hover": {
-                  backgroundColor: "transparent",
-                },
+                letterSpacing: 2,
               }
             : {
                 color: "#fff",
-                width: 100,
-                "&.MuiButtonBaseRoot:hover": {
-                  backgroundColor: "transparent",
-                },
+                letterSpacing: 2,
               }
         }
       >

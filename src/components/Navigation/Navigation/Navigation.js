@@ -6,9 +6,7 @@ import Menu from "../Menu/Menu";
 import NavLink from "../NavLink/NavLink";
 
 const common = {
-  padding: "10px 15px",
-  fontSize: 17,
-  letterSpacing: 1,
+  padding: "10px 20px",
   textDecoration: "none",
   borderRadius: 4,
 };
