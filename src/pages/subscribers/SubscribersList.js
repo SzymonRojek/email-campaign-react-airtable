@@ -26,14 +26,26 @@ const SubscribersList = (props) => {
               titleTwo="Please add a new subscriber."
             />
           ) : (
-            <ContainerSubscribers
-              dataHeadTable={generalDataHeadTable}
-              subscribersData={subscribersData.data}
-              setSelectedData={setSelectedData}
-              handleSubscriberDetails={handleSubscriberDetails}
-              setContentPopup={setContentPopup}
-              setOpenConfirmPopup={setOpenConfirmPopup}
-            />
+            <>
+              <h1
+                style={{
+                  textAlign: "center",
+                  marginBottom: -40,
+                  color: "#003049",
+                  letterSpacing: 2,
+                }}
+              >
+                Subscribers List:
+              </h1>
+              <ContainerSubscribers
+                dataHeadTable={generalDataHeadTable}
+                subscribersData={subscribersData.data}
+                setSelectedData={setSelectedData}
+                handleSubscriberDetails={handleSubscriberDetails}
+                setContentPopup={setContentPopup}
+                setOpenConfirmPopup={setOpenConfirmPopup}
+              />
+            </>
           )}
 
           {subscribersData.data.length > 1 ? (
@@ -42,7 +54,7 @@ const SubscribersList = (props) => {
                 style={{
                   textAlign: "center",
                   marginBottom: -40,
-                  color: "#303f9f",
+                  color: "#003049",
                 }}
               >
                 Latest added subscriber:
