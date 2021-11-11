@@ -9,16 +9,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ContainerTable = ({ children }) => {
+const ContainerTable = ({ subHeading, children }) => {
   const classes = useStyles();
   return (
-    <TableContainer
-      component={Paper}
-      className={classes.tableContainer}
-      elevation={4}
-    >
-      <Table aria-label="subscribers table">{children}</Table>
-    </TableContainer>
+    <>
+      <header>
+        <h3
+          style={{
+            textAlign: "left",
+            marginBottom: -60,
+            color: "#003049",
+            letterSpacing: 2,
+          }}
+        >
+          {subHeading}
+        </h3>
+      </header>
+      <TableContainer
+        component={Paper}
+        className={classes.tableContainer}
+        elevation={4}
+      >
+        <Table aria-label="subscribers table">{children}</Table>
+      </TableContainer>
+    </>
   );
 };
 
