@@ -51,6 +51,7 @@ const FormCampaign = ({
 
               <Grid item xs={12} md={6}>
                 <StyledButton
+                  backgroundColor="#FFAB4C"
                   type="submit"
                   ariaLabel="draft"
                   label="draft"
@@ -62,6 +63,7 @@ const FormCampaign = ({
               </Grid>
               <Grid item xs={12} md={6}>
                 <StyledButton
+                  backgroundColor="#FF5F7E"
                   label="send"
                   ariaLabel="send"
                   type="submit"
