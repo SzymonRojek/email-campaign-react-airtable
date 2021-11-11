@@ -42,13 +42,29 @@ const RowSubscriber = (props) => {
     subscriber.fields.status === "pending"
       ? setContentPopup({
           title: "Please wait...",
-          text: `${subscriber.fields.name}'s status is pending at the moment - subscription has to be confirmed by an admin.`,
+          text: (
+            <>
+              {capitalizeFirstLetter(subscriber.fields.name)}'s status is
+              <span style={{ color: "orange" }}>
+                <strong> pending </strong>
+              </span>
+              at the moment - subscription has to be confirmed by an admin.
+            </>
+          ),
           colorButton: "error",
         })
       : subscriber.fields.status === "blocked"
       ? setContentPopup({
           title: "Unfortunately...",
-          text: `${subscriber.fields.name}'s status is blocked - can not get an access to more details.`,
+          text: (
+            <>
+              {capitalizeFirstLetter(subscriber.fields.name)}'s status is
+              <span style={{ color: "#d32f2f" }}>
+                <strong> blocked </strong>
+              </span>
+              - can not get an access to more details.
+            </>
+          ),
           colorButton: "error",
         })
       : {};

@@ -6,7 +6,7 @@ const InfoPopup = ({ openInfoPopup, setOpenInfoPopup, contentPopup }) => {
     <Dialog open={openInfoPopup} maxWidth="sm">
       <DialogTitle>
         <div style={{ display: "flex" }}>
-          <Typography variant="h6" style={{ flexGrow: 1 }}>
+          <Typography variant="h6" p={2} style={{ flexGrow: 1 }}>
             {contentPopup.title}
           </Typography>
           <Button
@@ -22,7 +22,7 @@ const InfoPopup = ({ openInfoPopup, setOpenInfoPopup, contentPopup }) => {
         </div>
       </DialogTitle>
       <DialogContent dividers>
-        <Typography>{contentPopup.text}</Typography>
+        <Typography p={2}>{contentPopup.text}</Typography>
       </DialogContent>
     </Dialog>
   );
