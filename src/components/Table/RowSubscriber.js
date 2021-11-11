@@ -123,9 +123,8 @@ const RowSubscriber = (props) => {
               onClick={() => {
                 setOpenConfirmPopup(true);
                 setSelectedData(subscriber);
-                setSelectedData(subscriber);
                 setContentPopup({
-                  title: "Are you sure you want to remove this subscriber?",
+                  title: capitalizeFirstLetter(subscriber.fields.name),
                 });
               }}
             />

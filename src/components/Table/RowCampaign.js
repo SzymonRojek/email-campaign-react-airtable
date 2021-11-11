@@ -110,7 +110,7 @@ const RowCampaign = (props) => {
             setOpenConfirmPopup(true);
             setSelectedData(campaign);
             setContentPopup({
-              title: "Are you sure you want to remove this email campaign?",
+              title: capitalizeFirstLetter(campaign.fields.title),
             });
           }}
         />

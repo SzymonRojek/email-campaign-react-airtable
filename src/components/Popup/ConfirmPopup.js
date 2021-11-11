@@ -18,7 +18,10 @@ const ConfirmPopup = ({
     <Dialog open={openConfirmPopup} maxWidth="sm">
       <DialogTitle>
         <div>
-          <Typography variant="h6">{contentPopup.title}</Typography>
+          <Typography variant="h6" p={2}>
+            Are you sure you want to remove
+            <span style={{ color: "crimson" }}> {contentPopup.title}</span> ?
+          </Typography>
         </div>
       </DialogTitle>
       <DialogContent
