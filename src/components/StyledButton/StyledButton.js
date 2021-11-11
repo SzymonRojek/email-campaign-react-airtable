@@ -20,6 +20,7 @@ const StyledButton = ({ type, onClick, ariaLabel, label, backgroundColor }) => {
         color: "white",
         backgroundColor: backgroundColor,
         fontSize: "1.5em",
+        letterSpacing: 2,
       }}
       type={type}
       aria-label={ariaLabel}
