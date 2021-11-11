@@ -28,14 +28,16 @@ const CampaignsList = ({
               <h1
                 style={{
                   textAlign: "center",
-                  marginBottom: -40,
+                  margin: "100px 0 60px 0",
                   color: "#003049",
                   letterSpacing: 2,
+                  wordSpacing: 15,
                 }}
               >
-                Campaigns List:
+                Campaigns:
               </h1>
               <ContainerCampaigns
+                subHeading="List:"
                 dataHeadEmailTable={dataHeadEmailTable}
                 campaignsData={campaignsData.data}
                 setSelectedData={setSelectedData}
@@ -47,25 +49,15 @@ const CampaignsList = ({
           )}
 
           {campaignsData.data.length > 1 ? (
-            <>
-              <h2
-                style={{
-                  textAlign: "center",
-                  marginBottom: -40,
-                  color: "#003049",
-                }}
-              >
-                Latest added Campaign:
-              </h2>
-              <ContainerCampaigns
-                dataHeadEmailTable={dataHeadEmailTable}
-                campaignsData={campaignsData.latestCampaign}
-                setSelectedData={setSelectedData}
-                handleEditCampaign={handleEditCampaign}
-                setContentPopup={setContentPopup}
-                setOpenConfirmPopup={setOpenConfirmPopup}
-              />
-            </>
+            <ContainerCampaigns
+              subHeading="Latest added Campaign:"
+              dataHeadEmailTable={dataHeadEmailTable}
+              campaignsData={campaignsData.latestCampaign}
+              setSelectedData={setSelectedData}
+              handleEditCampaign={handleEditCampaign}
+              setContentPopup={setContentPopup}
+              setOpenConfirmPopup={setOpenConfirmPopup}
+            />
           ) : (
             ""
           )}
