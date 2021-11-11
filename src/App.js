@@ -94,8 +94,18 @@ const App = () => {
 
     setOpenConfirmPopup(false);
 
-    if (data.data.length === 0) setOpenInfoPopup(true);
+    // if (data.data.length === 0) setOpenInfoPopup(true);
+
     getSubscribersData();
+    setOpenInfoPopup(true);
+    setContentPopup({
+      title: "Element has been removed permanently 😞",
+      colorButton: "error",
+    });
+
+    setTimeout(() => {
+      setOpenInfoPopup(false);
+    }, 3_000);
   };
 
   const handleSubscriberDetails = (subscriber) =>
