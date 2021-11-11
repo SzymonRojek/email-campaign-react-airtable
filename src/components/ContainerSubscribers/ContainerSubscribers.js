@@ -3,6 +3,7 @@ import { TableCell } from "@material-ui/core";
 import { ContainerTable, HeadTable, BodyTable, RowSubscriber } from "../Table";
 
 const ContainerSubscribers = ({
+  subHeading,
   dataHeadTable,
   subscribersData,
   setSelectedData,
@@ -10,7 +11,7 @@ const ContainerSubscribers = ({
   setContentPopup,
   setOpenConfirmPopup,
 }) => (
-  <ContainerTable>
+  <ContainerTable subHeading={subHeading}>
     <HeadTable dataHeadTable={dataHeadTable} />
     <BodyTable>
       {subscribersData &&
