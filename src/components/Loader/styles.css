@@ -14,7 +14,7 @@
   border-top: 10px solid #303f9f;
   border-bottom: 10px solid #303f9f;
   animation: rotateAntiCW 1.8s linear infinite;
-  margin: 200px auto;
+  margin: 0 auto;
 }
 
 .load::after {
@@ -30,15 +30,15 @@
 }
 
 .loader-text {
-  margin-top: -80px;
+  margin-top: 60px;
   font-size: 2em;
   letter-spacing: 2px;
   word-spacing: 4px;
   font-weight: 500;
   color: #303f9f;
-  opacity: 0; /* Initial opacity. */
-  animation: fadeIn ease-in 1; /* Animation definition. */
-  animation-fill-mode: forwards; /* Maintain visibility after complete. */
+  opacity: 0;
+  animation: fadeIn ease-in 1;
+  animation-fill-mode: forwards;
   animation-duration: 1s;
   animation-delay: 0.5s;
 }
