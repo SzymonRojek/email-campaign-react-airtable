@@ -123,7 +123,12 @@ const AddSubscriber = ({
                   />
                 </Grid>
                 <Grid item xs={12} md={12}>
-                  <StyledButton label="add" ariaLabel="add" type="submit" />
+                  <StyledButton
+                    label="submit"
+                    ariaLabel="add"
+                    type="submit"
+                    backgroundColor="#FF5F7E"
+                  />
                 </Grid>
               </Grid>
             </Box>
