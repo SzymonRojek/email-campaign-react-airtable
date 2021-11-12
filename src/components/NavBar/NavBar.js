@@ -8,13 +8,7 @@ import { AiFillHome } from "react-icons/ai";
 import { useNavigate } from "react-router";
 
 import MenuIcon from "@material-ui/icons/Menu";
-import {
-  MenuItem,
-  Menu,
-  IconButton,
-  useMediaQuery,
-  Link,
-} from "@material-ui/core";
+import { MenuItem, Menu, IconButton, useMediaQuery } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import { StyledTabs } from "../StyledTabs";
@@ -92,11 +86,10 @@ function NavBar() {
     <div className={classes.root}>
       <AppBar style={{ backgroundColor: "#142f43" }}>
         <Toolbar>
-          <Link href="/home">
-            <Typography className={classes.logoIcon}>
-              <GoMailRead />
-            </Typography>
-          </Link>
+          <Typography className={classes.logoIcon}>
+            <GoMailRead />
+          </Typography>
+
           {isMobile ? (
             <>
               <IconButton
