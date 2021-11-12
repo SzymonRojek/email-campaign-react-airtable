@@ -127,13 +127,21 @@ const AddSubscriber = ({
                     message={errors.email?.message ?? ""}
                   />
                 </Grid>
-                <Grid item xs={12} md={12}>
-                  <StyledButton
-                    label="submit"
-                    ariaLabel="add"
-                    type="submit"
-                    backgroundColor="#FF5F7E"
-                  />
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="space-evenly"
+                  alignItems="center"
+                >
+                  <Grid item>
+                    <StyledButton
+                      onHover="#286a2b"
+                      backgroundColor="#2e7d32"
+                      label="submit"
+                      ariaLabel="add"
+                      type="submit"
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
             </Box>
