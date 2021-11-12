@@ -6,8 +6,15 @@ import { BsFillPersonPlusFill } from "react-icons/bs";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
 import { useNavigate } from "react-router";
+
 import MenuIcon from "@material-ui/icons/Menu";
-import { MenuItem, Menu, IconButton, useMediaQuery } from "@material-ui/core";
+import {
+  MenuItem,
+  Menu,
+  IconButton,
+  useMediaQuery,
+  Link,
+} from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import { StyledTabs } from "../StyledTabs";
@@ -20,15 +27,17 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
     marginLeft: 20,
   },
-  title: {
-    fontSize: 30,
+  logoIcon: {
     paddingTop: 20,
     margin: "0 0 10px 20px",
+    fontSize: 30,
+    color: "orange",
     [theme.breakpoints.down("xs")]: {
       flexGrow: 1,
       paddingTop: 20,
       margin: "0 0 10px 20px",
     },
+    cursor: "pointer",
   },
   headerOptions: {
     display: "flex",
@@ -81,11 +90,13 @@ function NavBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar color="primary">
+      <AppBar style={{ backgroundColor: "#142f43" }}>
         <Toolbar>
-          <Typography className={classes.title}>
-            <GoMailRead />
-          </Typography>
+          <Link href="/home">
+            <Typography className={classes.logoIcon}>
+              <GoMailRead />
+            </Typography>
+          </Link>
           {isMobile ? (
             <>
               <IconButton
