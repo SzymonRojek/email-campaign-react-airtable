@@ -53,30 +53,38 @@ const FormCampaign = ({
                   message={errors.description?.message ?? ""}
                 />
               </Grid>
-
-              <Grid item xs={12} md={6}>
-                <StyledButton
-                  backgroundColor="#FFAB4C"
-                  type="submit"
-                  ariaLabel="draft"
-                  label="draft"
-                  onClick={() => {
-                    setActionStatus("draft");
-                    getCampaignsData();
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <StyledButton
-                  backgroundColor="#FF5F7E"
-                  label="send"
-                  ariaLabel="send"
-                  type="submit"
-                  onClick={() => {
-                    setActionStatus("sent");
-                    getCampaignsData();
-                  }}
-                />
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-evenly"
+                alignItems="center"
+              >
+                <Grid item>
+                  <StyledButton
+                    onHover="#cf890a"
+                    backgroundColor="#ffa500"
+                    type="submit"
+                    ariaLabel="draft"
+                    label="draft"
+                    onClick={() => {
+                      setActionStatus("draft");
+                      getCampaignsData();
+                    }}
+                  />
+                </Grid>
+                <Grid item>
+                  <StyledButton
+                    onHover="#286a2b"
+                    backgroundColor="#2e7d32"
+                    label="send"
+                    ariaLabel="send"
+                    type="submit"
+                    onClick={() => {
+                      setActionStatus("sent");
+                      getCampaignsData();
+                    }}
+                  />
+                </Grid>
               </Grid>
             </Grid>
           </Box>
