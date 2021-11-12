@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
-import { Grid } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 
-import "./styles.css";
 import Menu from "../Menu/Menu";
 import NavLink from "../NavLink/NavLink";
 
@@ -25,7 +24,7 @@ const inactive = {
 };
 
 const Navigation = ({ dataLinks }) => (
-  <>
+  <Container>
     <Menu>
       <Grid
         style={{
@@ -36,10 +35,9 @@ const Navigation = ({ dataLinks }) => (
           justifyContent: "space-around",
         }}
         container
-        className="header-list"
-        spacing={4}
+        spacing={1}
       >
-        {dataLinks.map(({ to, exact, name }) => (
+        {dataLinks.map(({ to, exact, name }, i) => (
           <Grid item key={name} xs={12} md={3}>
             <NavLink
               to={to}
@@ -56,7 +54,7 @@ const Navigation = ({ dataLinks }) => (
     <div>
       <Outlet />
     </div>
-  </>
+  </Container>
 );
 
 export default Navigation;
