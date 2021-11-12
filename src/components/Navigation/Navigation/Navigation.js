@@ -5,9 +5,12 @@ import Menu from "../Menu/Menu";
 import NavLink from "../NavLink/NavLink";
 
 const common = {
-  padding: "10px 20px",
   textDecoration: "none",
   borderRadius: 4,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  maxWidth: 175,
 };
 
 const active = {
@@ -27,15 +30,15 @@ const Navigation = ({ dataLinks }) => (
   <Container>
     <Menu>
       <Grid
+        container
+        spacing={1}
         style={{
-          margin: "90px auto",
+          margin: "100px auto",
           maxWidth: 600,
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-around",
+          justifyContent: "center",
         }}
-        container
-        spacing={1}
       >
         {dataLinks.map(({ to, exact, name }, i) => (
           <Grid item key={name} xs={12} md={3}>
