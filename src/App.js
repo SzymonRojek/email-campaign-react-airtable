@@ -62,7 +62,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    const delayGetSubscribersData = setTimeout(getSubscribersData, 1500);
+    const delayGetSubscribersData = setTimeout(getSubscribersData, 3_000);
 
     return () => clearTimeout(delayGetSubscribersData);
   }, []);
@@ -85,7 +85,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    const delayGetCampaignData = setTimeout(getCampaignsData, 1500);
+    const delayGetCampaignData = setTimeout(getCampaignsData, 3_000);
 
     return () => clearTimeout(delayGetCampaignData);
   }, []);
