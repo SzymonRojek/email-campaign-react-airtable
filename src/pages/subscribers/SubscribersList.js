@@ -15,7 +15,7 @@ const SubscribersList = (props) => {
   return (
     <>
       {subscribersData.status === "loading" ? (
-        <Loader title="Subscribers Data List is loading..." />
+        <Loader title="Subscribers Data are loading..." />
       ) : subscribersData.status === "success" ? (
         <>
           {subscribersData.status === "success" &&
