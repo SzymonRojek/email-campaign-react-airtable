@@ -5,7 +5,6 @@ const useStyles = makeStyles((theme) => ({
   tableContainer: {
     borderRadius: 15,
     margin: "100px auto",
-    // maxWidth: 1200,
   },
 }));
 
