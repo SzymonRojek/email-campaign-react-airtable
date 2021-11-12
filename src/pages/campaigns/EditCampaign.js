@@ -89,7 +89,6 @@ const EditCampaign = ({
       <h1
         style={{
           textAlign: "center",
-          marginBottom: -100,
           color: "#003049",
           letterSpacing: 2,
         }}
