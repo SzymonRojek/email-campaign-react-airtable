@@ -1,5 +1,3 @@
-import { Container } from "@material-ui/core";
-
 import { dataHeadEmailTable } from "../../data/dataHeadEmailTable";
 import { ContainerCampaigns } from "../../components/ContainerCampaigns";
 import { Loader } from "../../components/Loader";
@@ -13,7 +11,7 @@ const CampaignsList = ({
   setOpenConfirmPopup,
 }) => {
   return (
-    <Container>
+    <>
       {campaignsData.status === "loading" ? (
         <Loader title="Campaigns Data List is loading..." />
       ) : campaignsData.status === "success" ? (
@@ -69,7 +67,7 @@ const CampaignsList = ({
           titleThree="Contact with your internet provider."
         />
       )}
-    </Container>
+    </>
   );
 };
 

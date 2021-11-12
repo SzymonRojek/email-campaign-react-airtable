@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { Paper, Box, Container } from "@mui/material";
+import { Paper, Box } from "@mui/material";
 import { Grid, Typography } from "@material-ui/core";
 
 import api from "../../api";
@@ -73,7 +73,7 @@ const AddSubscriber = ({
       >
         Add Subscriber:
       </h1>
-      <Container>
+      <>
         <Paper
           elevation={14}
           style={{
@@ -139,7 +139,7 @@ const AddSubscriber = ({
             </Box>
           </form>
         </Paper>
-      </Container>
+      </>
     </>
   );
 };
