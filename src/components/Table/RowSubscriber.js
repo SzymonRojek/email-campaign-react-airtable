@@ -104,6 +104,10 @@ const RowSubscriber = (props) => {
             className={classes.status}
             style={{
               backgroundColor: getStatusColor(subscriber.fields.status),
+              padding: "9px 20px 9px 20px",
+              letterSpacing: 2,
+              textTransform: "uppercase",
+              fontSize: 11,
             }}
           >
             {subscriber.fields.status}

@@ -69,6 +69,10 @@ const RowCampaign = (props) => {
             className={classes.status}
             style={{
               backgroundColor: getStatusColor(campaign.fields.status),
+              padding: "9px 20px 9px 20px",
+              letterSpacing: 2,
+              textTransform: "uppercase",
+              fontSize: 11,
             }}
           >
             {campaign.fields.status}
@@ -78,6 +82,7 @@ const RowCampaign = (props) => {
       <TableCell>
         {campaign.fields.status === "draft" ? (
           <Button
+            style={{ fontSize: 12, letterSpacing: 2, fontWeight: "bold" }}
             aria-label="edit"
             color="success"
             variant="contained"
