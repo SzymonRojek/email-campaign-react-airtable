@@ -1,50 +1,16 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { AppBar, Typography, Tabs, Tab, Toolbar } from "@material-ui/core";
+import { AppBar, Typography, Tab, Toolbar } from "@material-ui/core";
 import { GoMailRead } from "react-icons/go";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
 import { useNavigate } from "react-router";
-import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { MenuItem, Menu, IconButton, useMediaQuery } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
-// const useStyles = makeStyles((theme) => ({
-// root: {
-//   backgroundColor: theme.palette.background.paper,
-//   width: 500,
-// },
-// indicator: {
-//   background: "yellow",
-//   borderBottom: "2px solid",
-// },
-// tabs: {
-// "& button[aria-selected='true']": {
-//   border: "5px solid red"
-// }
-// "& button": {
-//   padding: 5,
-//   borderBottom: 2,
-// },
-// "& button[aria-selected='true']": {
-//   position: "relative",
-
-//   "&:before": {
-//     content: '""',
-//     position: "absolute",
-//     left: 0,
-//     top: 0,
-//     right: 0,
-//     bottom: 0,
-//     background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
-//     zIndex: 0,
-// }));
-
-const checkUrl = (string) => window.location.href.indexOf(string) > -1;
+import { StyledTabs } from "../StyledTabs";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flex: 1,
     justifyContent: "space-evenly",
+    paddingBottom: 20,
   },
 }));
 
@@ -99,20 +66,6 @@ function NavBar() {
   useEffect(() => {
     navigateLinksOnReload(value);
   }, []);
-
-  // const menuItems = [
-  //   { id: 1, menuTitle: "Home", pageURL: "/" },
-  //   {
-  //     id: 2,
-  //     menuTitle: "Campaigns",
-  //     pageURL: "/campaigns",
-  //   },
-  //   {
-  //     id: 3,
-  //     menuTitle: "Subscribers",
-  //     pageURL: "/subscribers",
-  //   },
-  // ];
 
   const menuItems = [
     { to: "/subscribers", name: "Subscribers" },
@@ -171,11 +124,17 @@ function NavBar() {
             </>
           ) : (
             <div className={classes.headerOptions}>
-              <Tabs
+              <StyledTabs
+                TabIndicatorProps={{
+                  style: {
+                    background: "orange",
+                    maxWidth: 130,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                }}
                 onChange={handleClickTab}
-                indicatorColor="secondary"
-                // className={classes.tabs}
-                // classes={{ indicator: classes.indicator }}
                 value={value}
               >
                 <Tab
@@ -198,7 +157,7 @@ function NavBar() {
                   label="home"
                   onClick={() => handleTabClick("/")}
                 />
-              </Tabs>
+              </StyledTabs>
             </div>
           )}
         </Toolbar>
