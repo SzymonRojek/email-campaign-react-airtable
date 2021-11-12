@@ -20,7 +20,7 @@ const StyledTextField = withStyles({
         borderColor: "#fff",
       },
       "&.Mui-focused fieldset": {
-        borderColor: "green",
+        borderColor: "#2e7d32",
       },
     },
   },
