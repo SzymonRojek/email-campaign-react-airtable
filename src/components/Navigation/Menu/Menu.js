@@ -1,3 +1,3 @@
-const Menu = ({ children }) => <nav style={{ width: "100%" }}>{children}</nav>;
+const Menu = ({ children }) => <nav>{children}</nav>;
 
 export default Menu;
