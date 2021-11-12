@@ -34,10 +34,12 @@ const NavLink = ({ to, exact, style, active, inactive, name, ...rest }) => {
             ? {
                 color: "#003049",
                 letterSpacing: 2,
+                fontSize: 12,
               }
             : {
                 color: "#fff",
                 letterSpacing: 2,
+                fontSize: 12,
               }
         }
       >
