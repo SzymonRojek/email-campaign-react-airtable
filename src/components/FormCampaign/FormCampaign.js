@@ -15,18 +15,23 @@ const FormCampaign = ({
   return (
     <Container>
       <Paper
-        elevation={6}
+        elevation={14}
         style={{
           maxWidth: 600,
           margin: "20px auto 40px auto",
           borderRadius: 8,
+          backgroundColor: "#142F43",
         }}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box px={3} py={3}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
-                <Typography color="textSecondary" variant="body2">
+                <Typography
+                  color="textSecondary"
+                  variant="body2"
+                  style={{ color: "#fff" }}
+                >
                   *Fields required
                 </Typography>
               </Grid>
