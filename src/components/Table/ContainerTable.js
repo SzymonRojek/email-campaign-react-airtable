@@ -18,7 +18,7 @@ const ContainerTable = ({ subHeading, children }) => {
           style={{
             textAlign: "left",
             marginBottom: -60,
-            color: "#003049",
+            color: "#142F43",
             letterSpacing: 2,
           }}
         >

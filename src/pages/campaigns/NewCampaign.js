@@ -71,7 +71,7 @@ const NewCampaign = ({
         style={{
           textAlign: "center",
           margin: "100px 0 60px 0",
-          color: "#003049",
+          color: "#142F43",
           letterSpacing: 2,
           wordSpacing: 15,
         }}
