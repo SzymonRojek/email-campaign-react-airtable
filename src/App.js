@@ -39,6 +39,7 @@ const App = () => {
   const [contentPopup, setContentPopup] = useState({});
   const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
   const [selectedData, setSelectedData] = useState({});
+  const [tabsValue, setTabsValue] = useState(0);
 
   const endpointSubscribers = "/subscribers";
   const endpointCampaigns = "/campaigns";
@@ -230,7 +231,7 @@ const App = () => {
 
   return (
     <>
-      <NavBar />
+      <NavBar tabsValue={tabsValue} setTabsValue={setTabsValue} />
 
       <InfoPopup
         contentPopup={contentPopup}
