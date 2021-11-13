@@ -33,7 +33,7 @@ const Navigation = ({ dataLinks }) => (
         container
         spacing={1}
         style={{
-          margin: "100px auto",
+          margin: "20px auto",
           maxWidth: 600,
           display: "flex",
           alignItems: "center",
