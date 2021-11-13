@@ -6,26 +6,53 @@ import {
   IconButton,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
   makeStyles,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
+import { BsFillPersonPlusFill } from "react-icons/bs";
+import { AiFillMail } from "react-icons/ai";
+import { AiFillHome } from "react-icons/ai";
 
 const useStyles = makeStyles(() => ({
+  list: {
+    backgroundColor: "#142f43",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+  },
   link: {
     textDecoration: "none",
-    color: "#142f43",
+    color: "#ffffff8c",
     fontSize: "20px",
   },
   icon: {
     color: "white",
   },
+  divider: { backgroundColor: "#ffffff8c" },
 }));
 
 const mobileLinks = [
-  { to: "/subscribers", name: "Subscribers", tabsValue: 0 },
-  { to: "/campaigns", name: "Campaigns", tabsValue: 1 },
-  { to: "/", name: "Home", tabsValue: 2 },
+  {
+    icon: <BsFillPersonPlusFill style={{ color: "orange", fontSize: 17 }} />,
+    to: "/subscribers",
+    name: "Subscribers",
+    tabsValue: 0,
+  },
+  {
+    icon: <AiFillMail style={{ color: "orange", fontSize: 17 }} />,
+    to: "/campaigns",
+    name: "Campaigns",
+    tabsValue: 1,
+  },
+  {
+    icon: <AiFillHome style={{ color: "orange", fontSize: 17 }} />,
+    to: "/",
+    name: "Home",
+    tabsValue: 2,
+  },
 ];
 
 function DrawerMenu({ setTabsValue }) {
@@ -34,10 +61,15 @@ function DrawerMenu({ setTabsValue }) {
   return (
     <>
       <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
-        <List>
-          {mobileLinks.map(({ to, name, tabsValue }) => (
-            <>
-              <ListItem onClick={() => setOpenDrawer(false)}>
+        <List className={classes.list}>
+          {mobileLinks.map(({ icon, to, name, tabsValue }) => (
+            <div key={`key-${tabsValue}`}>
+              <ListItem
+                button
+                key={`key-${tabsValue}`}
+                onClick={() => setOpenDrawer(false)}
+              >
+                <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText>
                   <Link
                     to={to}
@@ -48,8 +80,8 @@ function DrawerMenu({ setTabsValue }) {
                   </Link>
                 </ListItemText>
               </ListItem>
-              <Divider />
-            </>
+              <Divider className={classes.divider} />
+            </div>
           ))}
         </List>
       </Drawer>
