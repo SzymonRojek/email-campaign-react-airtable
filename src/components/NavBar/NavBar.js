@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AppBar,
   Typography,
@@ -12,7 +12,7 @@ import { BsFillPersonPlusFill } from "react-icons/bs";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { StyledTabs } from "../StyledTabs";
 import { DrawerMenu } from "../DrawerMenu";
@@ -34,34 +34,6 @@ const mainNavigationLinks = [
     to: "/",
   },
 ];
-
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     flexGrow: 1,
-//   },
-//   menuButton: {
-//     marginRight: theme.spacing(2),
-//     marginLeft: 20,
-//   },
-//   logoIcon: {
-//     paddingTop: 20,
-//     margin: "0 0 10px 20px",
-//     fontSize: 30,
-//     color: "orange",
-//     [theme.breakpoints.down("xs")]: {
-//       flexGrow: 1,
-//       paddingTop: 20,
-//       margin: "0 0 10px 20px",
-//     },
-//     cursor: "pointer",
-//   },
-//   headerOptions: {
-//     display: "flex",
-//     flex: 1,
-//     justifyContent: "space-evenly",
-//     paddingBottom: 20,
-//   },
-// }));
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -99,10 +71,20 @@ function NavBar() {
   const theme = useTheme();
   const classes = useStyles();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  const location = useLocation();
 
-  const handleClickTab = (e, newValue) => {
-    return setValue(newValue);
-  };
+  const handleClickTab = (e, newValue) => setValue(newValue);
+
+  const checkStringUrl = (string) =>
+    window.location.href.indexOf(string) > -1 && value !== 0;
+
+  // keep same indicator tabs position on reload
+  useEffect(() => {
+    const path = location.pathname;
+    if (checkStringUrl("subscribers")) setValue(0);
+    else if (checkStringUrl("campaigns")) setValue(1);
+    else if (path === "/" && value !== 2) setValue(2);
+  }, [value]);
 
   return (
     <div>
