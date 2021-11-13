@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   AppBar,
-  Typography,
   Tab,
   Toolbar,
   CssBaseline,
@@ -45,14 +44,16 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-evenly",
     padding: "10px 0 20px 0",
   },
+  logoContainer: {
+    [theme.breakpoints.down("xs")]: {
+      flexGrow: 1,
+    },
+  },
   logo: {
     fontSize: 30,
     color: "orange",
     cursor: "pointer",
     marginRight: 20,
-    [theme.breakpoints.down("xs")]: {
-      flexGrow: 1,
-    },
   },
   link: {
     textDecoration: "none",
@@ -66,40 +67,40 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NavBar() {
-  const [value, setValue] = useState(2);
+function NavBar({ tabsValue, setTabsValue }) {
   const theme = useTheme();
   const classes = useStyles();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const location = useLocation();
 
-  const handleClickTab = (e, newValue) => setValue(newValue);
-
-  const checkStringUrl = (string) =>
-    window.location.href.indexOf(string) > -1 && value !== 0;
+  const handleClickTab = (e, newTabsValue) => setTabsValue(newTabsValue);
 
   // keep same indicator tabs position on reload
   useEffect(() => {
     const path = location.pathname;
-    if (checkStringUrl("subscribers")) setValue(0);
-    else if (checkStringUrl("campaigns")) setValue(1);
-    else if (path === "/" && value !== 2) setValue(2);
-  }, [value]);
+    if (window.location.href.indexOf("subscribers") > -1 && tabsValue !== 0)
+      setTabsValue(0);
+    else if (window.location.href.indexOf("campaigns") > -1 && tabsValue !== 1)
+      setTabsValue(1);
+    else if (path === "/" && tabsValue !== 2) setTabsValue(2);
+  }, []);
 
   return (
     <div>
       <AppBar className={classes.container} position="static">
         <CssBaseline />
         <Toolbar>
-          <Typography className={classes.logo}>
-            <GoMailRead />
-          </Typography>
+          <div className={classes.logoContainer}>
+            <Link to="/">
+              <GoMailRead className={classes.logo} />
+            </Link>
+          </div>
 
           {isMobile ? (
-            <DrawerMenu />
+            <DrawerMenu setTabsValue={setTabsValue} />
           ) : (
             <div className={classes.navLinksContainer}>
-              <StyledTabs onChange={handleClickTab} value={value}>
+              <StyledTabs onChange={handleClickTab} value={tabsValue}>
                 {mainNavigationLinks.map(({ icon, name, to }) => (
                   <Tab
                     key={name}
