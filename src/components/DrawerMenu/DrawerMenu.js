@@ -1,40 +1,61 @@
 import { useState } from "react";
-
+import { Link } from "react-router-dom";
 import {
+  Divider,
   Drawer,
+  IconButton,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
+  makeStyles,
 } from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/Menu";
 
-const DrawerMenu = () => {
-  const [openDrawer, setOpenDrawer] = useState(true);
+const useStyles = makeStyles(() => ({
+  link: {
+    textDecoration: "none",
+    color: "#142f43",
+    fontSize: "20px",
+  },
+  icon: {
+    color: "white",
+  },
+}));
+
+const mobileLinks = [
+  { to: "/subscribers", name: "Subscribers" },
+  { to: "/campaigns", name: "Campaigns" },
+  { to: "/", name: "Home" },
+];
+
+function DrawerMenu() {
+  const classes = useStyles();
+  const [openDrawer, setOpenDrawer] = useState(false);
   return (
-    <Drawer
-      anchor="right"
-      open={openDrawer}
-      onClose={() => setOpenDrawer(false)}
-    >
-      <List>
-        <ListItem divider button>
-          <ListItemIcon>
-            <ListItemText>Subscribers</ListItemText>
-          </ListItemIcon>
-        </ListItem>
-        <ListItem divider button>
-          <ListItemIcon>
-            <ListItemText>Campaigns</ListItemText>
-          </ListItemIcon>
-        </ListItem>
-        <ListItem divider button>
-          <ListItemIcon>
-            <ListItemText>Home</ListItemText>
-          </ListItemIcon>
-        </ListItem>
-      </List>
-    </Drawer>
+    <>
+      <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
+        <List>
+          {mobileLinks.map((link) => (
+            <>
+              <ListItem onClick={() => setOpenDrawer(false)}>
+                <ListItemText>
+                  <Link to={link.to} className={classes.link}>
+                    {link.name}
+                  </Link>
+                </ListItemText>
+              </ListItem>
+              <Divider />
+            </>
+          ))}
+        </List>
+      </Drawer>
+      <IconButton
+        onClick={() => setOpenDrawer(!openDrawer)}
+        className={classes.icon}
+      >
+        <MenuIcon />
+      </IconButton>
+    </>
   );
-};
-
+}
 export default DrawerMenu;
