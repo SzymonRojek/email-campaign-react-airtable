@@ -5,7 +5,6 @@ import { TableCell, TableRow, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import successIcon from "./success.png";
-
 import {
   isEven,
   getFormattedData,
@@ -13,7 +12,23 @@ import {
   capitalizeFirstLetter,
 } from "../../helpers";
 
-const useStyles = makeStyles((theme) => ({
+const typographyStyles = {
+  padding: "9px 20px",
+  letterSpacing: 2,
+  textTransform: "uppercase",
+  fontSize: 11,
+  width: 60,
+  display: "flex",
+  justifyContent: "center",
+};
+
+const buttonStyles = {
+  fontSize: 12,
+  letterSpacing: 2,
+  fontWeight: "bold",
+};
+
+const useStyles = makeStyles(() => ({
   status: {
     fontWeight: "bold",
     fontSize: "0.75rem",
@@ -69,13 +84,7 @@ const RowCampaign = (props) => {
             className={classes.status}
             style={{
               backgroundColor: getStatusColor(campaign.fields.status),
-              padding: "9px 20px",
-              letterSpacing: 2,
-              textTransform: "uppercase",
-              fontSize: 11,
-              width: 60,
-              display: "flex",
-              justifyContent: "center",
+              ...typographyStyles,
             }}
           >
             {campaign.fields.status}
@@ -85,7 +94,7 @@ const RowCampaign = (props) => {
       <TableCell>
         {campaign.fields.status === "draft" ? (
           <Button
-            style={{ fontSize: 12, letterSpacing: 2, fontWeight: "bold" }}
+            style={{ ...buttonStyles }}
             aria-label="edit"
             color="success"
             variant="contained"
