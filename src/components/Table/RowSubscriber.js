@@ -108,6 +108,9 @@ const RowSubscriber = (props) => {
               letterSpacing: 2,
               textTransform: "uppercase",
               fontSize: 11,
+              width: 60,
+              display: "flex",
+              justifyContent: "center",
             }}
           >
             {subscriber.fields.status}
