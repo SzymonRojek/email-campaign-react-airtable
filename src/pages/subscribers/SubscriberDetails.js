@@ -79,22 +79,22 @@ const SubscriberDetails = () => {
                 [subscriberData.data].map((subscriber, index) => (
                   <TableRow key={`i-${index}`}>
                     <TableCell>
-                      <Typography color="textSecondary" variant="body2">
+                      <Typography color="textSecondary" variant="subtitle1">
                         {subscriber.fields?.email}
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography color="textSecondary" variant="body2">
+                      <Typography color="textSecondary" variant="subtitle1">
                         {subscriber.fields?.salary}
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography color="textSecondary" variant="body2">
+                      <Typography color="textSecondary" variant="subtitle1">
                         {subscriber.fields?.telephone}
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography color="textSecondary" variant="body2">
+                      <Typography color="textSecondary" variant="subtitle1">
                         {subscriber.fields?.address}
                       </Typography>
                     </TableCell>

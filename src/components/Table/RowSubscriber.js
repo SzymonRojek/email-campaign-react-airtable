@@ -81,19 +81,19 @@ const RowSubscriber = (props) => {
       <TableCell>
         <Grid container alignItems="center">
           <Grid item>
-            <Typography color="textSecondary" variant="body2">
+            <Typography color="textSecondary" variant="subtitle1">
               {capitalizeFirstLetter(subscriber.fields.name)}
             </Typography>
           </Grid>
         </Grid>
       </TableCell>
       <TableCell>
-        <Typography color="textSecondary" variant="body2">
+        <Typography color="textSecondary" variant="subtitle1">
           {capitalizeFirstLetter(subscriber.fields.surname)}
         </Typography>
       </TableCell>
       <TableCell>
-        <Typography color="textSecondary" variant="body2">
+        <Typography color="textSecondary" variant="subtitle1">
           {subscriber.fields.profession}
         </Typography>
       </TableCell>
@@ -104,7 +104,7 @@ const RowSubscriber = (props) => {
             className={classes.status}
             style={{
               backgroundColor: getStatusColor(subscriber.fields.status),
-              padding: "9px 20px 9px 20px",
+              padding: "10px 20px 9px 20px",
               letterSpacing: 2,
               textTransform: "uppercase",
               fontSize: 11,
@@ -115,7 +115,7 @@ const RowSubscriber = (props) => {
         </span>
       </TableCell>
       <TableCell>
-        <Typography color="textSecondary" variant="body2">
+        <Typography color="textSecondary" variant="subtitle1">
           {getFormattedData(subscriber.createdTime)}
         </Typography>
       </TableCell>

@@ -48,17 +48,17 @@ const RowCampaign = (props) => {
     >
       {children}
       <TableCell>
-        <Typography color="textSecondary" variant="body2">
+        <Typography color="textSecondary" variant="subtitle1">
           {capitalizeFirstLetter(campaign.fields.title)}
         </Typography>
       </TableCell>
       <TableCell>
-        <Typography color="textSecondary" variant="body2">
+        <Typography color="textSecondary" variant="subtitle1">
           {campaign.fields.description}
         </Typography>
       </TableCell>
       <TableCell>
-        <Typography color="textSecondary" variant="body2">
+        <Typography color="textSecondary" variant="subtitle1">
           {getFormattedData(campaign.createdTime)}
         </Typography>
       </TableCell>
