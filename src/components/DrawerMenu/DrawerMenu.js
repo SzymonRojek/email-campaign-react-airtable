@@ -23,24 +23,28 @@ const useStyles = makeStyles(() => ({
 }));
 
 const mobileLinks = [
-  { to: "/subscribers", name: "Subscribers" },
-  { to: "/campaigns", name: "Campaigns" },
-  { to: "/", name: "Home" },
+  { to: "/subscribers", name: "Subscribers", tabsValue: 0 },
+  { to: "/campaigns", name: "Campaigns", tabsValue: 1 },
+  { to: "/", name: "Home", tabsValue: 2 },
 ];
 
-function DrawerMenu() {
+function DrawerMenu({ setTabsValue }) {
   const classes = useStyles();
   const [openDrawer, setOpenDrawer] = useState(false);
   return (
     <>
       <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
         <List>
-          {mobileLinks.map((link) => (
+          {mobileLinks.map(({ to, name, tabsValue }) => (
             <>
               <ListItem onClick={() => setOpenDrawer(false)}>
                 <ListItemText>
-                  <Link to={link.to} className={classes.link}>
-                    {link.name}
+                  <Link
+                    to={to}
+                    className={classes.link}
+                    onClick={() => setTabsValue(tabsValue)}
+                  >
+                    {name}
                   </Link>
                 </ListItemText>
               </ListItem>
