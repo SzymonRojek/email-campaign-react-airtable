@@ -104,11 +104,11 @@ const RowSubscriber = (props) => {
             className={classes.status}
             style={{
               backgroundColor: getStatusColor(subscriber.fields.status),
-              padding: "10px 20px 9px 20px",
+              padding: "8px 20px",
               letterSpacing: 2,
               textTransform: "uppercase",
               fontSize: 11,
-              width: 60,
+              width: 80,
               display: "flex",
               justifyContent: "center",
             }}
