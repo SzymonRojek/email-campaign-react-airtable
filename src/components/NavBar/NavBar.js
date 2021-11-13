@@ -116,10 +116,14 @@ function NavBar() {
                 open={open}
                 onClose={() => setAnchorEl(null)}
               >
-                {menuItems.map((menuItem) => {
+                {menuItems.map((menuItem, i) => {
                   const { name, to } = menuItem;
                   return (
-                    <MenuItem onClick={() => handleMenuClick(to)} divider>
+                    <MenuItem
+                      key={`link-${i}`}
+                      onClick={() => handleMenuClick(to)}
+                      divider
+                    >
                       {name}
                     </MenuItem>
                   );
