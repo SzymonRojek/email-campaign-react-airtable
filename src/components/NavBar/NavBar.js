@@ -142,21 +142,29 @@ function NavBar() {
                 value={value}
               >
                 <Tab
-                  icon={<BsFillPersonPlusFill />}
+                  icon={
+                    <BsFillPersonPlusFill
+                      style={{ color: "orange", fontSize: 17 }}
+                    />
+                  }
                   disableRipple
                   label="subscribers"
                   onClick={() => handleTabClick("/subscribers")}
                 />
 
                 <Tab
-                  icon={<AiFillMail />}
+                  icon={
+                    <AiFillMail style={{ color: "orange", fontSize: 17 }} />
+                  }
                   disableRipple
                   label="campaigns"
                   onClick={() => handleTabClick("/campaigns")}
                 />
 
                 <Tab
-                  icon={<AiFillHome />}
+                  icon={
+                    <AiFillHome style={{ color: "orange", fontSize: 17 }} />
+                  }
                   disableRipple
                   label="home"
                   onClick={() => handleTabClick("/")}
