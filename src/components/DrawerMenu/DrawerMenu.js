@@ -75,33 +75,45 @@ function DrawerMenu({ setTabsValue }) {
   const location = useLocation();
   const [openDrawer, setOpenDrawer] = useState(false);
 
+  const activeSelectedLink = (strOne, strTwo) =>
+    window.location.href.indexOf(strOne) > -1
+      ? strOne
+      : window.location.href.indexOf(strTwo) > -1
+      ? strTwo
+      : "";
+
   return (
     <>
       <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
         <List className={classes.list}>
-          {mobileLinks.map(({ icon, to, name, tabsValue }) => (
-            <div key={`key-${tabsValue}`}>
-              <StyledListItem
-                button
-                onClick={() => setOpenDrawer(false)}
-                selected={to === location.pathname}
-              >
-                <ListItemIcon className={classes.listItemIcon}>
-                  {icon}
-                </ListItemIcon>
-                <ListItemText onClick={() => setTabsValue(tabsValue)}>
-                  <Link
-                    to={to}
-                    onClick={() => setTabsValue(tabsValue)}
-                    className={classes.link}
-                  >
-                    {name}
-                  </Link>
-                </ListItemText>
-              </StyledListItem>
-              <Divider className={classes.divider} />
-            </div>
-          ))}
+          {mobileLinks.map(({ icon, to, name, tabsValue }) => {
+            return (
+              <div key={`key-${tabsValue}`}>
+                <StyledListItem
+                  button
+                  onClick={() => setOpenDrawer(false)}
+                  selected={
+                    to === location.pathname ||
+                    to === activeSelectedLink("/subscribers", "/campaigns")
+                  }
+                >
+                  <ListItemIcon className={classes.listItemIcon}>
+                    {icon}
+                  </ListItemIcon>
+                  <ListItemText onClick={() => setTabsValue(tabsValue)}>
+                    <Link
+                      to={to}
+                      onClick={() => setTabsValue(tabsValue)}
+                      className={classes.link}
+                    >
+                      {name}
+                    </Link>
+                  </ListItemText>
+                </StyledListItem>
+                <Divider className={classes.divider} />
+              </div>
+            );
+          })}
         </List>
       </Drawer>
       <IconButton
