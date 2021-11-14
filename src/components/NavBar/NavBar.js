@@ -37,6 +37,9 @@ const mainNavigationLinks = [
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: "#142f43",
+    [theme.breakpoints.down("xs")]: {
+      padding: "10px 0",
+    },
   },
   navLinksContainer: {
     display: "flex",
