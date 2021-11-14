@@ -89,27 +89,27 @@ function DrawerMenu({ setTabsValue }) {
           {mobileLinks.map(({ icon, to, name, tabsValue }) => {
             return (
               <div key={`key-${tabsValue}`}>
-                <StyledListItem
-                  button
-                  onClick={() => setOpenDrawer(false)}
-                  selected={
-                    to === location.pathname ||
-                    to === activeSelectedLink("/subscribers", "/campaigns")
-                  }
+                <Link
+                  to={to}
+                  onClick={() => setTabsValue(tabsValue)}
+                  className={classes.link}
                 >
-                  <ListItemIcon className={classes.listItemIcon}>
-                    {icon}
-                  </ListItemIcon>
-                  <ListItemText onClick={() => setTabsValue(tabsValue)}>
-                    <Link
-                      to={to}
-                      onClick={() => setTabsValue(tabsValue)}
-                      className={classes.link}
-                    >
+                  <StyledListItem
+                    button
+                    onClick={() => setOpenDrawer(false)}
+                    selected={
+                      to === location.pathname ||
+                      to === activeSelectedLink("/subscribers", "/campaigns")
+                    }
+                  >
+                    <ListItemIcon className={classes.listItemIcon}>
+                      {icon}
+                    </ListItemIcon>
+                    <ListItemText onClick={() => setTabsValue(tabsValue)}>
                       {name}
-                    </Link>
-                  </ListItemText>
-                </StyledListItem>
+                    </ListItemText>
+                  </StyledListItem>
+                </Link>
                 <Divider className={classes.divider} />
               </div>
             );
