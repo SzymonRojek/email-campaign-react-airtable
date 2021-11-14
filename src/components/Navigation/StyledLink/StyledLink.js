@@ -1,6 +1,6 @@
 import { Link, useLocation, useResolvedLocation } from "react-router-dom";
 
-const common = {
+const commonStyles = {
   display: "flex",
   justifyContent: "center",
   padding: "8px 20px",
@@ -14,14 +14,14 @@ const common = {
 const activeLink = {
   color: "#003049",
   border: "3px solid #003049",
-  ...common,
+  ...commonStyles,
 };
 
 const unactiveLink = {
   color: "#fff",
   backgroundColor: "#003049",
   border: "3px solid #003049",
-  ...common,
+  ...commonStyles,
 };
 
 const StyledLink = ({ to, exact, ...rest }) => {
