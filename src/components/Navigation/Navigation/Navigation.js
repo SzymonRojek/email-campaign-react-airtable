@@ -9,7 +9,7 @@ const Navigation = ({ dataLinks }) => (
     <Menu>
       <Grid
         container
-        spacing={1}
+        rowSpacing={{ xs: 1 }}
         style={{
           margin: "20px auto",
           maxWidth: 400,
