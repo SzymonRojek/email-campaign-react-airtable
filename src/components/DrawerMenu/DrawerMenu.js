@@ -1,5 +1,7 @@
+import React from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import {
   Divider,
   Drawer,
@@ -8,12 +10,13 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  makeStyles,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
+
+import "./styles.css";
 
 const useStyles = makeStyles(() => ({
   list: {
@@ -23,12 +26,13 @@ const useStyles = makeStyles(() => ({
     flexDirection: "column",
     justifyContent: "center",
   },
+  listItemIcon: { color: "orange", fontSize: 17 },
   link: {
     textDecoration: "none",
     color: "#ffffff8c",
     fontSize: "20px",
   },
-  icon: {
+  hamburgerIcon: {
     color: "white",
   },
   divider: { backgroundColor: "#ffffff8c" },
@@ -36,50 +40,62 @@ const useStyles = makeStyles(() => ({
 
 const mobileLinks = [
   {
-    icon: <BsFillPersonPlusFill style={{ color: "orange", fontSize: 17 }} />,
+    icon: <BsFillPersonPlusFill />,
     to: "/subscribers",
     name: "Subscribers",
     tabsValue: 0,
   },
   {
-    icon: <AiFillMail style={{ color: "orange", fontSize: 17 }} />,
+    icon: <AiFillMail />,
     to: "/campaigns",
     name: "Campaigns",
     tabsValue: 1,
   },
   {
-    icon: <AiFillHome style={{ color: "orange", fontSize: 17 }} />,
+    icon: <AiFillHome />,
     to: "/",
     name: "Home",
     tabsValue: 2,
   },
 ];
 
+const StyledListItem = withStyles({
+  root: {
+    "&.Mui-selected": {
+      backgroundColor: "#102636",
+    },
+  },
+})(ListItem);
+
 function DrawerMenu({ setTabsValue }) {
   const classes = useStyles();
   const [openDrawer, setOpenDrawer] = useState(false);
+  const location = useLocation();
+
   return (
     <>
       <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
         <List className={classes.list}>
           {mobileLinks.map(({ icon, to, name, tabsValue }) => (
             <div key={`key-${tabsValue}`}>
-              <ListItem
+              <StyledListItem
                 button
-                key={`key-${tabsValue}`}
                 onClick={() => setOpenDrawer(false)}
+                selected={to === location.pathname}
               >
-                <ListItemIcon>{icon}</ListItemIcon>
-                <ListItemText>
+                <ListItemIcon className={classes.listItemIcon}>
+                  {icon}
+                </ListItemIcon>
+                <ListItemText onClick={() => setTabsValue(tabsValue)}>
                   <Link
                     to={to}
-                    className={classes.link}
                     onClick={() => setTabsValue(tabsValue)}
+                    className={classes.link}
                   >
                     {name}
                   </Link>
                 </ListItemText>
-              </ListItem>
+              </StyledListItem>
               <Divider className={classes.divider} />
             </div>
           ))}
@@ -87,7 +103,7 @@ function DrawerMenu({ setTabsValue }) {
       </Drawer>
       <IconButton
         onClick={() => setOpenDrawer(!openDrawer)}
-        className={classes.icon}
+        className={classes.hamburgerIcon}
       >
         <MenuIcon />
       </IconButton>
