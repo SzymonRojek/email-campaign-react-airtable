@@ -1,12 +1,12 @@
 import { Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-const CssButton = styled(Button)(({ backgroundColor, onHover }) => ({
+const CssButton = styled(Button)(({ backgroundcolor, hover }) => ({
   ":hover": {
-    backgroundColor: onHover,
+    backgroundColor: hover,
   },
   color: "white",
-  backgroundColor: backgroundColor,
+  backgroundColor: backgroundcolor,
   minWidth: 120,
   fontSize: 18,
   padding: "15px 25px",
@@ -19,13 +19,13 @@ const StyledButton = ({
   onClick,
   ariaLabel,
   label,
-  backgroundColor,
-  onHover,
+  hover,
+  backgroundcolor,
 }) => {
   return (
     <CssButton
-      onHover={onHover}
-      backgroundColor={backgroundColor}
+      hover={hover}
+      backgroundcolor={backgroundcolor}
       type={type}
       aria-label={ariaLabel}
       onClick={onClick}

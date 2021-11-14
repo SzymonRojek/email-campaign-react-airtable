@@ -61,8 +61,8 @@ const FormCampaign = ({
               >
                 <Grid item>
                   <StyledButton
-                    onHover="#cf890a"
-                    backgroundColor="#ffa500"
+                    hover="#cf890a"
+                    backgroundcolor="#ffa500"
                     type="submit"
                     ariaLabel="draft"
                     label="draft"
@@ -74,8 +74,8 @@ const FormCampaign = ({
                 </Grid>
                 <Grid item>
                   <StyledButton
-                    onHover="#286a2b"
-                    backgroundColor="#2e7d32"
+                    hover="#286a2b"
+                    backgroundcolor="#2e7d32"
                     label="send"
                     ariaLabel="send"
                     type="submit"
