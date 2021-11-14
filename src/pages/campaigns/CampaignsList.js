@@ -2,6 +2,7 @@ import { dataHeadEmailTable } from "../../data/dataHeadEmailTable";
 import { ContainerCampaigns } from "../../components/ContainerCampaigns";
 import { Loader } from "../../components/Loader";
 import { Error } from "../../components/Error";
+import { StyledHeading } from "../../components/StyledHeading";
 
 const CampaignsList = ({
   campaignsData,
@@ -23,17 +24,8 @@ const CampaignsList = ({
             />
           ) : (
             <>
-              <h1
-                style={{
-                  textAlign: "center",
-                  margin: "100px 0 60px 0",
-                  color: "#142F43",
-                  letterSpacing: 2,
-                  wordSpacing: 15,
-                }}
-              >
-                Campaigns:
-              </h1>
+              <StyledHeading label="Campaigns:" />
+
               <ContainerCampaigns
                 subHeading="List:"
                 dataHeadEmailTable={dataHeadEmailTable}

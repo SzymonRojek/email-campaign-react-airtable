@@ -8,6 +8,7 @@ import api from "../../api";
 // import { emailMessage } from "../../mailgun/app";
 import { capitalizeFirstLetter, validationCampaign } from "../../helpers";
 import { FormCampaign } from "../../components/FormCampaign";
+import { StyledHeading } from "../../components/StyledHeading";
 
 const EditCampaign = ({
   selectedData,
@@ -86,15 +87,8 @@ const EditCampaign = ({
 
   return (
     <>
-      <h1
-        style={{
-          textAlign: "center",
-          color: "#142F43",
-          letterSpacing: 2,
-        }}
-      >
-        Edit Campaign Data:
-      </h1>
+      <StyledHeading label="Edit Campaign:" />
+
       <FormCampaign
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}

@@ -1,6 +1,7 @@
 import { ContainerSubscribers } from "../../components/ContainerSubscribers";
 import { Loader } from "../../components/Loader";
 import { Error } from "../../components/Error";
+import { StyledHeading } from "../../components/StyledHeading";
 import { generalDataHeadTable } from "../../data/dataHeadTable";
 
 const SubscribersList = (props) => {
@@ -26,17 +27,8 @@ const SubscribersList = (props) => {
             />
           ) : (
             <>
-              <h1
-                style={{
-                  textAlign: "center",
-                  margin: "100px 0 60px 0",
-                  color: "#142F43",
-                  letterSpacing: 2,
-                  wordSpacing: 15,
-                }}
-              >
-                Subscribers:
-              </h1>
+              <StyledHeading label="Subscribers:" />
+
               <ContainerSubscribers
                 subHeading="List:"
                 dataHeadTable={generalDataHeadTable}

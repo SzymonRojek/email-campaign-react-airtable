@@ -1,6 +1,7 @@
 import { FilterStatusSubscribers } from "../../components/FilterStatusSubscribers";
 import { Loader } from "../../components/Loader";
 import { Error } from "../../components/Error";
+import { StyledHeading } from "../../components/StyledHeading";
 import { generalDataHeadTable } from "../../data/dataHeadTable";
 
 const FilteredSubscribersList = (props) => {
@@ -14,17 +15,8 @@ const FilteredSubscribersList = (props) => {
 
   return (
     <>
-      <h1
-        style={{
-          textAlign: "center",
-          margin: "100px 0 60px 0",
-          color: "#142F43",
-          letterSpacing: 2,
-          wordSpacing: 15,
-        }}
-      >
-        Subscribers status:
-      </h1>
+      <StyledHeading label="Subscribers status:" />
+
       <>
         {subscribersData.status === "loading" ? (
           <Loader title="Subscribers Data List is loading..." />

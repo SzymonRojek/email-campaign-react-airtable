@@ -1,6 +1,7 @@
 import { FilterStatusCampaigns } from "../../components/FilterStatusCampaigns";
 import { Loader } from "../../components/Loader";
 import { Error } from "../../components/Error";
+import { StyledHeading } from "../../components/StyledHeading";
 import { dataHeadEmailTable } from "../../data/dataHeadEmailTable";
 
 const FilteredCampaignsList = (props) => {
@@ -14,17 +15,8 @@ const FilteredCampaignsList = (props) => {
 
   return (
     <>
-      <h1
-        style={{
-          textAlign: "center",
-          margin: "100px 0 60px 0",
-          color: "#142F43",
-          letterSpacing: 2,
-          wordSpacing: 15,
-        }}
-      >
-        Campaigns status:
-      </h1>
+      <StyledHeading label="Campaigns Status:" />
+
       <>
         {campaignsData.status === "loading" ? (
           <Loader title="Subscribers Data List is loading..." />

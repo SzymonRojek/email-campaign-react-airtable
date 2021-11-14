@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import api from "../../api";
 import { capitalizeFirstLetter, validationCampaign } from "../../helpers";
 import { FormCampaign } from "../../components/FormCampaign";
+import { StyledHeading } from "../../components/StyledHeading";
 import { emailMessage } from "../../mailgun/app";
 
 const NewCampaign = ({
@@ -67,17 +68,8 @@ const NewCampaign = ({
 
   return (
     <>
-      <h1
-        style={{
-          textAlign: "center",
-          margin: "100px 0 60px 0",
-          color: "#142F43",
-          letterSpacing: 2,
-          wordSpacing: 15,
-        }}
-      >
-        Add Campaign:
-      </h1>
+      <StyledHeading label="Add Campaign:" />
+
       <FormCampaign
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}

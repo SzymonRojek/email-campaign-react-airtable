@@ -13,6 +13,7 @@ import {
   detailsDataHeadTableSecond,
 } from "../../data/dataHeadTable";
 import { Loader } from "../../components/Loader";
+import { StyledHeading } from "../../components/StyledHeading";
 
 const SubscriberDetails = () => {
   const [subscriberData, setSubscriberData] = useState({
@@ -44,17 +45,7 @@ const SubscriberDetails = () => {
         <Loader title={`Subscriber's details are loading...`} />
       ) : (
         <>
-          <h1
-            style={{
-              textAlign: "center",
-              margin: "100px 0 60px 0",
-              color: "#142F43",
-              letterSpacing: 2,
-              wordSpacing: 15,
-            }}
-          >
-            Subscriber Details:
-          </h1>
+          <StyledHeading label="Subscribers Details:" />
 
           <ContainerTable subHeading="General:">
             <HeadTable dataHeadTable={detailsDataHeadTableFirst} />

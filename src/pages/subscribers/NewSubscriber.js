@@ -7,6 +7,7 @@ import { Grid, Typography } from "@material-ui/core";
 import api from "../../api";
 import { TextInput } from "../../components/TextInput";
 import { StyledButton } from "../../components/StyledButton";
+import { StyledHeading } from "../../components/StyledHeading";
 import { capitalizeFirstLetter, validationSubscriber } from "../../helpers";
 
 const AddSubscriber = ({
@@ -62,17 +63,8 @@ const AddSubscriber = ({
 
   return (
     <>
-      <h1
-        style={{
-          textAlign: "center",
-          margin: "100px 0 60px 0",
-          color: "#142F43",
-          letterSpacing: 2,
-          wordSpacing: 15,
-        }}
-      >
-        Add Subscriber:
-      </h1>
+      <StyledHeading label="Add Subscriber:" />
+
       <>
         <Paper
           elevation={14}
