@@ -2,7 +2,6 @@ import { TextField, Typography } from "@mui/material";
 import { Grid } from "@material-ui/core";
 import { inputLabelClasses } from "@mui/material/InputLabel";
 import { withStyles } from "@mui/styles";
-import "./styles.css";
 
 const StyledTextField = withStyles({
   root: {
