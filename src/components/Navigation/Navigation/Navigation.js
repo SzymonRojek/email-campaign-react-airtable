@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom";
 import { Container, Grid } from "@mui/material";
 
-import Menu from "../Menu/Menu";
-import { StyledLink } from "../StyledLink";
+import Menu from "../Menu";
+import StyledLink from "../StyledLink";
 
 const Navigation = ({ dataLinks }) => (
   <Container>
