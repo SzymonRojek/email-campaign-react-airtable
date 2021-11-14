@@ -12,6 +12,7 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
@@ -30,9 +31,10 @@ const useStyles = makeStyles(() => ({
     color: "#ffffff8c",
     fontSize: "20px",
   },
-  hamburgerIcon: {
-    color: "white",
+  menuIcon: {
+    color: "orange",
   },
+
   divider: { backgroundColor: "#ffffff8c" },
 }));
 
@@ -70,8 +72,8 @@ const StyledListItem = withStyles({
 
 function DrawerMenu({ setTabsValue }) {
   const classes = useStyles();
-  const [openDrawer, setOpenDrawer] = useState(false);
   const location = useLocation();
+  const [openDrawer, setOpenDrawer] = useState(false);
 
   return (
     <>
@@ -103,10 +105,10 @@ function DrawerMenu({ setTabsValue }) {
         </List>
       </Drawer>
       <IconButton
+        className={classes.menuIcon}
         onClick={() => setOpenDrawer(!openDrawer)}
-        className={classes.hamburgerIcon}
       >
-        <MenuIcon />
+        {!openDrawer ? <MenuIcon /> : <MenuOpenIcon />}
       </IconButton>
     </>
   );
