@@ -8,13 +8,11 @@ import { ThemeProvider } from "@material-ui/core";
 import theme from "./theme";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <HashRouter>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </HashRouter>
-  </React.StrictMode>,
+  <HashRouter>
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
+  </HashRouter>,
   document.getElementById("root")
 );
 
