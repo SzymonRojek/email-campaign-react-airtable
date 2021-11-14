@@ -2,29 +2,7 @@ import { Outlet } from "react-router-dom";
 import { Container, Grid } from "@mui/material";
 
 import Menu from "../Menu/Menu";
-import NavLink from "../NavLink/NavLink";
-
-const common = {
-  textDecoration: "none",
-  borderRadius: 4,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  maxWidth: 175,
-};
-
-const active = {
-  color: "#003049",
-  border: "3px solid #003049",
-  ...common,
-};
-
-const inactive = {
-  color: "#fff",
-  backgroundColor: "#003049",
-  border: "3px solid transparent",
-  ...common,
-};
+import { StyledLink } from "../StyledLink";
 
 const Navigation = ({ dataLinks }) => (
   <Container>
@@ -34,21 +12,17 @@ const Navigation = ({ dataLinks }) => (
         spacing={1}
         style={{
           margin: "20px auto",
-          maxWidth: 600,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          maxWidth: 400,
         }}
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
       >
-        {dataLinks.map(({ to, exact, name }, i) => (
-          <Grid item key={name} xs={12} md={3}>
-            <NavLink
-              to={to}
-              exact={exact}
-              active={active}
-              inactive={inactive}
-              name={name}
-            />
+        {dataLinks.map(({ to, exact, name }, index) => (
+          <Grid item key={index} xs={12} md={3}>
+            <StyledLink to={to} exact={exact}>
+              {name}
+            </StyledLink>
           </Grid>
         ))}
       </Grid>
