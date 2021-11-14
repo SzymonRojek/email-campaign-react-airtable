@@ -16,8 +16,6 @@ import { BsFillPersonPlusFill } from "react-icons/bs";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
 
-import "./styles.css";
-
 const useStyles = makeStyles(() => ({
   list: {
     backgroundColor: "#142f43",
@@ -62,6 +60,9 @@ const mobileLinks = [
 const StyledListItem = withStyles({
   root: {
     "&.Mui-selected": {
+      backgroundColor: "#102636",
+    },
+    "&:hover": {
       backgroundColor: "#102636",
     },
   },
@@ -110,4 +111,5 @@ function DrawerMenu({ setTabsValue }) {
     </>
   );
 }
+
 export default DrawerMenu;
