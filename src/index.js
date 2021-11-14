@@ -4,14 +4,10 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { HashRouter } from "react-router-dom";
-import { ThemeProvider } from "@material-ui/core";
-import theme from "./theme";
 
 ReactDOM.render(
   <HashRouter>
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
+    <App />
   </HashRouter>,
   document.getElementById("root")
 );
