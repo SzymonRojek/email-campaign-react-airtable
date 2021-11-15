@@ -9,6 +9,7 @@ const appBarStyles = {
   left: 0,
   backgroundColor: "#142f43",
   color: "#ffffff8c",
+  zIndex: -1,
 };
 
 const iconStyles = {
