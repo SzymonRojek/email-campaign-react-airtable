@@ -3,7 +3,8 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top: 10%;
+  /* margin-top: 10%; */
+  margin-top: 30%;
 }
 
 .load {
