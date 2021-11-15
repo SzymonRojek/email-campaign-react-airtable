@@ -10,7 +10,8 @@ const Loader = ({ title }) => (
       <p className="loader-text">{title}</p>
 
       <div className="dot-container">
-        <div class="dot-flashing"></div>
+        <p className="loader-text">Data</p>
+        <div className="dot-flashing"></div>
       </div>
     </div>
   </>

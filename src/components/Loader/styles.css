@@ -81,9 +81,22 @@
 /* dots flashing */
 
 .dot-container {
-  padding: 20px;
-  margin-top: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
 }
+
+@media (max-width: 400px) {
+  .text-container {
+    flex-direction: column;
+  }
+  .dot-container {
+    margin-top: -80px;
+    margin-left: 0;
+  }
+}
+
 .dot-flashing {
   position: relative;
   width: 7px;
@@ -93,6 +106,8 @@
   color: orange;
   animation: dotFlashing 1s infinite linear alternate;
   animation-delay: 0.5s;
+  margin-left: 20px;
+  margin-top: 47px;
 }
 
 .dot-flashing::before,
