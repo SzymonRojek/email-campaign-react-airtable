@@ -16,6 +16,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import IconExpandLess from "@material-ui/icons/ExpandLess";
 import IconExpandMore from "@material-ui/icons/ExpandMore";
+import { GoMailRead } from "react-icons/go";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
@@ -35,6 +36,12 @@ const useStyles = makeStyles(() => ({
     justifyContent: "center",
   },
   listItemIcon: { color: "orange", fontSize: 17 },
+  listItemLogo: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 100,
+  },
   linkCollapse: {
     color: "orange",
     fontSize: 20,
@@ -48,7 +55,10 @@ const useStyles = makeStyles(() => ({
   menuIcon: {
     color: "orange",
   },
-
+  logo: {
+    color: "orange",
+    fontSize: 45,
+  },
   divider: { backgroundColor: "#ffffff8c" },
 }));
 
@@ -139,6 +149,11 @@ function DrawerMenu({ setTabsValue }) {
       >
         <div className={classes.listContainer}>
           <List>
+            <ListItem className={classes.listItemLogo}>
+              <ListItemIcon className={classes.logo}>
+                <GoMailRead />
+              </ListItemIcon>
+            </ListItem>
             <ListItem
               button
               onClick={handleSubscribersClick}
