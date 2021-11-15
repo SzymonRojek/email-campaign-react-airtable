@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRoutes, useNavigate } from "react-router-dom";
 
-import { NavBar } from "./components/NavBar";
 import api from "./api";
+import { MainNavigation } from "./components/MainNavigation";
+import { SubNavigation } from "./components/SubNavigation";
 import { Home } from "./pages/home";
 import {
   SubscribersList,
@@ -16,7 +17,6 @@ import {
   CampaignsList,
   FilteredCampaignsList,
 } from "./pages/campaigns";
-import { Navigation } from "./components/Navigation";
 import { InfoPopup, ConfirmPopup } from "./components/Popup";
 import { sortDataAlphabetically, getLatestAddedSubscriber } from "./helpers";
 import {
@@ -127,7 +127,7 @@ const App = () => {
     { path: "/", element: <Home /> },
     {
       path: "/subscribers",
-      element: <Navigation dataLinks={subscribersLinksNavigation} />,
+      element: <SubNavigation dataLinks={subscribersLinksNavigation} />,
       children: [
         {
           path: "/",
@@ -173,7 +173,7 @@ const App = () => {
     },
     {
       path: "/campaigns",
-      element: <Navigation dataLinks={campaignsLinksNavigation} />,
+      element: <SubNavigation dataLinks={campaignsLinksNavigation} />,
       children: [
         {
           path: "/",
@@ -231,7 +231,7 @@ const App = () => {
 
   return (
     <>
-      <NavBar tabsValue={tabsValue} setTabsValue={setTabsValue} />
+      <MainNavigation tabsValue={tabsValue} setTabsValue={setTabsValue} />
 
       <InfoPopup
         contentPopup={contentPopup}
