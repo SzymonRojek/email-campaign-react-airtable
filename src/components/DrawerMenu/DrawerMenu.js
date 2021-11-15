@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { uniqueId } from "lodash";
 import {
   Divider,
   Drawer,
@@ -111,6 +112,13 @@ function DrawerMenu({ setTabsValue }) {
   const [openSubscribersLinks, setOpenSubscribersLinks] = useState(false);
   const [openCampaignsLinks, setOpenCampaignsLinks] = useState(false);
 
+  useEffect(() => {
+    if (!openDrawer) {
+      setOpenSubscribersLinks(false);
+      setOpenCampaignsLinks(false);
+    }
+  }, [openDrawer]);
+
   const activeSelectedLink = (strOne, strTwo) =>
     window.location.href.indexOf(strOne) > -1
       ? strOne
@@ -146,7 +154,7 @@ function DrawerMenu({ setTabsValue }) {
               <Divider />
               {subscribersLinks.map(({ icon, to, name, tabsValue }) => {
                 return (
-                  <div key={`key-${tabsValue}`}>
+                  <div key={`key-${uniqueId()}`}>
                     <Link
                       to={to}
                       onClick={() => setTabsValue(tabsValue)}
@@ -191,7 +199,7 @@ function DrawerMenu({ setTabsValue }) {
               <Divider />
               {campaignsLinks.map(({ icon, to, name, tabsValue }) => {
                 return (
-                  <div key={`key-${tabsValue}`}>
+                  <div key={`key-${uniqueId()}`}>
                     <Link
                       to={to}
                       onClick={() => setTabsValue(tabsValue)}
