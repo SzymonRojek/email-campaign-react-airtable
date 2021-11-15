@@ -4,6 +4,7 @@ import { useRoutes, useNavigate } from "react-router-dom";
 import api from "./api";
 import { MainNavigation } from "./components/MainNavigation";
 import { SubNavigation } from "./components/SubNavigation";
+import { StyledFooter } from "./components/StyledFooter";
 import { Home } from "./pages/home";
 import {
   SubscribersList,
@@ -232,6 +233,8 @@ const App = () => {
   return (
     <>
       <MainNavigation tabsValue={tabsValue} setTabsValue={setTabsValue} />
+
+      <StyledFooter />
 
       <InfoPopup
         contentPopup={contentPopup}
