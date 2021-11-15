@@ -46,6 +46,18 @@ const mobileLinks = [
     tabsValue: 0,
   },
   {
+    icon: <BsFillPersonPlusFill />,
+    to: "/subscribers/filter",
+    name: "Status",
+    tabsValue: 0,
+  },
+  {
+    icon: <BsFillPersonPlusFill />,
+    to: "/subscribers/add",
+    name: "Add Subscriber",
+    tabsValue: 0,
+  },
+  {
     icon: <AiFillMail />,
     to: "/campaigns",
     name: "Campaigns",
