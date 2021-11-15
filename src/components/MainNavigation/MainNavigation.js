@@ -56,14 +56,13 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 30,
     color: "orange",
     cursor: "pointer",
-    marginRight: 20,
+    marginRight: 40,
   },
   link: {
     textDecoration: "none",
     color: "white",
     fontSize: 15,
     letterSpacing: 2,
-    padding: 0,
     "&:first-child": {
       marginRight: theme.spacing(4),
     },
