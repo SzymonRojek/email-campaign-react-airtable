@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NavBar({ tabsValue, setTabsValue }) {
+function MainNavigation({ tabsValue, setTabsValue }) {
   const theme = useTheme();
   const classes = useStyles();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
@@ -124,4 +124,4 @@ function NavBar({ tabsValue, setTabsValue }) {
   );
 }
 
-export default NavBar;
+export default MainNavigation;
