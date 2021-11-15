@@ -1,12 +1,11 @@
 import { Outlet } from "react-router-dom";
 import { Container, Grid } from "@mui/material";
 
-import Menu from "../Menu";
-import StyledLink from "../StyledLink";
+import StyledLink from "./StyledLink";
 
-const Navigation = ({ dataLinks }) => (
+const SubNavigation = ({ dataLinks }) => (
   <Container>
-    <Menu>
+    <nav>
       <Grid
         container
         rowSpacing={{ xs: 1 }}
@@ -26,12 +25,11 @@ const Navigation = ({ dataLinks }) => (
           </Grid>
         ))}
       </Grid>
-    </Menu>
+    </nav>
 
     <div>
       <Outlet />
     </div>
   </Container>
 );
-
-export default Navigation;
+export default SubNavigation;
