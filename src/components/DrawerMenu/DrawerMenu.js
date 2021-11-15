@@ -84,7 +84,11 @@ function DrawerMenu({ setTabsValue }) {
 
   return (
     <>
-      <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
+      <Drawer
+        style={{ zIndex: 1 }}
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+      >
         <List className={classes.list}>
           {mobileLinks.map(({ icon, to, name, tabsValue }) => {
             return (
@@ -120,7 +124,11 @@ function DrawerMenu({ setTabsValue }) {
         className={classes.menuIcon}
         onClick={() => setOpenDrawer(!openDrawer)}
       >
-        {!openDrawer ? <MenuIcon /> : <MenuOpenIcon />}
+        {!openDrawer ? (
+          <MenuIcon style={{ fontSize: 35 }} />
+        ) : (
+          <MenuOpenIcon style={{ fontSize: 35, zIndex: 2 }} />
+        )}
       </IconButton>
     </>
   );
