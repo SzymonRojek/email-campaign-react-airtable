@@ -15,64 +15,62 @@ const FilteredSubscribersList = (props) => {
 
   return (
     <>
-      <StyledHeading label="Subscribers status:" />
+      {subscribersData.status === "loading" ? (
+        <Loader title="Subscribers Data are loading..." />
+      ) : subscribersData.status === "success" ? (
+        <>
+          {subscribersData.status === "success" &&
+          !subscribersData.data.length ? (
+            <Error
+              titleOne="There are not subscribers added yet."
+              titleTwo="Please add a new subscriber."
+            />
+          ) : (
+            <>
+              <StyledHeading label="Subscribers status:" />
 
-      <>
-        {subscribersData.status === "loading" ? (
-          <Loader title="Subscribers Data List is loading..." />
-        ) : subscribersData.status === "success" ? (
-          <>
-            {subscribersData.status === "success" &&
-            !subscribersData.data.length ? (
-              <Error
-                titleOne="There are not subscribers added yet."
-                titleTwo="Please add a new subscriber."
+              <FilterStatusSubscribers
+                subHeading="Active:"
+                generalDataHeadTable={generalDataHeadTable}
+                subscribersData={subscribersData.data}
+                status="active"
+                setSelectedData={setSelectedData}
+                handleSubscriberDetails={handleSubscriberDetails}
+                setContentPopup={setContentPopup}
+                setOpenConfirmPopup={setOpenConfirmPopup}
               />
-            ) : (
-              <>
-                <FilterStatusSubscribers
-                  subHeading="Active:"
-                  generalDataHeadTable={generalDataHeadTable}
-                  subscribersData={subscribersData.data}
-                  status="active"
-                  setSelectedData={setSelectedData}
-                  handleSubscriberDetails={handleSubscriberDetails}
-                  setContentPopup={setContentPopup}
-                  setOpenConfirmPopup={setOpenConfirmPopup}
-                />
 
-                <FilterStatusSubscribers
-                  subHeading="Pending:"
-                  generalDataHeadTable={generalDataHeadTable}
-                  subscribersData={subscribersData.data}
-                  status="pending"
-                  setSelectedData={setSelectedData}
-                  handleSubscriberDetails={handleSubscriberDetails}
-                  setContentPopup={setContentPopup}
-                  setOpenConfirmPopup={setOpenConfirmPopup}
-                />
+              <FilterStatusSubscribers
+                subHeading="Pending:"
+                generalDataHeadTable={generalDataHeadTable}
+                subscribersData={subscribersData.data}
+                status="pending"
+                setSelectedData={setSelectedData}
+                handleSubscriberDetails={handleSubscriberDetails}
+                setContentPopup={setContentPopup}
+                setOpenConfirmPopup={setOpenConfirmPopup}
+              />
 
-                <FilterStatusSubscribers
-                  subHeading="Blocked:"
-                  generalDataHeadTable={generalDataHeadTable}
-                  subscribersData={subscribersData.data}
-                  status="blocked"
-                  setSelectedData={setSelectedData}
-                  handleSubscriberDetails={handleSubscriberDetails}
-                  setContentPopup={setContentPopup}
-                  setOpenConfirmPopup={setOpenConfirmPopup}
-                />
-              </>
-            )}
-          </>
-        ) : (
-          <Error
-            titleOne="ERROR MESSAGE"
-            titleTwo="Probably there is no an access to the internet."
-            titleThree="Contact with your support team."
-          />
-        )}
-      </>
+              <FilterStatusSubscribers
+                subHeading="Blocked:"
+                generalDataHeadTable={generalDataHeadTable}
+                subscribersData={subscribersData.data}
+                status="blocked"
+                setSelectedData={setSelectedData}
+                handleSubscriberDetails={handleSubscriberDetails}
+                setContentPopup={setContentPopup}
+                setOpenConfirmPopup={setOpenConfirmPopup}
+              />
+            </>
+          )}
+        </>
+      ) : (
+        <Error
+          titleOne="ERROR MESSAGE"
+          titleTwo="Probably there is no an access to the internet."
+          titleThree="Contact with your support team."
+        />
+      )}
     </>
   );
 };
