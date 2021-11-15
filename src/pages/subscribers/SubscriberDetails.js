@@ -42,7 +42,7 @@ const SubscriberDetails = () => {
   return (
     <>
       {subscriberData.status === "loading" ? (
-        <Loader title={`Subscriber's details are loading...`} />
+        <Loader title={`Subscriber's details are loading`} />
       ) : (
         <>
           <StyledHeading label="Subscribers Details:" />
