@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Container } from "@material-ui/core";
 
 import api from "../../api";
 import { capitalizeFirstLetter, validationCampaign } from "../../helpers";
@@ -67,7 +68,7 @@ const NewCampaign = ({
   };
 
   return (
-    <>
+    <Container>
       <StyledHeading label="Add Campaign:" />
 
       <FormCampaign
@@ -78,7 +79,7 @@ const NewCampaign = ({
         setActionStatus={setActionStatus}
         getCampaignsData={getCampaignsData}
       />
-    </>
+    </Container>
   );
 };
 

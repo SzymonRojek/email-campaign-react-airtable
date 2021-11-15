@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
+import { Container } from "@material-ui/core";
 
 import api from "../../api";
 // import { emailMessage } from "../../mailgun/app";
@@ -86,7 +87,7 @@ const EditCampaign = ({
   };
 
   return (
-    <>
+    <Container>
       <StyledHeading label="Edit Campaign:" />
 
       <FormCampaign
@@ -97,7 +98,7 @@ const EditCampaign = ({
         setActionStatus={setActionStatus}
         getCampaignsData={getCampaignsData}
       />
-    </>
+    </Container>
   );
 };
 

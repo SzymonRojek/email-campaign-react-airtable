@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { TableBody, TableCell, TableRow, Typography } from "@material-ui/core";
+import {
+  TableBody,
+  TableCell,
+  TableRow,
+  Typography,
+  Container,
+} from "@material-ui/core";
 
 import api from "../../api";
 import {
@@ -40,7 +46,7 @@ const SubscriberDetails = () => {
   }, []);
 
   return (
-    <>
+    <Container>
       {subscriberData.status === "loading" ? (
         <Loader title={`Subscriber's`} />
       ) : (
@@ -95,7 +101,7 @@ const SubscriberDetails = () => {
           </ContainerTable>
         </>
       )}
-    </>
+    </Container>
   );
 };
 

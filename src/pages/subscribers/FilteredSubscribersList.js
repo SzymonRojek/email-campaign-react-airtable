@@ -1,3 +1,5 @@
+import { Container } from "@material-ui/core";
+
 import { FilterStatusSubscribers } from "../../components/FilterStatusSubscribers";
 import { Loader } from "../../components/Loader";
 import { Error } from "../../components/Error";
@@ -14,7 +16,7 @@ const FilteredSubscribersList = (props) => {
   } = props;
 
   return (
-    <>
+    <Container>
       {subscribersData.status === "loading" ? (
         <Loader title="Subscribers" />
       ) : subscribersData.status === "success" ? (
@@ -71,7 +73,7 @@ const FilteredSubscribersList = (props) => {
           titleThree="Contact with your support team."
         />
       )}
-    </>
+    </Container>
   );
 };
 

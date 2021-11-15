@@ -1,3 +1,5 @@
+import { Container } from "@material-ui/core";
+
 import { FilterStatusCampaigns } from "../../components/FilterStatusCampaigns";
 import { Loader } from "../../components/Loader";
 import { Error } from "../../components/Error";
@@ -14,7 +16,7 @@ const FilteredCampaignsList = (props) => {
   } = props;
 
   return (
-    <>
+    <Container>
       {campaignsData.status === "loading" ? (
         <Loader title="Campaigns" />
       ) : campaignsData.status === "success" ? (
@@ -59,7 +61,7 @@ const FilteredCampaignsList = (props) => {
           titleThree="Contact with your internet provider."
         />
       )}
-    </>
+    </Container>
   );
 };
 

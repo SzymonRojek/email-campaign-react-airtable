@@ -1,3 +1,5 @@
+import { Container } from "@material-ui/core";
+
 import { ContainerSubscribers } from "../../components/ContainerSubscribers";
 import { Loader } from "../../components/Loader";
 import { Error } from "../../components/Error";
@@ -14,7 +16,7 @@ const SubscribersList = (props) => {
   } = props;
 
   return (
-    <>
+    <Container>
       {subscribersData.status === "loading" ? (
         <Loader title="Subscribers" />
       ) : subscribersData.status === "success" ? (
@@ -62,7 +64,7 @@ const SubscribersList = (props) => {
           titleThree="Contact with your internet provider."
         />
       )}
-    </>
+    </Container>
   );
 };
 
