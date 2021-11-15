@@ -3,12 +3,13 @@ import { Link, useLocation, useResolvedLocation } from "react-router-dom";
 const commonStyles = {
   display: "flex",
   justifyContent: "center",
-  padding: "8px 20px",
+  padding: "8px 23px",
   width: 130,
-  fontSize: 14,
+  fontSize: 12,
   textDecoration: "none",
   letterSpacing: 2,
   borderRadius: 4,
+  textTransform: "uppercase",
 };
 
 const activeLink = {
