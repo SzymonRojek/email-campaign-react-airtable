@@ -14,7 +14,7 @@ const CampaignsList = ({
   return (
     <>
       {campaignsData.status === "loading" ? (
-        <Loader title="Campaigns Data are loading" />
+        <Loader title="Campaigns" />
       ) : campaignsData.status === "success" ? (
         <>
           {campaignsData.status === "success" && !campaignsData.data.length ? (

@@ -34,7 +34,7 @@ const SubscriberDetails = () => {
   };
 
   useEffect(() => {
-    const delayGetData = setTimeout(getSubscriberData, 1_000);
+    const delayGetData = setTimeout(getSubscriberData, 3_000);
 
     return () => clearTimeout(delayGetData);
   }, []);
@@ -42,7 +42,7 @@ const SubscriberDetails = () => {
   return (
     <>
       {subscriberData.status === "loading" ? (
-        <Loader title={`Subscriber's details are loading`} />
+        <Loader title={`Subscriber's`} />
       ) : (
         <>
           <StyledHeading label="Subscribers Details:" />
