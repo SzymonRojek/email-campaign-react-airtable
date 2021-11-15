@@ -9,7 +9,6 @@ const CssButton = styled(Button)(({ backgroundcolor, hover }) => ({
   backgroundColor: backgroundcolor,
   minWidth: 120,
   fontSize: 18,
-  padding: "15px 25px",
   letterSpacing: 2,
   margin: "20px 0",
 }));
