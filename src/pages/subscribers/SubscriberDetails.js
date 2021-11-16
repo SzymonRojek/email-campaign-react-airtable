@@ -19,6 +19,7 @@ import {
   detailsDataHeadTableSecond,
 } from "../../data/dataHeadTable";
 import { Loader } from "../../components/Loader";
+import { Error } from "../../components/Error";
 import { StyledHeading } from "../../components/StyledHeading";
 
 const SubscriberDetails = () => {
@@ -46,62 +47,70 @@ const SubscriberDetails = () => {
   }, []);
 
   return (
-    <Container style={{ marginBottom: 200 }}>
+    <>
       {subscriberData.status === "loading" ? (
-        <Loader title={`Subscriber's`} />
+        <Loader title="Subscriber" />
+      ) : subscriberData.status === "error" ? (
+        <Error
+          titleOne="ERROR MESSAGE"
+          titleTwo="Probably there is no an access to the internet."
+          titleThree="Contact with your internet provider."
+        />
       ) : (
-        <>
-          <StyledHeading label="Subscribers Details:" />
+        <Container style={{ marginBottom: 200 }}>
+          <>
+            <StyledHeading label="Subscribers Details:" />
 
-          <ContainerTable subHeading="General:">
-            <HeadTable dataHeadTable={detailsDataHeadTableFirst} />
+            <ContainerTable subHeading="General:">
+              <HeadTable dataHeadTable={detailsDataHeadTableFirst} />
 
-            <TableBody>
-              {subscriberData &&
-                [subscriberData.data].map((subscriber, index) => (
-                  <RowSubscriber
-                    key={`id-${subscriber.id}`}
-                    index={index}
-                    subscriber={subscriber}
-                  />
-                ))}
-            </TableBody>
-          </ContainerTable>
+              <TableBody>
+                {subscriberData &&
+                  [subscriberData.data].map((subscriber, index) => (
+                    <RowSubscriber
+                      key={`id-${subscriber.id}`}
+                      index={index}
+                      subscriber={subscriber}
+                    />
+                  ))}
+              </TableBody>
+            </ContainerTable>
 
-          <ContainerTable subHeading="Details:">
-            <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
+            <ContainerTable subHeading="Details:">
+              <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
 
-            <TableBody>
-              {subscriberData &&
-                [subscriberData.data].map((subscriber, index) => (
-                  <TableRow key={`i-${index}`}>
-                    <TableCell>
-                      <Typography color="textSecondary" variant="subtitle1">
-                        {subscriber.fields?.email}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography color="textSecondary" variant="subtitle1">
-                        {subscriber.fields?.salary}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography color="textSecondary" variant="subtitle1">
-                        {subscriber.fields?.telephone}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography color="textSecondary" variant="subtitle1">
-                        {subscriber.fields?.address}
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </ContainerTable>
-        </>
+              <TableBody>
+                {subscriberData &&
+                  [subscriberData.data].map((subscriber, index) => (
+                    <TableRow key={`i-${index}`}>
+                      <TableCell>
+                        <Typography color="textSecondary" variant="subtitle1">
+                          {subscriber.fields?.email}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textSecondary" variant="subtitle1">
+                          {subscriber.fields?.salary}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textSecondary" variant="subtitle1">
+                          {subscriber.fields?.telephone}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textSecondary" variant="subtitle1">
+                          {subscriber.fields?.address}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </ContainerTable>
+          </>
+        </Container>
       )}
-    </Container>
+    </>
   );
 };
 
