@@ -107,6 +107,7 @@
   animation-fill-mode: forwards;
   animation-duration: 1s;
   animation-delay: 0.5s;
+  animation-fill-mode: forwards;
 }
 
 /* dots flashing */
