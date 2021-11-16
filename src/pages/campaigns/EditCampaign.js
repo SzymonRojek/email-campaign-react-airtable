@@ -87,7 +87,7 @@ const EditCampaign = ({
   };
 
   return (
-    <Container>
+    <Container style={{ marginBottom: 200 }}>
       <StyledHeading label="Edit Campaign:" />
 
       <FormCampaign

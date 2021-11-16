@@ -16,7 +16,7 @@ const FilteredCampaignsList = (props) => {
   } = props;
 
   return (
-    <Container>
+    <Container style={{ marginBottom: 200 }}>
       {campaignsData.status === "loading" ? (
         <Loader title="Campaigns" />
       ) : campaignsData.status === "success" ? (
