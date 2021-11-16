@@ -3,8 +3,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  /* margin-top: 10%; */
-  margin-top: 30%;
+  min-height: 60vh;
 }
 
 .load {
@@ -39,6 +38,20 @@
   word-spacing: 4px;
   font-weight: 500;
   color: #142f43;
+}
+
+@media (max-width: 400px) {
+  .load {
+    width: 80px;
+    height: 80px;
+  }
+  .load::after {
+    width: 60px;
+    height: 60px;
+  }
+  .loader-text {
+    font-size: 1.5em;
+  }
 }
 
 @keyframes rotate {
