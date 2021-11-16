@@ -6,10 +6,10 @@ const Loader = ({ title }) => (
       <div className="load"></div>
 
       <div className="text-container">
-        <p className="loader-text">{title}</p>
+        <p className="loader-text">{title} Data</p>
 
         <div className="dot-container">
-          <p className="loader-text">Data</p>
+          <p className="loader-text">loading</p>
           <div className="dot-flashing"></div>
         </div>
       </div>
