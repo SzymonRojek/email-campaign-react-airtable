@@ -36,6 +36,8 @@ const mainNavigationLinks = [
 
 const useStyles = makeStyles((theme) => ({
   container: {
+    position: "fixed",
+    top: 0,
     backgroundColor: "#142f43",
     minHeight: "5vh",
     [theme.breakpoints.down("xs")]: {
@@ -50,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px 0 20px 0",
   },
   logoContainer: {
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
       flexGrow: 1,
     },
   },
@@ -74,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
 function MainNavigation({ tabsValue, setTabsValue }) {
   const theme = useTheme();
   const classes = useStyles();
-  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const location = useLocation();
 
   const handleClickTab = (e, newTabsValue) => setTabsValue(newTabsValue);
