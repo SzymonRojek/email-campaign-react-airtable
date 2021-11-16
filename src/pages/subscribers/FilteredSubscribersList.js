@@ -26,7 +26,7 @@ const FilteredSubscribersList = (props) => {
           titleThree="Contact with your internet provider."
         />
       ) : (
-        <Container style={{ marginBottom: 200 }}>
+        <Container>
           {subscribersData.status === "success" &&
           !subscribersData.data.length ? (
             <Error

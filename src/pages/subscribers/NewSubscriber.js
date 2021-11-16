@@ -62,7 +62,7 @@ const AddSubscriber = ({
   };
 
   return (
-    <Container style={{ marginBottom: 200 }}>
+    <Container>
       <StyledHeading label="Add Subscriber:" />
 
       <>

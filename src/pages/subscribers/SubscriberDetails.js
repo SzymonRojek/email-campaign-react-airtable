@@ -57,7 +57,7 @@ const SubscriberDetails = () => {
           titleThree="Contact with your internet provider."
         />
       ) : (
-        <Container style={{ marginBottom: 200 }}>
+        <Container>
           <>
             <StyledHeading label="Subscribers Details:" />
 

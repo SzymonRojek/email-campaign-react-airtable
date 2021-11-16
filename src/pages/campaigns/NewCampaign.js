@@ -68,7 +68,7 @@ const NewCampaign = ({
   };
 
   return (
-    <Container style={{ marginBottom: 200 }}>
+    <Container>
       <StyledHeading label="Add Campaign:" />
 
       <FormCampaign

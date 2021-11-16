@@ -26,7 +26,7 @@ const FilteredCampaignsList = (props) => {
           titleThree="Contact with your internet provider."
         />
       ) : (
-        <Container style={{ marginBottom: 200 }}>
+        <Container>
           {campaignsData.status === "success" && !campaignsData.data.length ? (
             <Error
               titleOne="There are not campaigns added yet."
