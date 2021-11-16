@@ -16,7 +16,7 @@ const FilteredSubscribersList = (props) => {
   } = props;
 
   return (
-    <Container>
+    <Container style={{ marginBottom: 200 }}>
       {subscribersData.status === "loading" ? (
         <Loader title="Subscribers" />
       ) : subscribersData.status === "success" ? (

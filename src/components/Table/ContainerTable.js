@@ -4,7 +4,7 @@ import { Table, TableContainer, Paper } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   tableContainer: {
     borderRadius: 15,
-    margin: "100px auto",
+    margin: "50px auto",
   },
 }));
 
@@ -16,7 +16,7 @@ const ContainerTable = ({ subHeading, children }) => {
         <h3
           style={{
             textAlign: "left",
-            marginBottom: -60,
+            marginBottom: -20,
             color: "#142F43",
             letterSpacing: 2,
           }}

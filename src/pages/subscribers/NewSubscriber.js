@@ -62,7 +62,7 @@ const AddSubscriber = ({
   };
 
   return (
-    <Container>
+    <Container style={{ marginBottom: 200 }}>
       <StyledHeading label="Add Subscriber:" />
 
       <>
@@ -70,7 +70,7 @@ const AddSubscriber = ({
           elevation={14}
           style={{
             maxWidth: 600,
-            margin: "auto auto 50px auto",
+            margin: "auto",
             borderRadius: 8,
             backgroundColor: "#142F43",
           }}
