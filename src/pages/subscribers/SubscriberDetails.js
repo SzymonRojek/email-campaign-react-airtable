@@ -46,7 +46,7 @@ const SubscriberDetails = () => {
   }, []);
 
   return (
-    <Container>
+    <Container style={{ marginBottom: 200 }}>
       {subscriberData.status === "loading" ? (
         <Loader title={`Subscriber's`} />
       ) : (
