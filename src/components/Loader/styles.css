@@ -40,7 +40,7 @@
   color: #142f43;
 }
 
-@media (max-width: 400px) {
+@media only screen and (min-device-width: 768px) {
   .load {
     width: 80px;
     height: 80px;
@@ -51,6 +51,12 @@
   }
   .loader-text {
     font-size: 1.5em;
+  }
+}
+
+@media (orientation: landscape) {
+  .loader-container {
+    padding: 20px;
   }
 }
 
