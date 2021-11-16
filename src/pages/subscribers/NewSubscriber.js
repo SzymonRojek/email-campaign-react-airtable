@@ -70,7 +70,7 @@ const AddSubscriber = ({
           elevation={14}
           style={{
             maxWidth: 600,
-            margin: "100px auto",
+            margin: "auto auto 50px auto",
             borderRadius: 8,
             backgroundColor: "#142F43",
           }}
