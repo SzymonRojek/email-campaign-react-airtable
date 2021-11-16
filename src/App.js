@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRoutes, useNavigate } from "react-router-dom";
 
+import "./App.css";
 import api from "./api";
 import { MainNavigation } from "./components/MainNavigation";
 import { SubNavigation } from "./components/SubNavigation";
@@ -231,11 +232,12 @@ const App = () => {
   const routing = useRoutes(routes);
 
   return (
-    <>
+    <div className="page-container">
       <MainNavigation tabsValue={tabsValue} setTabsValue={setTabsValue} />
 
-      <StyledFooter />
+      {routing}
 
+      <StyledFooter />
       <InfoPopup
         contentPopup={contentPopup}
         openInfoPopup={openInfoPopup}
@@ -250,8 +252,7 @@ const App = () => {
         openConfirmPopup={openConfirmPopup}
         setOpenConfirmPopup={setOpenConfirmPopup}
       />
-      <div>{routing}</div>
-    </>
+    </div>
   );
 };
 
