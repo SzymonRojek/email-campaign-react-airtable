@@ -10,17 +10,17 @@ const appBarStyles = {
   backgroundColor: "#142f43",
   color: "#ffffff8c",
   minHeight: "5vh",
-  zIndex: -1,
 };
 
 const iconStyles = {
   fontSize: 25,
   cursor: "pointer",
   color: "orange",
+  zIndex: -1,
 };
 
 const StyledFooter = () => (
-  <footer>
+  <footer style={{ marginBottom: 180 }}>
     <AppBar position="static" color="primary" style={appBarStyles}>
       <Container maxWidth="md">
         <Box p={3}>
