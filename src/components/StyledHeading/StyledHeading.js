@@ -1,6 +1,7 @@
 const headingStyles = {
   textAlign: "center",
-  margin: "100px 0 60px 0",
+  marginTop: 60,
+  marginBottom: 40,
   color: "#142F43",
   letterSpacing: 2,
   wordSpacing: 15,
