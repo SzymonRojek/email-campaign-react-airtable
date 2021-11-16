@@ -16,11 +16,17 @@ const FilteredSubscribersList = (props) => {
   } = props;
 
   return (
-    <Container style={{ marginBottom: 200 }}>
+    <>
       {subscribersData.status === "loading" ? (
         <Loader title="Subscribers" />
-      ) : subscribersData.status === "success" ? (
-        <>
+      ) : subscribersData.status === "error" ? (
+        <Error
+          titleOne="ERROR MESSAGE"
+          titleTwo="Probably there is no an access to the internet."
+          titleThree="Contact with your internet provider."
+        />
+      ) : (
+        <Container style={{ marginBottom: 200 }}>
           {subscribersData.status === "success" &&
           !subscribersData.data.length ? (
             <Error
@@ -65,15 +71,9 @@ const FilteredSubscribersList = (props) => {
               />
             </>
           )}
-        </>
-      ) : (
-        <Error
-          titleOne="ERROR MESSAGE"
-          titleTwo="Probably there is no an access to the internet."
-          titleThree="Contact with your support team."
-        />
+        </Container>
       )}
-    </Container>
+    </>
   );
 };
 
