@@ -235,9 +235,10 @@ const App = () => {
     <div className="page-container">
       <MainNavigation tabsValue={tabsValue} setTabsValue={setTabsValue} />
 
-      {routing}
+      <div className="routing-children">{routing}</div>
 
       <StyledFooter />
+
       <InfoPopup
         contentPopup={contentPopup}
         openInfoPopup={openInfoPopup}
