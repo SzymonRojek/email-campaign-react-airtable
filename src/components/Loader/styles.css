@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  min-height: 50vh;
+  min-height: 70vh;
 }
 
 .load {
@@ -40,7 +40,7 @@
   color: #142f43;
 }
 
-@media only screen and (min-device-width: 768px) {
+@media (max-width: 768px) {
   .load {
     width: 80px;
     height: 80px;
@@ -57,6 +57,17 @@
 @media (orientation: landscape) {
   .loader-container {
     padding: 20px;
+  }
+  .load {
+    width: 80px;
+    height: 80px;
+  }
+  .load::after {
+    width: 60px;
+    height: 60px;
+  }
+  .loader-text {
+    font-size: 1.5em;
   }
 }
 
