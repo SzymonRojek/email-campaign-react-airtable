@@ -37,7 +37,9 @@ const mainNavigationLinks = [
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: "#142f43",
+    minHeight: "5vh",
     [theme.breakpoints.down("xs")]: {
+      minHeight: "5vh",
       padding: "10px 0",
     },
   },
