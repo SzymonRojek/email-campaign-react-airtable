@@ -127,7 +127,7 @@ function DrawerMenu({ setTabsValue }) {
       setOpenSubscribersLinks(false);
       setOpenCampaignsLinks(false);
     }
-  }, [openDrawer]);
+  }, [openDrawer, openSubscribersLinks, openCampaignsLinks]);
 
   const activeSelectedLink = (strOne, strTwo) =>
     window.location.href.indexOf(strOne) > -1
@@ -136,9 +136,15 @@ function DrawerMenu({ setTabsValue }) {
       ? strTwo
       : "";
 
-  const handleSubscribersClick = () =>
+  const handleSubscribersClick = () => {
     setOpenSubscribersLinks(!openSubscribersLinks);
-  const handleCampaignsClick = () => setOpenCampaignsLinks(!openCampaignsLinks);
+    setOpenCampaignsLinks(false);
+  };
+
+  const handleCampaignsClick = () => {
+    setOpenCampaignsLinks(!openCampaignsLinks);
+    setOpenSubscribersLinks(false);
+  };
 
   return (
     <>
