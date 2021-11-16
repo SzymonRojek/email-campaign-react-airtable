@@ -14,11 +14,17 @@ const CampaignsList = ({
   setOpenConfirmPopup,
 }) => {
   return (
-    <Container style={{ marginBottom: 200 }}>
+    <>
       {campaignsData.status === "loading" ? (
         <Loader title="Campaigns" />
-      ) : campaignsData.status === "success" ? (
-        <>
+      ) : campaignsData.status === "error" ? (
+        <Error
+          titleOne="ERROR MESSAGE"
+          titleTwo="Probably there is no an access to the internet."
+          titleThree="Contact with your internet provider."
+        />
+      ) : (
+        <Container style={{ marginBottom: 200 }}>
           {campaignsData.status === "success" && !campaignsData.data.length ? (
             <Error
               titleOne="There are not campaigns added yet."
@@ -53,15 +59,9 @@ const CampaignsList = ({
           ) : (
             ""
           )}
-        </>
-      ) : (
-        <Error
-          titleOne="ERROR MESSAGE"
-          titleTwo="Probably there is no an access to the internet."
-          titleThree="Contact with your internet provider."
-        />
+        </Container>
       )}
-    </Container>
+    </>
   );
 };
 
