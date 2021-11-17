@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import {
   AppBar,
   Tab,
@@ -10,8 +12,6 @@ import { GoMailRead } from "react-icons/go";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { Link, useLocation } from "react-router-dom";
 
 import { StyledTabs } from "../StyledTabs";
 import { DrawerMenu } from "../DrawerMenu";
@@ -76,12 +76,11 @@ const useStyles = makeStyles((theme) => ({
 function MainNavigation({ tabsValue, setTabsValue }) {
   const theme = useTheme();
   const classes = useStyles();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
   const location = useLocation();
 
   const handleClickTab = (e, newTabsValue) => setTabsValue(newTabsValue);
 
-  // keep same indicator tabs position on reload
   useEffect(() => {
     const path = location.pathname;
     if (window.location.href.indexOf("subscribers") > -1 && tabsValue !== 0)
@@ -102,7 +101,7 @@ function MainNavigation({ tabsValue, setTabsValue }) {
             </Link>
           </div>
 
-          {isMobile ? (
+          {isSmallDevice ? (
             <DrawerMenu setTabsValue={setTabsValue} />
           ) : (
             <div className={classes.navLinksContainer}>
