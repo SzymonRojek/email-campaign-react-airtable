@@ -60,7 +60,7 @@ const useStyles = makeStyles(() => ({
   divider: { backgroundColor: "#ffffff8c" },
 }));
 
-const subscribersLinks = [
+const subscriberLinks = [
   {
     icon: <IoIosPeople />,
     to: "/subscribers",
@@ -81,7 +81,7 @@ const subscribersLinks = [
   },
 ];
 
-const campaignsLinks = [
+const campaignLinks = [
   {
     icon: <AiFillMail />,
     to: "/campaigns",
@@ -92,13 +92,13 @@ const campaignsLinks = [
     icon: <SiStatuspage />,
     to: "/campaigns/filter",
     name: "Status",
-    tabsValue: 0,
+    tabsValue: 1,
   },
   {
     icon: <MdOutlineMarkEmailRead />,
     to: "/campaigns/add",
     name: "Add New",
-    tabsValue: 0,
+    tabsValue: 1,
   },
 ];
 
@@ -126,13 +126,6 @@ function DrawerMenu({ setTabsValue }) {
       setOpenCampaignsLinks(false);
     }
   }, [openDrawer, openSubscribersLinks, openCampaignsLinks]);
-
-  const activeSelectedLink = (strOne, strTwo) =>
-    window.location.href.indexOf(strOne) > -1
-      ? strOne
-      : window.location.href.indexOf(strTwo) > -1
-      ? strTwo
-      : "";
 
   const handleSubscribersClick = () => {
     setOpenSubscribersLinks(!openSubscribersLinks);
@@ -182,7 +175,7 @@ function DrawerMenu({ setTabsValue }) {
 
               <Collapse in={openSubscribersLinks} timeout="auto" unmountOnExit>
                 <Divider />
-                {subscribersLinks.map(({ icon, to, name, tabsValue }) => {
+                {subscriberLinks.map(({ icon, to, name, tabsValue }) => {
                   return (
                     <div key={`key-${uniqueId()}`}>
                       <Link
@@ -193,11 +186,7 @@ function DrawerMenu({ setTabsValue }) {
                         <StyledListItem
                           button
                           onClick={() => setOpenDrawer(false)}
-                          selected={
-                            to === location.pathname ||
-                            to ===
-                              activeSelectedLink("/subscribers", "/campaigns")
-                          }
+                          selected={to === location.pathname}
                         >
                           <ListItemIcon className={classes.listItemIcon}>
                             {icon}
@@ -228,7 +217,7 @@ function DrawerMenu({ setTabsValue }) {
 
               <Collapse in={openCampaignsLinks} timeout="auto" unmountOnExit>
                 <Divider />
-                {campaignsLinks.map(({ icon, to, name, tabsValue }) => {
+                {campaignLinks.map(({ icon, to, name, tabsValue }) => {
                   return (
                     <div key={`key-${uniqueId()}`}>
                       <Link
@@ -239,11 +228,7 @@ function DrawerMenu({ setTabsValue }) {
                         <StyledListItem
                           button
                           onClick={() => setOpenDrawer(false)}
-                          selected={
-                            to === location.pathname ||
-                            to ===
-                              activeSelectedLink("/subscribers", "/campaigns")
-                          }
+                          selected={to === location.pathname}
                         >
                           <ListItemIcon className={classes.listItemIcon}>
                             {icon}
@@ -269,10 +254,7 @@ function DrawerMenu({ setTabsValue }) {
               <StyledListItem
                 button
                 onClick={() => setOpenDrawer(false)}
-                selected={
-                  "/" === location.pathname ||
-                  "/" === activeSelectedLink("/subscribers", "/campaigns")
-                }
+                selected={"/" === location.pathname}
               >
                 <ListItemIcon className={classes.listItemIcon}>
                   <AiFillHome />
