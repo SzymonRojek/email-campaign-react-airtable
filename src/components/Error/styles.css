@@ -3,7 +3,13 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top: 10%;
+  margin: auto;
+  max-width: 250px;
+  padding: 40px 20px;
+  text-align: center;
+  background-color: #142f43;
+  border-radius: 4px;
+  box-shadow: 3px 6px 14px -1px #7d7d7d;
 }
 
 .error-text {
@@ -20,7 +26,21 @@
 }
 
 .error-mainText {
-  color: crimson;
+  color: orange;
+}
+
+@media (max-width: 768px) {
+  .error-mainText,
+  .error-subText {
+    font-size: 19px;
+  }
+}
+
+@media (min-width: 769px) {
+  .error-container {
+    max-width: 390px;
+    margin-top: 15%;
+  }
 }
 
 .error-subText {
@@ -28,6 +48,7 @@
   animation-fill-mode: forwards;
   animation-duration: 1s;
   animation-delay: 1.2s;
+  color: white;
 }
 
 @keyframes fadeIn {
