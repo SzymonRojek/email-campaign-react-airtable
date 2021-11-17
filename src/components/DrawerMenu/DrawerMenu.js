@@ -11,6 +11,7 @@ import {
   ListItemIcon,
   ListItemText,
   Collapse,
+  Grid,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
@@ -28,19 +29,16 @@ import { MdAlternateEmail } from "react-icons/md";
 import { MdOutlineMarkEmailRead } from "react-icons/md";
 
 const useStyles = makeStyles(() => ({
-  listContainer: {
-    backgroundColor: "#142f43",
+  container: {
     height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
+    maxWidth: 230,
+    backgroundColor: "#142f43",
   },
   listItemIcon: { color: "orange", fontSize: 17 },
   listItemLogo: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 100,
   },
   linkCollapse: {
     color: "orange",
@@ -149,107 +147,120 @@ function DrawerMenu({ setTabsValue }) {
   return (
     <>
       <Drawer
-        style={{ zIndex: 1 }}
+        style={{
+          position: "fixed",
+        }}
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
       >
-        <div className={classes.listContainer}>
-          <List>
+        <Grid
+          container
+          direction="column"
+          justifyContent="space-around"
+          className={classes.container}
+        >
+          <Grid container item>
             <ListItem className={classes.listItemLogo}>
               <ListItemIcon className={classes.logo}>
                 <GoMailRead />
               </ListItemIcon>
             </ListItem>
-            <ListItem
-              button
-              onClick={handleSubscribersClick}
-              className={classes.linkCollapse}
-            >
-              <ListItemIcon className={classes.listItemIcon}>
-                <MdPeopleAlt />
-              </ListItemIcon>
-              <ListItemText primary="Subscribers" />
-              {openSubscribersLinks ? <IconExpandLess /> : <IconExpandMore />}
-            </ListItem>
-            <Collapse in={openSubscribersLinks} timeout="auto" unmountOnExit>
-              <Divider />
-              {subscribersLinks.map(({ icon, to, name, tabsValue }) => {
-                return (
-                  <div key={`key-${uniqueId()}`}>
-                    <Link
-                      to={to}
-                      onClick={() => setTabsValue(tabsValue)}
-                      className={classes.link}
-                    >
-                      <StyledListItem
-                        button
-                        onClick={() => setOpenDrawer(false)}
-                        selected={
-                          to === location.pathname ||
-                          to ===
-                            activeSelectedLink("/subscribers", "/campaigns")
-                        }
+          </Grid>
+          <Grid item>
+            <List>
+              <ListItem
+                button
+                onClick={handleSubscribersClick}
+                className={classes.linkCollapse}
+              >
+                <ListItemIcon className={classes.listItemIcon}>
+                  <MdPeopleAlt />
+                </ListItemIcon>
+                <ListItemText primary="Subscribers" />
+                {openSubscribersLinks ? <IconExpandLess /> : <IconExpandMore />}
+              </ListItem>
+
+              <Collapse in={openSubscribersLinks} timeout="auto" unmountOnExit>
+                <Divider />
+                {subscribersLinks.map(({ icon, to, name, tabsValue }) => {
+                  return (
+                    <div key={`key-${uniqueId()}`}>
+                      <Link
+                        to={to}
+                        onClick={() => setTabsValue(tabsValue)}
+                        className={classes.link}
                       >
-                        <ListItemIcon className={classes.listItemIcon}>
-                          {icon}
-                        </ListItemIcon>
-                        <ListItemText onClick={() => setTabsValue(tabsValue)}>
-                          {name}
-                        </ListItemText>
-                      </StyledListItem>
-                    </Link>
-                    <Divider className={classes.divider} />
-                  </div>
-                );
-              })}
-            </Collapse>
-          </List>
-          <List>
-            <ListItem
-              button
-              onClick={handleCampaignsClick}
-              className={classes.linkCollapse}
-            >
-              <ListItemIcon className={classes.listItemIcon}>
-                <MdAlternateEmail />
-              </ListItemIcon>
-              <ListItemText primary="Campaigns" />
-              {openCampaignsLinks ? <IconExpandLess /> : <IconExpandMore />}
-            </ListItem>
-            <Collapse in={openCampaignsLinks} timeout="auto" unmountOnExit>
-              <Divider />
-              {campaignsLinks.map(({ icon, to, name, tabsValue }) => {
-                return (
-                  <div key={`key-${uniqueId()}`}>
-                    <Link
-                      to={to}
-                      onClick={() => setTabsValue(tabsValue)}
-                      className={classes.link}
-                    >
-                      <StyledListItem
-                        button
-                        onClick={() => setOpenDrawer(false)}
-                        selected={
-                          to === location.pathname ||
-                          to ===
-                            activeSelectedLink("/subscribers", "/campaigns")
-                        }
+                        <StyledListItem
+                          button
+                          onClick={() => setOpenDrawer(false)}
+                          selected={
+                            to === location.pathname ||
+                            to ===
+                              activeSelectedLink("/subscribers", "/campaigns")
+                          }
+                        >
+                          <ListItemIcon className={classes.listItemIcon}>
+                            {icon}
+                          </ListItemIcon>
+                          <ListItemText onClick={() => setTabsValue(tabsValue)}>
+                            {name}
+                          </ListItemText>
+                        </StyledListItem>
+                      </Link>
+                      <Divider className={classes.divider} />
+                    </div>
+                  );
+                })}
+              </Collapse>
+            </List>
+            <List>
+              <ListItem
+                button
+                onClick={handleCampaignsClick}
+                className={classes.linkCollapse}
+              >
+                <ListItemIcon className={classes.listItemIcon}>
+                  <MdAlternateEmail />
+                </ListItemIcon>
+                <ListItemText primary="Campaigns" />
+                {openCampaignsLinks ? <IconExpandLess /> : <IconExpandMore />}
+              </ListItem>
+
+              <Collapse in={openCampaignsLinks} timeout="auto" unmountOnExit>
+                <Divider />
+                {campaignsLinks.map(({ icon, to, name, tabsValue }) => {
+                  return (
+                    <div key={`key-${uniqueId()}`}>
+                      <Link
+                        to={to}
+                        onClick={() => setTabsValue(tabsValue)}
+                        className={classes.link}
                       >
-                        <ListItemIcon className={classes.listItemIcon}>
-                          {icon}
-                        </ListItemIcon>
-                        <ListItemText onClick={() => setTabsValue(tabsValue)}>
-                          {name}
-                        </ListItemText>
-                      </StyledListItem>
-                    </Link>
-                    <Divider className={classes.divider} />
-                  </div>
-                );
-              })}
-            </Collapse>
-          </List>
-          <div key={`key-${2}`}>
+                        <StyledListItem
+                          button
+                          onClick={() => setOpenDrawer(false)}
+                          selected={
+                            to === location.pathname ||
+                            to ===
+                              activeSelectedLink("/subscribers", "/campaigns")
+                          }
+                        >
+                          <ListItemIcon className={classes.listItemIcon}>
+                            {icon}
+                          </ListItemIcon>
+                          <ListItemText onClick={() => setTabsValue(tabsValue)}>
+                            {name}
+                          </ListItemText>
+                        </StyledListItem>
+                      </Link>
+                      <Divider className={classes.divider} />
+                    </div>
+                  );
+                })}
+              </Collapse>
+            </List>
+          </Grid>
+          <Grid item>
             <Link
               to="/"
               onClick={() => setTabsValue(2)}
@@ -272,8 +283,8 @@ function DrawerMenu({ setTabsValue }) {
               </StyledListItem>
             </Link>
             <Divider className={classes.divider} />
-          </div>
-        </div>
+          </Grid>
+        </Grid>
       </Drawer>
       <IconButton
         className={classes.menuIcon}
@@ -282,7 +293,7 @@ function DrawerMenu({ setTabsValue }) {
         {!openDrawer ? (
           <MenuIcon style={{ fontSize: 35 }} />
         ) : (
-          <MenuOpenIcon style={{ fontSize: 35, zIndex: 2 }} />
+          <MenuOpenIcon style={{ fontSize: 35 }} />
         )}
       </IconButton>
     </>
