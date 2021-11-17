@@ -5,21 +5,20 @@ import { useMediaQuery } from "@material-ui/core";
 
 import StyledLink from "./StyledLink";
 
+const styleGrid = { margin: "10px 360px", maxWidth: 400 };
+
 const SubNavigation = ({ dataLinks }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <>
-      {!isMobile ? (
+      {!isSmallDevice ? (
         <Container>
           <nav>
             <Grid
               container
-              style={{
-                margin: "20px auto",
-                maxWidth: 400,
-              }}
+              style={styleGrid}
               direction="row"
               justifyContent="space-between"
               alignItems="center"
