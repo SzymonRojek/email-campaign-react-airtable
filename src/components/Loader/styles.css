@@ -54,6 +54,12 @@
   }
 }
 
+@media (min-width: 769px) {
+  .loader-container {
+    margin-top: 15%;
+  }
+}
+
 @media (orientation: landscape) {
   .loader-container {
     padding: 20px;
