@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 30,
     color: "orange",
     cursor: "pointer",
-    marginRight: 40,
+    marginRight: "8px",
   },
   link: {
     textDecoration: "none",
@@ -91,38 +91,36 @@ function MainNavigation({ tabsValue, setTabsValue }) {
   }, []);
 
   return (
-    <div>
-      <AppBar className={classes.container} position="static">
-        <CssBaseline />
-        <Toolbar>
-          <div className={classes.logoContainer}>
-            <Link to="/">
-              <GoMailRead className={classes.logo} />
-            </Link>
-          </div>
+    <AppBar className={classes.container} position="static">
+      <CssBaseline />
+      <Toolbar>
+        <div className={classes.logoContainer}>
+          <Link to="/">
+            <GoMailRead className={classes.logo} />
+          </Link>
+        </div>
 
-          {isSmallDevice ? (
-            <DrawerMenu setTabsValue={setTabsValue} />
-          ) : (
-            <div className={classes.navLinksContainer}>
-              <StyledTabs onChange={handleClickTab} value={tabsValue}>
-                {mainNavigationLinks.map(({ icon, name, to }) => (
-                  <Tab
-                    key={name}
-                    icon={icon}
-                    disableRipple
-                    label={name}
-                    component={Link}
-                    to={to}
-                    className={classes.link}
-                  />
-                ))}
-              </StyledTabs>
-            </div>
-          )}
-        </Toolbar>
-      </AppBar>
-    </div>
+        {isSmallDevice ? (
+          <DrawerMenu setTabsValue={setTabsValue} />
+        ) : (
+          <div className={classes.navLinksContainer}>
+            <StyledTabs onChange={handleClickTab} value={tabsValue}>
+              {mainNavigationLinks.map(({ icon, name, to }) => (
+                <Tab
+                  key={name}
+                  icon={icon}
+                  disableRipple
+                  label={name}
+                  component={Link}
+                  to={to}
+                  className={classes.link}
+                />
+              ))}
+            </StyledTabs>
+          </div>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 }
 
