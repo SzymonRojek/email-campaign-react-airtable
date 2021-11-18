@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 30,
     color: "orange",
     cursor: "pointer",
-    marginRight: "8px",
+    marginRight: "40px",
   },
   link: {
     textDecoration: "none",
