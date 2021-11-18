@@ -4,7 +4,6 @@ import { Link } from "@mui/material";
 import { BsGithub } from "react-icons/bs";
 
 const appBarStyles = {
-  // marginTop: "auto",
   position: "absolute",
   bottom: 0,
   backgroundColor: "#142f43",
