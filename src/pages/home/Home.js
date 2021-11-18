@@ -94,7 +94,7 @@ const Home = () => {
               </Grid>
               <Grid item>
                 <Typography variant="h3">
-                  Airtable base will provide its own <strong>rest API</strong>
+                  Airtable base will provide its own <strong>rest API </strong>
                   to create, read, update, and delete any records.
                 </Typography>
               </Grid>
@@ -107,7 +107,7 @@ const Home = () => {
                   Add new subscriber, wait for an admin confirmation to get an
                   active status and get more their details. Finally create an
                   email campaign and send it to all your active subscribers just
-                  by one simple click!
+                  by one <strong>simple click</strong>!
                 </Typography>
               </Grid>
 
