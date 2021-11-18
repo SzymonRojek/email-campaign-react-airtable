@@ -59,9 +59,9 @@ const Home = () => {
           </Grid>
           <Grid item sm={6} md={6}>
             <Typography variant="h2" paragraph>
-              This is a personalize <strong>Email Campaign </strong>
-              application. You can write @mail to all subscribers just by one
-              CLICK - easy peasy!
+              This is the <strong>Email Campaign </strong>
+              application. You can write @mail to all your subscribers just by
+              one CLICK - easy peasy!
             </Typography>
           </Grid>
           <Grid item sm={6} xs={12} md={6} order={{ md: 4 }}>
@@ -88,13 +88,13 @@ const Home = () => {
                     <SiAirtable />
                     Airtable
                   </Link>
-                  base. Easily brings all information together, organize and
-                  connect it we want, and change it as needed.
+                  base. Easily brings all information together - organize,
+                  connect and change them as needed.
                 </Typography>
               </Grid>
               <Grid item>
                 <Typography variant="h3">
-                  Airtable base will provide its own <strong>rest API</strong>{" "}
+                  Airtable base will provide its own <strong>rest API</strong>
                   to create, read, update, and delete any records.
                 </Typography>
               </Grid>
@@ -105,9 +105,9 @@ const Home = () => {
               <Grid item>
                 <Typography variant="body2">
                   Add new subscriber, wait for an admin confirmation to get an
-                  active status, get more their details. Finally create an email
-                  campaign and send it to all your subscribers by one simple
-                  click!
+                  active status and get more their details. Finally create an
+                  email campaign and send it to all your active subscribers just
+                  by one simple click!
                 </Typography>
               </Grid>
 
