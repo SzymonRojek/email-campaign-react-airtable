@@ -5,7 +5,7 @@ import { useMediaQuery } from "@material-ui/core";
 
 import StyledLink from "./StyledLink";
 
-const styleGrid = { margin: "10px 360px", maxWidth: 400 };
+const styleGrid = { margin: "10px auto", maxWidth: 400 };
 
 const SubNavigation = ({ dataLinks }) => {
   const theme = useTheme();
