@@ -109,11 +109,10 @@
   justify-content: center;
   align-items: center;
   opacity: 0;
-  animation: fadeIn ease-in 1;
+  animation: fadeIn ease-in;
   animation-fill-mode: forwards;
   animation-duration: 1s;
   animation-delay: 0.5s;
-  animation-fill-mode: forwards;
 }
 
 /* dots flashing */
