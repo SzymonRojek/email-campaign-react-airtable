@@ -136,11 +136,11 @@
 
 .dot-flashing {
   position: relative;
-  width: 7px;
-  height: 7px;
+  width: 5px;
+  height: 5px;
   border-radius: 5px;
-  background-color: orange;
-  color: orange;
+  background-color: #142f43;
+  color: #142f43;
   animation: dotFlashing 1s infinite linear alternate;
   animation-delay: 0.5s;
   margin-left: 20px;
@@ -157,32 +157,34 @@
 
 .dot-flashing::before {
   left: -15px;
-  width: 7px;
-  height: 7px;
+  width: 5px;
+  height: 5px;
   border-radius: 5px;
-  background-color: orange;
-  color: orange;
+  background-color: #142f43;
+  color: #142f43;
   animation: dotFlashing 1s infinite alternate;
   animation-delay: 0s;
 }
 
 .dot-flashing::after {
   left: 15px;
-  width: 7px;
-  height: 7px;
+  width: 5px;
+  height: 5px;
   border-radius: 5px;
-  background-color: orange;
-  color: orange;
+  background-color: #142f43;
+  color: #142f43;
   animation: dotFlashing 1s infinite alternate;
   animation-delay: 1s;
 }
 
 @keyframes dotFlashing {
   0% {
-    background-color: orange;
+    background-color: #142f43;
   }
-  50%,
+  50% {
+    background-color: #1f405b;
+  }
   100% {
-    background-color: rgb(247, 240, 228);
+    background-color: #abcde8;
   }
 }
