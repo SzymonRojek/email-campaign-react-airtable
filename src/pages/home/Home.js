@@ -3,7 +3,7 @@ import { Link } from "@mui/material";
 import { Container, Box, Grid, Typography } from "@mui/material";
 import { SiAirtable } from "react-icons/si";
 
-import homeImg from "../../img/image-home.svg";
+import homeImg from "../../img/graphic.svg";
 
 const styledBox = {
   maxWidth: 1224,
