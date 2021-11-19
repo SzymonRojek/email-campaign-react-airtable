@@ -17,7 +17,6 @@ import MenuIcon from "@material-ui/icons/Menu";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import IconExpandLess from "@material-ui/icons/ExpandLess";
 import IconExpandMore from "@material-ui/icons/ExpandMore";
-import { GoMailRead } from "react-icons/go";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
@@ -25,8 +24,12 @@ import { SiStatuspage } from "react-icons/si";
 import { MdPeopleAlt } from "react-icons/md";
 import { IoIosPeople } from "react-icons/io";
 import { MdAlternateEmail } from "react-icons/md";
-
 import { MdOutlineMarkEmailRead } from "react-icons/md";
+
+const style = {
+  drawer: { zIndex: 10 },
+  icon: { fontSize: 35 },
+};
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -35,11 +38,6 @@ const useStyles = makeStyles(() => ({
     backgroundColor: "#142f43",
   },
   listItemIcon: { color: "orange", fontSize: 17 },
-  listItemLogo: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   linkCollapse: {
     color: "orange",
     fontSize: 20,
@@ -52,10 +50,6 @@ const useStyles = makeStyles(() => ({
   },
   menuIcon: {
     color: "orange",
-  },
-  logo: {
-    color: "orange",
-    fontSize: 45,
   },
   divider: { backgroundColor: "#ffffff8c" },
 }));
@@ -140,25 +134,17 @@ function DrawerMenu({ setTabsValue }) {
   return (
     <>
       <Drawer
-        style={{
-          position: "fixed",
-        }}
+        anchor="right"
+        style={style.drawer}
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
       >
         <Grid
           container
           direction="column"
-          justifyContent="space-around"
+          justifyContent="space-evenly"
           className={classes.container}
         >
-          <Grid container item>
-            <ListItem className={classes.listItemLogo}>
-              <ListItemIcon className={classes.logo}>
-                <GoMailRead />
-              </ListItemIcon>
-            </ListItem>
-          </Grid>
           <Grid item>
             <List>
               <ListItem
@@ -273,9 +259,9 @@ function DrawerMenu({ setTabsValue }) {
         onClick={() => setOpenDrawer(!openDrawer)}
       >
         {!openDrawer ? (
-          <MenuIcon style={{ fontSize: 35 }} />
+          <MenuIcon style={style.icon} />
         ) : (
-          <MenuOpenIcon style={{ fontSize: 35 }} />
+          <MenuOpenIcon style={style.icon} />
         )}
       </IconButton>
     </>
