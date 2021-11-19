@@ -9,6 +9,10 @@ import { FormCampaign } from "../../components/FormCampaign";
 import { StyledHeading } from "../../components/StyledHeading";
 import { emailMessage } from "../../mailgun/app";
 
+const style = {
+  title: { color: "green" },
+};
+
 const NewCampaign = ({
   setOpenInfoPopup,
   setContentPopup,
@@ -54,9 +58,16 @@ const NewCampaign = ({
 
     setContentPopup({
       title: "Yeah 🎊",
-      text: `Campaign ${capitalizeFirstLetter(data.title)} has been ${
-        actionStatus === "draft" ? "drafted and add" : "send"
-      } to the data.`,
+      text: (
+        <>
+          Campaign
+          <span style={style.title}>
+            <strong> {capitalizeFirstLetter(data.title)} </strong>
+          </span>
+          has been {actionStatus === "draft" ? "drafted and add" : "send"} to
+          the data. 😁
+        </>
+      ),
       colorButton: "success",
     });
 
