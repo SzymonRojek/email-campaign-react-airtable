@@ -12,6 +12,18 @@ import {
   capitalizeFirstLetter,
 } from "../../helpers";
 
+const style = {
+  paragraph: {
+    padding: "8px 20px",
+    letterSpacing: 2,
+    textTransform: "uppercase",
+    fontSize: 11,
+    width: 80,
+    display: "flex",
+    justifyContent: "center",
+  },
+  icon: { marginLeft: 10, color: "white" },
+};
 const useStyles = makeStyles((theme) => ({
   status: {
     fontWeight: "bold",
@@ -104,13 +116,7 @@ const RowSubscriber = (props) => {
             className={classes.status}
             style={{
               backgroundColor: getStatusColor(subscriber.fields.status),
-              padding: "8px 20px",
-              letterSpacing: 2,
-              textTransform: "uppercase",
-              fontSize: 11,
-              width: 80,
-              display: "flex",
-              justifyContent: "center",
+              ...style.paragraph,
             }}
           >
             {subscriber.fields.status}
@@ -129,7 +135,7 @@ const RowSubscriber = (props) => {
               aria-label="subscriber-details"
               color="success"
               variant="contained"
-              startIcon={<DetailsIcon style={{ marginLeft: 10 }} />}
+              startIcon={<DetailsIcon style={style.icon} />}
               onClick={() => {
                 setSelectedData(subscriber);
                 handleSubscriberDetails(subscriber);
@@ -142,7 +148,7 @@ const RowSubscriber = (props) => {
               aria-label="delete"
               color="error"
               variant="contained"
-              startIcon={<DeleteIcon style={{ marginLeft: 10 }} />}
+              startIcon={<DeleteIcon style={style.icon} />}
               onClick={() => {
                 setOpenConfirmPopup(true);
                 setSelectedData(subscriber);
