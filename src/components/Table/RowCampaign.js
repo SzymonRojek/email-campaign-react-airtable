@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Button, Tooltip } from "@mui/material";
+import { Button, Tooltip, Zoom } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { TableCell, TableRow, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -12,20 +12,23 @@ import {
   capitalizeFirstLetter,
 } from "../../helpers";
 
-const typographyStyles = {
-  padding: "9px 20px",
-  letterSpacing: 2,
-  textTransform: "uppercase",
-  fontSize: 11,
-  width: 60,
-  display: "flex",
-  justifyContent: "center",
-};
-
-const buttonStyles = {
-  fontSize: 12,
-  letterSpacing: 2,
-  fontWeight: "bold",
+const style = {
+  typography: {
+    padding: "9px 20px",
+    letterSpacing: 2,
+    textTransform: "uppercase",
+    fontSize: 11,
+    width: 60,
+    display: "flex",
+    justifyContent: "center",
+  },
+  button: {
+    fontSize: 12,
+    letterSpacing: 2,
+    fontWeight: "bold",
+    color: "white",
+  },
+  icon: { marginLeft: 10 },
 };
 
 const useStyles = makeStyles(() => ({
@@ -84,7 +87,7 @@ const RowCampaign = (props) => {
             className={classes.status}
             style={{
               backgroundColor: getStatusColor(campaign.fields.status),
-              ...typographyStyles,
+              ...style.typography,
             }}
           >
             {campaign.fields.status}
@@ -94,7 +97,7 @@ const RowCampaign = (props) => {
       <TableCell>
         {campaign.fields.status === "draft" ? (
           <Button
-            style={{ ...buttonStyles }}
+            style={style.button}
             aria-label="edit"
             color="success"
             variant="contained"
@@ -107,11 +110,18 @@ const RowCampaign = (props) => {
           </Button>
         ) : (
           <div>
-            <Tooltip title="No edit" placement="right-start">
+            <Tooltip
+              title="No edit"
+              placement="right-start"
+              TransitionComponent={Zoom}
+            >
               <img
                 src={successIcon}
                 alt="success-icon"
-                style={{ height: "50px", width: "50px" }}
+                style={{
+                  height: "50px",
+                  width: "50px",
+                }}
               />
             </Tooltip>
           </div>
@@ -122,7 +132,7 @@ const RowCampaign = (props) => {
           aria-label="delete"
           color="error"
           variant="contained"
-          startIcon={<DeleteIcon style={{ marginLeft: 10 }} />}
+          startIcon={<DeleteIcon style={style.icon} />}
           onClick={() => {
             setOpenConfirmPopup(true);
             setSelectedData(campaign);
