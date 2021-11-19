@@ -5,17 +5,18 @@ import { SiAirtable } from "react-icons/si";
 
 import homeImg from "../../img/graphic.svg";
 
-const styledBox = {
-  maxWidth: 1224,
-  margin: "auto",
-  color: "#ffffff8c",
-  backgroundColor: "#142f43",
-  borderRadius: 6,
-};
-
-const styledLink = {
-  color: "orange",
-  padding: "0 10px",
+const style = {
+  box: {
+    maxWidth: 1224,
+    margin: "auto",
+    color: "#ffffff8c",
+    backgroundColor: "#142f43",
+    borderRadius: 6,
+  },
+  link: {
+    color: "orange",
+    padding: "0 10px",
+  },
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -38,6 +39,10 @@ const useStyles = makeStyles((theme) => ({
   mainHeading: {
     color: "orange",
   },
+  link: {
+    color: "orange",
+    padding: "0 10px",
+  },
 }));
 
 const Home = () => {
@@ -45,7 +50,7 @@ const Home = () => {
 
   return (
     <Container className={classes.container}>
-      <Box boxShadow={3} p={4} style={styledBox}>
+      <Box boxShadow={3} p={4} style={style.box}>
         <Grid container direction="row" spacing={4}>
           <Grid item sm={12} xs={12} md={6}>
             <Typography
@@ -79,15 +84,16 @@ const Home = () => {
               <Grid item>
                 <Typography variant="h3">
                   The app is connected to the
-                  <Link
-                    href="https://airtable.com/"
-                    target="_blank"
-                    underline="hover"
-                    style={styledLink}
-                  >
-                    <SiAirtable />
-                    Airtable
-                  </Link>
+                  <span style={{ display: "inline-block" }}>
+                    <Link
+                      href="https://airtable.com/"
+                      target="_blank"
+                      underline="hover"
+                      style={style.link}
+                    >
+                      <SiAirtable /> Airtable
+                    </Link>
+                  </span>
                   base. Easily brings all information together - organize,
                   connect and change them as needed.
                 </Typography>
@@ -120,7 +126,7 @@ const Home = () => {
                     href="https://github.com/SzymonRojek/email-campaign-react-airtable"
                     target="_blank"
                     underline="hover"
-                    style={styledLink}
+                    style={style.link}
                   >
                     ReadMe
                   </Link>
@@ -129,9 +135,7 @@ const Home = () => {
               </Grid>
 
               <Grid item>
-                <Typography variant="body2" style={{ color: "orange" }}>
-                  Thanks! 🙏
-                </Typography>
+                <Typography variant="body2">Thanks! 🙏</Typography>
               </Grid>
             </Grid>
           </Grid>
