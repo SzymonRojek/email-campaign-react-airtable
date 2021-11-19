@@ -51,7 +51,8 @@ const useStyles = makeStyles(() => ({
   menuIcon: {
     color: "orange",
   },
-  divider: { backgroundColor: "#ffffff8c" },
+  mainDivider: { backgroundColor: "#7a6032" },
+  subDivider: { backgroundColor: "#9c98988c" },
 }));
 
 const subscriberLinks = [
@@ -158,9 +159,9 @@ function DrawerMenu({ setTabsValue }) {
                 <ListItemText primary="Subscribers" />
                 {openSubscribersLinks ? <IconExpandLess /> : <IconExpandMore />}
               </ListItem>
+              <Divider className={classes.mainDivider} />
 
               <Collapse in={openSubscribersLinks} timeout="auto" unmountOnExit>
-                <Divider />
                 {subscriberLinks.map(({ icon, to, name, tabsValue }) => {
                   return (
                     <div key={`key-${uniqueId()}`}>
@@ -182,7 +183,7 @@ function DrawerMenu({ setTabsValue }) {
                           </ListItemText>
                         </StyledListItem>
                       </Link>
-                      <Divider className={classes.divider} />
+                      <Divider className={classes.subDivider} />
                     </div>
                   );
                 })}
@@ -200,9 +201,9 @@ function DrawerMenu({ setTabsValue }) {
                 <ListItemText primary="Campaigns" />
                 {openCampaignsLinks ? <IconExpandLess /> : <IconExpandMore />}
               </ListItem>
+              <Divider className={classes.mainDivider} />
 
               <Collapse in={openCampaignsLinks} timeout="auto" unmountOnExit>
-                <Divider />
                 {campaignLinks.map(({ icon, to, name, tabsValue }) => {
                   return (
                     <div key={`key-${uniqueId()}`}>
@@ -224,7 +225,7 @@ function DrawerMenu({ setTabsValue }) {
                           </ListItemText>
                         </StyledListItem>
                       </Link>
-                      <Divider className={classes.divider} />
+                      <Divider className={classes.subDivider} />
                     </div>
                   );
                 })}
@@ -250,7 +251,7 @@ function DrawerMenu({ setTabsValue }) {
                 </ListItemText>
               </StyledListItem>
             </Link>
-            <Divider className={classes.divider} />
+            <Divider className={classes.subDivider} />
           </Grid>
         </Grid>
       </Drawer>
