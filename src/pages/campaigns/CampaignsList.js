@@ -20,15 +20,15 @@ const CampaignsList = ({
       ) : campaignsData.status === "error" ? (
         <Error
           titleOne="ERROR MESSAGE"
-          titleTwo="Probably there is no an access to the internet."
-          titleThree="Contact with your internet provider."
+          titleTwo="Check access to the data from airtable base."
+          titleThree="Also, please check your internet connection."
         />
       ) : (
         <Container>
           {campaignsData.status === "success" && !campaignsData.data.length ? (
             <Error
               titleOne="There are not campaigns added yet."
-              titleTwo="Please add a new subscriber."
+              titleTwo="Please add a new campaign."
             />
           ) : (
             <>
@@ -50,7 +50,7 @@ const CampaignsList = ({
             <ContainerCampaigns
               subHeading="Latest added Campaign:"
               dataHeadEmailTable={dataHeadEmailTable}
-              campaignsData={campaignsData.latestCampaign}
+              campaignsData={campaignsData.latestAddedItem}
               setSelectedData={setSelectedData}
               handleEditCampaign={handleEditCampaign}
               setContentPopup={setContentPopup}

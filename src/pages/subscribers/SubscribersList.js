@@ -22,8 +22,8 @@ const SubscribersList = (props) => {
       ) : subscribersData.status === "error" ? (
         <Error
           titleOne="ERROR MESSAGE"
-          titleTwo="Probably there is no an access to the internet."
-          titleThree="Contact with your internet provider."
+          titleTwo="Check access to the data from airtable base."
+          titleThree="Also, please check your internet connection."
         />
       ) : (
         <Container>
@@ -53,7 +53,7 @@ const SubscribersList = (props) => {
             <ContainerSubscribers
               subHeading="Latest added Subscriber:"
               dataHeadTable={generalDataHeadTable}
-              subscribersData={subscribersData.latestSubscriber}
+              subscribersData={subscribersData.latestAddedItem}
               setSelectedData={setSelectedData}
               handleSubscriberDetails={handleSubscriberDetails}
               setContentPopup={setContentPopup}
