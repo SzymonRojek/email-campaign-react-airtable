@@ -17,7 +17,7 @@ const style = {
     color: "orange",
     zIndex: -1,
   },
-  footer: { marginBottom: 180, zIndex: 1 },
+  footer: { marginBottom: 180, zIndex: 1, textAlign: "center" },
 };
 
 const StyledFooter = () => (
