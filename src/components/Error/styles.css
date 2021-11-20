@@ -3,8 +3,8 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin: auto;
-  max-width: 250px;
+  margin: 15% auto 0 auto;
+  max-width: 300px;
   padding: 40px 20px;
   text-align: center;
   background-color: #142f43;
@@ -38,8 +38,7 @@
 
 @media (min-width: 769px) {
   .error-container {
-    max-width: 390px;
-    margin-top: 15%;
+    max-width: 420px;
   }
 }
 
