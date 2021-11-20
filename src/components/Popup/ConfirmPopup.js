@@ -4,16 +4,9 @@ import Button from "@mui/material/Button";
 const ConfirmPopup = ({
   openConfirmPopup,
   setOpenConfirmPopup,
-  subscribersData,
-  campaignsData,
-  selectedData,
   handleRemoveItem,
   contentPopup,
 }) => {
-  const isItemFromSubscribersData = subscribersData.data
-    ? !!subscribersData.data.filter((item) => item.id === selectedData).length
-    : null;
-
   return (
     <Dialog open={openConfirmPopup} maxWidth="sm">
       <DialogTitle>
@@ -35,11 +28,7 @@ const ConfirmPopup = ({
         <Button
           variant="contained"
           color="error"
-          onClick={() =>
-            isItemFromSubscribersData
-              ? handleRemoveItem(subscribersData, "subscribers")
-              : handleRemoveItem(campaignsData, "campaigns")
-          }
+          onClick={() => handleRemoveItem()}
         >
           YES
         </Button>
