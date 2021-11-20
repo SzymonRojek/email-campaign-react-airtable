@@ -5,7 +5,7 @@ import { useMediaQuery } from "@material-ui/core";
 
 import StyledLink from "./StyledLink";
 
-const styleGrid = { margin: "10px auto", maxWidth: 400 };
+const styleGrid = { margin: "10px auto", maxWidth: 480, paddingRight: 20 };
 
 const SubNavigation = ({ dataLinks }) => {
   const theme = useTheme();
@@ -20,8 +20,7 @@ const SubNavigation = ({ dataLinks }) => {
               container
               style={styleGrid}
               direction="row"
-              justifyContent="space-between"
-              alignItems="center"
+              justifyContent="space-evenly"
             >
               {dataLinks.map(({ to, exact, name }, index) => (
                 <Grid item key={index} md={3}>
