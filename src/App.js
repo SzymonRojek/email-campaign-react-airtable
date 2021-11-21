@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRoutes, useNavigate } from "react-router-dom";
 
 import "./App.css";
 import api from "./api";
+import { useSubscribers } from "./useSubscribers";
+import { useCampaigns } from "./useCampaigns";
 import { MainNavigation } from "./components/MainNavigation";
 import { SubNavigation } from "./components/SubNavigation";
 import { StyledFooter } from "./components/StyledFooter";
@@ -20,7 +22,7 @@ import {
   FilteredCampaignsList,
 } from "./pages/campaigns";
 import { InfoPopup, ConfirmPopup } from "./components/Popup";
-import { sortDataAlphabetically, getLatestAddedSubscriber } from "./helpers";
+import { getLatestAddedItem } from "./helpers";
 import {
   subscribersLinksNavigation,
   campaignsLinksNavigation,
@@ -28,15 +30,6 @@ import {
 
 const App = () => {
   const navigate = useNavigate();
-  const [subscribersData, setSubscribersData] = useState({
-    status: "loading",
-    data: null,
-    latestSubscriber: null,
-  });
-  const [campaignsData, setCampaignsData] = useState({
-    status: "loading",
-    data: null,
-  });
   const [openInfoPopup, setOpenInfoPopup] = useState(false);
   const [contentPopup, setContentPopup] = useState({});
   const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
@@ -46,77 +39,43 @@ const App = () => {
   const endpointSubscribers = "/subscribers";
   const endpointCampaigns = "/campaigns";
 
-  const getSubscribersData = async () => {
-    try {
-      const { records } = await api.get(endpointSubscribers);
-
-      sortDataAlphabetically(records);
-      setSubscribersData({
-        status: "success",
-        data: records,
-        latestSubscriber: getLatestAddedSubscriber(records),
-      });
-    } catch (error) {
-      setSubscribersData({
-        status: "error",
-      });
-    }
-  };
-
-  useEffect(() => {
-    const delayGetSubscribersData = setTimeout(getSubscribersData, 3_000);
-
-    return () => clearTimeout(delayGetSubscribersData);
-  }, []);
-
-  const getCampaignsData = async () => {
-    try {
-      const { records } = await api.get(endpointCampaigns);
-
-      sortDataAlphabetically(records);
-      setCampaignsData({
-        status: "success",
-        data: records,
-        latestCampaign: getLatestAddedSubscriber(records),
-      });
-    } catch (error) {
-      setCampaignsData({
-        status: "error",
-      });
-    }
-  };
-
-  useEffect(() => {
-    const delayGetCampaignData = setTimeout(getCampaignsData, 3_000);
-
-    return () => clearTimeout(delayGetCampaignData);
-  }, []);
-
-  const handleRemoveItem = async (data, endpoint) => {
-    await api.delete(`/${endpoint}/${selectedData.id}`);
-
-    data === subscribersData ? getSubscribersData() : getCampaignsData();
-
-    setOpenConfirmPopup(false);
-
-    // if (data.data.length === 0) setOpenInfoPopup(true);
-
-    getSubscribersData();
-    setOpenInfoPopup(true);
-    setContentPopup({
-      title: "Element has been removed permanently 😞",
-      colorButton: "error",
-    });
-
-    setTimeout(() => {
-      setOpenInfoPopup(false);
-    }, 3_000);
-  };
+  const { subscribersData, setSubscribersData } =
+    useSubscribers(endpointSubscribers);
+  const { campaignsData, setCampaignsData } = useCampaigns(endpointCampaigns);
 
   const handleSubscriberDetails = (subscriber) =>
     subscriber.fields.status === "active"
       ? navigate(`/subscribers/${subscriber.id}`)
       : setOpenInfoPopup(true);
+
+  const removeItemFromAirtable = async (endpoint, id) =>
+    await api.delete(`/${endpoint}/${id}`);
+
+  const handleRemoveItem = () => {
+    const nameGroup = selectedData?.group;
+    const selectedId = selectedData.id;
+    const filteredGroup = (group) =>
+      group.data.filter((item) => item.id !== selectedId);
+
+    if (nameGroup === "subscribers") {
+      setSubscribersData({
+        status: "success",
+        data: filteredGroup(subscribersData),
+        latestAddedItem: getLatestAddedItem(filteredGroup(subscribersData)),
+      });
+    }
+
+    if (nameGroup === "campaigns") {
+      setCampaignsData({
+        status: "success",
+        data: filteredGroup(campaignsData),
+        latestAddedItem: getLatestAddedItem(filteredGroup(campaignsData)),
+      });
+    }
+
+    removeItemFromAirtable(nameGroup, selectedId);
+    setOpenConfirmPopup(false);
+  };
 
   const handleEditCampaign = (id) =>
     setSelectedData(
@@ -148,7 +107,7 @@ const App = () => {
           path: "/add",
           element: (
             <NewSubscriber
-              getSubscribersData={getSubscribersData}
+              // getSubscribersData={getSubscribersData}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
             />
@@ -206,7 +165,7 @@ const App = () => {
           path: "/add",
           element: (
             <NewCampaign
-              getCampaignsData={getCampaignsData}
+              // getCampaignsData={getCampaignsData}
               subscribersData={subscribersData}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
@@ -221,7 +180,7 @@ const App = () => {
               setOpenInfoPopup={setOpenInfoPopup}
               setContentPopup={setContentPopup}
               selectedData={selectedData}
-              getCampaignsData={getCampaignsData}
+              // getCampaignsData={getCampaignsData}
             />
           ),
         },
@@ -245,9 +204,6 @@ const App = () => {
         setOpenInfoPopup={setOpenInfoPopup}
       />
       <ConfirmPopup
-        subscribersData={subscribersData}
-        campaignsData={campaignsData}
-        selectedData={selectedData}
         handleRemoveItem={handleRemoveItem}
         contentPopup={contentPopup}
         openConfirmPopup={openConfirmPopup}
