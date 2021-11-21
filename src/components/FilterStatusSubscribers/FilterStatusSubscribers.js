@@ -11,7 +11,6 @@ const FilterStatusSubscribers = (props) => {
     status,
     setSelectedData,
     handleSubscriberDetails,
-    removeItem,
     setContentPopup,
     setOpenConfirmPopup,
   } = props;
@@ -33,11 +32,10 @@ const FilterStatusSubscribers = (props) => {
                   </TableCell>
                 }
                 key={`id-${subscriber.id}`}
-                subscriber={subscriber}
+                subscriber={{ ...subscriber, group: "subscribers" }}
                 index={index}
                 setSelectedData={setSelectedData}
                 handleSubscriberDetails={handleSubscriberDetails}
-                removeItem={removeItem}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />

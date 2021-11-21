@@ -11,7 +11,6 @@ const FilterStatusCampaigns = (props) => {
     status,
     setSelectedData,
     handleEditCampaign,
-    removeItem,
     setContentPopup,
     setOpenConfirmPopup,
   } = props;
@@ -33,11 +32,10 @@ const FilterStatusCampaigns = (props) => {
                   </TableCell>
                 }
                 key={`id-${campaign.id}`}
-                campaign={campaign}
+                campaign={{ ...campaign, group: "campaigns" }}
                 index={index}
                 setSelectedData={setSelectedData}
                 handleEditCampaign={handleEditCampaign}
-                removeItem={removeItem}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />

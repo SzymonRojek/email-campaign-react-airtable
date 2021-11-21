@@ -23,7 +23,7 @@ const ContainerSubscribers = ({
               </TableCell>
             }
             key={`id-${subscriber.id}`}
-            subscriber={subscriber}
+            subscriber={{ ...subscriber, group: "subscribers" }}
             index={index}
             setSelectedData={setSelectedData}
             handleSubscriberDetails={handleSubscriberDetails}

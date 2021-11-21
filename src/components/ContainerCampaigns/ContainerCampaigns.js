@@ -28,7 +28,7 @@ const ContainerCampaigns = ({
                 </TableCell>
               }
               key={`id-${campaign.id}`}
-              campaign={campaign}
+              campaign={{ ...campaign, group: "campaigns" }}
               index={index}
               setSelectedData={setSelectedData}
               handleEditCampaign={handleEditCampaign}
