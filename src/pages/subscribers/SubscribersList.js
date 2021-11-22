@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { Container } from "@material-ui/core";
 
 import { ContainerSubscribers } from "../../components/ContainerSubscribers";
@@ -14,6 +15,46 @@ const SubscribersList = (props) => {
     setContentPopup,
     handleSubscriberDetails,
   } = props;
+
+  const [dataLength, setDataLength] = useState(0);
+
+  function useOnceCall(cb, condition = true) {
+    const isCalledRef = useRef(false);
+
+    useEffect(() => {
+      if (condition && !isCalledRef.current) {
+        isCalledRef.current = true;
+        cb();
+      }
+    }, [cb, condition]);
+  }
+  // const refreshPage = () => {
+  //   if (subscribersData.data) {
+  //     setDataLength((prev) => prev !== subscribersData.data.length);
+  //   }
+
+  //   // if (!window.location.hash) {
+  //   //   window.location = window.location + "#loaded";
+  //   //   window.location.reload();
+  //   // }
+  //   if (window.location.href.substr(-2) !== "?r") {
+  //     window.location = window.location.href + "?r";
+  //   }
+  // };
+  function reloadPage() {
+    if (window.location.href.substr(-2) !== "?r") {
+      window.location = window.location.href + "?r";
+    }
+  }
+
+  // useEffect(() => {
+  //   refreshPage();
+  // }, [dataLength]);
+
+  useOnceCall(() => {
+    reloadPage();
+    console.log("called");
+  });
 
   return (
     <>

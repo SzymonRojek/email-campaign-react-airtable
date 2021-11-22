@@ -46,7 +46,7 @@ const RowSubscriber = (props) => {
     setContentPopup,
     setOpenConfirmPopup,
   } = props;
-
+  console.log(subscriber);
   const classes = useStyles();
   const location = useLocation();
 
@@ -145,6 +145,7 @@ const RowSubscriber = (props) => {
           </TableCell>
           <TableCell>
             <Button
+              key={location.key}
               aria-label="delete"
               color="error"
               variant="contained"

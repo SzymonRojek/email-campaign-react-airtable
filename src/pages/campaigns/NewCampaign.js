@@ -16,7 +16,7 @@ const style = {
 const NewCampaign = ({
   setOpenInfoPopup,
   setContentPopup,
-  getCampaignsData,
+  // getCampaignsData,
 }) => {
   const {
     register,
@@ -52,7 +52,7 @@ const NewCampaign = ({
       },
     });
 
-    getCampaignsData();
+    // getCampaignsData();
 
     reset();
 
@@ -88,7 +88,7 @@ const NewCampaign = ({
         register={register}
         errors={errors}
         setActionStatus={setActionStatus}
-        getCampaignsData={getCampaignsData}
+        // getCampaignsData={getCampaignsData}
       />
     </Container>
   );

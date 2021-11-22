@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRoutes, useNavigate } from "react-router-dom";
 
 import "./App.css";
@@ -41,6 +41,7 @@ const App = () => {
 
   const { subscribersData, setSubscribersData } =
     useSubscribers(endpointSubscribers);
+
   const { campaignsData, setCampaignsData } = useCampaigns(endpointCampaigns);
 
   const handleSubscriberDetails = (subscriber) =>
@@ -54,6 +55,7 @@ const App = () => {
   const handleRemoveItem = () => {
     const nameGroup = selectedData?.group;
     const selectedId = selectedData.id;
+
     const filteredGroup = (group) =>
       group.data.filter((item) => item.id !== selectedId);
 
@@ -107,6 +109,7 @@ const App = () => {
           path: "/add",
           element: (
             <NewSubscriber
+              setSubscribersData={setSubscribersData}
               // getSubscribersData={getSubscribersData}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}

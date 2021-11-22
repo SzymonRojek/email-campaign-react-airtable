@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { v4 as uuidv4 } from "uuid";
 
 import { Paper, Box } from "@mui/material";
 import { Grid, Typography, Container } from "@material-ui/core";
@@ -8,7 +9,11 @@ import api from "../../api";
 import { TextInput } from "../../components/TextInput";
 import { StyledButton } from "../../components/StyledButton";
 import { StyledHeading } from "../../components/StyledHeading";
-import { capitalizeFirstLetter, validationSubscriber } from "../../helpers";
+import {
+  capitalizeFirstLetter,
+  getLatestAddedItem,
+  validationSubscriber,
+} from "../../helpers";
 
 const style = {
   paper: {
@@ -24,7 +29,8 @@ const style = {
 const AddSubscriber = ({
   setOpenInfoPopup,
   setContentPopup,
-  getSubscribersData,
+  setSubscribersData,
+  // getSubscribersData,
 }) => {
   const {
     register,
@@ -49,6 +55,35 @@ const AddSubscriber = ({
     });
 
     reset();
+    // setSubscribersData((prevState) => ({
+    // customID: "1",
+    //   status: "success",
+    //   data: [
+    //     ...prevState.data,
+    //     {
+    //       fields: {
+    //         name: data.name,
+    //         surname: data.surname,
+    //         profession: data.profession,
+    //         email: data.email,
+    //         status: "pending",
+    //       },
+    //       createdTime: "2021-11-21T21:05:58.000Z",
+    //     },
+    //   ],
+    //   latestAddedItem: getLatestAddedItem([
+    //     {
+    //       createdTime: "2021-11-21T21:05:58.000Z",
+    //       fields: {
+    //         name: data.name,
+    //         surname: data.surname,
+    //         profession: data.profession,
+    //         email: data.email,
+    //         status: "pending",
+    //       },
+    //     },
+    //   ]),
+    // }));
 
     setContentPopup({
       title: "Yeah 🎊",
@@ -64,7 +99,7 @@ const AddSubscriber = ({
       colorButton: "success",
     });
 
-    getSubscribersData();
+    // getSubscribersData();
     setOpenInfoPopup(true);
 
     setTimeout(() => {
