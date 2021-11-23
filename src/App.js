@@ -3,8 +3,7 @@ import { useRoutes, useNavigate } from "react-router-dom";
 
 import "./App.css";
 import api from "./api";
-import { useSubscribers } from "./useSubscribers";
-import { useCampaigns } from "./useCampaigns";
+import { useFetchData } from "./useFetchData";
 import { MainNavigation } from "./components/MainNavigation";
 import { SubNavigation } from "./components/SubNavigation";
 import { StyledFooter } from "./components/StyledFooter";
@@ -39,10 +38,28 @@ const App = () => {
   const endpointSubscribers = "/subscribers";
   const endpointCampaigns = "/campaigns";
 
-  const { subscribersData, setSubscribersData } =
-    useSubscribers(endpointSubscribers);
+  const [
+    {
+      subscribersData,
+      setSubscribersData,
+      campaignsData,
+      setCampaignsData,
+      isCalledRefSubscribers,
+      isCalledRefCampaigns,
+    },
+    refetchData,
+  ] = useFetchData(endpointSubscribers, endpointCampaigns);
 
-  const { campaignsData, setCampaignsData } = useCampaigns(endpointCampaigns);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (!isCalledRefSubscribers.current) refetchData();
+      if (!isCalledRefCampaigns.current) refetchData();
+    }, 3_000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isCalledRefSubscribers, isCalledRefCampaigns, refetchData]);
 
   const handleSubscriberDetails = (subscriber) =>
     subscriber.fields.status === "active"
@@ -89,7 +106,7 @@ const App = () => {
   const routes = [
     { path: "/", element: <Home /> },
     {
-      path: "/subscribers",
+      path: endpointSubscribers,
       element: <SubNavigation dataLinks={subscribersLinksNavigation} />,
       children: [
         {
@@ -110,7 +127,7 @@ const App = () => {
           element: (
             <NewSubscriber
               setSubscribersData={setSubscribersData}
-              // getSubscribersData={getSubscribersData}
+              isCalledRefSubscribers={isCalledRefSubscribers}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
             />
@@ -136,7 +153,7 @@ const App = () => {
       ],
     },
     {
-      path: "/campaigns",
+      path: endpointCampaigns,
       element: <SubNavigation dataLinks={campaignsLinksNavigation} />,
       children: [
         {
@@ -168,7 +185,7 @@ const App = () => {
           path: "/add",
           element: (
             <NewCampaign
-              // getCampaignsData={getCampaignsData}
+              isCalledRefCampaigns={isCalledRefCampaigns}
               subscribersData={subscribersData}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
@@ -180,10 +197,10 @@ const App = () => {
           element: (
             <EditCampaign
               subscribersData={subscribersData}
+              isCalledRefCampaigns={isCalledRefCampaigns}
               setOpenInfoPopup={setOpenInfoPopup}
               setContentPopup={setContentPopup}
               selectedData={selectedData}
-              // getCampaignsData={getCampaignsData}
             />
           ),
         },
