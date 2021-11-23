@@ -16,7 +16,7 @@ const style = {
 const NewCampaign = ({
   setOpenInfoPopup,
   setContentPopup,
-  // getCampaignsData,
+  isCalledRefCampaigns,
 }) => {
   const {
     register,
@@ -52,9 +52,9 @@ const NewCampaign = ({
       },
     });
 
-    // getCampaignsData();
-
     reset();
+
+    isCalledRefCampaigns.current = false;
 
     setContentPopup({
       title: "Yeah 🎊",
@@ -88,10 +88,13 @@ const NewCampaign = ({
         register={register}
         errors={errors}
         setActionStatus={setActionStatus}
-        // getCampaignsData={getCampaignsData}
+        isCalledRefCampaigns={isCalledRefCampaigns}
       />
     </Container>
   );
 };
 
 export default NewCampaign;
+
+// note, in the future:
+// before sent a data by the post method do again do the get method to get all fresh subs

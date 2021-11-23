@@ -19,7 +19,6 @@ const FormCampaign = ({
   register,
   errors,
   setActionStatus,
-  // getCampaignsData,
 }) => {
   return (
     <Paper elevation={14} style={style.paper}>
@@ -68,7 +67,6 @@ const FormCampaign = ({
                   label="draft"
                   onClick={() => {
                     setActionStatus("draft");
-                    // getCampaignsData();
                   }}
                 />
               </Grid>
@@ -81,7 +79,6 @@ const FormCampaign = ({
                   type="submit"
                   onClick={() => {
                     setActionStatus("sent");
-                    // getCampaignsData();
                   }}
                 />
               </Grid>

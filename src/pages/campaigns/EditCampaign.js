@@ -13,7 +13,7 @@ import { StyledHeading } from "../../components/StyledHeading";
 
 const EditCampaign = ({
   selectedData,
-  getCampaignsData,
+  isCalledRefCampaigns,
   setOpenInfoPopup,
   setContentPopup,
 }) => {
@@ -66,7 +66,7 @@ const EditCampaign = ({
       });
     }
 
-    getCampaignsData();
+    isCalledRefCampaigns.current = false;
 
     setContentPopup({
       text: isCampaignChanged
@@ -96,7 +96,6 @@ const EditCampaign = ({
         register={register}
         errors={errors}
         setActionStatus={setActionStatus}
-        getCampaignsData={getCampaignsData}
       />
     </Container>
   );
