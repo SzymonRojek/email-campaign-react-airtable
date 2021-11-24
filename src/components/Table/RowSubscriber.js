@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useLocation } from "react-router-dom";
 import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -23,6 +24,8 @@ const style = {
     justifyContent: "center",
   },
   icon: { marginLeft: 10, color: "white" },
+  pending: { color: "orange" },
+  blocked: { color: "#d32f2f" },
 };
 const useStyles = makeStyles((theme) => ({
   status: {
@@ -43,10 +46,10 @@ const RowSubscriber = (props) => {
     children,
     setSelectedData,
     handleSubscriberDetails,
-    setContentPopup,
     setOpenConfirmPopup,
+    setContentPopup,
   } = props;
-  console.log(subscriber);
+
   const classes = useStyles();
   const location = useLocation();
 
@@ -57,7 +60,7 @@ const RowSubscriber = (props) => {
           text: (
             <>
               {capitalizeFirstLetter(subscriber.fields.name)}'s status is
-              <span style={{ color: "orange" }}>
+              <span style={style.pending}>
                 <strong> pending </strong>
               </span>
               at the moment - subscription has to be confirmed by an admin 🙂
@@ -71,7 +74,7 @@ const RowSubscriber = (props) => {
           text: (
             <>
               {capitalizeFirstLetter(subscriber.fields.name)}'s status is
-              <span style={{ color: "#d32f2f" }}>
+              <span style={style.blocked}>
                 <strong> blocked </strong>
               </span>
               - can not get an access to more details 🙁
@@ -84,9 +87,6 @@ const RowSubscriber = (props) => {
   return (
     <TableRow
       key={`${subscriber.id}`}
-      sx={{
-        "&:last-child td, &:last-child th": { border: 0 },
-      }}
       style={{ backgroundColor: isEven(index, "#F5F5F5") }}
     >
       {children}
@@ -163,6 +163,16 @@ const RowSubscriber = (props) => {
       )}
     </TableRow>
   );
+};
+
+RowSubscriber.propTypes = {
+  subscriber: PropTypes.object.isRequired,
+  index: PropTypes.number.isRequired,
+  children: PropTypes.object.isRequired,
+  setSelectedData: PropTypes.func.isRequired,
+  handleSubscriberDetails: PropTypes.func.isRequired,
+  setOpenConfirmPopup: PropTypes.func.isRequired,
+  setContentPopup: PropTypes.func.isRequired,
 };
 
 export default RowSubscriber;
