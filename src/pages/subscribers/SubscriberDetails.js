@@ -29,7 +29,7 @@ const SubscriberDetails = () => {
   });
   const { id } = useParams();
   const endpoint = `/subscribers/${id}`;
-  console.log(id);
+
   const getSubscriberData = async () => {
     try {
       const data = await api.get(endpoint);
