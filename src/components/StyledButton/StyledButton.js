@@ -1,36 +1,30 @@
+import PropTypes from "prop-types";
 import { Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-const CssButton = styled(Button)(({ backgroundcolor, hover }) => ({
+const CustomButton = styled(Button)(({ bgc, hover }) => ({
   ":hover": {
     backgroundColor: hover,
   },
   color: "white",
-  backgroundColor: backgroundcolor,
+  backgroundColor: bgc,
   minWidth: 120,
   fontSize: 18,
   letterSpacing: 2,
   margin: "20px 0",
 }));
 
-const StyledButton = ({
-  type,
-  onClick,
-  ariaLabel,
-  label,
-  hover,
-  backgroundcolor,
-}) => {
-  return (
-    <CssButton
-      hover={hover}
-      backgroundcolor={backgroundcolor}
-      type={type}
-      aria-label={ariaLabel}
-      onClick={onClick}
-    >
-      {label}
-    </CssButton>
-  );
+const StyledButton = ({ bgc, hover, ariaLabel, label, type }) => (
+  <CustomButton bgc={bgc} hover={hover} aria-label={ariaLabel} type={type}>
+    {label}
+  </CustomButton>
+);
+
+StyledButton.propTypes = {
+  bgc: PropTypes.string.isRequired,
+  hover: PropTypes.string.isRequired,
+  ariaLabel: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
 };
+
 export default StyledButton;
