@@ -11,17 +11,15 @@ export function useFetchData(endpointOne, endpointSecond) {
     data: null,
     latestAddedItem: null,
   });
-
   const [campaignsData, setCampaignsData] = useState({
     status: "loading",
     data: null,
     latestAddedItem: null,
   });
-
   const subscribersUrl = "/subscribers";
   const campaignsUrl = "/campaigns";
 
-  const refetchData = useCallback(() => {
+  const refetchSubscribersData = useCallback(() => {
     const fetchData = async () => {
       if (endpointOne !== subscribersUrl)
         setSubscribersData({ status: "error" });
@@ -40,13 +38,23 @@ export function useFetchData(endpointOne, endpointSecond) {
             latestAddedItem: getLatestAddedItem(records),
           });
 
-          isCalledRefSubscribers.current = true;
+          if (subscribersData.status !== "success")
+            isCalledRefSubscribers.current = true;
         } catch (error) {
           setSubscribersData({
             status: "error",
           });
         }
       }
+    };
+
+    if (!isCalledRefSubscribers.current) fetchData();
+  }, [endpointOne]);
+
+  const refetchCampaignsData = useCallback(() => {
+    const fetchData = async () => {
+      if (endpointSecond !== campaignsUrl)
+        setCampaignsData({ status: "error" });
 
       if (endpointSecond === campaignsUrl) {
         try {
@@ -69,9 +77,8 @@ export function useFetchData(endpointOne, endpointSecond) {
       }
     };
 
-    if (!isCalledRefSubscribers.current || !isCalledRefCampaigns.current)
-      fetchData();
-  }, [endpointOne, endpointSecond]);
+    if (!isCalledRefCampaigns.current) fetchData();
+  }, [endpointSecond]);
 
   return [
     {
@@ -82,42 +89,7 @@ export function useFetchData(endpointOne, endpointSecond) {
       isCalledRefSubscribers,
       isCalledRefCampaigns,
     },
-    refetchData,
+    refetchSubscribersData,
+    refetchCampaignsData,
   ];
 }
-
-// export const useSubscribers = (endpoint) => {
-//   const [susbcribersData, setSubscribersData] = useState({
-//     status: "loading",
-//     data: null,
-//     latestAddedItem: null,
-//   });
-
-//   useEffect(() => {
-//     if (!endpoint) return;
-
-//     const fetchData = async () => {
-//       try {
-//         const { records } = await api.get(endpoint);
-
-//         sortDataAlphabetically(records);
-
-//         setSubscribersData({
-//           status: "success",
-//           data: records,
-//           latestAddedItem: getLatestAddedItem(records),
-//         });
-//       } catch (error) {
-//         setSubscribersData({
-//           status: "error",
-//         });
-//       }
-//     };
-
-//     const delayFetchData = setTimeout(fetchData, 1000);
-
-//     return () => clearTimeout(delayFetchData);
-//   }, [endpoint]);
-
-//   return { subscribersData, setSubscribersData };
-// };

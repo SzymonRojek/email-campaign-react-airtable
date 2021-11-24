@@ -47,19 +47,25 @@ const AppContainer = () => {
       isCalledRefSubscribers,
       isCalledRefCampaigns,
     },
-    refetchData,
+    refetchSubscribersData,
+    refetchCampaignsData,
   ] = useFetchData(endpointSubscribers, endpointCampaigns);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      if (!isCalledRefSubscribers.current) refetchData();
-      if (!isCalledRefCampaigns.current) refetchData();
+      if (!isCalledRefSubscribers.current) refetchSubscribersData();
+      if (!isCalledRefCampaigns.current) refetchCampaignsData();
     }, 3_000);
 
     return () => {
       clearInterval(intervalId);
     };
-  }, [isCalledRefSubscribers, isCalledRefCampaigns, refetchData]);
+  }, [
+    isCalledRefSubscribers,
+    isCalledRefCampaigns,
+    refetchSubscribersData,
+    refetchCampaignsData,
+  ]);
 
   const handleSubscriberDetails = (subscriber) =>
     subscriber.fields.status === "active"
@@ -216,7 +222,7 @@ const AppContainer = () => {
 
       <div className="routing-children">{routing}</div>
 
-      <StyledFooter />
+      <StyledFooter label="Coded By Szymon Rojek © 2021" />
 
       <InfoPopup
         contentPopup={contentPopup}
