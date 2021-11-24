@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
@@ -268,5 +269,9 @@ function DrawerMenu({ setTabsValue }) {
     </>
   );
 }
+
+DrawerMenu.propTypes = {
+  setTabsValue: PropTypes.func.isRequired,
+};
 
 export default DrawerMenu;

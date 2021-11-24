@@ -1,7 +1,21 @@
+import PropTypes from "prop-types";
 import { TextField, Typography } from "@mui/material";
 import { Grid } from "@material-ui/core";
 import { inputLabelClasses } from "@mui/material/InputLabel";
 import { withStyles } from "@mui/styles";
+
+const inputLabelProps = {
+  sx: {
+    // set the color of the label when not shrinked
+    color: "#fff",
+    [`&.${inputLabelClasses.shrink}`]: {
+      // set the color of the label when shrinked (usually when the TextField is focused)
+      color: "#fff",
+    },
+  },
+};
+
+const styleTypography = { color: "crimson", paddingTop: 4 };
 
 const StyledTextField = withStyles({
   root: {
@@ -39,21 +53,23 @@ const TextInput = ({ error, register, value, message, multiline, rows }) => (
       margin="dense"
       {...register(value)}
       error={error}
-      InputLabelProps={{
-        sx: {
-          // set the color of the label when not shrinked
-          color: "#fff",
-          [`&.${inputLabelClasses.shrink}`]: {
-            // set the color of the label when shrinked (usually when the TextField is focused)
-            color: "#fff",
-          },
-        },
-      }}
+      InputLabelProps={inputLabelProps}
     />
-    <Typography variant="inherit" style={{ color: "crimson", paddingTop: 4 }}>
+    <Typography variant="inherit" style={styleTypography}>
       {message}
     </Typography>
   </Grid>
 );
+
+TextInput.propTypes = {
+  errors: PropTypes.object,
+  register: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+  message: PropTypes.string,
+  multiline: PropTypes.bool,
+  rows: PropTypes.number,
+};
+
+TextInput.defaultProps = { message: "", rows: 5, errors: {} };
 
 export default TextInput;

@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { TableCell } from "@material-ui/core";
 
 import { ContainerTable, HeadTable, BodyTable, RowSubscriber } from "../Table";
@@ -6,8 +7,8 @@ const ContainerSubscribers = ({
   subHeading,
   dataHeadTable,
   subscribersData,
-  setSelectedData,
   handleSubscriberDetails,
+  setSelectedData,
   setContentPopup,
   setOpenConfirmPopup,
 }) => (
@@ -34,5 +35,15 @@ const ContainerSubscribers = ({
     </BodyTable>
   </ContainerTable>
 );
+
+ContainerSubscribers.propTypes = {
+  subHeading: PropTypes.string.isRequired,
+  dataHeadTable: PropTypes.array.isRequired,
+  subscribersData: PropTypes.array.isRequired,
+  handleSubscriberDetails: PropTypes.func.isRequired,
+  setSelectedData: PropTypes.func.isRequired,
+  setContentPopup: PropTypes.func.isRequired,
+  setOpenConfirmPopup: PropTypes.func.isRequired,
+};
 
 export default ContainerSubscribers;

@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { Button, Tooltip, Zoom } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -29,6 +30,10 @@ const style = {
     color: "white",
   },
   icon: { marginLeft: 10 },
+  toolip: {
+    height: "50px",
+    width: "50px",
+  },
 };
 
 const useStyles = makeStyles(() => ({
@@ -59,9 +64,6 @@ const RowCampaign = (props) => {
   return (
     <TableRow
       key={`${campaign.id}`}
-      sx={{
-        "&:last-child td, &:last-child th": { border: 0 },
-      }}
       style={{ backgroundColor: isEven(index, "#F5F5F5") }}
     >
       {children}
@@ -115,14 +117,7 @@ const RowCampaign = (props) => {
               placement="right-start"
               TransitionComponent={Zoom}
             >
-              <img
-                src={successIcon}
-                alt="success-icon"
-                style={{
-                  height: "50px",
-                  width: "50px",
-                }}
-              />
+              <img src={successIcon} alt="success-icon" style={style.toolip} />
             </Tooltip>
           </div>
         )}
@@ -144,6 +139,16 @@ const RowCampaign = (props) => {
       </TableCell>
     </TableRow>
   );
+};
+
+RowCampaign.propTypes = {
+  campaign: PropTypes.object.isRequired,
+  index: PropTypes.number.isRequired,
+  children: PropTypes.object.isRequired,
+  setSelectedData: PropTypes.func.isRequired,
+  handleEditCampaign: PropTypes.func.isRequired,
+  setOpenConfirmPopup: PropTypes.func.isRequired,
+  setContentPopup: PropTypes.func.isRequired,
 };
 
 export default RowCampaign;

@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { TableCell } from "@material-ui/core";
 
 import { ContainerTable, HeadTable, BodyTable } from "../Table";
@@ -6,11 +7,11 @@ import { RowCampaign } from "../Table";
 const FilterStatusCampaigns = (props) => {
   const {
     subHeading,
-    campaignsData,
     dataHeadEmailTable,
+    campaignsData,
     status,
-    setSelectedData,
     handleEditCampaign,
+    setSelectedData,
     setContentPopup,
     setOpenConfirmPopup,
   } = props;
@@ -45,6 +46,17 @@ const FilterStatusCampaigns = (props) => {
   ) : (
     ""
   );
+};
+
+FilterStatusCampaigns.propTypes = {
+  subHeading: PropTypes.string.isRequired,
+  dataHeadEmailTable: PropTypes.array.isRequired,
+  campaignsData: PropTypes.array.isRequired,
+  status: PropTypes.string.isRequired,
+  handleEditCampaign: PropTypes.func.isRequired,
+  setSelectedData: PropTypes.func.isRequired,
+  setContentPopup: PropTypes.func.isRequired,
+  setOpenConfirmPopup: PropTypes.func.isRequired,
 };
 
 export default FilterStatusCampaigns;

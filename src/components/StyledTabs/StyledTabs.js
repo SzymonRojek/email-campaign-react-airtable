@@ -1,12 +1,12 @@
+import PropTypes from "prop-types";
 import { Tabs } from "@material-ui/core";
 import styled from "@emotion/styled";
 
-const StyledTabs = styled(({ className, ...other }) => {
+const StyledTabs = styled(({ ...other }) => {
   return (
     <Tabs
       {...other}
       classes={{
-        root: className,
         flexContainer: "flexContainer",
         indicator: "indicator",
       }}
@@ -30,8 +30,11 @@ const StyledTabs = styled(({ className, ...other }) => {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    // width:'fit-content'
   },
 });
+
+StyledTabs.propTypes = {
+  other: PropTypes.object,
+};
 
 export default StyledTabs;

@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 import "./styles.css";
 
 const Loader = ({ title }) => (
@@ -14,5 +16,9 @@ const Loader = ({ title }) => (
     </div>
   </div>
 );
+
+Loader.propTypes = {
+  title: PropTypes.string.isRequired,
+};
 
 export default Loader;

@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Container, Box, Grid } from "@material-ui/core";
 import { AppBar, Typography } from "@material-ui/core";
 import { Link } from "@mui/material";
@@ -20,7 +21,7 @@ const style = {
   footer: { marginBottom: 180, zIndex: 1, textAlign: "center" },
 };
 
-const StyledFooter = () => (
+const StyledFooter = ({ label }) => (
   <footer style={style.footer}>
     <AppBar position="static" color="primary" style={style.appBar}>
       <Container maxWidth="md">
@@ -33,9 +34,7 @@ const StyledFooter = () => (
             spacing={2}
           >
             <Grid item xs={12}>
-              <Typography variant="body1">
-                Coded By Szymon Rojek © 2021
-              </Typography>
+              <Typography variant="body1">{label}</Typography>
             </Grid>
             <Grid item xs={12}>
               <Link href="https://github.com/SzymonRojek" target="_blank">
@@ -48,5 +47,9 @@ const StyledFooter = () => (
     </AppBar>
   </footer>
 );
+
+StyledFooter.propTypes = {
+  label: PropTypes.string.isRequired,
+};
 
 export default StyledFooter;

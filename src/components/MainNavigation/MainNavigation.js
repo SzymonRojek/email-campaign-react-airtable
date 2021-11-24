@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -122,5 +123,10 @@ function MainNavigation({ tabsValue, setTabsValue }) {
     </AppBar>
   );
 }
+
+MainNavigation.propTypes = {
+  tabsValue: PropTypes.number.isRequired,
+  setTabsValue: PropTypes.func.isRequired,
+};
 
 export default MainNavigation;

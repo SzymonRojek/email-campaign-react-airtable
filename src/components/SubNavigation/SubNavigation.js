@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Outlet } from "react-router-dom";
 import { Container, Grid } from "@mui/material";
 import { useTheme } from "@material-ui/core/styles";
@@ -44,4 +45,9 @@ const SubNavigation = ({ dataLinks }) => {
     </>
   );
 };
+
+SubNavigation.propTypes = {
+  dataLinks: PropTypes.array.isRequired,
+};
+
 export default SubNavigation;

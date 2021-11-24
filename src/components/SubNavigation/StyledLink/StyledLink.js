@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Link, useLocation, useResolvedLocation } from "react-router-dom";
 
 const commonStyles = {
@@ -40,6 +41,12 @@ const StyledLink = ({ to, exact, ...rest }) => {
   return (
     <Link style={isActive ? activeLink : unactiveLink} to={to} {...rest} />
   );
+};
+
+StyledLink.propTypes = {
+  to: PropTypes.string.isRequired,
+  exact: PropTypes.bool,
+  rest: PropTypes.object,
 };
 
 export default StyledLink;

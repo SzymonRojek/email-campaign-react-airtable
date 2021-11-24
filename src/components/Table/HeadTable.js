@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import { TableCell, TableHead, TableRow } from "@material-ui/core";
 
@@ -23,6 +24,10 @@ const HeadTable = ({ dataHeadTable }) => {
       </TableRow>
     </TableHead>
   );
+};
+
+HeadTable.propTypes = {
+  dataHeadTable: PropTypes.array.isRequired,
 };
 
 export default HeadTable;
