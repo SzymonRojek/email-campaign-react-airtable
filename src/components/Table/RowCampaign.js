@@ -54,7 +54,7 @@ const RowCampaign = (props) => {
     index,
     children,
     setSelectedData,
-    handleEditCampaign,
+    handleEditDetailsCampaign,
     setOpenConfirmPopup,
     setContentPopup,
   } = props;
@@ -104,7 +104,7 @@ const RowCampaign = (props) => {
             color="success"
             variant="contained"
             onClick={() => {
-              handleEditCampaign(campaign.id);
+              handleEditDetailsCampaign(campaign);
               navigate(`/campaigns/${campaign.id}`);
             }}
           >
@@ -141,14 +141,14 @@ const RowCampaign = (props) => {
   );
 };
 
-RowCampaign.propTypes = {
-  campaign: PropTypes.object.isRequired,
-  index: PropTypes.number.isRequired,
-  children: PropTypes.object.isRequired,
-  setSelectedData: PropTypes.func.isRequired,
-  handleEditCampaign: PropTypes.func.isRequired,
-  setOpenConfirmPopup: PropTypes.func.isRequired,
-  setContentPopup: PropTypes.func.isRequired,
-};
+// RowCampaign.propTypes = {
+//   campaign: PropTypes.object.isRequired,
+//   index: PropTypes.number.isRequired,
+//   children: PropTypes.object.isRequired,
+//   setSelectedData: PropTypes.func.isRequired,
+//   handleEditCampaign: PropTypes.func.isRequired,
+//   setOpenConfirmPopup: PropTypes.func.isRequired,
+//   setContentPopup: PropTypes.func.isRequired,
+// };
 
 export default RowCampaign;

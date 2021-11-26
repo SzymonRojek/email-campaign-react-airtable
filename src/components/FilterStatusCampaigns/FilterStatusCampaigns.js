@@ -10,7 +10,7 @@ const FilterStatusCampaigns = (props) => {
     dataHeadEmailTable,
     campaignsData,
     status,
-    handleEditCampaign,
+    handleEditDetailsCampaign,
     setSelectedData,
     setContentPopup,
     setOpenConfirmPopup,
@@ -36,7 +36,7 @@ const FilterStatusCampaigns = (props) => {
                 campaign={{ ...campaign, group: "campaigns" }}
                 index={index}
                 setSelectedData={setSelectedData}
-                handleEditCampaign={handleEditCampaign}
+                handleEditDetailsCampaign={handleEditDetailsCampaign}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />

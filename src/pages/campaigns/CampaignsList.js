@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Container } from "@material-ui/core";
 
 import { dataHeadEmailTable } from "../../data/dataHeadEmailTable";
@@ -10,9 +11,11 @@ const CampaignsList = ({
   campaignsData,
   setSelectedData,
   handleEditCampaign,
-  setContentPopup,
+  handleEditDetailsCampaign,
   setOpenConfirmPopup,
+  setContentPopup,
 }) => {
+  // console.log(campaignsData);
   return (
     <>
       {campaignsData.status === "loading" ? (
@@ -39,7 +42,8 @@ const CampaignsList = ({
                 dataHeadEmailTable={dataHeadEmailTable}
                 campaignsData={campaignsData.data}
                 setSelectedData={setSelectedData}
-                handleEditCampaign={handleEditCampaign}
+                // handleEditCampaign={handleEditCampaign}
+                handleEditDetailsCampaign={handleEditDetailsCampaign}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
@@ -63,6 +67,18 @@ const CampaignsList = ({
       )}
     </>
   );
+};
+
+CampaignsList.propTypes = {
+  campaignsData: PropTypes.shape({
+    status: PropTypes.string,
+    data: PropTypes.arrayOf(PropTypes.object),
+    latestAddedItem: PropTypes.arrayOf(PropTypes.object),
+  }),
+  setSelectedData: PropTypes.func.isRequired,
+  handleEditCampaign: PropTypes.func.isRequired,
+  setOpenConfirmPopup: PropTypes.func.isRequired,
+  setContentPopup: PropTypes.func.isRequired,
 };
 
 export default CampaignsList;

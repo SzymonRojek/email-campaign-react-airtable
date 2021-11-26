@@ -11,7 +11,8 @@ const ContainerCampaigns = ({
   subHeading,
   dataHeadEmailTable,
   campaignsData,
-  handleEditCampaign,
+  // handleEditCampaign,
+  handleEditDetailsCampaign,
   setSelectedData,
   setContentPopup,
   setOpenConfirmPopup,
@@ -32,7 +33,8 @@ const ContainerCampaigns = ({
               campaign={{ ...campaign, group: "campaigns" }}
               index={index}
               setSelectedData={setSelectedData}
-              handleEditCampaign={handleEditCampaign}
+              // handleEditCampaign={handleEditCampaign}
+              handleEditDetailsCampaign={handleEditDetailsCampaign}
               setContentPopup={setContentPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
             />
@@ -46,7 +48,7 @@ ContainerCampaigns.propTypes = {
   subHeading: PropTypes.string.isRequired,
   dataHeadEmailTable: PropTypes.array.isRequired,
   campaignsData: PropTypes.array.isRequired,
-  handleEditCampaign: PropTypes.func.isRequired,
+  // handleEditCampaign: PropTypes.func.isRequired,
   setSelectedData: PropTypes.func.isRequired,
   setContentPopup: PropTypes.func.isRequired,
   setOpenConfirmPopup: PropTypes.func.isRequired,
