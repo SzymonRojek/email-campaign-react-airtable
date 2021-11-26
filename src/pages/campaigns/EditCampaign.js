@@ -7,11 +7,13 @@ import { useNavigate } from "react-router";
 import { Container } from "@material-ui/core";
 
 import api from "../../api";
+import { useFetchDetailsById } from "../../useFetchDetailsById";
 // import { emailMessage } from "../../mailgun/app";
 import { capitalizeFirstLetter, validationCampaign } from "../../helpers";
 import { FormCampaign } from "../../components/FormCampaign";
 import { StyledHeading } from "../../components/StyledHeading";
-import { useFetchDetailsById } from "../../useFetchDetailsById";
+import { Loader } from "../../components/Loader";
+import { Error } from "../../components/Error";
 
 const EditCampaign = ({
   isCalledRefCampaigns,
@@ -97,18 +99,32 @@ const EditCampaign = ({
     }, 3_000);
   };
 
-  return (
-    <Container>
-      <StyledHeading label="Edit Campaign:" />
+  console.log(itemData);
 
-      <FormCampaign
-        handleSubmit={handleSubmit}
-        onSubmit={onSubmit}
-        control={control}
-        errors={errors}
-        setActionStatus={setActionStatus}
-      />
-    </Container>
+  return (
+    <>
+      {itemData.status === "loading" ? (
+        <Loader title="Campaign Details" />
+      ) : itemData.status === "error" ? (
+        <Error
+          titleOne="ERROR MESSAGE"
+          titleTwo="Probably there is no an access to the internet."
+          titleThree="Contact with your internet provider."
+        />
+      ) : (
+        <Container>
+          <StyledHeading label="Edit Campaign:" />
+
+          <FormCampaign
+            handleSubmit={handleSubmit}
+            onSubmit={onSubmit}
+            control={control}
+            errors={errors}
+            setActionStatus={setActionStatus}
+          />
+        </Container>
+      )}
+    </>
   );
 };
 
