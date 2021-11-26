@@ -1,11 +1,12 @@
+import PropTypes from "prop-types";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-
 import { Paper, Box } from "@mui/material";
 import { Grid, Typography, Container } from "@material-ui/core";
 
 import api from "../../api";
-import { TextInput } from "../../components/TextInput";
+import { TextInputController } from "../../components/TextInputController";
 import { StyledButton } from "../../components/StyledButton";
 import { StyledHeading } from "../../components/StyledHeading";
 import { capitalizeFirstLetter, validationSubscriber } from "../../helpers";
@@ -27,13 +28,19 @@ const AddSubscriber = ({
   isCalledRefSubscribers,
 }) => {
   const {
-    register,
     handleSubmit,
+    control,
+    formState,
     formState: { errors },
     reset,
   } = useForm({
     resolver: yupResolver(validationSubscriber),
   });
+
+  useEffect(() => {
+    if (formState.isSubmitSuccessful)
+      reset({ name: "", surname: "", profession: "", email: "", status: "" });
+  }, [formState, reset]);
 
   const endpoint = "/subscribers";
 
@@ -47,8 +54,6 @@ const AddSubscriber = ({
         status: "pending",
       },
     });
-
-    reset();
 
     isCalledRefSubscribers.current = false;
 
@@ -91,34 +96,34 @@ const AddSubscriber = ({
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <TextInput
-                  value="name"
-                  register={register}
-                  error={!!errors?.name}
+                <TextInputController
+                  control={control}
+                  name="name"
+                  error={!!errors.name}
                   message={errors.name?.message ?? ""}
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextInput
-                  value="surname"
-                  register={register}
-                  error={!!errors?.surname}
+                <TextInputController
+                  control={control}
+                  name="surname"
+                  error={!!errors.surname}
                   message={errors.surname?.message ?? ""}
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextInput
-                  value="profession"
-                  register={register}
-                  error={!!errors?.profession}
+                <TextInputController
+                  control={control}
+                  name="profession"
+                  error={!!errors.profession}
                   message={errors.profession?.message ?? ""}
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextInput
-                  value="email"
-                  register={register}
-                  error={!!errors?.email}
+                <TextInputController
+                  control={control}
+                  name="email"
+                  error={!!errors.email}
                   message={errors.email?.message ?? ""}
                 />
               </Grid>
@@ -144,6 +149,14 @@ const AddSubscriber = ({
       </Paper>
     </Container>
   );
+};
+
+AddSubscriber.propTypes = {
+  setOpenInfoPopup: PropTypes.func.isRequired,
+  setContentPopup: PropTypes.func.isRequired,
+  isCalledRefSubscribers: PropTypes.shape({
+    current: PropTypes.bool.isRequired,
+  }),
 };
 
 export default AddSubscriber;
