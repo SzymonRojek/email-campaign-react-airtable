@@ -102,12 +102,11 @@ const AppContainer = () => {
     setOpenConfirmPopup(false);
   };
 
-  const handleEditCampaign = (id) =>
-    setSelectedData(
-      campaignsData.data
-        ? campaignsData.data.filter((item) => item.id === id)[0]
-        : null
-    );
+  const handleEditDetailsCampaign = (campaign) => {
+    campaign.fields.status === "draft"
+      ? navigate(`/campaigns/${campaign.id}`)
+      : setOpenInfoPopup(true);
+  };
 
   const routes = [
     { path: "/", element: <Home /> },
@@ -168,7 +167,7 @@ const AppContainer = () => {
             <CampaignsList
               campaignsData={campaignsData}
               setSelectedData={setSelectedData}
-              handleEditCampaign={handleEditCampaign}
+              handleEditDetailsCampaign={handleEditDetailsCampaign}
               setContentPopup={setContentPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
             />
@@ -180,7 +179,7 @@ const AppContainer = () => {
             <FilteredCampaignsList
               campaignsData={campaignsData}
               setSelectedData={setSelectedData}
-              handleEditCampaign={handleEditCampaign}
+              handleEditDetailsCampaign={handleEditDetailsCampaign}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
@@ -202,11 +201,11 @@ const AppContainer = () => {
           path: "/:id",
           element: (
             <EditCampaign
-              subscribersData={subscribersData}
+              campaignsData={campaignsData}
+              selectedData={selectedData}
               isCalledRefCampaigns={isCalledRefCampaigns}
               setOpenInfoPopup={setOpenInfoPopup}
               setContentPopup={setContentPopup}
-              selectedData={selectedData}
             />
           ),
         },
