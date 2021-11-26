@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { TextField, Typography } from "@mui/material";
+import { TextField } from "@mui/material";
 import { Grid } from "@material-ui/core";
 import { inputLabelClasses } from "@mui/material/InputLabel";
 import { withStyles } from "@mui/styles";
@@ -14,8 +14,6 @@ const inputLabelProps = {
     },
   },
 };
-
-const styleTypography = { color: "crimson", paddingTop: 4 };
 
 const StyledTextField = withStyles({
   root: {
@@ -39,37 +37,35 @@ const StyledTextField = withStyles({
   },
 })(TextField);
 
-const TextInput = ({ error, register, value, message, multiline, rows }) => (
+const CustomTextInput = ({ name, error, value, onChange, rows }) => (
   <Grid item xs={12}>
     <StyledTextField
       variant="outlined"
-      multiline={multiline}
-      rows={rows}
+      multiline
+      id={name}
+      name={name}
+      label={name}
+      value={value}
+      error={error}
+      onChange={onChange}
       required
-      id={value}
-      name={value}
-      label={value}
       fullWidth
       margin="dense"
-      {...register(value)}
-      error={error}
+      rows={rows}
       InputLabelProps={inputLabelProps}
     />
-    <Typography variant="inherit" style={styleTypography}>
-      {message}
-    </Typography>
   </Grid>
 );
 
-TextInput.propTypes = {
-  errors: PropTypes.object,
-  register: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
-  message: PropTypes.string,
-  multiline: PropTypes.bool,
-  rows: PropTypes.number,
-};
+// TextInput.propTypes = {
+//   errors: PropTypes.object,
+//   register: PropTypes.func.isRequired,
+//   value: PropTypes.string.isRequired,
+//   message: PropTypes.string,
+//   multiline: PropTypes.bool,
+//   rows: PropTypes.number,
+// };
 
-TextInput.defaultProps = { message: "", rows: 5, errors: {} };
+// TextInput.defaultProps = { rows: 5 };
 
-export default TextInput;
+export default CustomTextInput;
