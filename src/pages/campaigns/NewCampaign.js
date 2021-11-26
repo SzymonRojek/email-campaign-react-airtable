@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Container } from "@material-ui/core";
@@ -19,13 +19,23 @@ const NewCampaign = ({
   isCalledRefCampaigns,
 }) => {
   const {
-    register,
     handleSubmit,
+    control,
+    formState,
     formState: { errors },
     reset,
   } = useForm({
     resolver: yupResolver(validationCampaign),
   });
+
+  useEffect(() => {
+    if (formState.isSubmitSuccessful)
+      reset({
+        title: "",
+        description: "",
+      });
+  }, [formState, reset]);
+
   const [actionStatus, setActionStatus] = useState("");
 
   const endpoint = "/campaigns";
@@ -51,8 +61,6 @@ const NewCampaign = ({
         status: actionStatus,
       },
     });
-
-    reset();
 
     isCalledRefCampaigns.current = false;
 
@@ -85,7 +93,7 @@ const NewCampaign = ({
       <FormCampaign
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
-        register={register}
+        control={control}
         errors={errors}
         setActionStatus={setActionStatus}
         isCalledRefCampaigns={isCalledRefCampaigns}
