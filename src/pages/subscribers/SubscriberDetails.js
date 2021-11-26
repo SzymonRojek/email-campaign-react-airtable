@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   TableBody,
@@ -8,7 +7,6 @@ import {
   Container,
 } from "@material-ui/core";
 
-import api from "../../api";
 import {
   ContainerTable,
   HeadTable,
@@ -21,36 +19,18 @@ import {
 import { Loader } from "../../components/Loader";
 import { Error } from "../../components/Error";
 import { StyledHeading } from "../../components/StyledHeading";
+import { useFetchDetailsById } from "../../useFetchDetailsById";
 
 const SubscriberDetails = () => {
-  const [subscriberData, setSubscriberData] = useState({
-    status: "loading",
-    data: null,
-  });
   const { id } = useParams();
   const endpoint = `/subscribers/${id}`;
-
-  const getSubscriberData = async () => {
-    try {
-      const data = await api.get(endpoint);
-
-      setSubscriberData({ status: "success", data });
-    } catch (error) {
-      setSubscriberData({ status: "error" });
-    }
-  };
-
-  useEffect(() => {
-    const delayGetData = setTimeout(getSubscriberData, 3_000);
-
-    return () => clearTimeout(delayGetData);
-  }, []);
+  const { itemData } = useFetchDetailsById(endpoint);
 
   return (
     <>
-      {subscriberData.status === "loading" ? (
+      {itemData.status === "loading" ? (
         <Loader title="Subscriber" />
-      ) : subscriberData.status === "error" ? (
+      ) : itemData.status === "error" ? (
         <Error
           titleOne="ERROR MESSAGE"
           titleTwo="Probably there is no an access to the internet."
@@ -65,8 +45,8 @@ const SubscriberDetails = () => {
               <HeadTable dataHeadTable={detailsDataHeadTableFirst} />
 
               <TableBody>
-                {subscriberData &&
-                  [subscriberData.data].map((subscriber, index) => (
+                {itemData &&
+                  [itemData.data].map((subscriber, index) => (
                     <RowSubscriber
                       key={`id-${subscriber.id}`}
                       index={index}
@@ -80,8 +60,8 @@ const SubscriberDetails = () => {
               <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
 
               <TableBody>
-                {subscriberData &&
-                  [subscriberData.data].map((subscriber, index) => (
+                {itemData &&
+                  [itemData.data].map((subscriber, index) => (
                     <TableRow key={`i-${index}`}>
                       <TableCell>
                         <Typography color="textSecondary" variant="subtitle1">
