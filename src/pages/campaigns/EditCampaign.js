@@ -1,4 +1,5 @@
-import { useState } from "react";
+import PropTypes from "prop-types";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useParams } from "react-router-dom";
@@ -10,30 +11,40 @@ import api from "../../api";
 import { capitalizeFirstLetter, validationCampaign } from "../../helpers";
 import { FormCampaign } from "../../components/FormCampaign";
 import { StyledHeading } from "../../components/StyledHeading";
+import { useFetchDetailsById } from "../../useFetchDetailsById";
 
 const EditCampaign = ({
-  selectedData,
   isCalledRefCampaigns,
   setOpenInfoPopup,
   setContentPopup,
 }) => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const endpoint = `/campaigns/${id}`;
+  const { itemData } = useFetchDetailsById(endpoint);
+
+  const defaultValues = {
+    title: itemData.data ? itemData.data.fields.title : "",
+    description: itemData.data ? itemData.data.fields.description : "",
+  };
+
   const {
-    register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    control,
   } = useForm({
     resolver: yupResolver(validationCampaign),
-    defaultValues: {
-      title: selectedData ? selectedData.fields.title : "",
-      description: selectedData ? selectedData.fields.description : "",
-    },
   });
 
-  const [actionStatus, setActionStatus] = useState("");
-  const navigate = useNavigate();
-  const { id } = useParams();
+  useEffect(() => {
+    setTimeout(() => {
+      setValue("title", defaultValues.title);
+      setValue("description", defaultValues.description);
+    }, 300);
+  }, [setValue, defaultValues.title, defaultValues.description]);
 
-  const endpoint = `/campaigns/${id}`;
+  const [actionStatus, setActionStatus] = useState("");
 
   const onSubmit = (data) => {
     // if (actionStatus === "sent") {
@@ -50,8 +61,8 @@ const EditCampaign = ({
     // }
 
     const isCampaignChanged =
-      data.title !== selectedData.fields.title ||
-      data.description !== selectedData.fields.description ||
+      data.title !== itemData.data.fields.title ||
+      data.description !== itemData.data.fields.description ||
       actionStatus === "sent"
         ? true
         : false;
@@ -93,12 +104,21 @@ const EditCampaign = ({
       <FormCampaign
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
-        register={register}
+        control={control}
         errors={errors}
         setActionStatus={setActionStatus}
       />
     </Container>
   );
+};
+
+EditCampaign.propTypes = {
+  // selectedData: PropTypes.object,
+  setOpenInfoPopup: PropTypes.func.isRequired,
+  setContentPopup: PropTypes.func.isRequired,
+  isCalledRefCampaigns: PropTypes.shape({
+    current: PropTypes.bool.isRequired,
+  }),
 };
 
 export default EditCampaign;
