@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { Paper, Box, Grid, Typography } from "@material-ui/core";
 
-import { TextInput } from "../../components/TextInput";
+import { TextInputController } from "../TextInputController";
 import { StyledButton } from "../StyledButton";
 
 const style = {
@@ -17,7 +17,7 @@ const style = {
 const FormCampaign = ({
   handleSubmit,
   onSubmit,
-  register,
+  control,
   errors,
   setActionStatus,
 }) => (
@@ -35,21 +35,20 @@ const FormCampaign = ({
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <TextInput
-              value="title"
-              register={register}
-              error={!!errors?.title}
+            <TextInputController
+              control={control}
+              name="title"
+              error={!!errors.title}
               message={errors.title?.message ?? ""}
             />
           </Grid>
           <Grid item xs={12}>
-            <TextInput
-              multiline
-              rows={5}
-              value="description"
-              register={register}
-              error={!!errors?.description}
+            <TextInputController
+              control={control}
+              name="description"
+              error={!!errors.description}
               message={errors.description?.message ?? ""}
+              rows={5}
             />
           </Grid>
           <Grid
@@ -92,7 +91,6 @@ const FormCampaign = ({
 FormCampaign.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  register: PropTypes.func.isRequired,
   errors: PropTypes.object,
   setActionStatus: PropTypes.func.isRequired,
 };
