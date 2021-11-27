@@ -33,8 +33,8 @@ const SubscriberDetails = () => {
       ) : itemData.status === "error" ? (
         <Error
           titleOne="ERROR MESSAGE"
-          titleTwo="Probably there is no an access to the internet."
-          titleThree="Contact with your internet provider."
+          titleTwo="Check the url address again."
+          titleThree="Maybe there is no an access to the internet."
         />
       ) : (
         <Container>
