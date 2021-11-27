@@ -21,21 +21,32 @@ import { Error } from "../../components/Error";
 import { StyledHeading } from "../../components/StyledHeading";
 import { useFetchDetailsById } from "../../useFetchDetailsById";
 
-const SubscriberDetails = () => {
+const SubscriberDetails = ({ subscribersData }) => {
   const { id } = useParams();
   const endpoint = `/subscribers/${id}`;
+
+  let isIdCorrect = null;
+
+  if (id !== undefined && subscribersData.data !== null) {
+    isIdCorrect = Boolean(subscribersData.data.find((item) => item.id === id));
+  }
+
   const { itemData } = useFetchDetailsById(endpoint);
+
+  if (isIdCorrect === false || itemData.status === "error") {
+    return (
+      <Error
+        titleOne="Unfortunately, Subscriber does not exist."
+        titleTwo="Check the url address."
+        titleThree="Back to Subscribers."
+      />
+    );
+  }
 
   return (
     <>
       {itemData.status === "loading" ? (
         <Loader title="Subscriber" />
-      ) : itemData.status === "error" ? (
-        <Error
-          titleOne="ERROR MESSAGE"
-          titleTwo="Check the url address again."
-          titleThree="Maybe there is no an access to the internet."
-        />
       ) : (
         <Container>
           <>
