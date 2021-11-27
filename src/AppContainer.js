@@ -26,6 +26,7 @@ import {
   subscribersLinksNavigation,
   campaignsLinksNavigation,
 } from "./data/dataLinksNavigation";
+import { NotFoundPage } from "./pages/notFoundPage";
 
 const AppContainer = () => {
   const navigate = useNavigate();
@@ -211,6 +212,7 @@ const AppContainer = () => {
         },
       ],
     },
+    { path: "*", element: <NotFoundPage /> },
   ];
 
   const routing = useRoutes(routes);
