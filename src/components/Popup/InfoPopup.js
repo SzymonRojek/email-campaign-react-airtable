@@ -1,31 +1,67 @@
 import PropTypes from "prop-types";
-import { Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
-import Button from "@mui/material/Button";
+import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { makeStyles } from "@material-ui/core/styles";
 
-const InfoPopup = ({ openInfoPopup, setOpenInfoPopup, contentPopup }) => (
-  <Dialog open={openInfoPopup} maxWidth="sm">
-    <DialogTitle>
-      <div style={{ display: "flex" }}>
-        <Typography variant="h6" p={2} style={{ flexGrow: 1 }}>
-          {contentPopup.title}
-        </Typography>
-        <Button
-          variant="contained"
-          color={contentPopup.colorButton}
-          onClick={() => {
-            setOpenInfoPopup(false);
-            if (contentPopup.switch) return contentPopup.switch;
-          }}
-        >
-          X
-        </Button>
-      </div>
-    </DialogTitle>
-    <DialogContent dividers>
-      <Typography p={2}>{contentPopup.text}</Typography>
-    </DialogContent>
-  </Dialog>
-);
+const style = {
+  titleContainer: { display: "flex" },
+  title: { flexGrow: 1 },
+};
+
+const useStyles = makeStyles((theme) => ({
+  [theme.breakpoints.down("xs")]: {
+    button: {
+      maxWidth: "28px",
+      maxHeight: "28px",
+      minWidth: "28px",
+      minHeight: "28px",
+    },
+    buttonText: {
+      fontSize: 12,
+    },
+    heading: { fontSize: 18 },
+    contentText: { fontSize: 15 },
+  },
+  [theme.breakpoints.up("sm")]: {
+    button: {
+      height: 35,
+    },
+    heading: { fontSize: 25 },
+    contentText: { fontSize: 20 },
+    paper: {
+      maxWidth: 500,
+    },
+  },
+}));
+
+const InfoPopup = ({ openInfoPopup, setOpenInfoPopup, contentPopup }) => {
+  const classes = useStyles();
+
+  return (
+    <Dialog open={openInfoPopup} classes={{ paper: classes.paper }}>
+      <DialogTitle>
+        <div style={style.titleContainer}>
+          <p style={style.title} className={classes.heading}>
+            {contentPopup.title}
+          </p>
+          <Button
+            className={classes.button}
+            variant="contained"
+            color={contentPopup.colorButton}
+            onClick={() => {
+              setOpenInfoPopup(false);
+              if (contentPopup.switch) return contentPopup.switch;
+            }}
+          >
+            <span className={classes.buttonText}>close</span>
+          </Button>
+        </div>
+      </DialogTitle>
+      <DialogContent dividers>
+        <p className={classes.contentText}>{contentPopup.text}</p>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 InfoPopup.propTypes = {
   openInfoPopup: PropTypes.bool.isRequired,
