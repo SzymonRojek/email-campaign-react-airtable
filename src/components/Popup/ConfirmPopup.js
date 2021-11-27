@@ -9,6 +9,7 @@ const style = {
     padding: "30px 0 25px 0",
   },
   span: { color: "crimson" },
+  button: { color: "white" },
 };
 
 const ConfirmPopup = ({
@@ -37,6 +38,7 @@ const ConfirmPopup = ({
       <Button
         variant="contained"
         color="success"
+        style={style.button}
         onClick={() => setOpenConfirmPopup(false)}
       >
         NO
