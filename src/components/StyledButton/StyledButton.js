@@ -14,8 +14,14 @@ const CustomButton = styled(Button)(({ bgc, hover }) => ({
   margin: "20px 0",
 }));
 
-const StyledButton = ({ bgc, hover, ariaLabel, label, type }) => (
-  <CustomButton bgc={bgc} hover={hover} aria-label={ariaLabel} type={type}>
+const StyledButton = ({ bgc, hover, ariaLabel, label, type, onClick }) => (
+  <CustomButton
+    bgc={bgc}
+    hover={hover}
+    aria-label={ariaLabel}
+    type={type}
+    onClick={onClick}
+  >
     {label}
   </CustomButton>
 );
