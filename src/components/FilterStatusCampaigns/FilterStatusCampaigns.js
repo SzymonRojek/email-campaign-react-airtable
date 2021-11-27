@@ -53,7 +53,7 @@ FilterStatusCampaigns.propTypes = {
   dataHeadEmailTable: PropTypes.array.isRequired,
   campaignsData: PropTypes.array.isRequired,
   status: PropTypes.string.isRequired,
-  handleEditCampaign: PropTypes.func.isRequired,
+  handleEditDetailsCampaign: PropTypes.func.isRequired,
   setSelectedData: PropTypes.func.isRequired,
   setContentPopup: PropTypes.func.isRequired,
   setOpenConfirmPopup: PropTypes.func.isRequired,

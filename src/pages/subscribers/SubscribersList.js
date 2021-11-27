@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Container } from "@material-ui/core";
 
 import { ContainerSubscribers } from "../../components/ContainerSubscribers";
@@ -9,10 +10,10 @@ import { generalDataHeadTable } from "../../data/dataHeadTable";
 const SubscribersList = (props) => {
   const {
     subscribersData,
-    setOpenConfirmPopup,
     setSelectedData,
-    setContentPopup,
     handleSubscriberDetails,
+    setOpenConfirmPopup,
+    setContentPopup,
   } = props;
 
   return (
@@ -66,6 +67,18 @@ const SubscribersList = (props) => {
       )}
     </>
   );
+};
+
+SubscribersList.propTypes = {
+  subscribersData: PropTypes.shape({
+    status: PropTypes.string,
+    data: PropTypes.arrayOf(PropTypes.object),
+    latestAddedItem: PropTypes.arrayOf(PropTypes.object),
+  }),
+  setSelectedData: PropTypes.func.isRequired,
+  handleSubscriberDetails: PropTypes.func.isRequired,
+  setOpenInfoPopup: PropTypes.func.isRequired,
+  setContentPopup: PropTypes.func.isRequired,
 };
 
 export default SubscribersList;

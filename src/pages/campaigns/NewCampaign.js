@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -14,9 +15,9 @@ const style = {
 };
 
 const NewCampaign = ({
+  isCalledRefCampaigns,
   setOpenInfoPopup,
   setContentPopup,
-  isCalledRefCampaigns,
 }) => {
   const {
     handleSubmit,
@@ -100,6 +101,14 @@ const NewCampaign = ({
       />
     </Container>
   );
+};
+
+NewCampaign.propTypes = {
+  isCalledRefCampaigns: PropTypes.shape({
+    current: PropTypes.bool.isRequired,
+  }),
+  setOpenInfoPopup: PropTypes.func.isRequired,
+  setContentPopup: PropTypes.func.isRequired,
 };
 
 export default NewCampaign;

@@ -23,9 +23,9 @@ const style = {
 };
 
 const AddSubscriber = ({
+  isCalledRefSubscribers,
   setOpenInfoPopup,
   setContentPopup,
-  isCalledRefSubscribers,
 }) => {
   const {
     handleSubmit,
@@ -152,11 +152,11 @@ const AddSubscriber = ({
 };
 
 AddSubscriber.propTypes = {
-  setOpenInfoPopup: PropTypes.func.isRequired,
-  setContentPopup: PropTypes.func.isRequired,
   isCalledRefSubscribers: PropTypes.shape({
     current: PropTypes.bool.isRequired,
   }),
+  setOpenInfoPopup: PropTypes.func.isRequired,
+  setContentPopup: PropTypes.func.isRequired,
 };
 
 export default AddSubscriber;

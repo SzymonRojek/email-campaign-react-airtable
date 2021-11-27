@@ -10,12 +10,10 @@ import { StyledHeading } from "../../components/StyledHeading";
 const CampaignsList = ({
   campaignsData,
   setSelectedData,
-  handleEditCampaign,
   handleEditDetailsCampaign,
   setOpenConfirmPopup,
   setContentPopup,
 }) => {
-  // console.log(campaignsData);
   return (
     <>
       {campaignsData.status === "loading" ? (
@@ -42,7 +40,6 @@ const CampaignsList = ({
                 dataHeadEmailTable={dataHeadEmailTable}
                 campaignsData={campaignsData.data}
                 setSelectedData={setSelectedData}
-                // handleEditCampaign={handleEditCampaign}
                 handleEditDetailsCampaign={handleEditDetailsCampaign}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
@@ -55,8 +52,8 @@ const CampaignsList = ({
               subHeading="Latest added Campaign:"
               dataHeadEmailTable={dataHeadEmailTable}
               campaignsData={campaignsData.latestAddedItem}
+              handleEditDetailsCampaign={handleEditDetailsCampaign}
               setSelectedData={setSelectedData}
-              handleEditCampaign={handleEditCampaign}
               setContentPopup={setContentPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
             />
@@ -76,7 +73,7 @@ CampaignsList.propTypes = {
     latestAddedItem: PropTypes.arrayOf(PropTypes.object),
   }),
   setSelectedData: PropTypes.func.isRequired,
-  handleEditCampaign: PropTypes.func.isRequired,
+  handleEditDetailsCampaign: PropTypes.func.isRequired,
   setOpenConfirmPopup: PropTypes.func.isRequired,
   setContentPopup: PropTypes.func.isRequired,
 };

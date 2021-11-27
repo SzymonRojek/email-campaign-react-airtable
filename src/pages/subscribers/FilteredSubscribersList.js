@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Container } from "@material-ui/core";
 
 import { FilterStatusSubscribers } from "../../components/FilterStatusSubscribers";
@@ -9,10 +10,10 @@ import { generalDataHeadTable } from "../../data/dataHeadTable";
 const FilteredSubscribersList = (props) => {
   const {
     subscribersData,
+    handleSubscriberDetails,
     setOpenConfirmPopup,
     setSelectedData,
     setContentPopup,
-    handleSubscriberDetails,
   } = props;
 
   return (
@@ -75,6 +76,18 @@ const FilteredSubscribersList = (props) => {
       )}
     </>
   );
+};
+
+FilteredSubscribersList.propTypes = {
+  subscribersData: PropTypes.shape({
+    status: PropTypes.string,
+    data: PropTypes.arrayOf(PropTypes.object),
+    latestAddedItem: PropTypes.arrayOf(PropTypes.object),
+  }),
+  handleSubscriberDetails: PropTypes.func.isRequired,
+  setOpenConfirmPopup: PropTypes.func.isRequired,
+  setSelectedData: PropTypes.func.isRequired,
+  setContentPopup: PropTypes.func.isRequired,
 };
 
 export default FilteredSubscribersList;

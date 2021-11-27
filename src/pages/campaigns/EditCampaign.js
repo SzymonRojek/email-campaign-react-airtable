@@ -99,8 +99,6 @@ const EditCampaign = ({
     }, 3_000);
   };
 
-  console.log(itemData);
-
   return (
     <>
       {itemData.status === "loading" ? (
@@ -108,8 +106,8 @@ const EditCampaign = ({
       ) : itemData.status === "error" ? (
         <Error
           titleOne="ERROR MESSAGE"
-          titleTwo="Probably there is no an access to the internet."
-          titleThree="Contact with your internet provider."
+          titleTwo="Check the url address again."
+          titleThree="Maybe there is no an access to the internet."
         />
       ) : (
         <Container>
@@ -129,12 +127,11 @@ const EditCampaign = ({
 };
 
 EditCampaign.propTypes = {
-  // selectedData: PropTypes.object,
-  setOpenInfoPopup: PropTypes.func.isRequired,
-  setContentPopup: PropTypes.func.isRequired,
   isCalledRefCampaigns: PropTypes.shape({
     current: PropTypes.bool.isRequired,
   }),
+  setOpenInfoPopup: PropTypes.func.isRequired,
+  setContentPopup: PropTypes.func.isRequired,
 };
 
 export default EditCampaign;

@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Container } from "@material-ui/core";
 
 import { FilterStatusCampaigns } from "../../components/FilterStatusCampaigns";
@@ -63,6 +64,18 @@ const FilteredCampaignsList = (props) => {
       )}
     </>
   );
+};
+
+FilteredCampaignsList.propTypes = {
+  campaignsData: PropTypes.shape({
+    status: PropTypes.string,
+    data: PropTypes.arrayOf(PropTypes.object),
+    latestAddedItem: PropTypes.arrayOf(PropTypes.object),
+  }),
+  handleEditDetailsCampaign: PropTypes.func.isRequired,
+  setSelectedData: PropTypes.func.isRequired,
+  setOpenConfirmPopup: PropTypes.func.isRequired,
+  setContentPopup: PropTypes.func.isRequired,
 };
 
 export default FilteredCampaignsList;

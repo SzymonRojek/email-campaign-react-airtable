@@ -141,14 +141,23 @@ const RowCampaign = (props) => {
   );
 };
 
-// RowCampaign.propTypes = {
-//   campaign: PropTypes.object.isRequired,
-//   index: PropTypes.number.isRequired,
-//   children: PropTypes.object.isRequired,
-//   setSelectedData: PropTypes.func.isRequired,
-//   handleEditCampaign: PropTypes.func.isRequired,
-//   setOpenConfirmPopup: PropTypes.func.isRequired,
-//   setContentPopup: PropTypes.func.isRequired,
-// };
+RowCampaign.propTypes = {
+  campaign: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    group: PropTypes.string.isRequired,
+    createdTime: PropTypes.string.isRequired,
+    fields: PropTypes.shape({
+      status: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+    }),
+  }),
+  index: PropTypes.number.isRequired,
+  children: PropTypes.object.isRequired,
+  setSelectedData: PropTypes.func.isRequired,
+  handleEditDetailsCampaign: PropTypes.func.isRequired,
+  setOpenConfirmPopup: PropTypes.func.isRequired,
+  setContentPopup: PropTypes.func.isRequired,
+};
 
 export default RowCampaign;

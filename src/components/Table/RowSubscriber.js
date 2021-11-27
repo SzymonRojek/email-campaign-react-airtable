@@ -166,13 +166,27 @@ const RowSubscriber = (props) => {
 };
 
 RowSubscriber.propTypes = {
-  subscriber: PropTypes.object.isRequired,
+  subscriber: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    group: PropTypes.string,
+    createdTime: PropTypes.string.isRequired,
+    fields: PropTypes.shape({
+      status: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      surname: PropTypes.string.isRequired,
+      profession: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+      address: PropTypes.string,
+      salary: PropTypes.string,
+      telephone: PropTypes.string,
+    }),
+  }),
   index: PropTypes.number.isRequired,
-  children: PropTypes.object.isRequired,
-  setSelectedData: PropTypes.func.isRequired,
-  handleSubscriberDetails: PropTypes.func.isRequired,
-  setOpenConfirmPopup: PropTypes.func.isRequired,
-  setContentPopup: PropTypes.func.isRequired,
+  children: PropTypes.any,
+  setSelectedData: PropTypes.func,
+  handleSubscriberDetails: PropTypes.func,
+  setOpenConfirmPopup: PropTypes.func,
+  setContentPopup: PropTypes.func,
 };
 
 export default RowSubscriber;
