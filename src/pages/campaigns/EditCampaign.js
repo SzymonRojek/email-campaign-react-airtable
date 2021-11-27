@@ -40,10 +40,12 @@ const EditCampaign = ({
   });
 
   useEffect(() => {
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       setValue("title", defaultValues.title);
       setValue("description", defaultValues.description);
     }, 300);
+
+    return () => clearTimeout(timeoutId);
   }, [setValue, defaultValues.title, defaultValues.description]);
 
   const [actionStatus, setActionStatus] = useState("");
