@@ -110,6 +110,7 @@ const AppContainer = () => {
   };
 
   const routes = [
+    { path: "*", element: <NotFoundPage /> },
     { path: "/", element: <Home /> },
     {
       path: endpointSubscribers,
@@ -154,7 +155,7 @@ const AppContainer = () => {
         },
         {
           path: "/:id",
-          element: <SubscriberDetails />,
+          element: <SubscriberDetails subscribersData={subscribersData} />,
         },
       ],
     },
@@ -212,7 +213,6 @@ const AppContainer = () => {
         },
       ],
     },
-    { path: "*", element: <NotFoundPage /> },
   ];
 
   const routing = useRoutes(routes);
