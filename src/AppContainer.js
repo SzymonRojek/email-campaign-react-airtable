@@ -68,11 +68,6 @@ const AppContainer = () => {
     refetchCampaignsData,
   ]);
 
-  const handleSubscriberDetails = (subscriber) =>
-    subscriber.fields.status === "active"
-      ? navigate(`/subscribers/${subscriber.id}`)
-      : setOpenInfoPopup(true);
-
   const removeItemFromAirtable = async (endpoint, id) =>
     await api.delete(`/${endpoint}/${id}`);
 
@@ -103,9 +98,14 @@ const AppContainer = () => {
     setOpenConfirmPopup(false);
   };
 
+  const handleSubscriberDetails = (subscriber) =>
+    subscriber.fields.status === "active"
+      ? navigate(`/subscribers/details/${subscriber.id}`)
+      : setOpenInfoPopup(true);
+
   const handleEditDetailsCampaign = (campaign) => {
     campaign.fields.status === "draft"
-      ? navigate(`/campaigns/${campaign.id}`)
+      ? navigate(`/campaigns/details/${campaign.id}`)
       : setOpenInfoPopup(true);
   };
 
@@ -113,7 +113,7 @@ const AppContainer = () => {
     { path: "*", element: <NotFoundPage /> },
     { path: "/", element: <Home /> },
     {
-      path: endpointSubscribers,
+      path: "subscribers",
       element: <SubNavigation dataLinks={subscribersLinksNavigation} />,
       children: [
         {
@@ -130,7 +130,7 @@ const AppContainer = () => {
           ),
         },
         {
-          path: "/add",
+          path: "add",
           element: (
             <NewSubscriber
               setSubscribersData={setSubscribersData}
@@ -141,7 +141,7 @@ const AppContainer = () => {
           ),
         },
         {
-          path: "/filter",
+          path: "filter",
           element: (
             <FilteredSubscribersList
               subscribersData={subscribersData}
@@ -154,13 +154,14 @@ const AppContainer = () => {
           ),
         },
         {
-          path: "/:id",
+          path: "details/:id",
           element: <SubscriberDetails subscribersData={subscribersData} />,
         },
+        { path: "*", element: <NotFoundPage /> },
       ],
     },
     {
-      path: endpointCampaigns,
+      path: "campaigns",
       element: <SubNavigation dataLinks={campaignsLinksNavigation} />,
       children: [
         {
@@ -176,7 +177,7 @@ const AppContainer = () => {
           ),
         },
         {
-          path: "/filter",
+          path: "filter",
           element: (
             <FilteredCampaignsList
               campaignsData={campaignsData}
@@ -189,7 +190,7 @@ const AppContainer = () => {
           ),
         },
         {
-          path: "/add",
+          path: "add",
           element: (
             <NewCampaign
               isCalledRefCampaigns={isCalledRefCampaigns}
@@ -200,7 +201,7 @@ const AppContainer = () => {
           ),
         },
         {
-          path: "/:id",
+          path: "details/:id",
           element: (
             <EditCampaign
               campaignsData={campaignsData}
