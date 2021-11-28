@@ -16,20 +16,11 @@ import { Loader } from "../../components/Loader";
 import { Error } from "../../components/Error";
 
 const EditCampaign = ({
+  campaignsData,
   isCalledRefCampaigns,
   setOpenInfoPopup,
   setContentPopup,
 }) => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const endpoint = `/campaigns/${id}`;
-  const { itemData } = useFetchDetailsById(endpoint);
-
-  const defaultValues = {
-    title: itemData.data ? itemData.data.fields.title : "",
-    description: itemData.data ? itemData.data.fields.description : "",
-  };
-
   const {
     handleSubmit,
     formState: { errors },
@@ -38,6 +29,19 @@ const EditCampaign = ({
   } = useForm({
     resolver: yupResolver(validationCampaign),
   });
+
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const endpoint = `/campaigns/${id}`;
+
+  const { itemData } = useFetchDetailsById(endpoint);
+
+  const [actionStatus, setActionStatus] = useState("");
+
+  const defaultValues = {
+    title: itemData.data ? itemData.data.fields.title : "",
+    description: itemData.data ? itemData.data.fields.description : "",
+  };
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -48,7 +52,22 @@ const EditCampaign = ({
     return () => clearTimeout(timeoutId);
   }, [setValue, defaultValues.title, defaultValues.description]);
 
-  const [actionStatus, setActionStatus] = useState("");
+  // check if Campaign's id is available, otherwise return Error
+  let isIdCorrect = null;
+
+  if (id !== undefined && campaignsData.data !== null) {
+    isIdCorrect = Boolean(campaignsData.data.find((item) => item.id === id));
+  }
+
+  if (isIdCorrect === false || itemData.status === "error") {
+    return (
+      <Error
+        titleOne="Unfortunately, this Campaign does not exist."
+        titleTwo="Check the url address."
+        titleThree="Back to Subscribers."
+      />
+    );
+  }
 
   const onSubmit = (data) => {
     // if (actionStatus === "sent") {
