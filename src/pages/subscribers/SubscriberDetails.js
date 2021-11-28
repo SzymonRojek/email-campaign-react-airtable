@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import {
   TableBody,
@@ -25,13 +26,14 @@ const SubscriberDetails = ({ subscribersData }) => {
   const { id } = useParams();
   const endpoint = `/subscribers/${id}`;
 
+  const { itemData } = useFetchDetailsById(endpoint);
+
+  // check if Campaign's id is available, otherwise return Error
   let isIdCorrect = null;
 
   if (id !== undefined && subscribersData.data !== null) {
     isIdCorrect = Boolean(subscribersData.data.find((item) => item.id === id));
   }
-
-  const { itemData } = useFetchDetailsById(endpoint);
 
   if (isIdCorrect === false || itemData.status === "error") {
     return (
@@ -103,6 +105,14 @@ const SubscriberDetails = ({ subscribersData }) => {
       )}
     </>
   );
+};
+
+SubscriberDetails.propTypes = {
+  subscribersData: PropTypes.shape({
+    status: PropTypes.string,
+    data: PropTypes.arrayOf(PropTypes.object),
+    latestAddedItem: PropTypes.arrayOf(PropTypes.object),
+  }),
 };
 
 export default SubscriberDetails;
