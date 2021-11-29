@@ -91,11 +91,6 @@ const SubscriberDetails = ({ subscribersData }) => {
                           {subscriber.fields?.telephone}
                         </Typography>
                       </TableCell>
-                      <TableCell>
-                        <Typography color="textSecondary" variant="subtitle1">
-                          {subscriber.fields?.address}
-                        </Typography>
-                      </TableCell>
                     </TableRow>
                   ))}
               </TableBody>

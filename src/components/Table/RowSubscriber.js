@@ -176,7 +176,6 @@ RowSubscriber.propTypes = {
       surname: PropTypes.string.isRequired,
       profession: PropTypes.string.isRequired,
       email: PropTypes.string.isRequired,
-      address: PropTypes.string,
       salary: PropTypes.string,
       telephone: PropTypes.string,
     }),

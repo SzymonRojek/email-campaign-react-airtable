@@ -17,9 +17,4 @@ export const detailsDataHeadTableFirst = [
   "Created",
 ];
 
-export const detailsDataHeadTableSecond = [
-  "Email",
-  "Salary",
-  "Telephone",
-  "Address",
-];
+export const detailsDataHeadTableSecond = ["Email", "Salary", "Telephone"];
