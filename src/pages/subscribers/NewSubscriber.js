@@ -162,7 +162,7 @@ const AddSubscriber = ({
                         onChange={handleCheckboxOnChange}
                       />
                     }
-                    label="Do you have more Subscriber Details?"
+                    label="Add More Details"
                   />
                 </Grid>
                 <Grid item xs={1}>
