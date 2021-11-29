@@ -1,9 +1,20 @@
 import PropTypes from "prop-types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Paper, Box } from "@mui/material";
+import {
+  Paper,
+  Box,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  Checkbox,
+  Select,
+  MenuItem,
+  Collapse,
+} from "@mui/material";
 import { Grid, Typography, Container } from "@material-ui/core";
+import { ExpandLess, ExpandMore } from "@material-ui/icons";
 
 import api from "../../api";
 import { TextInputController } from "../../components/TextInputController";
@@ -20,6 +31,15 @@ const style = {
   },
   typography: { color: "#fff" },
   name: { color: "green" },
+  labelCheckbox: { color: "orange" },
+  checkbox: {
+    color: "orange",
+    "&.Mui-checked": {
+      color: "orange",
+    },
+    paddingLeft: 3,
+  },
+  icon: { color: "orange" },
 };
 
 const AddSubscriber = ({
@@ -27,6 +47,10 @@ const AddSubscriber = ({
   setOpenInfoPopup,
   setContentPopup,
 }) => {
+  // const defaultIds = [1];
+  const [isCheckboxChecked, setisCheckboxChecked] = useState(false);
+  const [selectStatus, setSelectStatus] = useState("");
+  const endpoint = "/subscribers";
   const {
     handleSubmit,
     control,
@@ -34,15 +58,19 @@ const AddSubscriber = ({
     formState: { errors },
     reset,
   } = useForm({
-    resolver: yupResolver(validationSubscriber),
+    resolver: yupResolver(validationSubscriber(isCheckboxChecked)),
+    // defaultValues: { item_ids: defaultIds },
   });
+
+  const handleCheckboxOnChange = () => setisCheckboxChecked(!isCheckboxChecked);
+
+  const handleChangeSelectStatus = (event) =>
+    setSelectStatus(event.target.value);
 
   useEffect(() => {
     if (formState.isSubmitSuccessful)
-      reset({ name: "", surname: "", profession: "", email: "", status: "" });
+      reset({ name: "", surname: "", profession: "" });
   }, [formState, reset]);
-
-  const endpoint = "/subscribers";
 
   const onSubmit = (data) => {
     api.post(endpoint, {
@@ -50,8 +78,11 @@ const AddSubscriber = ({
         name: data.name,
         surname: data.surname,
         profession: data.profession,
-        email: data.email,
-        status: "pending",
+        status: isCheckboxChecked ? selectStatus : "pending",
+        email: isCheckboxChecked ? data.email : "",
+        salary: isCheckboxChecked ? String(data.salary) : "",
+        telephone: isCheckboxChecked ? data.telephone : "",
+        address: "",
       },
     });
 
@@ -119,14 +150,80 @@ const AddSubscriber = ({
                   message={errors.profession?.message ?? ""}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <TextInputController
-                  control={control}
-                  name="email"
-                  error={!!errors.email}
-                  message={errors.email?.message ?? ""}
-                />
+
+              <Grid container item xs={12}>
+                <Grid item xs={11}>
+                  <FormControlLabel
+                    style={style.labelCheckbox}
+                    control={
+                      <Checkbox
+                        sx={style.checkbox}
+                        defaultValue={false}
+                        onChange={handleCheckboxOnChange}
+                      />
+                    }
+                    label="Do you have more Subscriber Details?"
+                  />
+                </Grid>
+                <Grid item xs={1}>
+                  {isCheckboxChecked ? (
+                    <ExpandLess style={style.icon} />
+                  ) : (
+                    <ExpandMore style={style.icon} />
+                  )}
+                </Grid>
               </Grid>
+
+              <Collapse in={isCheckboxChecked} timeout="auto" unmountOnExit>
+                <Box px={2} py={3}>
+                  <Grid container spacing={4}>
+                    <Grid item xs={12}>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-autowidth-label">
+                          Choose Status
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-autowidth-label"
+                          id="demo-simple-select-autowidth"
+                          value={selectStatus}
+                          onChange={handleChangeSelectStatus}
+                          autoWidth
+                          label="status"
+                        >
+                          <MenuItem value="active">Active</MenuItem>
+                          <MenuItem value="pending">Pending</MenuItem>
+                          <MenuItem value="blocked">Blocked</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextInputController
+                        control={control}
+                        name="email"
+                        error={!!errors.email}
+                        message={errors.email?.message ?? ""}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextInputController
+                        control={control}
+                        name="salary"
+                        error={!!errors.salary}
+                        message={errors.salary?.message ?? ""}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextInputController
+                        control={control}
+                        name="telephone"
+                        error={!!errors.telephone}
+                        message={errors.telephone?.message ?? ""}
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Collapse>
+
               <Grid
                 container
                 direction="row"
