@@ -12,15 +12,52 @@ import {
   Select,
   MenuItem,
   Collapse,
+  Divider,
 } from "@mui/material";
 import { Grid, Typography, Container } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
 
 import api from "../../api";
 import { TextInputController } from "../../components/TextInputController";
 import { StyledButton } from "../../components/StyledButton";
 import { StyledHeading } from "../../components/StyledHeading";
 import { capitalizeFirstLetter, validationSubscriber } from "../../helpers";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& .MuiOutlinedInput-input": {
+      color: "white",
+    },
+    "& .MuiInputLabel-root": {
+      color: "white",
+    },
+    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      borderColor: "white",
+    },
+    "& .MuiSvgIcon-root": {
+      color: "white",
+    },
+    "&:hover .MuiOutlinedInput-input": {
+      color: "white",
+    },
+    "&:hover .MuiInputLabel-root": {
+      color: "white",
+    },
+    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      borderColor: "white",
+    },
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+      color: "white",
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "white",
+    },
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#2e7d32",
+    },
+  },
+}));
 
 const style = {
   paper: {
@@ -31,25 +68,32 @@ const style = {
   },
   typography: { color: "#fff" },
   name: { color: "green" },
-  labelCheckbox: { color: "orange" },
+  labelCheckbox: {
+    fontSize: "1rem",
+    color: "orange",
+    paddingLeft: 8,
+    letterSpacing: 1,
+  },
   checkbox: {
+    transform: "scale(1.1)",
     color: "orange",
     "&.Mui-checked": {
       color: "orange",
     },
-    paddingLeft: 3,
   },
-  icon: { color: "orange" },
+  icon: { color: "orange", marginTop: 5 },
 };
+
+const styleTypography = { color: "crimson", paddingTop: 4 };
 
 const AddSubscriber = ({
   isCalledRefSubscribers,
   setOpenInfoPopup,
   setContentPopup,
 }) => {
-  // const defaultIds = [1];
+  const classes = useStyles();
   const [isCheckboxChecked, setisCheckboxChecked] = useState(false);
-  const [selectStatus, setSelectStatus] = useState("");
+  const [selectStatus, setSelectStatus] = useState(false);
   const endpoint = "/subscribers";
   const {
     handleSubmit,
@@ -59,7 +103,6 @@ const AddSubscriber = ({
     reset,
   } = useForm({
     resolver: yupResolver(validationSubscriber(isCheckboxChecked)),
-    // defaultValues: { item_ids: defaultIds },
   });
 
   const handleCheckboxOnChange = () => setisCheckboxChecked(!isCheckboxChecked);
@@ -69,9 +112,17 @@ const AddSubscriber = ({
 
   useEffect(() => {
     if (formState.isSubmitSuccessful)
-      reset({ name: "", surname: "", profession: "" });
+      reset({
+        name: "",
+        surname: "",
+        profession: "",
+        status: "",
+        email: "",
+        salary: "",
+        telephone: "",
+      });
   }, [formState, reset]);
-
+  console.log(selectStatus);
   const onSubmit = (data) => {
     api.post(endpoint, {
       fields: {
@@ -82,7 +133,6 @@ const AddSubscriber = ({
         email: isCheckboxChecked ? data.email : "",
         salary: isCheckboxChecked ? String(data.salary) : "",
         telephone: isCheckboxChecked ? data.telephone : "",
-        address: "",
       },
     });
 
@@ -109,6 +159,7 @@ const AddSubscriber = ({
     }, 3_000);
   };
 
+  console.log(errors);
   return (
     <Container>
       <StyledHeading label="Add Subscriber:" />
@@ -154,7 +205,6 @@ const AddSubscriber = ({
               <Grid container item xs={12}>
                 <Grid item xs={11}>
                   <FormControlLabel
-                    style={style.labelCheckbox}
                     control={
                       <Checkbox
                         sx={style.checkbox}
@@ -162,7 +212,9 @@ const AddSubscriber = ({
                         onChange={handleCheckboxOnChange}
                       />
                     }
-                    label="Add More Details"
+                    label={
+                      <span style={style.labelCheckbox}>Add More Details</span>
+                    }
                   />
                 </Grid>
                 <Grid item xs={1}>
@@ -178,9 +230,9 @@ const AddSubscriber = ({
                 <Box px={2} py={3}>
                   <Grid container spacing={4}>
                     <Grid item xs={12}>
-                      <FormControl fullWidth>
+                      <FormControl fullWidth className={classes.root}>
                         <InputLabel id="demo-simple-select-autowidth-label">
-                          Choose Status
+                          Status
                         </InputLabel>
                         <Select
                           labelId="demo-simple-select-autowidth-label"
@@ -189,12 +241,20 @@ const AddSubscriber = ({
                           onChange={handleChangeSelectStatus}
                           autoWidth
                           label="status"
+                          error={!!errors.status}
+                          message={errors.status?.message ?? ""}
                         >
                           <MenuItem value="active">Active</MenuItem>
+                          <Divider />
                           <MenuItem value="pending">Pending</MenuItem>
+                          <Divider />
                           <MenuItem value="blocked">Blocked</MenuItem>
                         </Select>
                       </FormControl>
+                      <p></p>
+                      <Typography variant="inherit" style={styleTypography}>
+                        {errors.status?.message ?? ""}
+                      </Typography>
                     </Grid>
                     <Grid item xs={12}>
                       <TextInputController
