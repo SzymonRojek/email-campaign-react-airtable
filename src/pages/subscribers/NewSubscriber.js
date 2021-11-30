@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Paper,
@@ -81,10 +81,9 @@ const style = {
       color: "orange",
     },
   },
-  icon: { color: "orange", marginTop: 5 },
+  icon: { color: "orange", fontSize: 30, marginTop: 6, marginLeft: 22 },
+  textError: { color: "crimson", paddingTop: 4 },
 };
-
-const styleTypography = { color: "crimson", paddingTop: 4 };
 
 const AddSubscriber = ({
   isCalledRefSubscribers,
@@ -93,8 +92,8 @@ const AddSubscriber = ({
 }) => {
   const classes = useStyles();
   const [isCheckboxChecked, setisCheckboxChecked] = useState(false);
-  const [selectStatus, setSelectStatus] = useState(false);
   const endpoint = "/subscribers";
+
   const {
     handleSubmit,
     control,
@@ -106,9 +105,6 @@ const AddSubscriber = ({
   });
 
   const handleCheckboxOnChange = () => setisCheckboxChecked(!isCheckboxChecked);
-
-  const handleChangeSelectStatus = (event) =>
-    setSelectStatus(event.target.value);
 
   useEffect(() => {
     if (formState.isSubmitSuccessful)
@@ -122,14 +118,14 @@ const AddSubscriber = ({
         telephone: "",
       });
   }, [formState, reset]);
-  console.log(selectStatus);
+
   const onSubmit = (data) => {
     api.post(endpoint, {
       fields: {
         name: data.name,
         surname: data.surname,
         profession: data.profession,
-        status: isCheckboxChecked ? selectStatus : "pending",
+        status: isCheckboxChecked ? data.status : "pending",
         email: isCheckboxChecked ? data.email : "",
         salary: isCheckboxChecked ? String(data.salary) : "",
         telephone: isCheckboxChecked ? data.telephone : "",
@@ -137,7 +133,7 @@ const AddSubscriber = ({
     });
 
     isCalledRefSubscribers.current = false;
-
+    console.log(data);
     setContentPopup({
       title: "Yeah 🎊",
       text: (
@@ -159,7 +155,6 @@ const AddSubscriber = ({
     }, 3_000);
   };
 
-  console.log(errors);
   return (
     <Container>
       <StyledHeading label="Add Subscriber:" />
@@ -231,30 +226,34 @@ const AddSubscriber = ({
                   <Grid container spacing={4}>
                     <Grid item xs={12}>
                       <FormControl fullWidth className={classes.root}>
-                        <InputLabel id="demo-simple-select-autowidth-label">
-                          Status
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-autowidth-label"
-                          id="demo-simple-select-autowidth"
-                          value={selectStatus}
-                          onChange={handleChangeSelectStatus}
-                          autoWidth
-                          label="status"
-                          error={!!errors.status}
-                          message={errors.status?.message ?? ""}
-                        >
-                          <MenuItem value="active">Active</MenuItem>
-                          <Divider />
-                          <MenuItem value="pending">Pending</MenuItem>
-                          <Divider />
-                          <MenuItem value="blocked">Blocked</MenuItem>
-                        </Select>
+                        <Controller
+                          render={({ field: { ref, ...field } }) => (
+                            <Select
+                              {...field}
+                              inputRef={ref}
+                              labelId="demo-simple-select-autowidth-label"
+                              id="demo-simple-select-autowidth"
+                              error={!!errors.status}
+                            >
+                              <MenuItem value="change status">
+                                <em>Change Status</em>
+                              </MenuItem>
+                              <MenuItem value="active">Active</MenuItem>
+                              <Divider />
+                              <MenuItem value="pending">Pending</MenuItem>
+                              <Divider />
+                              <MenuItem value="blocked">Blocked</MenuItem>
+                            </Select>
+                          )}
+                          control={control}
+                          name="status"
+                          defaultValue="change status"
+                        />
+
+                        <Typography variant="inherit" style={style.textError}>
+                          {errors.status?.message ?? ""}
+                        </Typography>
                       </FormControl>
-                      <p></p>
-                      <Typography variant="inherit" style={styleTypography}>
-                        {errors.status?.message ?? ""}
-                      </Typography>
                     </Grid>
                     <Grid item xs={12}>
                       <TextInputController
