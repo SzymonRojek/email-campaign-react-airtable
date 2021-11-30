@@ -7,7 +7,6 @@ import {
   Box,
   FormControl,
   FormControlLabel,
-  InputLabel,
   Checkbox,
   Select,
   MenuItem,
@@ -81,7 +80,7 @@ const style = {
       color: "orange",
     },
   },
-  icon: { color: "orange", fontSize: 30, marginTop: 6, marginLeft: 22 },
+  icon: { color: "orange", fontSize: 30, marginTop: 6 },
   textError: { color: "crimson", paddingTop: 4 },
 };
 
