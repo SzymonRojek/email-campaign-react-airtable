@@ -5,6 +5,7 @@ import { FormControl, Select, MenuItem, Divider } from "@mui/material";
 import { Typography } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
+import { object } from "yup/lib/locale";
 
 const useStyles = makeStyles({
   root: {
@@ -45,39 +46,52 @@ const style = {
   textError: { color: "crimson", paddingTop: 4 },
 };
 
-const SelectInputController = ({ control, errors }) => {
+const SelectInputController = ({
+  control,
+  name,
+  error,
+  message,
+  defaultValue,
+  data,
+}) => {
   const classes = useStyles();
+
+  const customId = `${name}-id`;
   return (
     <FormControl fullWidth className={classes.root}>
       <Controller
         render={({ field: { ref, ...field } }) => (
-          <Select
-            {...field}
-            inputRef={ref}
-            labelId="demo-simple-select-autowidth-label"
-            id="demo-simple-select-autowidth"
-            error={!!errors.status}
-          >
-            <MenuItem value="change status">
-              <em>Change Status</em>
-            </MenuItem>
-            <MenuItem value="active">Active</MenuItem>
-            <Divider />
-            <MenuItem value="pending">Pending</MenuItem>
-            <Divider />
-            <MenuItem value="blocked">Blocked</MenuItem>
+          <Select {...field} inputRef={ref} id={customId} error={error}>
+            {data.map(({ value, label }) => (
+              <MenuItem key={`key-${label}`} value={value}>
+                {label}
+              </MenuItem>
+            ))}
           </Select>
         )}
         control={control}
-        name="status"
-        defaultValue="change status"
+        name={name}
+        defaultValue={defaultValue}
       />
 
       <Typography variant="inherit" style={style.textError}>
-        {errors.status?.message ?? ""}
+        {message}
       </Typography>
     </FormControl>
   );
 };
 
+SelectInputController.propTypes = {
+  control: PropTypes.object.isRequired,
+  error: PropTypes.bool.isRequired,
+  name: PropTypes.string.isRequired,
+  message: PropTypes.string.isRequired,
+  defaultValue: PropTypes.string.isRequired,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    })
+  ),
+};
 export default SelectInputController;

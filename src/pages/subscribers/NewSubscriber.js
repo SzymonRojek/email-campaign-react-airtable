@@ -20,6 +20,13 @@ import { StyledHeading } from "../../components/StyledHeading";
 
 import { capitalizeFirstLetter, validationSubscriber } from "../../helpers";
 
+const selectStatusData = [
+  { value: "change status", label: "change status*" },
+  { value: "blocked", label: "blocked" },
+  { value: "pending", label: "pending" },
+  { value: "active", label: "active" },
+];
+
 const style = {
   paper: {
     maxWidth: 600,
@@ -44,7 +51,6 @@ const style = {
     },
   },
   icon: { color: "orange", fontSize: 30, marginTop: 6 },
-  textError: { color: "crimson", paddingTop: 4 },
 };
 
 const AddSubscriber = ({
@@ -73,7 +79,7 @@ const AddSubscriber = ({
         name: "",
         surname: "",
         profession: "",
-        status: "",
+        status: "change status",
         email: "",
         salary: "",
         telephone: "",
@@ -187,7 +193,11 @@ const AddSubscriber = ({
                     <Grid item xs={12}>
                       <SelectInputController
                         control={control}
-                        errors={errors}
+                        name="status"
+                        error={!!errors.status}
+                        message={errors.status?.message ?? ""}
+                        defaultValue="change status"
+                        data={selectStatusData}
                       />
                     </Grid>
                     <Grid item xs={12}>
