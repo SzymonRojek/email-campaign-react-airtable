@@ -36,7 +36,7 @@ const allSubscriberInformation = {
     .matches(/^[aA-zZ\s]+$/, "only letters are required")
     .min(3, "must be at least 3 characters")
     .max(10, "must not exceed 10 characters"),
-  status: Yup.string().required("Status is required").oneOf(status),
+  status: Yup.string().required("status is required").oneOf(status),
   email: Yup.string()
     .required("email is required")
     .matches(/^([^.@]+)(\.[^.@]+)*@([^.@]+\.)+([^.@]+)$/, "email is invalid"),
