@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     },
     buttonText: {
       fontSize: 12,
+      color: "white !important",
     },
     heading: { fontSize: 18 },
     contentText: { fontSize: 15 },
