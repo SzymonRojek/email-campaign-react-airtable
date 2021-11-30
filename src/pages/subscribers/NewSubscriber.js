@@ -142,7 +142,7 @@ const AddSubscriber = ({
           <span style={style.subscriberName}>
             <strong> {capitalizeFirstLetter(data.name)} </strong>
           </span>
-          has been added to the data 😁
+          has been added to the Airtable 😁
         </>
       ),
       colorButton: "success",

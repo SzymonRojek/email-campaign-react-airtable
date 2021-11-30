@@ -33,6 +33,7 @@ const FilteredSubscribersList = (props) => {
             <Error
               titleOne="There are not subscribers added yet."
               titleTwo="Please add a new subscriber."
+              titleThree="🙂"
             />
           ) : (
             <>

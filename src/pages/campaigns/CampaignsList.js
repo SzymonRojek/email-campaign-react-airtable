@@ -30,6 +30,7 @@ const CampaignsList = ({
             <Error
               titleOne="There are not campaigns added yet."
               titleTwo="Please add a new campaign."
+              titleThree="🙂"
             />
           ) : (
             <>
