@@ -1,62 +1,24 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Paper,
   Box,
-  FormControl,
   FormControlLabel,
   Checkbox,
-  Select,
-  MenuItem,
   Collapse,
-  Divider,
 } from "@mui/material";
 import { Grid, Typography, Container } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
-import { makeStyles } from "@material-ui/core/styles";
 
 import api from "../../api";
 import { TextInputController } from "../../components/TextInputController";
+import { SelectInputController } from "../../components/SelectInputController";
 import { StyledButton } from "../../components/StyledButton";
 import { StyledHeading } from "../../components/StyledHeading";
-import { capitalizeFirstLetter, validationSubscriber } from "../../helpers";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& .MuiOutlinedInput-input": {
-      color: "white",
-    },
-    "& .MuiInputLabel-root": {
-      color: "white",
-    },
-    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "white",
-    },
-    "& .MuiSvgIcon-root": {
-      color: "white",
-    },
-    "&:hover .MuiOutlinedInput-input": {
-      color: "white",
-    },
-    "&:hover .MuiInputLabel-root": {
-      color: "white",
-    },
-    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "white",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-      color: "white",
-    },
-    "& .MuiInputLabel-root.Mui-focused": {
-      color: "white",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#2e7d32",
-    },
-  },
-}));
+import { capitalizeFirstLetter, validationSubscriber } from "../../helpers";
 
 const style = {
   paper: {
@@ -90,8 +52,7 @@ const AddSubscriber = ({
   setOpenInfoPopup,
   setContentPopup,
 }) => {
-  const classes = useStyles();
-  const [isCheckboxChecked, setisCheckboxChecked] = useState(false);
+  const [isCheckboxChecked, setCheckboxState] = useState(false);
   const endpoint = "/subscribers";
 
   const {
@@ -104,7 +65,7 @@ const AddSubscriber = ({
     resolver: yupResolver(validationSubscriber(isCheckboxChecked)),
   });
 
-  const handleCheckboxOnChange = () => setisCheckboxChecked(!isCheckboxChecked);
+  const handleCheckboxOnChange = () => setCheckboxState(!isCheckboxChecked);
 
   useEffect(() => {
     if (formState.isSubmitSuccessful)
@@ -224,35 +185,10 @@ const AddSubscriber = ({
                 <Box px={2} py={3}>
                   <Grid container spacing={4}>
                     <Grid item xs={12}>
-                      <FormControl fullWidth className={classes.root}>
-                        <Controller
-                          render={({ field: { ref, ...field } }) => (
-                            <Select
-                              {...field}
-                              inputRef={ref}
-                              labelId="demo-simple-select-autowidth-label"
-                              id="demo-simple-select-autowidth"
-                              error={!!errors.status}
-                            >
-                              <MenuItem value="change status">
-                                <em>Change Status</em>
-                              </MenuItem>
-                              <MenuItem value="active">Active</MenuItem>
-                              <Divider />
-                              <MenuItem value="pending">Pending</MenuItem>
-                              <Divider />
-                              <MenuItem value="blocked">Blocked</MenuItem>
-                            </Select>
-                          )}
-                          control={control}
-                          name="status"
-                          defaultValue="change status"
-                        />
-
-                        <Typography variant="inherit" style={style.textError}>
-                          {errors.status?.message ?? ""}
-                        </Typography>
-                      </FormControl>
+                      <SelectInputController
+                        control={control}
+                        errors={errors}
+                      />
                     </Grid>
                     <Grid item xs={12}>
                       <TextInputController
