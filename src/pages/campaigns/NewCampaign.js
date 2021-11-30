@@ -33,7 +33,7 @@ const NewCampaign = ({
       });
   }, [formState, reset]);
 
-  const [actionStatus, setActionStatus] = useState("");
+  const [isCampaignSent, setCampaignStatus] = useState(false);
 
   const endpoint = "/campaigns";
 
@@ -55,16 +55,15 @@ const NewCampaign = ({
       fields: {
         title: capitalizeFirstLetter(data.title),
         description: capitalizeFirstLetter(data.description),
-        status: actionStatus,
+        status: isCampaignSent ? "sent" : "draft",
       },
     });
 
     isCalledRefCampaigns.current = false;
 
-    const styledTextPopup =
-      actionStatus === "sent"
-        ? { color: "green", fontWeight: "bold" }
-        : { color: "orange", fontWeight: "bold" };
+    const styledTextPopup = isCampaignSent
+      ? { color: "green", fontWeight: "bold" }
+      : { color: "orange", fontWeight: "bold" };
 
     setContentPopup({
       title: <span style={styledTextPopup}>That's great 🎊"</span>,
@@ -74,8 +73,8 @@ const NewCampaign = ({
           <span style={styledTextPopup}>
             <strong> {capitalizeFirstLetter(data.title)} </strong>
           </span>
-          has been {actionStatus === "draft" ? "drafted and added" : "sent"} to
-          the data 😁
+          has been {isCampaignSent ? "sent" : "drafted and added"} to the
+          Airtable 😁
         </>
       ),
       colorButton: "success",
@@ -97,7 +96,7 @@ const NewCampaign = ({
         onSubmit={onSubmit}
         control={control}
         errors={errors}
-        setActionStatus={setActionStatus}
+        setCampaignStatus={setCampaignStatus}
         isCalledRefCampaigns={isCalledRefCampaigns}
       />
     </Container>

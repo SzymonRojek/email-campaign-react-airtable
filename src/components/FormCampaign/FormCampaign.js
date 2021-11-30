@@ -19,7 +19,7 @@ const FormCampaign = ({
   onSubmit,
   control,
   errors,
-  setActionStatus,
+  setCampaignStatus,
 }) => (
   <Paper elevation={14} style={style.paper}>
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -64,9 +64,7 @@ const FormCampaign = ({
                 type="submit"
                 ariaLabel="draft"
                 label="draft"
-                onClick={() => {
-                  setActionStatus("draft");
-                }}
+                onClick={() => setCampaignStatus(false)}
               />
             </Grid>
             <Grid item>
@@ -76,9 +74,7 @@ const FormCampaign = ({
                 label="send"
                 ariaLabel="send"
                 type="submit"
-                onClick={() => {
-                  setActionStatus("sent");
-                }}
+                onClick={() => setCampaignStatus(true)}
               />
             </Grid>
           </Grid>

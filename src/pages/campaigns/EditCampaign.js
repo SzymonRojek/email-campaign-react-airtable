@@ -36,7 +36,7 @@ const EditCampaign = ({
 
   const { itemData } = useFetchDetailsById(endpoint);
 
-  const [actionStatus, setActionStatus] = useState("");
+  const [isCampaignSent, setCampaignStatus] = useState(false);
 
   const defaultValues = {
     title: itemData.data ? itemData.data.fields.title : "",
@@ -85,17 +85,14 @@ const EditCampaign = ({
 
     const isCampaignChanged =
       data.title !== itemData.data.fields.title ||
-      data.description !== itemData.data.fields.description ||
-      actionStatus === "sent"
-        ? true
-        : false;
+      data.description !== itemData.data.fields.description;
 
-    if (isCampaignChanged || actionStatus === "sent") {
+    if (isCampaignChanged || isCampaignSent) {
       api.patch(endpoint, {
         fields: {
           title: capitalizeFirstLetter(data.title),
           description: capitalizeFirstLetter(data.description),
-          status: actionStatus,
+          status: isCampaignSent ? "sent" : "draft",
         },
       });
     }
@@ -103,34 +100,39 @@ const EditCampaign = ({
     isCalledRefCampaigns.current = false;
 
     const campaignTitle = (
-      <span
-        style={
-          actionStatus === "sent" ? { color: "green" } : { color: "orange" }
-        }
-      >
+      <span style={isCampaignSent ? { color: "green" } : { color: "orange" }}>
         <strong> {capitalizeFirstLetter(data.title)} </strong>
       </span>
     );
 
     setContentPopup({
-      title:
-        actionStatus === "sent" ? (
-          <span style={{ color: "green", fontWeight: "bold" }}>
-            That's great 🎊
-          </span>
-        ) : (
-          <span style={{ color: "orange", fontWeight: "bold" }}>
-            No changes... 🙂
-          </span>
-        ),
-      text: isCampaignChanged ? (
-        <> Campaign {campaignTitle} has been finally sent 🙂</>
+      title: isCampaignSent ? (
+        <span style={{ color: "green", fontWeight: "bold" }}>
+          That's great 🎊
+        </span>
       ) : (
-        <>
-          Campaign {campaignTitle} has not been changed
-          {actionStatus !== "sent" ? " - status is still draft 🙂" : ""}
-        </>
+        <span style={{ color: "orange", fontWeight: "bold" }}>
+          Still draft... 🙂
+        </span>
       ),
+      text:
+        isCampaignChanged && isCampaignSent ? (
+          <> Campaign {campaignTitle} has been changed and finally sent 🙂</>
+        ) : !isCampaignChanged && !isCampaignSent ? (
+          <>
+            Campaign {campaignTitle} has not been changed and status still is
+            draft 🙂
+          </>
+        ) : !isCampaignChanged && isCampaignSent ? (
+          <>Campaign {campaignTitle} has not been changed but finally sent 🙂</>
+        ) : isCampaignChanged && !isCampaignSent ? (
+          <>
+            Campaign {campaignTitle} has been changed and status still is draft
+            🙂
+          </>
+        ) : (
+          <>Campaign {campaignTitle} has not been changed but finally sent 🙂</>
+        ),
       colorButton: "success",
       switch: navigate("/campaigns"),
     });
@@ -162,7 +164,7 @@ const EditCampaign = ({
             onSubmit={onSubmit}
             control={control}
             errors={errors}
-            setActionStatus={setActionStatus}
+            setCampaignStatus={setCampaignStatus}
           />
         </Container>
       )}
