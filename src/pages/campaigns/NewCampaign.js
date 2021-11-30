@@ -66,15 +66,32 @@ const NewCampaign = ({
     isCalledRefCampaigns.current = false;
 
     setContentPopup({
-      title: "Yeah 🎊",
+      title: (
+        <span
+          style={
+            actionStatus === "sent"
+              ? { color: "green", fontWeight: "bold" }
+              : { color: "orange", fontWeight: "bold" }
+          }
+        >
+          That's great 🎊"
+        </span>
+      ),
+
       text: (
         <>
           Campaign
-          <span style={style.title}>
+          <span
+            style={
+              actionStatus === "sent"
+                ? { color: "green", fontWeight: "bold" }
+                : { color: "orange", fontWeight: "bold" }
+            }
+          >
             <strong> {capitalizeFirstLetter(data.title)} </strong>
           </span>
-          has been {actionStatus === "draft" ? "drafted and add" : "send"} to
-          the data. 😁
+          has been {actionStatus === "draft" ? "drafted and added" : "sent"} to
+          the data 😁
         </>
       ),
       colorButton: "success",

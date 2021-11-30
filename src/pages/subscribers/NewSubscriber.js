@@ -132,9 +132,13 @@ const AddSubscriber = ({
     });
 
     isCalledRefSubscribers.current = false;
-    console.log(data);
+
     setContentPopup({
-      title: "Yeah 🎊",
+      title: (
+        <span style={{ color: "green", fontWeight: "bold" }}>
+          That's great 🎊
+        </span>
+      ),
       text: (
         <>
           Subscriber

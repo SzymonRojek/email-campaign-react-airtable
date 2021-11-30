@@ -24,7 +24,9 @@ const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.up("sm")]: {
     button: {
       height: 35,
+      color: "white !important",
     },
+
     heading: { fontSize: 25 },
     contentText: { fontSize: 20 },
     paper: {
@@ -44,6 +46,7 @@ const InfoPopup = ({ openInfoPopup, setOpenInfoPopup, contentPopup }) => {
             {contentPopup.title}
           </p>
           <Button
+            aria-label="close"
             className={classes.button}
             variant="contained"
             color={contentPopup.colorButton}

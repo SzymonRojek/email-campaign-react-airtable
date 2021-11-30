@@ -102,12 +102,35 @@ const EditCampaign = ({
 
     isCalledRefCampaigns.current = false;
 
+    const campaignTitle = (
+      <span
+        style={
+          actionStatus === "sent" ? { color: "green" } : { color: "orange" }
+        }
+      >
+        <strong> {capitalizeFirstLetter(data.title)} </strong>
+      </span>
+    );
+
     setContentPopup({
-      text: isCampaignChanged
-        ? "Campaign has been changed"
-        : `Campaign has not been changed ${
-            actionStatus !== "sent" ? "and status is still draft" : ""
-          }.`,
+      title:
+        actionStatus === "sent" ? (
+          <span style={{ color: "green", fontWeight: "bold" }}>
+            That's great 🎊
+          </span>
+        ) : (
+          <span style={{ color: "orange", fontWeight: "bold" }}>
+            No changes... 🙂
+          </span>
+        ),
+      text: isCampaignChanged ? (
+        <> Campaign {campaignTitle} has been finally sent 🙂</>
+      ) : (
+        <>
+          Campaign {campaignTitle} has not been changed
+          {actionStatus !== "sent" ? " - status is still draft 🙂" : ""}
+        </>
+      ),
       colorButton: "success",
       switch: navigate("/campaigns"),
     });
