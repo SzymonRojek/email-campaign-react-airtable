@@ -46,9 +46,10 @@ const FormCampaign = ({
             <TextInputController
               control={control}
               name="description"
+              multiline
+              rows={5}
               error={!!errors.description}
               message={errors.description?.message ?? ""}
-              rows={5}
             />
           </Grid>
           <Grid
@@ -88,7 +89,7 @@ FormCampaign.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   errors: PropTypes.object,
-  setActionStatus: PropTypes.func.isRequired,
+  setCampaignStatus: PropTypes.func.isRequired,
 };
 
 export default FormCampaign;

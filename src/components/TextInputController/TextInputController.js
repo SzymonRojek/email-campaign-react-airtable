@@ -6,7 +6,14 @@ import CustomTextInput from "./CustomTextInput";
 
 const styleTypography = { color: "crimson", paddingTop: 4 };
 
-const TextInputController = ({ control, name, error, message, rows }) => (
+const TextInputController = ({
+  control,
+  name,
+  error,
+  message,
+  rows,
+  multiline,
+}) => (
   <>
     <Controller
       name={name}
@@ -14,7 +21,13 @@ const TextInputController = ({ control, name, error, message, rows }) => (
       defaultValue=""
       rules={{ required: true }}
       render={({ field: { ref, ...field } }) => (
-        <CustomTextInput {...field} inputRef={ref} error={error} rows={rows} />
+        <CustomTextInput
+          {...field}
+          inputRef={ref}
+          error={error}
+          rows={rows}
+          multiline={multiline}
+        />
       )}
     />
 
