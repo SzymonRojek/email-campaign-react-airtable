@@ -57,15 +57,15 @@ const CustomTextInput = ({ name, error, value, onChange, rows, multiline }) => (
   </Grid>
 );
 
-// TextInput.propTypes = {
-//   errors: PropTypes.object,
-//   register: PropTypes.func.isRequired,
-//   value: PropTypes.string.isRequired,
-//   message: PropTypes.string,
-//   multiline: PropTypes.bool,
-//   rows: PropTypes.number,
-// };
+CustomTextInput.propTypes = {
+  name: PropTypes.string.isRequired,
+  errors: PropTypes.object,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  rows: PropTypes.number,
+  multiline: PropTypes.bool,
+};
 
-// TextInput.defaultProps = { rows: 5 };
+CustomTextInput.defaultProps = { rows: 5 };
 
 export default CustomTextInput;
