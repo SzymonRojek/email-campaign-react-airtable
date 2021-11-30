@@ -66,7 +66,8 @@ const style = {
     backgroundColor: "#142F43",
   },
   typography: { color: "#fff" },
-  name: { color: "green" },
+  titlePopup: { color: "green", fontWeight: "bold" },
+  subscriberName: { color: "green" },
   labelCheckbox: {
     fontSize: "1rem",
     color: "orange",
@@ -134,15 +135,11 @@ const AddSubscriber = ({
     isCalledRefSubscribers.current = false;
 
     setContentPopup({
-      title: (
-        <span style={{ color: "green", fontWeight: "bold" }}>
-          That's great 🎊
-        </span>
-      ),
+      title: <span style={style.titlePopup}>That's great 🎊</span>,
       text: (
         <>
           Subscriber
-          <span style={style.name}>
+          <span style={style.subscriberName}>
             <strong> {capitalizeFirstLetter(data.name)} </strong>
           </span>
           has been added to the data 😁
@@ -152,7 +149,6 @@ const AddSubscriber = ({
     });
 
     setOpenInfoPopup(true);
-
     setTimeout(() => {
       setOpenInfoPopup(false);
     }, 3_000);

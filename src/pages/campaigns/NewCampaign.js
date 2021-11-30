@@ -10,10 +10,6 @@ import { FormCampaign } from "../../components/FormCampaign";
 import { StyledHeading } from "../../components/StyledHeading";
 import { emailMessage } from "../../mailgun/app";
 
-const style = {
-  title: { color: "green" },
-};
-
 const NewCampaign = ({
   isCalledRefCampaigns,
   setOpenInfoPopup,
@@ -65,29 +61,17 @@ const NewCampaign = ({
 
     isCalledRefCampaigns.current = false;
 
-    setContentPopup({
-      title: (
-        <span
-          style={
-            actionStatus === "sent"
-              ? { color: "green", fontWeight: "bold" }
-              : { color: "orange", fontWeight: "bold" }
-          }
-        >
-          That's great 🎊"
-        </span>
-      ),
+    const styledTextPopup =
+      actionStatus === "sent"
+        ? { color: "green", fontWeight: "bold" }
+        : { color: "orange", fontWeight: "bold" };
 
+    setContentPopup({
+      title: <span style={styledTextPopup}>That's great 🎊"</span>,
       text: (
         <>
           Campaign
-          <span
-            style={
-              actionStatus === "sent"
-                ? { color: "green", fontWeight: "bold" }
-                : { color: "orange", fontWeight: "bold" }
-            }
-          >
+          <span style={styledTextPopup}>
             <strong> {capitalizeFirstLetter(data.title)} </strong>
           </span>
           has been {actionStatus === "draft" ? "drafted and added" : "sent"} to
