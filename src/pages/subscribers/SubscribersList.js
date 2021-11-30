@@ -72,10 +72,10 @@ const SubscribersList = (props) => {
 
 SubscribersList.propTypes = {
   subscribersData: PropTypes.shape({
-    status: PropTypes.string,
+    status: PropTypes.string.isRequired,
     data: PropTypes.arrayOf(PropTypes.object),
     latestAddedItem: PropTypes.arrayOf(PropTypes.object),
-  }),
+  }).isRequired,
   setSelectedData: PropTypes.func.isRequired,
   handleSubscriberDetails: PropTypes.func.isRequired,
   setOpenInfoPopup: PropTypes.func.isRequired,

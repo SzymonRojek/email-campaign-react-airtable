@@ -7,8 +7,8 @@ import CustomTextInput from "./CustomTextInput";
 const styleTypography = { color: "crimson", paddingTop: 4 };
 
 const TextInputController = ({
-  control,
   name,
+  control,
   error,
   message,
   rows,
@@ -36,5 +36,16 @@ const TextInputController = ({
     </Typography>
   </>
 );
+
+CustomTextInput.propTypes = {
+  name: PropTypes.string.isRequired,
+  control: PropTypes.object,
+  error: PropTypes.bool.isRequired,
+  message: PropTypes.string,
+  rows: PropTypes.number.isRequired,
+  multiline: PropTypes.bool,
+};
+
+CustomTextInput.defaultProps = { rows: 5 };
 
 export default TextInputController;

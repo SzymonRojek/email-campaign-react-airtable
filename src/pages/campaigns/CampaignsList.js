@@ -72,7 +72,7 @@ CampaignsList.propTypes = {
     status: PropTypes.string,
     data: PropTypes.arrayOf(PropTypes.object),
     latestAddedItem: PropTypes.arrayOf(PropTypes.object),
-  }),
+  }).isRequired,
   setSelectedData: PropTypes.func.isRequired,
   handleEditDetailsCampaign: PropTypes.func.isRequired,
   setOpenConfirmPopup: PropTypes.func.isRequired,
