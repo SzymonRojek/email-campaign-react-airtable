@@ -4,7 +4,7 @@ import { TableCell } from "@material-ui/core";
 import { ContainerTable, HeadTable, BodyTable } from "../Table";
 import { RowCampaign } from "../Table";
 
-const FilterStatusCampaigns = (props) => {
+const CampaignStatus = (props) => {
   const {
     subHeading,
     dataHeadEmailTable,
@@ -48,7 +48,7 @@ const FilterStatusCampaigns = (props) => {
   );
 };
 
-FilterStatusCampaigns.propTypes = {
+CampaignStatus.propTypes = {
   subHeading: PropTypes.string.isRequired,
   dataHeadEmailTable: PropTypes.array.isRequired,
   campaignsData: PropTypes.array.isRequired,
@@ -59,4 +59,4 @@ FilterStatusCampaigns.propTypes = {
   setOpenConfirmPopup: PropTypes.func.isRequired,
 };
 
-export default FilterStatusCampaigns;
+export default CampaignStatus;

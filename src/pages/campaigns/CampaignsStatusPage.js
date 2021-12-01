@@ -1,13 +1,12 @@
 import PropTypes from "prop-types";
 import { Container } from "@material-ui/core";
 
-import { FilterStatusCampaigns } from "../../components/FilterStatusCampaigns";
-import { Loader } from "../../components/Loader";
-import { Error } from "../../components/Error";
-import { StyledHeading } from "../../components/StyledHeading";
-import { dataHeadEmailTable } from "../../data/dataHeadEmailTable";
+import { CampaignStatus } from "components/CampaignStatus";
+import { Loader, Error } from "components/DisplayMessage";
+import { StyledHeading } from "components/StyledHeading";
+import { dataHeadEmailTable } from "data/dataHeadEmailTable";
 
-const FilteredCampaignsList = (props) => {
+const CampaignsStatusPage = (props) => {
   const {
     campaignsData,
     handleEditDetailsCampaign,
@@ -38,7 +37,7 @@ const FilteredCampaignsList = (props) => {
             <>
               <StyledHeading label="Campaigns Status:" />
 
-              <FilterStatusCampaigns
+              <CampaignStatus
                 subHeading="Sent:"
                 dataHeadEmailTable={dataHeadEmailTable}
                 campaignsData={campaignsData.data}
@@ -49,7 +48,7 @@ const FilteredCampaignsList = (props) => {
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
 
-              <FilterStatusCampaigns
+              <CampaignStatus
                 subHeading="Draft:"
                 dataHeadEmailTable={dataHeadEmailTable}
                 campaignsData={campaignsData.data}
@@ -67,7 +66,7 @@ const FilteredCampaignsList = (props) => {
   );
 };
 
-FilteredCampaignsList.propTypes = {
+CampaignsStatusPage.propTypes = {
   campaignsData: PropTypes.shape({
     status: PropTypes.string,
     data: PropTypes.arrayOf(PropTypes.object),
@@ -79,4 +78,4 @@ FilteredCampaignsList.propTypes = {
   setContentPopup: PropTypes.func.isRequired,
 };
 
-export default FilteredCampaignsList;
+export default CampaignsStatusPage;

@@ -1,11 +1,10 @@
 import PropTypes from "prop-types";
 import { Container } from "@material-ui/core";
 
-import { FilterStatusSubscribers } from "../../components/FilterStatusSubscribers";
-import { Loader } from "../../components/Loader";
-import { Error } from "../../components/Error";
-import { StyledHeading } from "../../components/StyledHeading";
-import { generalDataHeadTable } from "../../data/dataHeadTable";
+import { FilterStatusSubscribers } from "components/FilterStatusSubscribers";
+import { Loader, Error } from "components/DisplayMessage";
+import { StyledHeading } from "components/StyledHeading";
+import { generalDataHeadTable } from "data/dataHeadTable";
 
 const FilteredSubscribersList = (props) => {
   const {
