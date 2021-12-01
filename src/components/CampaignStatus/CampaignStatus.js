@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { TableCell } from "@material-ui/core";
 
 import { ContainerTable, HeadTable, BodyTable } from "../Table";
-import { RowCampaign } from "../Table";
+import { CampaignTableRow } from "components/CampaignTableRow";
 
 const CampaignStatus = (props) => {
   const {
@@ -26,7 +26,7 @@ const CampaignStatus = (props) => {
           campaignsData
             .filter((subscriber) => subscriber.fields.status === status)
             .map((campaign, index) => (
-              <RowCampaign
+              <CampaignTableRow
                 children={
                   <TableCell component="th" scope="row">
                     {++index}.

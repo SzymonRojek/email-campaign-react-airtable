@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { TableCell } from "@material-ui/core";
-import { ContainerTable, HeadTable, BodyTable, RowCampaign } from "../Table";
+import { ContainerTable, HeadTable, BodyTable } from "../Table";
+import { CampaignTableRow } from "../CampaignTableRow";
 
 const CampaignsList = ({
   subHeading,
@@ -17,7 +18,7 @@ const CampaignsList = ({
       <BodyTable>
         {campaignsData &&
           campaignsData.map((campaign, index) => (
-            <RowCampaign
+            <CampaignTableRow
               children={
                 <TableCell component="th" scope="row">
                   {++index}.
