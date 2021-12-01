@@ -3,7 +3,7 @@ import { Link } from "@mui/material";
 import { Container, Box, Grid, Typography } from "@mui/material";
 import { SiAirtable } from "react-icons/si";
 
-import homeImg from "../../img/graphic.svg";
+import homeImg from "img/graphic.svg";
 
 const style = {
   box: {
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = () => {
+const HomePage = () => {
   const classes = useStyles();
 
   return (
@@ -145,4 +145,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;
