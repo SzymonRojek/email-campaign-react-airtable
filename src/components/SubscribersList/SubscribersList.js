@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
 import { TableCell } from "@material-ui/core";
 
-import { ContainerTable, HeadTable, BodyTable, RowSubscriber } from "../Table";
+import { ContainerTable, HeadTable, BodyTable } from "../Table";
+import { SubscriberTableRow } from "../SubscriberTableRow";
 
 const SubscribersList = ({
   subHeading,
@@ -17,7 +18,7 @@ const SubscribersList = ({
     <BodyTable>
       {subscribersData &&
         subscribersData.map((subscriber, index) => (
-          <RowSubscriber
+          <SubscriberTableRow
             children={
               <TableCell component="th" scope="row">
                 {++index}.

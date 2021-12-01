@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { TableCell } from "@material-ui/core";
 
 import { ContainerTable, HeadTable, BodyTable } from "../Table";
-import { RowSubscriber } from "../Table";
+import { SubscriberTableRow } from "../SubscriberTableRow";
 
 const SubscriberStatus = (props) => {
   const {
@@ -26,7 +26,7 @@ const SubscriberStatus = (props) => {
           subscribersData
             .filter((subscriber) => subscriber.fields.status === status)
             .map((subscriber, index) => (
-              <RowSubscriber
+              <SubscriberTableRow
                 children={
                   <TableCell component="th" scope="row">
                     {++index}.

@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const RowSubscriber = (props) => {
+const SubscriberTableRow = (props) => {
   const {
     subscriber,
     index,
@@ -165,7 +165,7 @@ const RowSubscriber = (props) => {
   );
 };
 
-RowSubscriber.propTypes = {
+SubscriberTableRow.propTypes = {
   subscriber: PropTypes.shape({
     id: PropTypes.string.isRequired,
     group: PropTypes.string,
@@ -188,4 +188,4 @@ RowSubscriber.propTypes = {
   setContentPopup: PropTypes.func,
 };
 
-export default RowSubscriber;
+export default SubscriberTableRow;
