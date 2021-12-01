@@ -1,12 +1,12 @@
 import PropTypes from "prop-types";
 import { Container } from "@material-ui/core";
 
-import { FilterStatusSubscribers } from "components/FilterStatusSubscribers";
+import { SubscriberStatus } from "components/SubscriberStatus";
 import { Loader, Error } from "components/DisplayMessage";
 import { StyledHeading } from "components/StyledHeading";
 import { generalDataHeadTable } from "data/dataHeadTable";
 
-const FilteredSubscribersList = (props) => {
+const SubscribersStatusPage = (props) => {
   const {
     subscribersData,
     handleSubscriberDetails,
@@ -38,7 +38,7 @@ const FilteredSubscribersList = (props) => {
             <>
               <StyledHeading label="Subscribers status:" />
 
-              <FilterStatusSubscribers
+              <SubscriberStatus
                 subHeading="Active:"
                 generalDataHeadTable={generalDataHeadTable}
                 subscribersData={subscribersData.data}
@@ -49,7 +49,7 @@ const FilteredSubscribersList = (props) => {
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
 
-              <FilterStatusSubscribers
+              <SubscriberStatus
                 subHeading="Pending:"
                 generalDataHeadTable={generalDataHeadTable}
                 subscribersData={subscribersData.data}
@@ -60,7 +60,7 @@ const FilteredSubscribersList = (props) => {
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
 
-              <FilterStatusSubscribers
+              <SubscriberStatus
                 subHeading="Blocked:"
                 generalDataHeadTable={generalDataHeadTable}
                 subscribersData={subscribersData.data}
@@ -78,7 +78,7 @@ const FilteredSubscribersList = (props) => {
   );
 };
 
-FilteredSubscribersList.propTypes = {
+SubscribersStatusPage.propTypes = {
   subscribersData: PropTypes.shape({
     status: PropTypes.string,
     data: PropTypes.arrayOf(PropTypes.object),
@@ -90,4 +90,4 @@ FilteredSubscribersList.propTypes = {
   setContentPopup: PropTypes.func.isRequired,
 };
 
-export default FilteredSubscribersList;
+export default SubscribersStatusPage;

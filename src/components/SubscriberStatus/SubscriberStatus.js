@@ -4,7 +4,7 @@ import { TableCell } from "@material-ui/core";
 import { ContainerTable, HeadTable, BodyTable } from "../Table";
 import { RowSubscriber } from "../Table";
 
-const FilterStatusSubscribers = (props) => {
+const SubscriberStatus = (props) => {
   const {
     subHeading,
     generalDataHeadTable,
@@ -48,7 +48,7 @@ const FilterStatusSubscribers = (props) => {
   );
 };
 
-FilterStatusSubscribers.propTypes = {
+SubscriberStatus.propTypes = {
   subHeading: PropTypes.string.isRequired,
   generalDataHeadTable: PropTypes.array.isRequired,
   subscribersData: PropTypes.array.isRequired,
@@ -59,4 +59,4 @@ FilterStatusSubscribers.propTypes = {
   setOpenConfirmPopup: PropTypes.func.isRequired,
 };
 
-export default FilterStatusSubscribers;
+export default SubscriberStatus;
