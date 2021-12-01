@@ -11,7 +11,7 @@ import {
   getFormattedData,
   getStatusColor,
   capitalizeFirstLetter,
-} from "../../helpers";
+} from "helpers";
 
 const style = {
   paragraph: {

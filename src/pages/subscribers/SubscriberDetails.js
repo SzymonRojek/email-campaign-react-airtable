@@ -8,19 +8,15 @@ import {
   Container,
 } from "@material-ui/core";
 
-import {
-  ContainerTable,
-  HeadTable,
-  RowSubscriber,
-} from "../../components/Table";
+import { ContainerTable, HeadTable } from "components/Table";
+import { SubscriberTableRow } from "components/SubscriberTableRow";
 import {
   detailsDataHeadTableFirst,
   detailsDataHeadTableSecond,
-} from "../../data/dataHeadTable";
-import { Loader } from "../../components/Loader";
-import { Error } from "../../components/Error";
-import { StyledHeading } from "../../components/StyledHeading";
-import { useFetchDetailsById } from "../../useFetchDetailsById";
+} from "data/dataHeadTable";
+import { Loader, Error } from "components/DisplayMessage";
+import { StyledHeading } from "components/StyledHeading";
+import { useFetchDetailsById } from "useFetchDetailsById";
 
 const SubscriberDetails = ({ subscribersData }) => {
   const { id } = useParams();
@@ -60,7 +56,7 @@ const SubscriberDetails = ({ subscribersData }) => {
               <TableBody>
                 {itemData &&
                   [itemData.data].map((subscriber, index) => (
-                    <RowSubscriber
+                    <SubscriberTableRow
                       key={`id-${subscriber.id}`}
                       index={index}
                       subscriber={subscriber}
