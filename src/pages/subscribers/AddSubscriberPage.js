@@ -2,19 +2,16 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Paper,
-  Box,
-  FormControlLabel,
-  Checkbox,
-  Collapse,
-  Divider,
-} from "@mui/material";
+import { Paper, Box, Collapse, Divider } from "@mui/material";
 import { Grid, Typography, Container } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 
 import api from "api";
-import { TextInputController, SelectInputController } from "components/Inputs";
+import {
+  TextInputController,
+  SelectInputController,
+  StyledCheckbox,
+} from "components/Inputs";
 import { StyledButton } from "components/StyledButton";
 import { StyledHeading } from "components/StyledHeading";
 import { capitalizeFirstLetter, validationSubscriber } from "helpers";
@@ -164,17 +161,12 @@ const AddSubscriberPage = ({
 
               <Grid container item xs={12}>
                 <Grid item xs={11}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        sx={style.checkbox}
-                        defaultValue={false}
-                        onChange={handleCheckboxOnChange}
-                      />
-                    }
-                    label={
-                      <span style={style.labelCheckbox}>Add More Details</span>
-                    }
+                  <StyledCheckbox
+                    sx={style.checkbox}
+                    style={style.labelCheckbox}
+                    defaultValue={false}
+                    onChange={handleCheckboxOnChange}
+                    label="Add More Details"
                   />
                 </Grid>
                 <Grid item xs={1}>
