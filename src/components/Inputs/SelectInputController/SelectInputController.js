@@ -5,7 +5,6 @@ import { FormControl, Select, MenuItem, Divider } from "@mui/material";
 import { Typography } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { object } from "yup/lib/locale";
 
 const useStyles = makeStyles({
   root: {
@@ -43,20 +42,14 @@ const useStyles = makeStyles({
 });
 
 const style = {
-  textError: { color: "crimson", paddingTop: 4 },
+  textError: { color: "crimson", paddingTop: 10 },
 };
 
-const SelectInputController = ({
-  control,
-  name,
-  error,
-  message,
-  defaultValue,
-  data,
-}) => {
+const SelectInputController = ({ ...props }) => {
+  const { control, name, error, message, defaultValue, data } = props;
   const classes = useStyles();
-
   const customId = `${name}-id`;
+
   return (
     <FormControl fullWidth className={classes.root}>
       <Controller
