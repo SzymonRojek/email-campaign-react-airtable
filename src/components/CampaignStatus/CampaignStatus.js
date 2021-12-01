@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { TableCell } from "@material-ui/core";
 
 import { ContainerTable, HeadTable, BodyTable } from "../Table";
-import { CampaignTableRow } from "components/CampaignTableRow";
+import { CampaignTableRow } from "../CampaignTableRow";
 
 const CampaignStatus = (props) => {
   const {
