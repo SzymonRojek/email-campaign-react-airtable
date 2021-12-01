@@ -3,7 +3,7 @@ import { TableCell } from "@material-ui/core";
 
 import { ContainerTable, HeadTable, BodyTable, RowSubscriber } from "../Table";
 
-const ContainerSubscribers = ({
+const SubscribersList = ({
   subHeading,
   dataHeadTable,
   subscribersData,
@@ -36,7 +36,7 @@ const ContainerSubscribers = ({
   </ContainerTable>
 );
 
-ContainerSubscribers.propTypes = {
+SubscribersList.propTypes = {
   subHeading: PropTypes.string.isRequired,
   dataHeadTable: PropTypes.array.isRequired,
   subscribersData: PropTypes.array.isRequired,
@@ -46,4 +46,4 @@ ContainerSubscribers.propTypes = {
   setOpenConfirmPopup: PropTypes.func.isRequired,
 };
 
-export default ContainerSubscribers;
+export default SubscribersList;

@@ -1,13 +1,12 @@
 import PropTypes from "prop-types";
 import { Container } from "@material-ui/core";
 
-import { ContainerSubscribers } from "../../components/ContainerSubscribers";
-import { Loader } from "../../components/Loader";
-import { Error } from "../../components/Error";
-import { StyledHeading } from "../../components/StyledHeading";
-import { generalDataHeadTable } from "../../data/dataHeadTable";
+import { SubscribersList } from "components/SubscribersList";
+import { Loader, Error } from "components/DisplayMessage";
+import { StyledHeading } from "components/StyledHeading";
+import { generalDataHeadTable } from "data/dataHeadTable";
 
-const SubscribersList = (props) => {
+const SubscribersPage = (props) => {
   const {
     subscribersData,
     setSelectedData,
@@ -39,7 +38,7 @@ const SubscribersList = (props) => {
             <>
               <StyledHeading label="Subscribers:" />
 
-              <ContainerSubscribers
+              <SubscribersList
                 subHeading="List:"
                 dataHeadTable={generalDataHeadTable}
                 subscribersData={subscribersData.data}
@@ -52,7 +51,7 @@ const SubscribersList = (props) => {
           )}
 
           {subscribersData.data.length > 1 ? (
-            <ContainerSubscribers
+            <SubscribersList
               subHeading="Latest added Subscriber:"
               dataHeadTable={generalDataHeadTable}
               subscribersData={subscribersData.latestAddedItem}
@@ -70,7 +69,7 @@ const SubscribersList = (props) => {
   );
 };
 
-SubscribersList.propTypes = {
+SubscribersPage.propTypes = {
   subscribersData: PropTypes.shape({
     status: PropTypes.string.isRequired,
     data: PropTypes.arrayOf(PropTypes.object),
@@ -82,4 +81,4 @@ SubscribersList.propTypes = {
   setContentPopup: PropTypes.func.isRequired,
 };
 
-export default SubscribersList;
+export default SubscribersPage;
