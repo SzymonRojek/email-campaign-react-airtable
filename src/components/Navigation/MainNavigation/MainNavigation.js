@@ -14,8 +14,8 @@ import { BsFillPersonPlusFill } from "react-icons/bs";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
 
-import { StyledTabs } from "../StyledTabs";
-import { DrawerMenu } from "../DrawerMenu";
+import { StyledTabs } from "../../StyledTabs";
+import { DrawerMenu } from "./DrawerMenu";
 
 const mainNavigationLinks = [
   {

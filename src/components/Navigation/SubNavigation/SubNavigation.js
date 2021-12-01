@@ -47,7 +47,13 @@ const SubNavigation = ({ dataLinks }) => {
 };
 
 SubNavigation.propTypes = {
-  dataLinks: PropTypes.array.isRequired,
+  dataLinks: PropTypes.arrayOf(
+    PropTypes.shape({
+      to: PropTypes.string.isRequired,
+      exact: PropTypes.bool,
+      name: PropTypes.string.isRequired,
+    }).isRequired
+  ),
 };
 
 export default SubNavigation;
