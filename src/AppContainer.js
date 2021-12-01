@@ -1,32 +1,31 @@
 import { useState, useEffect } from "react";
 import { useRoutes, useNavigate } from "react-router-dom";
 
-import "./App.css";
-import api from "./api";
-import { useFetchData } from "./useFetchData";
-import { MainNavigation } from "./components/MainNavigation";
-import { SubNavigation } from "./components/SubNavigation";
-import { StyledFooter } from "./components/StyledFooter";
-import { Home } from "./pages/home";
+import "App.css";
+import api from "api";
+import { useFetchData } from "useFetchData";
+import { MainNavigation, SubNavigation } from "components/Navigation";
+import { StyledFooter } from "components/StyledFooter";
+import { HomePage } from "pages/homePage";
 import {
-  SubscribersList,
-  FilteredSubscribersList,
-  NewSubscriber,
-  SubscriberDetails,
-} from "./pages/subscribers";
+  SubscribersPage,
+  SubscribersStatusPage,
+  AddSubscriberPage,
+  SubscriberDetailsPage,
+} from "pages/subscribers";
 import {
-  EditCampaign,
-  NewCampaign,
-  CampaignsList,
-  FilteredCampaignsList,
-} from "./pages/campaigns";
-import { InfoPopup, ConfirmPopup } from "./components/Popup";
-import { getLatestAddedItem } from "./helpers";
+  CampaignEditPage,
+  AddCampaignPage,
+  CampaignsPage,
+  CampaignsStatusPage,
+} from "pages/campaigns";
+import { InfoPopup, ConfirmPopup } from "components/DisplayMessage";
+import { getLatestAddedItem } from "helpers";
 import {
   subscribersLinksNavigation,
   campaignsLinksNavigation,
-} from "./data/dataLinksNavigation";
-import { NotFoundPage } from "./pages/notFoundPage";
+} from "data/dataLinksNavigation";
+import { NotFoundPage } from "pages/notFoundPage";
 
 const AppContainer = () => {
   const navigate = useNavigate();
@@ -111,7 +110,7 @@ const AppContainer = () => {
 
   const routes = [
     { path: "*", element: <NotFoundPage /> },
-    { path: "/", element: <Home /> },
+    { path: "/", element: <HomePage /> },
     {
       path: "subscribers",
       element: <SubNavigation dataLinks={subscribersLinksNavigation} />,
@@ -119,7 +118,7 @@ const AppContainer = () => {
         {
           path: "/",
           element: (
-            <SubscribersList
+            <SubscribersPage
               subscribersData={subscribersData}
               setSelectedData={setSelectedData}
               handleSubscriberDetails={handleSubscriberDetails}
@@ -132,7 +131,7 @@ const AppContainer = () => {
         {
           path: "add",
           element: (
-            <NewSubscriber
+            <AddSubscriberPage
               setSubscribersData={setSubscribersData}
               isCalledRefSubscribers={isCalledRefSubscribers}
               setContentPopup={setContentPopup}
@@ -143,7 +142,7 @@ const AppContainer = () => {
         {
           path: "filter",
           element: (
-            <FilteredSubscribersList
+            <SubscribersStatusPage
               subscribersData={subscribersData}
               setSelectedData={setSelectedData}
               handleSubscriberDetails={handleSubscriberDetails}
@@ -155,7 +154,7 @@ const AppContainer = () => {
         },
         {
           path: "details/:id",
-          element: <SubscriberDetails subscribersData={subscribersData} />,
+          element: <SubscriberDetailsPage subscribersData={subscribersData} />,
         },
         { path: "*", element: <NotFoundPage /> },
       ],
@@ -167,7 +166,7 @@ const AppContainer = () => {
         {
           path: "/",
           element: (
-            <CampaignsList
+            <CampaignsPage
               campaignsData={campaignsData}
               setSelectedData={setSelectedData}
               handleEditDetailsCampaign={handleEditDetailsCampaign}
@@ -179,7 +178,7 @@ const AppContainer = () => {
         {
           path: "filter",
           element: (
-            <FilteredCampaignsList
+            <CampaignsStatusPage
               campaignsData={campaignsData}
               setSelectedData={setSelectedData}
               handleEditDetailsCampaign={handleEditDetailsCampaign}
@@ -192,7 +191,7 @@ const AppContainer = () => {
         {
           path: "add",
           element: (
-            <NewCampaign
+            <AddCampaignPage
               isCalledRefCampaigns={isCalledRefCampaigns}
               subscribersData={subscribersData}
               setContentPopup={setContentPopup}
@@ -203,7 +202,7 @@ const AppContainer = () => {
         {
           path: "details/:id",
           element: (
-            <EditCampaign
+            <CampaignEditPage
               campaignsData={campaignsData}
               selectedData={selectedData}
               isCalledRefCampaigns={isCalledRefCampaigns}
