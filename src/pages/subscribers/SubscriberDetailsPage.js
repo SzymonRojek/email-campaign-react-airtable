@@ -18,7 +18,7 @@ import { Loader, Error } from "components/DisplayMessage";
 import { StyledHeading } from "components/StyledHeading";
 import { useFetchDetailsById } from "useFetchDetailsById";
 
-const SubscriberDetails = ({ subscribersData }) => {
+const SubscriberDetailsPage = ({ subscribersData }) => {
   const { id } = useParams();
   const endpoint = `/subscribers/${id}`;
 
@@ -98,7 +98,7 @@ const SubscriberDetails = ({ subscribersData }) => {
   );
 };
 
-SubscriberDetails.propTypes = {
+SubscriberDetailsPage.propTypes = {
   subscribersData: PropTypes.shape({
     status: PropTypes.string,
     data: PropTypes.arrayOf(PropTypes.object),
@@ -106,4 +106,4 @@ SubscriberDetails.propTypes = {
   }),
 };
 
-export default SubscriberDetails;
+export default SubscriberDetailsPage;
