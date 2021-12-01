@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Error } from "../../components/Error";
-import { Loader } from "../../components/Loader";
+
+import { Loader, Error } from "components/DisplayMessage";
 
 const NotFoundPage = () => {
   const [loading, setLoading] = useState(true);
