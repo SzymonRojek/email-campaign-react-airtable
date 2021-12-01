@@ -6,14 +6,13 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { Container } from "@material-ui/core";
 
-import api from "../../api";
-import { useFetchDetailsById } from "../../useFetchDetailsById";
+import api from "api";
+import { useFetchDetailsById } from "useFetchDetailsById";
 // import { emailMessage } from "../../mailgun/app";
-import { capitalizeFirstLetter, validationCampaign } from "../../helpers";
-import { FormCampaign } from "../../components/FormCampaign";
-import { StyledHeading } from "../../components/StyledHeading";
-import { Loader } from "../../components/Loader";
-import { Error } from "../../components/Error";
+import { capitalizeFirstLetter, validationCampaign } from "helpers";
+import { FormCampaign } from "components/FormCampaign";
+import { StyledHeading } from "components/StyledHeading";
+import { Loader, Error } from "components/DisplayMessage";
 
 const EditCampaign = ({
   campaignsData,
