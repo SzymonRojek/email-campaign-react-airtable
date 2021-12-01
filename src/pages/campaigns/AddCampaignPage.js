@@ -10,7 +10,7 @@ import { FormCampaign } from "../../components/FormCampaign";
 import { StyledHeading } from "../../components/StyledHeading";
 import { emailMessage } from "../../mailgun/app";
 
-const NewCampaign = ({
+const AddCampaignPage = ({
   isCalledRefCampaigns,
   setOpenInfoPopup,
   setContentPopup,
@@ -103,7 +103,7 @@ const NewCampaign = ({
   );
 };
 
-NewCampaign.propTypes = {
+AddCampaignPage.propTypes = {
   isCalledRefCampaigns: PropTypes.shape({
     current: PropTypes.bool.isRequired,
   }),
@@ -111,7 +111,7 @@ NewCampaign.propTypes = {
   setContentPopup: PropTypes.func.isRequired,
 };
 
-export default NewCampaign;
+export default AddCampaignPage;
 
 // note, in the future:
 // before sent a data by the post method do again do the get method to get all fresh subs
