@@ -1,13 +1,12 @@
 import PropTypes from "prop-types";
 import { Container } from "@material-ui/core";
 
-import { dataHeadEmailTable } from "../../data/dataHeadEmailTable";
-import { ContainerCampaigns } from "../../components/ContainerCampaigns";
-import { Loader } from "../../components/Loader";
-import { Error } from "../../components/Error";
-import { StyledHeading } from "../../components/StyledHeading";
+import { dataHeadEmailTable } from "data/dataHeadEmailTable";
+import { CampaignsList } from "components/CampaignsList";
+import { Loader, Error } from "components/DisplayMessage";
+import { StyledHeading } from "components/StyledHeading";
 
-const CampaignsList = ({
+const CampaignsPage = ({
   campaignsData,
   setSelectedData,
   handleEditDetailsCampaign,
@@ -36,7 +35,7 @@ const CampaignsList = ({
             <>
               <StyledHeading label="Campaigns:" />
 
-              <ContainerCampaigns
+              <CampaignsList
                 subHeading="List:"
                 dataHeadEmailTable={dataHeadEmailTable}
                 campaignsData={campaignsData.data}
@@ -49,7 +48,7 @@ const CampaignsList = ({
           )}
 
           {campaignsData.data.length > 1 ? (
-            <ContainerCampaigns
+            <CampaignsList
               subHeading="Latest added Campaign:"
               dataHeadEmailTable={dataHeadEmailTable}
               campaignsData={campaignsData.latestAddedItem}
@@ -67,7 +66,7 @@ const CampaignsList = ({
   );
 };
 
-CampaignsList.propTypes = {
+CampaignsPage.propTypes = {
   campaignsData: PropTypes.shape({
     status: PropTypes.string,
     data: PropTypes.arrayOf(PropTypes.object),
@@ -79,4 +78,4 @@ CampaignsList.propTypes = {
   setContentPopup: PropTypes.func.isRequired,
 };
 
-export default CampaignsList;
+export default CampaignsPage;

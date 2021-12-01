@@ -1,17 +1,11 @@
 import PropTypes from "prop-types";
 import { TableCell } from "@material-ui/core";
-import {
-  ContainerTable,
-  HeadTable,
-  BodyTable,
-  RowCampaign,
-} from "../../components/Table";
+import { ContainerTable, HeadTable, BodyTable, RowCampaign } from "../Table";
 
-const ContainerCampaigns = ({
+const CampaignsList = ({
   subHeading,
   dataHeadEmailTable,
   campaignsData,
-  // handleEditCampaign,
   handleEditDetailsCampaign,
   setSelectedData,
   setContentPopup,
@@ -33,7 +27,6 @@ const ContainerCampaigns = ({
               campaign={{ ...campaign, group: "campaigns" }}
               index={index}
               setSelectedData={setSelectedData}
-              // handleEditCampaign={handleEditCampaign}
               handleEditDetailsCampaign={handleEditDetailsCampaign}
               setContentPopup={setContentPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
@@ -44,14 +37,13 @@ const ContainerCampaigns = ({
   );
 };
 
-ContainerCampaigns.propTypes = {
+CampaignsList.propTypes = {
   subHeading: PropTypes.string.isRequired,
   dataHeadEmailTable: PropTypes.array.isRequired,
   campaignsData: PropTypes.array.isRequired,
-  // handleEditCampaign: PropTypes.func.isRequired,
   setSelectedData: PropTypes.func.isRequired,
   setContentPopup: PropTypes.func.isRequired,
   setOpenConfirmPopup: PropTypes.func.isRequired,
 };
 
-export default ContainerCampaigns;
+export default CampaignsList;
