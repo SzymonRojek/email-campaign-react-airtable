@@ -8,17 +8,16 @@ import {
   FormControlLabel,
   Checkbox,
   Collapse,
+  Divider,
 } from "@mui/material";
 import { Grid, Typography, Container } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 
-import api from "../../api";
-import { TextInputController } from "../../components/TextInputController";
-import { SelectInputController } from "../../components/SelectInputController";
-import { StyledButton } from "../../components/StyledButton";
-import { StyledHeading } from "../../components/StyledHeading";
-
-import { capitalizeFirstLetter, validationSubscriber } from "../../helpers";
+import api from "api";
+import { TextInputController, SelectInputController } from "components/Inputs";
+import { StyledButton } from "components/StyledButton";
+import { StyledHeading } from "components/StyledHeading";
+import { capitalizeFirstLetter, validationSubscriber } from "helpers";
 
 const selectStatusData = [
   { value: "change status", label: "change status*" },
@@ -53,7 +52,7 @@ const style = {
   icon: { color: "orange", fontSize: 30, marginTop: 6 },
 };
 
-const AddSubscriber = ({
+const AddSubscriberPage = ({
   isCalledRefSubscribers,
   setOpenInfoPopup,
   setContentPopup,
@@ -252,7 +251,7 @@ const AddSubscriber = ({
   );
 };
 
-AddSubscriber.propTypes = {
+AddSubscriberPage.propTypes = {
   isCalledRefSubscribers: PropTypes.shape({
     current: PropTypes.bool.isRequired,
   }),
@@ -260,4 +259,4 @@ AddSubscriber.propTypes = {
   setContentPopup: PropTypes.func.isRequired,
 };
 
-export default AddSubscriber;
+export default AddSubscriberPage;
