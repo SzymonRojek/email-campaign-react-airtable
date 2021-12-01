@@ -14,7 +14,7 @@ import { FormCampaign } from "components/FormCampaign";
 import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
 
-const EditCampaign = ({
+const CampaignEditPage = ({
   campaignsData,
   isCalledRefCampaigns,
   setOpenInfoPopup,
@@ -171,7 +171,7 @@ const EditCampaign = ({
   );
 };
 
-EditCampaign.propTypes = {
+CampaignEditPage.propTypes = {
   isCalledRefCampaigns: PropTypes.shape({
     current: PropTypes.bool.isRequired,
   }),
@@ -179,4 +179,4 @@ EditCampaign.propTypes = {
   setContentPopup: PropTypes.func.isRequired,
 };
 
-export default EditCampaign;
+export default CampaignEditPage;
