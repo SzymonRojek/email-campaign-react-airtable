@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRoutes, useNavigate } from "react-router-dom";
 
 import "App.css";
@@ -39,33 +39,10 @@ const AppContainer = () => {
   const endpointCampaigns = "/campaigns";
 
   const [
-    {
-      subscribersData,
-      setSubscribersData,
-      campaignsData,
-      setCampaignsData,
-      isCalledRefSubscribers,
-      isCalledRefCampaigns,
-    },
-    refetchSubscribersData,
-    refetchCampaignsData,
+    { subscribersData, setSubscribersData, campaignsData, setCampaignsData },
+    getSubscribersData,
+    getCampaignsData,
   ] = useFetchData(endpointSubscribers, endpointCampaigns);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (!isCalledRefSubscribers.current) refetchSubscribersData();
-      if (!isCalledRefCampaigns.current) refetchCampaignsData();
-    }, 3_000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [
-    isCalledRefSubscribers,
-    isCalledRefCampaigns,
-    refetchSubscribersData,
-    refetchCampaignsData,
-  ]);
 
   const removeItemFromAirtable = async (endpoint, id) =>
     await api.delete(`/${endpoint}/${id}`);
@@ -133,9 +110,9 @@ const AppContainer = () => {
           element: (
             <AddSubscriberPage
               setSubscribersData={setSubscribersData}
-              isCalledRefSubscribers={isCalledRefSubscribers}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
+              getSubscribersData={getSubscribersData}
             />
           ),
         },
@@ -192,8 +169,8 @@ const AppContainer = () => {
           path: "add",
           element: (
             <AddCampaignPage
-              isCalledRefCampaigns={isCalledRefCampaigns}
               subscribersData={subscribersData}
+              getCampaignsData={getCampaignsData}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
             />
@@ -205,7 +182,6 @@ const AppContainer = () => {
             <CampaignEditPage
               campaignsData={campaignsData}
               selectedData={selectedData}
-              isCalledRefCampaigns={isCalledRefCampaigns}
               setOpenInfoPopup={setOpenInfoPopup}
               setContentPopup={setContentPopup}
             />

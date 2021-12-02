@@ -11,7 +11,7 @@ import { StyledHeading } from "../../components/StyledHeading";
 import { emailMessage } from "../../mailgun/app";
 
 const AddCampaignPage = ({
-  isCalledRefCampaigns,
+  getCampaignsData,
   setOpenInfoPopup,
   setContentPopup,
 }) => {
@@ -59,8 +59,6 @@ const AddCampaignPage = ({
       },
     });
 
-    isCalledRefCampaigns.current = false;
-
     const styledTextPopup = isCampaignSent
       ? { color: "green", fontWeight: "bold" }
       : { color: "orange", fontWeight: "bold" };
@@ -80,6 +78,8 @@ const AddCampaignPage = ({
       colorButton: "success",
     });
 
+    getCampaignsData();
+
     setOpenInfoPopup(true);
 
     setTimeout(() => {
@@ -97,7 +97,6 @@ const AddCampaignPage = ({
         control={control}
         errors={errors}
         setCampaignStatus={setCampaignStatus}
-        isCalledRefCampaigns={isCalledRefCampaigns}
       />
     </Container>
   );

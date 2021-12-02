@@ -1,11 +1,9 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useEffect } from "react";
 
 import api from "./api";
 import { sortDataAlphabetically, getLatestAddedItem } from "./helpers";
 
 export function useFetchData(endpointOne, endpointSecond) {
-  const isCalledRefSubscribers = useRef(false);
-  const isCalledRefCampaigns = useRef(false);
   const [subscribersData, setSubscribersData] = useState({
     status: "loading",
     data: null,
@@ -19,66 +17,61 @@ export function useFetchData(endpointOne, endpointSecond) {
   const subscribersUrl = "/subscribers";
   const campaignsUrl = "/campaigns";
 
-  const refetchSubscribersData = useCallback(() => {
-    const fetchData = async () => {
-      if (endpointOne !== subscribersUrl)
-        setSubscribersData({ status: "error" });
-      if (endpointSecond !== campaignsUrl)
-        setCampaignsData({ status: "error" });
+  const getSubscribersData = async () => {
+    if (endpointOne !== subscribersUrl) setSubscribersData({ status: "error" });
 
-      if (endpointOne === subscribersUrl) {
-        try {
-          const { records } = await api.get(endpointOne);
+    if (endpointOne === subscribersUrl) {
+      try {
+        const { records } = await api.get(endpointOne);
 
-          sortDataAlphabetically(records);
+        sortDataAlphabetically(records);
 
-          setSubscribersData({
-            status: "success",
-            data: records,
-            latestAddedItem: getLatestAddedItem(records),
-          });
-
-          if (subscribersData.status !== "success")
-            isCalledRefSubscribers.current = true;
-        } catch (error) {
-          setSubscribersData({
-            status: "error",
-          });
-        }
+        setSubscribersData({
+          status: "success",
+          data: records,
+          latestAddedItem: getLatestAddedItem(records),
+        });
+      } catch (error) {
+        setSubscribersData({
+          status: "error",
+        });
       }
-    };
+    }
+  };
 
-    if (!isCalledRefSubscribers.current) fetchData();
-  }, [endpointOne]);
+  useEffect(() => {
+    const timeId = setInterval(() => getSubscribersData(), 3_000);
 
-  const refetchCampaignsData = useCallback(() => {
-    const fetchData = async () => {
-      if (endpointSecond !== campaignsUrl)
-        setCampaignsData({ status: "error" });
+    return () => clearInterval(timeId);
+  }, []);
 
-      if (endpointSecond === campaignsUrl) {
-        try {
-          const { records } = await api.get(endpointSecond);
+  const getCampaignsData = async () => {
+    if (endpointSecond !== campaignsUrl) setCampaignsData({ status: "error" });
 
-          sortDataAlphabetically(records);
+    if (endpointSecond === campaignsUrl) {
+      try {
+        const { records } = await api.get(endpointSecond);
 
-          setCampaignsData({
-            status: "success",
-            data: records,
-            latestAddedItem: getLatestAddedItem(records),
-          });
+        sortDataAlphabetically(records);
 
-          isCalledRefCampaigns.current = true;
-        } catch (error) {
-          setCampaignsData({
-            status: "error",
-          });
-        }
+        setCampaignsData({
+          status: "success",
+          data: records,
+          latestAddedItem: getLatestAddedItem(records),
+        });
+      } catch (error) {
+        setCampaignsData({
+          status: "error",
+        });
       }
-    };
+    }
+  };
 
-    if (!isCalledRefCampaigns.current) fetchData();
-  }, [endpointSecond]);
+  useEffect(() => {
+    const timeId = setTimeout(() => getCampaignsData(), 3_000);
+
+    return () => clearTimeout(timeId);
+  }, []);
 
   return [
     {
@@ -86,10 +79,8 @@ export function useFetchData(endpointOne, endpointSecond) {
       campaignsData,
       setSubscribersData,
       setCampaignsData,
-      isCalledRefSubscribers,
-      isCalledRefCampaigns,
     },
-    refetchSubscribersData,
-    refetchCampaignsData,
+    getSubscribersData,
+    getCampaignsData,
   ];
 }

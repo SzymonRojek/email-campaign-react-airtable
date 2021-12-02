@@ -50,7 +50,7 @@ const style = {
 };
 
 const AddSubscriberPage = ({
-  isCalledRefSubscribers,
+  getSubscribersData,
   setOpenInfoPopup,
   setContentPopup,
 }) => {
@@ -95,8 +95,6 @@ const AddSubscriberPage = ({
       },
     });
 
-    isCalledRefSubscribers.current = false;
-
     setContentPopup({
       title: <span style={style.titlePopup}>That's great 🎊</span>,
       text: (
@@ -110,6 +108,8 @@ const AddSubscriberPage = ({
       ),
       colorButton: "success",
     });
+
+    getSubscribersData();
 
     setOpenInfoPopup(true);
     setTimeout(() => {
