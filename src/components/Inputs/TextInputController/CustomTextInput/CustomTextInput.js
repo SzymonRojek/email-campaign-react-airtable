@@ -10,7 +10,8 @@ const inputLabelProps = {
     color: "#fff",
     [`&.${inputLabelClasses.shrink}`]: {
       // set the color of the label when shrinked (usually when the TextField is focused)
-      color: "#fff",
+      color: "#ffa500 !important",
+      letterSpacing: 1,
     },
   },
 };
@@ -31,7 +32,7 @@ const StyledTextField = withStyles({
         borderColor: "#fff",
       },
       "&.Mui-focused fieldset": {
-        borderColor: "#2e7d32",
+        borderColor: "#ffa500",
       },
     },
   },

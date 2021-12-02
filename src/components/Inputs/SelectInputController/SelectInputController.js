@@ -36,7 +36,7 @@ const useStyles = makeStyles({
       color: "white",
     },
     "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#2e7d32",
+      borderColor: "#ffa500",
     },
   },
 });
