@@ -30,7 +30,7 @@ const style = {
     borderRadius: 8,
     backgroundColor: "#142F43",
   },
-  typography: { color: "#fff" },
+  typographyRequiredText: { color: "orange", letterSpacing: 2, wordSpacing: 3 },
   titlePopup: { color: "green", fontWeight: "bold" },
   subscriberName: { color: "green" },
   labelCheckbox: {
@@ -129,7 +129,7 @@ const AddSubscriberPage = ({
                 <Typography
                   color="textSecondary"
                   variant="body2"
-                  style={style.typography}
+                  style={style.typographyRequiredText}
                 >
                   *Fields required
                 </Typography>

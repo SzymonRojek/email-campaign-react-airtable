@@ -11,7 +11,7 @@ const style = {
     borderRadius: 8,
     backgroundColor: "#142F43",
   },
-  typography: { color: "#fff" },
+  typography: { color: "orange", letterSpacing: 2, wordSpacing: 3 },
 };
 
 const FormCampaign = ({
