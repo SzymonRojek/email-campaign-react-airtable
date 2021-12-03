@@ -20,7 +20,6 @@ import {
   CampaignsStatusPage,
 } from "pages/campaigns";
 import { InfoPopup, ConfirmPopup } from "components/DisplayMessage";
-import { getLatestAddedItem } from "helpers";
 import {
   subscribersLinksNavigation,
   campaignsLinksNavigation,
@@ -38,11 +37,17 @@ const AppContainer = () => {
   const endpointSubscribers = "/subscribers";
   const endpointCampaigns = "/campaigns";
 
-  const [
-    { subscribersData, setSubscribersData, campaignsData, setCampaignsData },
-    getSubscribersData,
-    getCampaignsData,
-  ] = useFetchData(endpointSubscribers, endpointCampaigns);
+  const {
+    data: subscribersData,
+    setData: setSubscribersData,
+    getData: getSubscribersData,
+  } = useFetchData(endpointSubscribers);
+
+  const {
+    data: campaignsData,
+    setData: setCampaignsData,
+    getData: getCampaignsData,
+  } = useFetchData(endpointCampaigns);
 
   const removeItemFromAirtable = async (endpoint, id) =>
     await api.delete(`/${endpoint}/${id}`);
@@ -58,7 +63,6 @@ const AppContainer = () => {
       setSubscribersData({
         status: "success",
         data: filteredGroup(subscribersData),
-        latestAddedItem: getLatestAddedItem(filteredGroup(subscribersData)),
       });
     }
 
@@ -66,7 +70,6 @@ const AppContainer = () => {
       setCampaignsData({
         status: "success",
         data: filteredGroup(campaignsData),
-        latestAddedItem: getLatestAddedItem(filteredGroup(campaignsData)),
       });
     }
 
@@ -86,7 +89,6 @@ const AppContainer = () => {
   };
 
   const routes = [
-    { path: "*", element: <NotFoundPage /> },
     { path: "/", element: <HomePage /> },
     {
       path: "subscribers",
@@ -189,6 +191,7 @@ const AppContainer = () => {
         },
       ],
     },
+    { path: "*", element: <NotFoundPage /> },
   ];
 
   const routing = useRoutes(routes);
