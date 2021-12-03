@@ -1,4 +1,5 @@
 const sortDataAlphabetically = (data) => {
+  if (!data) return;
   const isName = data.map((x) => x.fields.name).filter(Boolean).length > 0;
 
   const nestedPropertyRetriever = (obj) =>
