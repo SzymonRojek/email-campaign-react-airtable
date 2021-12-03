@@ -5,6 +5,7 @@ import { SubscribersList } from "components/SubscribersList";
 import { Loader, Error } from "components/DisplayMessage";
 import { StyledHeading } from "components/StyledHeading";
 import { generalDataHeadTable } from "data/dataHeadTable";
+import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
 
 const SubscribersPage = (props) => {
   const {
@@ -15,6 +16,9 @@ const SubscribersPage = (props) => {
     setContentPopup,
   } = props;
 
+  sortDataAlphabetically(subscribersData.data);
+
+  const latestAddedSubscriber = getLatestAddedItem(subscribersData.data);
   return (
     <>
       {subscribersData.status === "loading" ? (
@@ -54,7 +58,7 @@ const SubscribersPage = (props) => {
             <SubscribersList
               subHeading="Latest added Subscriber:"
               dataHeadTable={generalDataHeadTable}
-              subscribersData={subscribersData.latestAddedItem}
+              subscribersData={latestAddedSubscriber}
               setSelectedData={setSelectedData}
               handleSubscriberDetails={handleSubscriberDetails}
               setContentPopup={setContentPopup}

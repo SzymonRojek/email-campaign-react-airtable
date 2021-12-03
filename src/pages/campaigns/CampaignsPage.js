@@ -5,6 +5,7 @@ import { dataHeadEmailTable } from "data/dataHeadEmailTable";
 import { CampaignsList } from "components/CampaignsList";
 import { Loader, Error } from "components/DisplayMessage";
 import { StyledHeading } from "components/StyledHeading";
+import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
 
 const CampaignsPage = ({
   campaignsData,
@@ -13,6 +14,9 @@ const CampaignsPage = ({
   setOpenConfirmPopup,
   setContentPopup,
 }) => {
+  sortDataAlphabetically(campaignsData.data);
+
+  const latestAddedCampaign = getLatestAddedItem(campaignsData.data);
   return (
     <>
       {campaignsData.status === "loading" ? (
@@ -51,7 +55,7 @@ const CampaignsPage = ({
             <CampaignsList
               subHeading="Latest added Campaign:"
               dataHeadEmailTable={dataHeadEmailTable}
-              campaignsData={campaignsData.latestAddedItem}
+              campaignsData={latestAddedCampaign}
               handleEditDetailsCampaign={handleEditDetailsCampaign}
               setSelectedData={setSelectedData}
               setContentPopup={setContentPopup}
