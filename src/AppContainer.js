@@ -183,6 +183,8 @@ const AppContainer = () => {
           element: (
             <CampaignEditPage
               campaignsData={campaignsData}
+              subscribersData={subscribersData}
+              getCampaignsData={getCampaignsData}
               selectedData={selectedData}
               setOpenInfoPopup={setOpenInfoPopup}
               setContentPopup={setContentPopup}
