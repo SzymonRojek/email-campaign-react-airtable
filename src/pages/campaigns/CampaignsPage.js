@@ -74,7 +74,6 @@ CampaignsPage.propTypes = {
   campaignsData: PropTypes.shape({
     status: PropTypes.string,
     data: PropTypes.arrayOf(PropTypes.object),
-    latestAddedItem: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
   setSelectedData: PropTypes.func.isRequired,
   handleEditDetailsCampaign: PropTypes.func.isRequired,
