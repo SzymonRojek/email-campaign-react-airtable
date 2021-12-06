@@ -5,10 +5,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { Container } from "@material-ui/core";
+import emailjs from "emailjs-com";
 
 import api from "api";
 import { useFetchDetailsById } from "useFetchDetailsById";
-// import { emailMessage } from "../../mailgun/app";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
 import { FormCampaign } from "components/FormCampaign";
 import { StyledHeading } from "components/StyledHeading";
@@ -16,7 +16,8 @@ import { Loader, Error } from "components/DisplayMessage";
 
 const CampaignEditPage = ({
   campaignsData,
-  isCalledRefCampaigns,
+  subscribersData,
+  getCampaignsData,
   setOpenInfoPopup,
   setContentPopup,
 }) => {
@@ -35,13 +36,13 @@ const CampaignEditPage = ({
 
   const { itemData } = useFetchDetailsById(endpoint);
 
-  const [isCampaignSent, setCampaignStatus] = useState(false);
-
   const defaultValues = {
     title: itemData.data ? itemData.data.fields.title : "",
     description: itemData.data ? itemData.data.fields.description : "",
   };
 
+  const [isEmailError, setEmailError] = useState(false);
+  console.log(isEmailError);
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setValue("title", defaultValues.title);
@@ -68,44 +69,22 @@ const CampaignEditPage = ({
     );
   }
 
-  const onSubmit = (data) => {
-    // if (actionStatus === "sent") {
-    //   subscribersData.data
-    //     .filter((subscriber) => subscriber.fields.status === "active")
-    //     .forEach((subscriber) => {
-    //       emailMessage(
-    //         subscriber.fields.email,
-    //         subscriber.fields.name,
-    //         data.title,
-    //         data.description
-    //       );
-    //     });
-    // }
+  const { REACT_APP_MAIL_USER, REACT_APP_MAIL_TEMPLATE, REACT_APP_MAIL_KEY } =
+    process.env;
 
+  const displayPopup = (data, status, changeRoute) => {
     const isCampaignChanged =
       data.title !== itemData.data.fields.title ||
       data.description !== itemData.data.fields.description;
 
-    if (isCampaignChanged || isCampaignSent) {
-      api.patch(endpoint, {
-        fields: {
-          title: capitalizeFirstLetter(data.title),
-          description: capitalizeFirstLetter(data.description),
-          status: isCampaignSent ? "sent" : "draft",
-        },
-      });
-    }
-
-    isCalledRefCampaigns.current = false;
-
     const campaignTitle = (
-      <span style={isCampaignSent ? { color: "green" } : { color: "orange" }}>
+      <span style={status ? { color: "green" } : { color: "orange" }}>
         <strong> {capitalizeFirstLetter(data.title)} </strong>
       </span>
     );
 
     setContentPopup({
-      title: isCampaignSent ? (
+      title: status ? (
         <span style={{ color: "green", fontWeight: "bold" }}>
           That's great 🎊
         </span>
@@ -115,16 +94,16 @@ const CampaignEditPage = ({
         </span>
       ),
       text:
-        isCampaignChanged && isCampaignSent ? (
+        isCampaignChanged && status ? (
           <> Campaign {campaignTitle} has been changed and finally sent 🙂</>
-        ) : !isCampaignChanged && !isCampaignSent ? (
+        ) : !isCampaignChanged && !status ? (
           <>
             Campaign {campaignTitle} has not been changed and status still is
             draft 🙂
           </>
-        ) : !isCampaignChanged && isCampaignSent ? (
+        ) : !isCampaignChanged && status ? (
           <>Campaign {campaignTitle} has not been changed but finally sent 🙂</>
-        ) : isCampaignChanged && !isCampaignSent ? (
+        ) : isCampaignChanged && !status ? (
           <>
             Campaign {campaignTitle} has been changed and status still is draft
             🙂
@@ -133,20 +112,85 @@ const CampaignEditPage = ({
           <>Campaign {campaignTitle} has not been changed but finally sent 🙂</>
         ),
       colorButton: "success",
-      switch: navigate("/campaigns"),
     });
 
     setOpenInfoPopup(true);
-
+    const switchRoute = () => changeRoute;
     setTimeout(() => {
       setOpenInfoPopup(false);
-      navigate("/campaigns");
-    }, 3_000);
+
+      switchRoute();
+    }, 5_000);
+  };
+
+  const handleDraftCampaign = (data) => {
+    if (
+      data.title !== itemData.data.fields.title ||
+      data.description !== itemData.data.fields.description
+    ) {
+      api.patch(endpoint, {
+        fields: {
+          title: capitalizeFirstLetter(data.title),
+          description: capitalizeFirstLetter(data.description),
+          status: "draft",
+        },
+      });
+
+      getCampaignsData();
+    }
+
+    displayPopup(data, false, navigate("/campaigns"));
+  };
+
+  const handleSendCampaign = (data) => {
+    if (subscribersData.data) {
+      subscribersData.data
+        .filter((subscriber) => subscriber.fields.status === "active")
+        .forEach((subscriber) => {
+          const inputsData = {
+            name: subscriber.fields.name,
+            email: subscriber.fields.email,
+            title: data.title,
+            description: data.description,
+          };
+          // REACT_APP_MAIL_USER,
+          emailjs
+            .send(
+              "ereyeryery",
+              REACT_APP_MAIL_TEMPLATE,
+              inputsData,
+              REACT_APP_MAIL_KEY
+            )
+            .then(() => {
+              api.patch(endpoint, {
+                fields: {
+                  title: capitalizeFirstLetter(data.title),
+                  description: capitalizeFirstLetter(data.description),
+                  status: "sent",
+                },
+              });
+
+              displayPopup(data, true, navigate("/campaigns"));
+              getCampaignsData();
+            })
+            .catch((err) => {
+              console.log("Unfortunately,", err);
+
+              setEmailError(true);
+            });
+        });
+    }
   };
 
   return (
     <>
-      {itemData.status === "loading" ? (
+      {isEmailError ? (
+        <Error
+          titleOne="Unfortunately, the Campaign has not been sent"
+          titleTwo="Probably there is a problem with EmailJS application at the moment"
+          titleThree="That's why your Campaign has been drafted"
+        />
+      ) : itemData.status === "loading" ? (
         <Loader title="Campaign Details" />
       ) : itemData.status === "error" ? (
         <Error
@@ -160,10 +204,10 @@ const CampaignEditPage = ({
 
           <FormCampaign
             handleSubmit={handleSubmit}
-            onSubmit={onSubmit}
+            handleDraftData={handleDraftCampaign}
+            handleSendData={handleSendCampaign}
             control={control}
             errors={errors}
-            setCampaignStatus={setCampaignStatus}
           />
         </Container>
       )}
