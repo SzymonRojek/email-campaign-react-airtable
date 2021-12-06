@@ -22,7 +22,7 @@ const SubscriberDetailsPage = ({ subscribersData }) => {
   const { id } = useParams();
   const endpoint = `/subscribers/${id}`;
 
-  const { itemData } = useFetchDetailsById(endpoint);
+  const { itemData: subscriberData } = useFetchDetailsById(endpoint);
 
   // check if Campaign's id is available, otherwise return Error
   let isIdCorrect = null;
@@ -31,7 +31,7 @@ const SubscriberDetailsPage = ({ subscribersData }) => {
     isIdCorrect = Boolean(subscribersData.data.find((item) => item.id === id));
   }
 
-  if (isIdCorrect === false || itemData.status === "error") {
+  if (isIdCorrect === false || subscriberData.status === "error") {
     return (
       <Error
         titleOne="Unfortunately, Subscriber does not exist."
@@ -43,7 +43,7 @@ const SubscriberDetailsPage = ({ subscribersData }) => {
 
   return (
     <>
-      {itemData.status === "loading" ? (
+      {subscriberData.status === "loading" ? (
         <Loader title="Subscriber" />
       ) : (
         <Container>
@@ -54,8 +54,8 @@ const SubscriberDetailsPage = ({ subscribersData }) => {
               <HeadTable dataHeadTable={detailsDataHeadTableFirst} />
 
               <TableBody>
-                {itemData &&
-                  [itemData.data].map((subscriber, index) => (
+                {subscriberData &&
+                  [subscriberData.data].map((subscriber, index) => (
                     <SubscriberTableRow
                       key={`id-${subscriber.id}`}
                       index={index}
@@ -69,8 +69,8 @@ const SubscriberDetailsPage = ({ subscribersData }) => {
               <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
 
               <TableBody>
-                {itemData &&
-                  [itemData.data].map((subscriber, index) => (
+                {subscriberData &&
+                  [subscriberData.data].map((subscriber, index) => (
                     <TableRow key={`i-${index}`}>
                       <TableCell>
                         <Typography color="textSecondary" variant="subtitle1">
@@ -102,7 +102,6 @@ SubscriberDetailsPage.propTypes = {
   subscribersData: PropTypes.shape({
     status: PropTypes.string,
     data: PropTypes.arrayOf(PropTypes.object),
-    latestAddedItem: PropTypes.arrayOf(PropTypes.object),
   }),
 };
 
