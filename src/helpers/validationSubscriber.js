@@ -11,11 +11,9 @@ const basicSubscriberInformation = {
     .matches(/^[aA-zZ\s]+$/, "only letters are required")
     .min(3, "must be at least 3 characters")
     .max(10, "must not exceed 10 characters"),
-  profession: Yup.string()
-    .required("is required")
-    .matches(/^[aA-zZ\s]+$/, "only letters are required")
-    .min(3, "must be at least 3 characters")
-    .max(10, "must not exceed 10 characters"),
+  email: Yup.string()
+    .required("email is required")
+    .matches(/^([^.@]+)(\.[^.@]+)*@([^.@]+\.)+([^.@]+)$/, "email is invalid"),
 };
 
 const status = ["pending", "blocked", "active"];
