@@ -16,13 +16,13 @@ const style = {
 
 const FormCampaign = ({
   handleSubmit,
-  onSubmit,
+  handleDraftData,
+  handleSendData,
   control,
   errors,
-  setCampaignStatus,
 }) => (
   <Paper elevation={14} style={style.paper}>
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form>
       <Box px={3} py={3}>
         <Grid container spacing={4}>
           <Grid item xs={12}>
@@ -62,10 +62,10 @@ const FormCampaign = ({
               <StyledButton
                 hover="#cf890a"
                 bgc="#ffa500"
-                type="submit"
-                ariaLabel="draft"
                 label="draft"
-                onClick={() => setCampaignStatus(false)}
+                ariaLabel="draft"
+                type="submit"
+                onClick={handleSubmit(handleDraftData)}
               />
             </Grid>
             <Grid item>
@@ -75,7 +75,7 @@ const FormCampaign = ({
                 label="send"
                 ariaLabel="send"
                 type="submit"
-                onClick={() => setCampaignStatus(true)}
+                onClick={handleSubmit(handleSendData)}
               />
             </Grid>
           </Grid>
@@ -87,9 +87,9 @@ const FormCampaign = ({
 
 FormCampaign.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
+  // onSubmit: PropTypes.func.isRequired,
   errors: PropTypes.object,
-  setCampaignStatus: PropTypes.func.isRequired,
+  // setCampaignStatus: PropTypes.func.isRequired,
 };
 
 export default FormCampaign;
