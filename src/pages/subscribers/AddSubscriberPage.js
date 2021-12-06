@@ -243,9 +243,7 @@ const AddSubscriberPage = ({
 };
 
 AddSubscriberPage.propTypes = {
-  isCalledRefSubscribers: PropTypes.shape({
-    current: PropTypes.bool.isRequired,
-  }),
+  getSubscribersData: PropTypes.func.isRequired,
   setOpenInfoPopup: PropTypes.func.isRequired,
   setContentPopup: PropTypes.func.isRequired,
 };
