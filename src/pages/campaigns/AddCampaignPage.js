@@ -11,6 +11,21 @@ import { FormCampaign } from "components/FormCampaign";
 import { StyledHeading } from "components/StyledHeading";
 import { Error } from "components/DisplayMessage";
 
+const { REACT_APP_MAIL_USER, REACT_APP_MAIL_TEMPLATE, REACT_APP_MAIL_KEY } =
+  process.env;
+
+const postData = (data, status) => {
+  const endpoint = "/campaigns";
+
+  api.post(endpoint, {
+    fields: {
+      title: capitalizeFirstLetter(data.title),
+      description: capitalizeFirstLetter(data.description),
+      status: status,
+    },
+  });
+};
+
 const AddCampaignPage = ({
   subscribersData,
   getCampaignsData,
@@ -27,8 +42,7 @@ const AddCampaignPage = ({
     resolver: yupResolver(validationCampaign),
   });
 
-  const { REACT_APP_MAIL_USER, REACT_APP_MAIL_TEMPLATE, REACT_APP_MAIL_KEY } =
-    process.env;
+  const [isEmailError, setEmailError] = useState(false);
 
   useEffect(() => {
     if (formState.isSubmitSuccessful)
@@ -38,14 +52,19 @@ const AddCampaignPage = ({
       });
   }, [formState, reset]);
 
-  const [isEmailError, setEmailError] = useState(false);
-
-  const endpoint = "/campaigns";
-
   const displayPopup = (data, status) => {
     const styledTextPopup = status
       ? { color: "green", fontWeight: "bold" }
       : { color: "orange", fontWeight: "bold" };
+
+    const addTimeout = () => {
+      const timeoutId = setTimeout(() => {
+        setOpenInfoPopup(false);
+      }, 3_000);
+
+      return () => clearTimeout(timeoutId);
+    };
+
     setContentPopup({
       title: (
         <span style={styledTextPopup}>{status ? "Sent!" : "Drafted!"} 🎊"</span>
@@ -62,23 +81,13 @@ const AddCampaignPage = ({
       colorButton: "success",
     });
 
+    addTimeout();
     setOpenInfoPopup(true);
-
-    setTimeout(() => {
-      setOpenInfoPopup(false);
-    }, 3_000);
   };
 
   const handleDraftCampaign = (data) => {
-    api.post(endpoint, {
-      fields: {
-        title: capitalizeFirstLetter(data.title),
-        description: capitalizeFirstLetter(data.description),
-        status: "draft",
-      },
-    });
+    postData(data, "draft");
     getCampaignsData();
-
     displayPopup(data, false);
   };
 
@@ -102,24 +111,12 @@ const AddCampaignPage = ({
               REACT_APP_MAIL_KEY
             )
             .then(() => {
-              api.post(endpoint, {
-                fields: {
-                  title: capitalizeFirstLetter(data.title),
-                  description: capitalizeFirstLetter(data.description),
-                  status: "sent",
-                },
-              });
+              postData(data, "sent");
               displayPopup(data, true);
             })
             .catch((err) => {
               console.log("Unfortunately,", err);
-              api.post(endpoint, {
-                fields: {
-                  title: capitalizeFirstLetter(data.title),
-                  description: capitalizeFirstLetter(data.description),
-                  status: "draft",
-                },
-              });
+              postData(data, "draft");
               setEmailError(true);
               displayPopup(data, false);
             });
@@ -134,7 +131,7 @@ const AddCampaignPage = ({
         <Error
           titleOne="Unfortunately, the Campaign has not been sent"
           titleTwo="Probably there is a problem with EmailJS application at the moment"
-          titleThree="That's why your Campaign has been drafted"
+          titleThree="That's why the Campaign has been drafted now"
         />
       ) : (
         <Container>
@@ -154,9 +151,11 @@ const AddCampaignPage = ({
 };
 
 AddCampaignPage.propTypes = {
-  isCalledRefCampaigns: PropTypes.shape({
-    current: PropTypes.bool.isRequired,
-  }),
+  subscribersData: PropTypes.shape({
+    status: PropTypes.string,
+    data: PropTypes.arrayOf(PropTypes.object),
+  }).isRequired,
+  getCampaignsData: PropTypes.func.isRequired,
   setOpenInfoPopup: PropTypes.func.isRequired,
   setContentPopup: PropTypes.func.isRequired,
 };

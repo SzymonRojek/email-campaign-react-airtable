@@ -14,6 +14,9 @@ import { FormCampaign } from "components/FormCampaign";
 import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
 
+const { REACT_APP_MAIL_USER, REACT_APP_MAIL_TEMPLATE, REACT_APP_MAIL_KEY } =
+  process.env;
+
 const CampaignEditPage = ({
   campaignsData,
   subscribersData,
@@ -34,15 +37,14 @@ const CampaignEditPage = ({
   const navigate = useNavigate();
   const endpoint = `/campaigns/${id}`;
 
-  const { itemData } = useFetchDetailsById(endpoint);
+  const { itemData: campaignData } = useFetchDetailsById(endpoint);
+  const [isEmailError, setEmailError] = useState(false);
 
   const defaultValues = {
-    title: itemData.data ? itemData.data.fields.title : "",
-    description: itemData.data ? itemData.data.fields.description : "",
+    title: campaignData.data ? campaignData.data.fields.title : "",
+    description: campaignData.data ? campaignData.data.fields.description : "",
   };
 
-  const [isEmailError, setEmailError] = useState(false);
-  console.log(isEmailError);
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setValue("title", defaultValues.title);
@@ -52,6 +54,16 @@ const CampaignEditPage = ({
     return () => clearTimeout(timeoutId);
   }, [setValue, defaultValues.title, defaultValues.description]);
 
+  const patchData = (data, status) => {
+    api.patch(endpoint, {
+      fields: {
+        title: capitalizeFirstLetter(data.title),
+        description: capitalizeFirstLetter(data.description),
+        status: status,
+      },
+    });
+  };
+
   // check if Campaign's id is available, otherwise return Error
   let isIdCorrect = null;
 
@@ -59,7 +71,7 @@ const CampaignEditPage = ({
     isIdCorrect = Boolean(campaignsData.data.find((item) => item.id === id));
   }
 
-  if (isIdCorrect === false || itemData.status === "error") {
+  if (isIdCorrect === false || campaignData.status === "error") {
     return (
       <Error
         titleOne="Unfortunately, this Campaign does not exist."
@@ -69,19 +81,26 @@ const CampaignEditPage = ({
     );
   }
 
-  const { REACT_APP_MAIL_USER, REACT_APP_MAIL_TEMPLATE, REACT_APP_MAIL_KEY } =
-    process.env;
-
   const displayPopup = (data, status, changeRoute) => {
     const isCampaignChanged =
-      data.title !== itemData.data.fields.title ||
-      data.description !== itemData.data.fields.description;
+      data.title !== campaignData.data.fields.title ||
+      data.description !== campaignData.data.fields.description;
 
     const campaignTitle = (
       <span style={status ? { color: "green" } : { color: "orange" }}>
         <strong> {capitalizeFirstLetter(data.title)} </strong>
       </span>
     );
+
+    const addTimeout = () => {
+      const timeoutId = setTimeout(() => {
+        setOpenInfoPopup(false);
+
+        changeRoute();
+      }, 3_000);
+
+      return () => clearTimeout(timeoutId);
+    };
 
     setContentPopup({
       title: status ? (
@@ -115,31 +134,21 @@ const CampaignEditPage = ({
     });
 
     setOpenInfoPopup(true);
-    const switchRoute = () => changeRoute;
-    setTimeout(() => {
-      setOpenInfoPopup(false);
 
-      switchRoute();
-    }, 5_000);
+    addTimeout();
   };
 
   const handleDraftCampaign = (data) => {
     if (
-      data.title !== itemData.data.fields.title ||
-      data.description !== itemData.data.fields.description
+      data.title !== campaignData.data.fields.title ||
+      data.description !== campaignData.data.fields.description
     ) {
-      api.patch(endpoint, {
-        fields: {
-          title: capitalizeFirstLetter(data.title),
-          description: capitalizeFirstLetter(data.description),
-          status: "draft",
-        },
-      });
+      patchData(data, "draft");
 
       getCampaignsData();
     }
 
-    displayPopup(data, false, navigate("/campaigns"));
+    displayPopup(data, false, () => navigate("/campaigns"));
   };
 
   const handleSendCampaign = (data) => {
@@ -162,15 +171,10 @@ const CampaignEditPage = ({
               REACT_APP_MAIL_KEY
             )
             .then(() => {
-              api.patch(endpoint, {
-                fields: {
-                  title: capitalizeFirstLetter(data.title),
-                  description: capitalizeFirstLetter(data.description),
-                  status: "sent",
-                },
-              });
+              patchData(data, "sent");
 
               displayPopup(data, true, navigate("/campaigns"));
+
               getCampaignsData();
             })
             .catch((err) => {
@@ -188,11 +192,11 @@ const CampaignEditPage = ({
         <Error
           titleOne="Unfortunately, the Campaign has not been sent"
           titleTwo="Probably there is a problem with EmailJS application at the moment"
-          titleThree="That's why your Campaign has been drafted"
+          titleThree="That's why the Campaign has been drafted"
         />
-      ) : itemData.status === "loading" ? (
+      ) : campaignData.status === "loading" ? (
         <Loader title="Campaign Details" />
-      ) : itemData.status === "error" ? (
+      ) : campaignData.status === "error" ? (
         <Error
           titleOne="ERROR MESSAGE"
           titleTwo="Check the url address again."
@@ -216,9 +220,15 @@ const CampaignEditPage = ({
 };
 
 CampaignEditPage.propTypes = {
-  isCalledRefCampaigns: PropTypes.shape({
-    current: PropTypes.bool.isRequired,
-  }),
+  campaignsData: PropTypes.shape({
+    status: PropTypes.string,
+    data: PropTypes.arrayOf(PropTypes.object),
+  }).isRequired,
+  subscribersData: PropTypes.shape({
+    status: PropTypes.string,
+    data: PropTypes.arrayOf(PropTypes.object),
+  }).isRequired,
+  getCampaignsData: PropTypes.func.isRequired,
   setOpenInfoPopup: PropTypes.func.isRequired,
   setContentPopup: PropTypes.func.isRequired,
 };
