@@ -87,9 +87,9 @@ const AddSubscriberPage = ({
       fields: {
         name: data.name,
         surname: data.surname,
-        profession: data.profession,
+        email: data.email,
+        profession: isCheckboxChecked ? data.profession : "",
         status: isCheckboxChecked ? data.status : "pending",
-        email: isCheckboxChecked ? data.email : "",
         salary: isCheckboxChecked ? String(data.salary) : "",
         telephone: isCheckboxChecked ? data.telephone : "",
       },
@@ -153,12 +153,11 @@ const AddSubscriberPage = ({
               <Grid item xs={12}>
                 <TextInputController
                   control={control}
-                  name="profession"
-                  error={!!errors.profession}
-                  message={errors.profession?.message ?? ""}
+                  name="email"
+                  error={!!errors.email}
+                  message={errors.email?.message ?? ""}
                 />
               </Grid>
-
               <Grid container item xs={12}>
                 <Grid item xs={11}>
                   <StyledCheckbox
@@ -194,9 +193,9 @@ const AddSubscriberPage = ({
                     <Grid item xs={12}>
                       <TextInputController
                         control={control}
-                        name="email"
-                        error={!!errors.email}
-                        message={errors.email?.message ?? ""}
+                        name="profession"
+                        error={!!errors.profession}
+                        message={errors.profession?.message ?? ""}
                       />
                     </Grid>
                     <Grid item xs={12}>
