@@ -1,31 +1,19 @@
-const { REACT_APP_DB_ID, REACT_APP_API_KEY } = process.env;
-const API_URL = `https://api.airtable.com/v0/${REACT_APP_DB_ID}`;
+import axios from "axios";
 
 const request = async (endpoint, method = "GET", data = null) => {
   const requestConfig = {
     method,
-    headers: {
-      Authorization: `Bearer ${REACT_APP_API_KEY}`,
-      "Content-Type": "application/json",
-    },
+    url: `http://localhost:3000${endpoint}`,
+    data: method === "POST" || method === "PATCH" ? data : null,
   };
 
-  if (method === "POST" || method === "PATCH")
-    requestConfig.body = JSON.stringify(data);
+  const response = await axios(requestConfig);
 
-  const url = `${API_URL}${endpoint}`;
-
-  const response = await fetch(url, requestConfig);
-
-  if (!response.ok) throw new Error(response.statusText);
-
-  const getData = await response.json();
-
-  if (!getData) {
+  if (!response) {
     throw new Error("Something happened - no data");
   }
 
-  return getData;
+  return response.data;
 };
 
 const get = (endpoint) => request(endpoint);
@@ -43,3 +31,40 @@ export default {
   patch,
   delete: _delete,
 };
+
+// const request = async (endpoint, method = "GET", data = null) => {
+//   const requestConfig = {
+//     method,
+//   };
+
+//   if (method === "POST" || method === "PATCH")
+//     requestConfig.body = JSON.stringify(data);
+
+//   const url = `http://localhost:3000${endpoint}`;
+
+//   const response = await fetch(url, requestConfig);
+
+//   const getData = await response.json();
+
+//   if (!getData) {
+//     throw new Error("Something happened - no data");
+//   }
+
+//   return getData;
+// };
+
+// const get = (endpoint) => request(endpoint);
+
+// const post = (endpoint, data) => request(endpoint, "POST", data);
+
+// const patch = (endpoint, data) => request(endpoint, "PATCH", data);
+
+// const _delete = (endpoint) => request(endpoint, "DELETE");
+
+// // eslint-disable-next-line import/no-anonymous-default-export
+// export default {
+//   get,
+//   post,
+//   patch,
+//   delete: _delete,
+// };
