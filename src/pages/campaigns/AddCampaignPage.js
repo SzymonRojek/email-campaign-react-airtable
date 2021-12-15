@@ -134,7 +134,15 @@ const AddCampaignPage = ({
           titleThree="That's why the Campaign has been drafted now"
         />
       ) : (
-        <Container>
+        <Container
+          style={{
+            padding: "10px 50px 60px 50px",
+            marginTop: 40,
+            backgroundColor: "rgba(255, 255, 255, 0.1)",
+            backdropFilter: "blur(5px)",
+            borderRadius: 6,
+          }}
+        >
           <StyledHeading label="Add Campaign:" />
 
           <FormCampaign
