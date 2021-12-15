@@ -13,11 +13,11 @@ export function useFetchData(endpoint) {
       setData({ status: "error" });
     } else {
       try {
-        const { records } = await api.get(endpoint);
+        const data = await api.get(endpoint);
 
         setData({
           status: "success",
-          data: records,
+          data,
         });
       } catch (error) {
         setData({
