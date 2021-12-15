@@ -28,7 +28,15 @@ const CampaignsPage = ({
           titleThree="Also, please check your internet connection."
         />
       ) : (
-        <Container>
+        <Container
+          style={{
+            // padding: "10px 50px",
+            marginTop: 40,
+            backgroundColor: "rgba(255,255,255,0.1)",
+            backdropFilter: "blur(5px)",
+            borderRadius: 6,
+          }}
+        >
           {campaignsData.status === "success" && !campaignsData.data.length ? (
             <Error
               titleOne="There are not campaigns added yet."
