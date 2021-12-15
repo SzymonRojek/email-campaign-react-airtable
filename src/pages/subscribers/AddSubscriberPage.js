@@ -70,7 +70,7 @@ const AddSubscriberPage = ({
   const handleCheckboxOnChange = () => setCheckboxState(!isCheckboxChecked);
 
   useEffect(() => {
-    if (formState.isSubmitSuccessful)
+    if (formState.isSubmitSuccessful) {
       reset({
         name: "",
         surname: "",
@@ -80,6 +80,9 @@ const AddSubscriberPage = ({
         salary: "",
         telephone: "",
       });
+
+      // setCheckboxState(false);
+    }
   }, [formState, reset]);
 
   const onSubmit = (data) => {
