@@ -3,10 +3,10 @@ const cors = require("cors");
 const axios = require("axios");
 const subscribers = require("./routes/subscribers");
 const campaigns = require("./routes/campaigns");
+const path = require("path");
 
 require("dotenv").config();
 
-const PORT = process.env.PORT || 3000;
 const { REACT_APP_DB_ID, REACT_APP_API_KEY } = process.env;
 
 const app = express();
@@ -18,6 +18,13 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/subscribers", subscribers);
 app.use("/campaigns", campaigns);
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("build"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "build", "index.html"));
+  });
+}
 
 app.get("/subscribers/:id", (request, response) =>
   getDetails(request, response, "subscribers")
@@ -177,4 +184,11 @@ app.patch("/campaigns/:id", async (request, response) => {
   }
 });
 
-app.listen(PORT, () => console.log(`sever is running on the port ${PORT}`));
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, (err) => {
+  if (err) {
+    return console.log(err);
+  }
+  console.log(`sever is running on the port ${PORT}`);
+});
