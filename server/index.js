@@ -35,7 +35,7 @@ app.get("/campaigns/:id", (request, response) =>
   getDetails(request, response, "campaigns")
 );
 
-app.get("subscribers/:id") = async (request, response) => {
+app.get("/subscribers/:id") = async (request, response) => {
   try {
     const requestConfig = {
       headers: {
@@ -57,7 +57,7 @@ app.get("subscribers/:id") = async (request, response) => {
   }
 };
 
-app.get("campaigns/:id") = async (request, response) => {
+app.get("/campaigns/:id") = async (request, response) => {
   try {
     const requestConfig = {
       headers: {
