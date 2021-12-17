@@ -128,7 +128,7 @@ const SubscriberTableRow = (props) => {
           {getFormattedData(subscriber.createdTime)}
         </Typography>
       </TableCell>
-      {location.pathname !== `/subscribers/details/${subscriber.id}` && (
+      {location.pathname !== `/subscribers/${subscriber.id}` && (
         <>
           <TableCell>
             <Button

@@ -79,7 +79,7 @@ const AppContainer = () => {
 
   const handleSubscriberDetails = (subscriber) =>
     subscriber.fields.status === "active"
-      ? navigate(`/subscribers/details/${subscriber.id}`)
+      ? navigate(`/subscribers/${subscriber.id}`)
       : setOpenInfoPopup(true);
 
   const handleEditDetailsCampaign = (campaign) => {
@@ -132,7 +132,7 @@ const AppContainer = () => {
           ),
         },
         {
-          path: "details/:id",
+          path: ":id",
           element: <SubscriberDetailsPage subscribersData={subscribersData} />,
         },
         { path: "*", element: <NotFoundPage /> },
