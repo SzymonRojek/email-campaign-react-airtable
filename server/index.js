@@ -44,7 +44,7 @@ const getDetails = async (request, response, group) => {
   }
 };
 
-app.get("/subscribers/:id", (request, response) => {
+app.get("/subscribers/:id", async (request, response) => {
   try {
     const requestConfig = {
       headers: {
@@ -56,7 +56,7 @@ app.get("/subscribers/:id", (request, response) => {
     const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/subscribers/${id}`;
     const { data } = await axios(api_url, requestConfig);
 
-    response.status(200).send(data);
+    response.status(200).json(data);
   } catch (error) {
     response.json({ error });
   }
