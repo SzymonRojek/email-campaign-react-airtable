@@ -35,16 +35,42 @@ app.get("/campaigns/:id", (request, response) =>
   getDetails(request, response, "campaigns")
 );
 
-const getDetails = async (request, response, group) => {
+app.get("subscribers/:id") = async (request, response) => {
   try {
     const requestConfig = {
       headers: {
         Authorization: `Bearer ${REACT_APP_API_KEY}`,
         "Content-Type": "application/json",
       },
+      params: {
+        id: id,
+      },
     };
+
     const id = request.params.id;
-    const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/${group}/${id}`;
+    const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/subscribers/${id}`;
+    const { data } = await axios(api_url, requestConfig);
+
+    response.status(200).json(data);
+  } catch (error) {
+    response.json({ error });
+  }
+};
+
+app.get("campaigns/:id") = async (request, response) => {
+  try {
+    const requestConfig = {
+      headers: {
+        Authorization: `Bearer ${REACT_APP_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      params: {
+        id: id,
+      },
+    };
+
+    const id = request.params.id;
+    const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/campaigns/${id}`;
     const { data } = await axios(api_url, requestConfig);
 
     response.status(200).json(data);
