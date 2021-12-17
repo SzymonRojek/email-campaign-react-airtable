@@ -24,7 +24,7 @@ const SubscriberDetailsPage = ({ subscribersData }) => {
 
   const { itemData: subscriberData } = useFetchDetailsById(endpoint);
 
-  // check if Campaign's id is available, otherwise return Error
+  // check if the subscriber id is available, otherwise return an Error
   let isIdCorrect = null;
 
   if (id !== undefined && subscribersData.data !== null) {
@@ -43,7 +43,7 @@ const SubscriberDetailsPage = ({ subscribersData }) => {
 
   return (
     <>
-      {subscriberData.status === "loading" ? (
+      {subscriberData && subscriberData.status === "loading" ? (
         <Loader title="Subscriber" />
       ) : (
         <Container>
