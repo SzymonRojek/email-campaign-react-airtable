@@ -19,6 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/subscribers", subscribers);
 app.use("/campaigns", campaigns);
 
+// dev && production ?
 if (process.env.NODE_ENV) {
   app.use(express.static(path.resolve(__dirname, "../client/build")));
   app.get("*", (req, res) => {
