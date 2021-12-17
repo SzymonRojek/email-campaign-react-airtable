@@ -19,12 +19,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/subscribers", subscribers);
 app.use("/campaigns", campaigns);
 
-// if (process.env.NODE_ENV === "production") {
-app.use(express.static(path.resolve(__dirname, "../client/build")));
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../client/build/, index.html"));
-});
-// }
+if (process.env.NODE_ENV) {
+  app.use(express.static(path.resolve(__dirname, "../client/build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../client/build/, index.html"));
+  });
+}
 
 app.get("/subscribers/:id", (request, response) =>
   getDetails(request, response, "subscribers")
