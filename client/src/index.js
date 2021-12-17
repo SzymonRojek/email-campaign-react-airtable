@@ -3,17 +3,17 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 
 import theme from "./theme";
 
 ReactDOM.render(
-  <HashRouter>
+  <Router>
     <ThemeProvider theme={theme}>
       <App />
     </ThemeProvider>
-  </HashRouter>,
+  </Router>,
   document.getElementById("root")
 );
 
