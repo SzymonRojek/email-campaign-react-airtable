@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
-const subscribers = require("./routes/subscribers");
-const campaigns = require("./routes/campaigns");
+const subscribers = require("../routes/subscribers");
+const campaigns = require("../routes/campaigns");
 const path = require("path");
 
 require("dotenv").config();
@@ -20,7 +20,7 @@ app.use("/subscribers", subscribers);
 app.use("/campaigns", campaigns);
 
 // if (process.env.NODE_ENV === "production") {
-app.use(express.static("../client/build"));
+app.use(express.static(path.resolve(__dirname, "../client/build")));
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname + "../client/build/index.html"));
 });
