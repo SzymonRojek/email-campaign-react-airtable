@@ -19,7 +19,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/subscribers", subscribers);
 app.use("/campaigns", campaigns);
 
-// dev && production ?
 if (process.env.NODE_ENV) {
   app.use(express.static(path.resolve(__dirname, "../client/build")));
   app.get("*", (req, res) => {
@@ -39,19 +38,33 @@ const getDetails = async (request, response, group) => {
     const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/${group}/${id}`;
     const { data } = await axios(api_url, requestConfig);
 
-    response.status(200).json(data);
+    response.status(200).send(data);
   } catch (error) {
     response.json({ error });
   }
 };
 
-app.get("/subscribers/:id", (request, response) =>
-  getDetails(request, response, "subscribers")
-);
+app.get("/subscribers/:id", (request, response) => {
+  try {
+    const requestConfig = {
+      headers: {
+        Authorization: `Bearer ${REACT_APP_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+    };
+    const id = request.params.id;
+    const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/subscribers/${id}`;
+    const { data } = await axios(api_url, requestConfig);
 
-app.get("/campaigns/:id", (request, response) =>
-  getDetails(request, response, "campaigns")
-);
+    response.status(200).send(data);
+  } catch (error) {
+    response.json({ error });
+  }
+});
+
+// app.get("/campaigns/:id", (request, response) =>
+//   getDetails(request, response, "campaigns")
+// );
 
 app.delete("/subscribers/:id", async (request, response) => {
   const id = request.params.id;
