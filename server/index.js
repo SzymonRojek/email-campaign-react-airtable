@@ -19,92 +19,45 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/subscribers", subscribers);
 app.use("/campaigns", campaigns);
 
-if (process.env.NODE_ENV) {
-  app.use(express.static(path.resolve(__dirname, "../client/build")));
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../client/build/, index.html"));
-  });
-}
+// const getDetails = async (request, response, group) => {
+//   try {
+//     const requestConfig = {
+//       headers: {
+//         Authorization: `Bearer ${REACT_APP_API_KEY}`,
+//         "Content-Type": "application/json",
+//       },
+//     };
+//     const id = request.params.id;
+//     const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/${group}/${id}`;
+//     const { data } = await axios(api_url, requestConfig);
 
-const getDetails = async (request, response, group) => {
-  try {
-    const requestConfig = {
-      headers: {
-        Authorization: `Bearer ${REACT_APP_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-    };
-    const id = request.params.id;
-    const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/${group}/${id}`;
-    const { data } = await axios(api_url, requestConfig);
+//     response.status(200).send(data);
+//   } catch (error) {
+//     response.json({ error });
+//   }
+// };
 
-    response.status(200).send(data);
-  } catch (error) {
-    response.json({ error });
-  }
-};
+// app.get("/:id", async (request, response) => {
+//   try {
+//     const requestConfig = {
+//       headers: {
+//         Authorization: `Bearer ${REACT_APP_API_KEY}`,
+//         "Content-Type": "application/json",
+//       },
+//     };
+//     const id = request.params.id;
+//     const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/subscribers/${id}`;
+//     const { data } = await axios(api_url, requestConfig);
 
-app.get("/subscribers/:id", async (request, response) => {
-  try {
-    const requestConfig = {
-      headers: {
-        Authorization: `Bearer ${REACT_APP_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-    };
-    const id = request.params.id;
-    const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/subscribers/${id}`;
-    const { data } = await axios(api_url, requestConfig);
-
-    response.status(200).json(data);
-  } catch (error) {
-    response.json({ error });
-  }
-});
+//     response.status(200).json(data);
+//   } catch (error) {
+//     response.json({ error });
+//   }
+// });
 
 // app.get("/campaigns/:id", (request, response) =>
 //   getDetails(request, response, "campaigns")
 // );
-
-app.delete("/subscribers/:id", async (request, response) => {
-  const id = request.params.id;
-  const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/subscribers/${id}`;
-  const requestConfig = {
-    headers: {
-      Authorization: `Bearer ${REACT_APP_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    params: {
-      id: id,
-    },
-  };
-
-  try {
-    await axios.delete(api_url, requestConfig); // maybe variable
-  } catch (error) {
-    response.json({ error });
-  }
-});
-
-app.delete("/campaigns/:id", async (request, response) => {
-  const id = request.params.id;
-  const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/campaigns/${id}`;
-  const requestConfig = {
-    headers: {
-      Authorization: `Bearer ${REACT_APP_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    params: {
-      id: id,
-    },
-  };
-
-  try {
-    await axios.delete(api_url, requestConfig);
-  } catch (error) {
-    response.json({ error });
-  }
-});
 
 app.post("/subscribers", async (request, response) => {
   const name = request.body.fields.name;
@@ -199,6 +152,13 @@ app.patch("/campaigns/:id", async (request, response) => {
 });
 
 const PORT = process.env.PORT || 5000;
+
+if (process.env.NODE_ENV) {
+  app.use(express.static(path.resolve(__dirname, "../client/build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../client/build/, index.html"));
+  });
+}
 
 app.listen(PORT, (err) => {
   if (err) {
