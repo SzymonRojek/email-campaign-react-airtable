@@ -7,7 +7,7 @@
     "node": "16.5.0",
     "npm": "7.19.1"
   },  "scripts": {
-    "start": "node server/index.js",
+    "start": "nodemon server/index.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "keywords": [],
