@@ -84,7 +84,7 @@ const AppContainer = () => {
 
   const handleEditDetailsCampaign = (campaign) => {
     campaign.fields.status === "draft"
-      ? navigate(`/campaigns/details/${campaign.id}`)
+      ? navigate(`/campaigns/${campaign.id}`)
       : setOpenInfoPopup(true);
   };
 
@@ -179,7 +179,7 @@ const AppContainer = () => {
           ),
         },
         {
-          path: "details/:id",
+          path: ":id",
           element: (
             <CampaignEditPage
               campaignsData={campaignsData}
