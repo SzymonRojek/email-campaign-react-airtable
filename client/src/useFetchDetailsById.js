@@ -9,12 +9,21 @@ export const useFetchDetailsById = (endpoint) => {
   });
 
   const fetchData = async () => {
-    try {
-      const data = await api.get(endpoint);
-
-      setItemData({ status: "success", data });
-    } catch (error) {
+    if (!endpoint) {
       setItemData({ status: "error" });
+    } else {
+      try {
+        const data = await api.get(endpoint);
+
+        setItemData({
+          status: "success",
+          data,
+        });
+      } catch (error) {
+        setItemData({
+          status: "error",
+        });
+      }
     }
   };
 
