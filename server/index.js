@@ -19,23 +19,23 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/subscribers", subscribers);
 app.use("/campaigns", campaigns);
 
-// const getDetails = async (request, response, group) => {
-//   try {
-//     const requestConfig = {
-//       headers: {
-//         Authorization: `Bearer ${REACT_APP_API_KEY}`,
-//         "Content-Type": "application/json",
-//       },
-//     };
-//     const id = request.params.id;
-//     const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/${group}/${id}`;
-//     const { data } = await axios(api_url, requestConfig);
+const getDetails = async (request, response, group) => {
+  try {
+    const requestConfig = {
+      headers: {
+        Authorization: `Bearer ${REACT_APP_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+    };
+    const id = request.params.id;
+    const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/${group}/${id}`;
+    const { data } = await axios(api_url, requestConfig);
 
-//     response.status(200).send(data);
-//   } catch (error) {
-//     response.json({ error });
-//   }
-// };
+    response.status(200).json(data);
+  } catch (error) {
+    response.json({ error });
+  }
+};
 
 // app.get("/:id", async (request, response) => {
 //   try {
@@ -55,9 +55,9 @@ app.use("/campaigns", campaigns);
 //   }
 // });
 
-// app.get("/campaigns/:id", (request, response) =>
-//   getDetails(request, response, "campaigns")
-// );
+app.get("/subscribers/:id", (request, response) =>
+  getDetails(request, response, "subscribers")
+);
 
 app.post("/subscribers", async (request, response) => {
   const name = request.body.fields.name;
