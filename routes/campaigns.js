@@ -6,22 +6,96 @@ require("dotenv").config();
 
 const { REACT_APP_DB_ID, REACT_APP_API_KEY } = process.env;
 
-const API_URL_Campaigns = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/campaigns`;
+const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/campaigns`;
 
-router.get("/", async (req, res) => {
+const headers = {
+  Authorization: `Bearer ${REACT_APP_API_KEY}`,
+  "Content-Type": "application/json",
+};
+
+router.get("/", async (request, response) => {
   try {
     const requestConfig = {
-      headers: {
-        Authorization: `Bearer ${REACT_APP_API_KEY}`,
-        "Content-Type": "application/json",
-      },
+      headers,
     };
 
-    const { data } = await axios.get(API_URL_Campaigns, requestConfig);
+    const { data } = await axios.get(api_url, requestConfig);
 
-    res.status(200).json(data.records);
+    response.status(200).json(data.records);
   } catch (error) {
-    res.json({ error });
+    response.json({ error });
+  }
+});
+
+router.post("/", async (request, response) => {
+  const title = request.body.fields.title;
+  const description = request.body.fields.description;
+  const status = request.body.fields.status;
+
+  const configRequest = {
+    method: "post",
+    url: api_url,
+    headers,
+    data: {
+      fields: { title, description, status },
+    },
+  };
+
+  try {
+    const { data } = await axios(configRequest);
+
+    response.status(200).json(data);
+  } catch (error) {
+    response.json({ error });
+  }
+});
+
+router.patch("/:id", async (request, response) => {
+  const title = request.body.fields.title;
+  const description = request.body.fields.description;
+  const status = request.body.fields.status;
+
+  const id = request.params.id;
+
+  const configRequest = {
+    method: "patch",
+    url: `${api_url}/${id}`,
+    headers,
+    params: {
+      id: id,
+    },
+    data: {
+      fields: { title, description, status },
+    },
+  };
+
+  try {
+    const { data } = await axios(configRequest);
+
+    response.status(200).json(data);
+  } catch (error) {
+    response.json({ error });
+  }
+});
+
+router.delete("/:id", async (request, response) => {
+  const id = request.params.id;
+
+  const configRequest = {
+    method: "delete",
+    headers,
+    url: `${api_url}/${id}`,
+    params: {
+      id: id,
+    },
+  };
+
+  try {
+    const { data } = await axios(configRequest);
+
+    request.status(200).json(data);
+  } catch (error) {
+    response.json({ error });
   }
 });
 
