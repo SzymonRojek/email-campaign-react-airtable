@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/subscribers", subscribers);
 app.use("/campaigns", campaigns);
 
-const getDetails = async (request, response, group) => {
+const getItemDetails = async (request, response, group) => {
   try {
     const requestConfig = {
       headers: {
@@ -31,125 +31,19 @@ const getDetails = async (request, response, group) => {
     const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/${group}/${id}`;
     const { data } = await axios(api_url, requestConfig);
 
-    response.status(200).json(data);
+    return await response.status(200).json(data);
   } catch (error) {
-    response.json({ error });
+    return response.json({ error });
   }
 };
 
-// app.get("/:id", async (request, response) => {
-//   try {
-//     const requestConfig = {
-//       headers: {
-//         Authorization: `Bearer ${REACT_APP_API_KEY}`,
-//         "Content-Type": "application/json",
-//       },
-//     };
-//     const id = request.params.id;
-//     const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/subscribers/${id}`;
-//     const { data } = await axios(api_url, requestConfig);
-
-//     response.status(200).json(data);
-//   } catch (error) {
-//     response.json({ error });
-//   }
-// });
-
 app.get("/subscribers/:id", (request, response) =>
-  getDetails(request, response, "subscribers")
+  getItemDetails(request, response, "subscribers")
 );
 
-app.post("/subscribers", async (request, response) => {
-  const name = request.body.fields.name;
-  const surname = request.body.fields.surname;
-  const email = request.body.fields.email;
-  const status = request.body.fields.status;
-  const profession = request.body.fields.profession;
-  const salary = request.body.fields.salary;
-  const telephone = request.body.fields.telephone;
-
-  const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/subscribers`;
-
-  const configRequest = {
-    method: "post",
-    url: api_url,
-    headers: {
-      Authorization: `Bearer ${REACT_APP_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    data: {
-      fields: { name, surname, email, status, profession, salary, telephone },
-    },
-  };
-
-  try {
-    const { data } = await axios(configRequest);
-
-    response.status(200).send(data);
-  } catch (error) {
-    response.send({ error });
-  }
-});
-
-app.post("/campaigns", async (request, response) => {
-  const title = request.body.fields.title;
-  const description = request.body.fields.description;
-  const status = request.body.fields.status;
-
-  const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/campaigns`;
-
-  const configRequest = {
-    method: "post",
-    url: api_url,
-    headers: {
-      Authorization: `Bearer ${REACT_APP_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    data: {
-      fields: { title, description, status },
-    },
-  };
-
-  try {
-    const { data } = await axios(configRequest);
-
-    response.status(200).send(data);
-  } catch (error) {
-    response.send({ error });
-  }
-});
-
-app.patch("/campaigns/:id", async (request, response) => {
-  const title = request.body.fields.title;
-  const description = request.body.fields.description;
-  const status = request.body.fields.status;
-
-  const id = request.params.id;
-  const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/campaigns/${id}`;
-
-  const configRequest = {
-    method: "patch",
-    url: api_url,
-    headers: {
-      Authorization: `Bearer ${REACT_APP_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    params: {
-      id: id,
-    },
-    data: {
-      fields: { title, description, status },
-    },
-  };
-
-  try {
-    const { data } = await axios(configRequest);
-
-    response.status(200).send(data);
-  } catch (error) {
-    response.send({ error });
-  }
-});
+app.get("/campaigns/:id", (request, response) =>
+  getItemDetails(request, response, "campaigns")
+);
 
 const PORT = process.env.PORT || 5000;
 
