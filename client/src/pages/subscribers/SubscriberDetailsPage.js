@@ -1,22 +1,17 @@
 import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
-import {
-  TableBody,
-  TableCell,
-  TableRow,
-  Typography,
-  Container,
-} from "@material-ui/core";
+import { TableBody, TableCell, TableRow, Typography } from "@material-ui/core";
 
-import { ContainerTable, HeadTable } from "components/Table";
-import { SubscriberTableRow } from "components/SubscriberTableRow";
+import { useFetchDetailsById } from "useFetchDetailsById";
 import {
   detailsDataHeadTableFirst,
   detailsDataHeadTableSecond,
 } from "data/dataHeadTable";
-import { Loader, Error } from "components/DisplayMessage";
+import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
-import { useFetchDetailsById } from "useFetchDetailsById";
+import { ContainerTable, HeadTable } from "components/Table";
+import { SubscriberTableRow } from "components/SubscriberTableRow";
+import { Loader, Error } from "components/DisplayMessage";
 
 const SubscriberDetailsPage = ({ subscribersData }) => {
   const { id } = useParams();
@@ -46,53 +41,51 @@ const SubscriberDetailsPage = ({ subscribersData }) => {
       {subscriberData && subscriberData.status === "loading" ? (
         <Loader title="Subscriber" />
       ) : (
-        <Container>
-          <>
-            <StyledHeading label="Subscribers Details:" />
+        <StyledContainer>
+          <StyledHeading label="Subscribers Details:" />
 
-            <ContainerTable subHeading="General:">
-              <HeadTable dataHeadTable={detailsDataHeadTableFirst} />
+          <ContainerTable subHeading="General:">
+            <HeadTable dataHeadTable={detailsDataHeadTableFirst} />
 
-              <TableBody>
-                {subscriberData &&
-                  [subscriberData.data].map((subscriber, index) => (
-                    <SubscriberTableRow
-                      key={`id-${subscriber.id}`}
-                      index={index}
-                      subscriber={subscriber}
-                    />
-                  ))}
-              </TableBody>
-            </ContainerTable>
+            <TableBody>
+              {subscriberData &&
+                [subscriberData.data].map((subscriber, index) => (
+                  <SubscriberTableRow
+                    key={`id-${subscriber.id}`}
+                    index={index}
+                    subscriber={subscriber}
+                  />
+                ))}
+            </TableBody>
+          </ContainerTable>
 
-            <ContainerTable subHeading="Details:">
-              <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
+          <ContainerTable subHeading="Details:">
+            <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
 
-              <TableBody>
-                {subscriberData &&
-                  [subscriberData.data].map((subscriber, index) => (
-                    <TableRow key={`i-${index}`}>
-                      <TableCell>
-                        <Typography color="textSecondary" variant="subtitle1">
-                          {subscriber.fields?.email}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography color="textSecondary" variant="subtitle1">
-                          {subscriber.fields?.salary}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography color="textSecondary" variant="subtitle1">
-                          {subscriber.fields?.telephone}
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </ContainerTable>
-          </>
-        </Container>
+            <TableBody>
+              {subscriberData &&
+                [subscriberData.data].map((subscriber, index) => (
+                  <TableRow key={`i-${index}`}>
+                    <TableCell>
+                      <Typography color="textSecondary" variant="subtitle1">
+                        {subscriber.fields?.email}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography color="textSecondary" variant="subtitle1">
+                        {subscriber.fields?.salary}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography color="textSecondary" variant="subtitle1">
+                        {subscriber.fields?.telephone}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </ContainerTable>
+        </StyledContainer>
       )}
     </>
   );

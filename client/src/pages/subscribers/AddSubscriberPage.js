@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Paper, Box, Collapse, Divider } from "@mui/material";
-import { Grid, Typography, Container } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 
 import api from "api";
+import { capitalizeFirstLetter, validationSubscriber } from "helpers";
+import { StyledContainer } from "components/StyledContainer";
 import {
   TextInputController,
   SelectInputController,
@@ -14,7 +16,6 @@ import {
 } from "components/Inputs";
 import { StyledButton } from "components/StyledButton";
 import { StyledHeading } from "components/StyledHeading";
-import { capitalizeFirstLetter, validationSubscriber } from "helpers";
 
 const selectStatusData = [
   { value: "change status", label: "change status*" },
@@ -121,7 +122,7 @@ const AddSubscriberPage = ({
   };
 
   return (
-    <Container>
+    <StyledContainer>
       <StyledHeading label="Add Subscriber:" />
 
       <Paper elevation={14} style={style.paper}>
@@ -241,7 +242,7 @@ const AddSubscriberPage = ({
           </Box>
         </form>
       </Paper>
-    </Container>
+    </StyledContainer>
   );
 };
 

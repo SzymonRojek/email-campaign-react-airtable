@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
-import { Container } from "@material-ui/core";
 
 import { dataHeadEmailTable } from "data/dataHeadEmailTable";
-import { CampaignsList } from "components/CampaignsList";
-import { Loader, Error } from "components/DisplayMessage";
-import { StyledHeading } from "components/StyledHeading";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
+import { Loader, Error } from "components/DisplayMessage";
+import { StyledContainer } from "components/StyledContainer";
+import { StyledHeading } from "components/StyledHeading";
+import { CampaignsList } from "components/CampaignsList";
 
 const CampaignsPage = ({
   campaignsData,
@@ -28,7 +28,7 @@ const CampaignsPage = ({
           titleThree="Also, please check your internet connection."
         />
       ) : (
-        <Container
+        <StyledContainer
           style={{
             // padding: "10px 50px",
             marginTop: 40,
@@ -72,7 +72,7 @@ const CampaignsPage = ({
           ) : (
             ""
           )}
-        </Container>
+        </StyledContainer>
       )}
     </>
   );

@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
-import { Container } from "@material-ui/core";
 
-import { CampaignStatus } from "components/CampaignStatus";
-import { Loader, Error } from "components/DisplayMessage";
-import { StyledHeading } from "components/StyledHeading";
 import { dataHeadEmailTable } from "data/dataHeadEmailTable";
+import { Loader, Error } from "components/DisplayMessage";
+import { StyledContainer } from "components/StyledContainer";
+import { StyledHeading } from "components/StyledHeading";
+import { CampaignStatus } from "components/CampaignStatus";
 
 const CampaignsStatusPage = (props) => {
   const {
@@ -26,7 +26,7 @@ const CampaignsStatusPage = (props) => {
           titleThree="Contact with your internet provider."
         />
       ) : (
-        <Container>
+        <StyledContainer>
           {campaignsData.status === "success" && !campaignsData.data.length ? (
             <Error
               titleOne="There are not campaigns added yet."
@@ -60,7 +60,7 @@ const CampaignsStatusPage = (props) => {
               />
             </>
           )}
-        </Container>
+        </StyledContainer>
       )}
     </>
   );

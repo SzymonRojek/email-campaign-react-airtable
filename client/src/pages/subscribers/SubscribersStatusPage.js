@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
-import { Container } from "@material-ui/core";
 
-import { SubscriberStatus } from "components/SubscriberStatus";
-import { Loader, Error } from "components/DisplayMessage";
-import { StyledHeading } from "components/StyledHeading";
 import { generalDataHeadTable } from "data/dataHeadTable";
+import { Loader, Error } from "components/DisplayMessage";
+import { StyledContainer } from "components/StyledContainer";
+import { StyledHeading } from "components/StyledHeading";
+import { SubscriberStatus } from "components/SubscriberStatus";
 
 const SubscribersStatusPage = (props) => {
   const {
@@ -26,7 +26,7 @@ const SubscribersStatusPage = (props) => {
           titleThree="Contact with your internet provider."
         />
       ) : (
-        <Container>
+        <StyledContainer>
           {subscribersData.status === "success" &&
           !subscribersData.data.length ? (
             <Error
@@ -72,7 +72,7 @@ const SubscribersStatusPage = (props) => {
               />
             </>
           )}
-        </Container>
+        </StyledContainer>
       )}
     </>
   );

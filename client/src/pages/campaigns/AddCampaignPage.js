@@ -2,14 +2,14 @@ import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Container } from "@material-ui/core";
 import emailjs from "emailjs-com";
 
 import api from "api";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
-import { FormCampaign } from "components/FormCampaign";
-import { StyledHeading } from "components/StyledHeading";
 import { Error } from "components/DisplayMessage";
+import { StyledContainer } from "components/StyledContainer";
+import { StyledHeading } from "components/StyledHeading";
+import { FormCampaign } from "components/FormCampaign";
 
 const { REACT_APP_MAIL_USER, REACT_APP_MAIL_TEMPLATE, REACT_APP_MAIL_KEY } =
   process.env;
@@ -134,7 +134,7 @@ const AddCampaignPage = ({
           titleThree="That's why the Campaign has been drafted now"
         />
       ) : (
-        <Container
+        <StyledContainer
           style={{
             padding: "10px 50px 60px 50px",
             marginTop: 40,
@@ -152,7 +152,7 @@ const AddCampaignPage = ({
             control={control}
             errors={errors}
           />
-        </Container>
+        </StyledContainer>
       )}
     </>
   );

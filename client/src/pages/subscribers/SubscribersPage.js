@@ -1,13 +1,13 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { Container } from "@material-ui/core";
 
-import { SubscribersList } from "components/SubscribersList";
-import { Loader, Error } from "components/DisplayMessage";
-import { StyledHeading } from "components/StyledHeading";
-import { Pagination } from "components/Pagination";
 import { generalDataHeadTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
+import { Loader, Error } from "components/DisplayMessage";
+import { StyledContainer } from "components/StyledContainer";
+import { StyledHeading } from "components/StyledHeading";
+import { SubscribersList } from "components/SubscribersList";
+import { Pagination } from "components/Pagination";
 
 const SubscribersPage = (props) => {
   const {
@@ -22,7 +22,7 @@ const SubscribersPage = (props) => {
   const latestAddedSubscriber = getLatestAddedItem(subscribersData.data);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [subscribersPerPage, setSubscribersPerPage] = useState(3);
+  const [subscribersPerPage] = useState(3);
 
   const lastSubscriberIndex = currentPage * subscribersPerPage;
   const firstSubscriberIndex = lastSubscriberIndex - subscribersPerPage;
@@ -43,14 +43,7 @@ const SubscribersPage = (props) => {
           titleThree="Also, please check your internet connection."
         />
       ) : (
-        <Container
-          style={{
-            marginTop: 40,
-            backgroundColor: "rgba(255,255,255,0.1)",
-            backdropFilter: "blur(5px)",
-            borderRadius: 6,
-          }}
-        >
+        <StyledContainer>
           {subscribersData.status === "success" &&
           !subscribersData.data.length ? (
             <Error
@@ -76,6 +69,7 @@ const SubscribersPage = (props) => {
                 totalSubscribers={subscribersData.data.length}
                 paginate={handlePagination}
                 currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
               />
             </div>
           )}
@@ -93,7 +87,7 @@ const SubscribersPage = (props) => {
           ) : (
             ""
           )}
-        </Container>
+        </StyledContainer>
       )}
     </>
   );
