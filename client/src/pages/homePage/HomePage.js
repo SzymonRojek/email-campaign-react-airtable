@@ -10,8 +10,9 @@ const style = {
     maxWidth: 1224,
     margin: "auto",
     color: "#ffffff8c",
-    backgroundColor: "#142f43",
+    backgroundColor: "rgb(20, 47, 67, 0.8)",
     borderRadius: 6,
+    backdropFilter: "blur(25px)",
   },
   link: {
     color: "orange",
