@@ -1,9 +1,11 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import { Container } from "@material-ui/core";
 
 import { SubscribersList } from "components/SubscribersList";
 import { Loader, Error } from "components/DisplayMessage";
 import { StyledHeading } from "components/StyledHeading";
+import { Pagination } from "components/Pagination";
 import { generalDataHeadTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
 
@@ -17,8 +19,19 @@ const SubscribersPage = (props) => {
   } = props;
 
   sortDataAlphabetically(subscribersData.data);
-
   const latestAddedSubscriber = getLatestAddedItem(subscribersData.data);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [subscribersPerPage, setSubscribersPerPage] = useState(3);
+
+  const lastSubscriberIndex = currentPage * subscribersPerPage;
+  const firstSubscriberIndex = lastSubscriberIndex - subscribersPerPage;
+  const currentSubscribers = subscribersData.data
+    ? subscribersData.data.slice(firstSubscriberIndex, lastSubscriberIndex)
+    : [];
+
+  const handlePagination = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <>
       {subscribersData.status === "loading" ? (
@@ -30,7 +43,14 @@ const SubscribersPage = (props) => {
           titleThree="Also, please check your internet connection."
         />
       ) : (
-        <Container>
+        <Container
+          style={{
+            marginTop: 40,
+            backgroundColor: "rgba(255,255,255,0.1)",
+            backdropFilter: "blur(5px)",
+            borderRadius: 6,
+          }}
+        >
           {subscribersData.status === "success" &&
           !subscribersData.data.length ? (
             <Error
@@ -39,19 +59,25 @@ const SubscribersPage = (props) => {
               titleThree="🙂"
             />
           ) : (
-            <>
+            <div>
               <StyledHeading label="Subscribers:" />
 
               <SubscribersList
                 subHeading="List:"
                 dataHeadTable={generalDataHeadTable}
-                subscribersData={subscribersData.data}
+                subscribersData={currentSubscribers}
                 setSelectedData={setSelectedData}
                 handleSubscriberDetails={handleSubscriberDetails}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
-            </>
+              <Pagination
+                subscribersPerPage={subscribersPerPage}
+                totalSubscribers={subscribersData.data.length}
+                paginate={handlePagination}
+                currentPage={currentPage}
+              />
+            </div>
           )}
 
           {subscribersData.data.length > 1 ? (
