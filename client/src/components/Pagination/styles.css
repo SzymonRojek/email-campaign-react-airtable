@@ -1,0 +1,33 @@
+.slider {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+.slider-pages {
+  display: flex;
+}
+
+.slider-link {
+  margin: 0 4px;
+  font-size: 15px;
+  color: black;
+  padding: 5px 10px;
+  text-decoration: none;
+  border-radius: 5px;
+  background-color: #142f43;
+  color: white;
+  transition: background-color 0.3s;
+  text-align: center;
+}
+
+.slider-button {
+  margin: 0 4px;
+  padding: 5px 10px;
+  font-size: 15px;
+  color: white;
+  background-color: #142f43;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
