@@ -1,6 +1,8 @@
-# Getting Started with Create React App
+# App still in progress
 
-Check [link demo](https://szymonrojek.github.io/email-campaign-react-airtable/)
+- working on pagination, layout, connection to Email.js external resource
+
+Check demo on Herokuapp:[link demo](https://email-campaign-subscribers.herokuapp.com/)
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Set env variables
@@ -11,6 +13,12 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Available Scripts
 
 In the project directory, you can run:
+
+- clinet-side
+
+### `npm start`
+
+- server-side
 
 ### `npm start`
 
