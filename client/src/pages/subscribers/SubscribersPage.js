@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
 
 import { generalDataHeadTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
@@ -7,7 +6,6 @@ import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
 import { SubscribersList } from "components/SubscribersList";
-import { Pagination } from "components/Pagination";
 
 const SubscribersPage = (props) => {
   const {
@@ -20,17 +18,6 @@ const SubscribersPage = (props) => {
 
   sortDataAlphabetically(subscribersData.data);
   const latestAddedSubscriber = getLatestAddedItem(subscribersData.data);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [subscribersPerPage] = useState(3);
-
-  const lastSubscriberIndex = currentPage * subscribersPerPage;
-  const firstSubscriberIndex = lastSubscriberIndex - subscribersPerPage;
-  const currentSubscribers = subscribersData.data
-    ? subscribersData.data.slice(firstSubscriberIndex, lastSubscriberIndex)
-    : [];
-
-  const handlePagination = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <>
@@ -52,33 +39,26 @@ const SubscribersPage = (props) => {
               titleThree="🙂"
             />
           ) : (
-            <div>
-              <StyledHeading label="Subscribers:" />
+            <div style={{ marginBottom: 100 }}>
+              <StyledHeading label="Subscribers" />
 
               <SubscribersList
-                subHeading="List:"
+                subHeading="List"
                 dataHeadTable={generalDataHeadTable}
-                subscribersData={currentSubscribers}
+                passedData={subscribersData.data}
                 setSelectedData={setSelectedData}
                 handleSubscriberDetails={handleSubscriberDetails}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
-              />
-              <Pagination
-                subscribersPerPage={subscribersPerPage}
-                totalSubscribers={subscribersData.data.length}
-                paginate={handlePagination}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
               />
             </div>
           )}
 
           {subscribersData.data.length > 1 ? (
             <SubscribersList
-              subHeading="Latest added Subscriber:"
+              subHeading="Latest added Subscriber"
               dataHeadTable={generalDataHeadTable}
-              subscribersData={latestAddedSubscriber}
+              passedData={latestAddedSubscriber}
               setSelectedData={setSelectedData}
               handleSubscriberDetails={handleSubscriberDetails}
               setContentPopup={setContentPopup}
