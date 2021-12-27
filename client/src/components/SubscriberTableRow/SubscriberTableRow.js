@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DetailsIcon from "@mui/icons-material/Details";
-import { TableCell, TableRow, Grid, Typography } from "@material-ui/core";
+import { TableCell, TableRow, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import {
@@ -37,13 +37,16 @@ const useStyles = makeStyles((theme) => ({
     padding: "3px 10px",
     display: "inline-block",
   },
+  cellNo: { width: 25 },
+  cell: { wordWrap: "break-word", width: 100 },
 }));
 
 const SubscriberTableRow = (props) => {
   const {
     subscriber,
     index,
-    children,
+    dataPerPage,
+    activatedTablePage,
     setSelectedData,
     handleSubscriberDetails,
     setOpenConfirmPopup,
@@ -86,26 +89,46 @@ const SubscriberTableRow = (props) => {
 
   return (
     <TableRow
+      className="table-row"
       key={`${subscriber.id}`}
-      style={{ backgroundColor: isEven(index, "#F5F5F5") }}
+      style={{
+        backgroundColor: isEven(index, "#F5F5F5"),
+        animation: `fadeIn 0.3s ease-in-out  forwards`,
+      }}
     >
-      {children}
       <TableCell>
-        <Grid container alignItems="center">
-          <Grid item>
-            <Typography color="textSecondary" variant="subtitle1">
-              {capitalizeFirstLetter(subscriber.fields.name)}
-            </Typography>
-          </Grid>
-        </Grid>
+        <Typography
+          color="textSecondary"
+          variant="subtitle1"
+          className={classes.cellNo}
+        >
+          {`${(activatedTablePage - 1) * dataPerPage + index + 1}`}
+        </Typography>
       </TableCell>
       <TableCell>
-        <Typography color="textSecondary" variant="subtitle1">
+        <Typography
+          color="textSecondary"
+          variant="subtitle1"
+          className={classes.cell}
+        >
+          {capitalizeFirstLetter(subscriber.fields.name)}
+        </Typography>
+      </TableCell>
+      <TableCell>
+        <Typography
+          color="textSecondary"
+          variant="subtitle1"
+          className={classes.cell}
+        >
           {capitalizeFirstLetter(subscriber.fields.surname)}
         </Typography>
       </TableCell>
       <TableCell>
-        <Typography color="textSecondary" variant="subtitle1">
+        <Typography
+          color="textSecondary"
+          variant="subtitle1"
+          className={classes.cell}
+        >
           {subscriber.fields.profession}
         </Typography>
       </TableCell>
@@ -124,7 +147,11 @@ const SubscriberTableRow = (props) => {
         </span>
       </TableCell>
       <TableCell>
-        <Typography color="textSecondary" variant="subtitle1">
+        <Typography
+          color="textSecondary"
+          variant="subtitle1"
+          className={classes.cell}
+        >
           {getFormattedData(subscriber.createdTime)}
         </Typography>
       </TableCell>
