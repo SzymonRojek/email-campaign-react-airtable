@@ -1,41 +1,56 @@
 import PropTypes from "prop-types";
-import { TableCell } from "@material-ui/core";
+import { useState } from "react";
 
 import { ContainerTable, HeadTable, BodyTable } from "../Table";
 import { SubscriberTableRow } from "../SubscriberTableRow";
+import CustomPaginator from "../PaginationPackage/CustomPaginator";
+
+const dataPerPage = 6;
 
 const SubscribersList = ({
   subHeading,
   dataHeadTable,
-  subscribersData,
+  passedData,
   handleSubscriberDetails,
   setSelectedData,
   setContentPopup,
   setOpenConfirmPopup,
-}) => (
-  <ContainerTable subHeading={subHeading}>
-    <HeadTable dataHeadTable={dataHeadTable} />
-    <BodyTable>
-      {subscribersData &&
-        subscribersData.map((subscriber, index) => (
-          <SubscriberTableRow
-            children={
-              <TableCell component="th" scope="row">
-                {++index}.
-              </TableCell>
-            }
-            key={`id-${subscriber.id}`}
-            subscriber={{ ...subscriber, group: "subscribers" }}
-            index={index}
-            setSelectedData={setSelectedData}
-            handleSubscriberDetails={handleSubscriberDetails}
-            setContentPopup={setContentPopup}
-            setOpenConfirmPopup={setOpenConfirmPopup}
-          />
-        ))}
-    </BodyTable>
-  </ContainerTable>
-);
+}) => {
+  const [activatedTablePage, setActiveTablePage] = useState(1);
+
+  return (
+    <CustomPaginator
+      passedData={passedData}
+      dataPerPage={dataPerPage}
+      disableDuration={400}
+      switcherDisplay="both" //top/bottom/both/none(or another string)
+      disableArrows={false} //true/false
+      disableDigits={false} //true/false
+      setActiveTablePage={setActiveTablePage}
+      renderData={(subscribersData) => (
+        <ContainerTable subHeading={subHeading}>
+          <HeadTable dataHeadTable={dataHeadTable} />
+          <BodyTable>
+            {subscribersData &&
+              subscribersData.map((subscriber, index) => (
+                <SubscriberTableRow
+                  key={`id-${subscriber.id}`}
+                  subscriber={{ ...subscriber, group: "subscribers" }}
+                  index={index}
+                  dataPerPage={dataPerPage}
+                  activatedTablePage={activatedTablePage}
+                  setSelectedData={setSelectedData}
+                  handleSubscriberDetails={handleSubscriberDetails}
+                  setContentPopup={setContentPopup}
+                  setOpenConfirmPopup={setOpenConfirmPopup}
+                />
+              ))}
+          </BodyTable>
+        </ContainerTable>
+      )}
+    />
+  );
+};
 
 SubscribersList.propTypes = {
   subHeading: PropTypes.string.isRequired,
@@ -48,3 +63,25 @@ SubscribersList.propTypes = {
 };
 
 export default SubscribersList;
+
+{
+  /* <ContainerTable subHeading={subHeading}>
+<HeadTable dataHeadTable={dataHeadTable} />
+<BodyTable>
+  {subscribersData &&
+    subscribersData.map((subscriber, index) => (
+      <SubscriberTableRow
+        key={`id-${subscriber.id}`}
+        subscriber={{ ...subscriber, group: "subscribers" }}
+        index={index}
+        dataPerPage={dataPerPage}
+        activatedTablePage={activatedTablePage}
+        setSelectedData={setSelectedData}
+        handleSubscriberDetails={handleSubscriberDetails}
+        setContentPopup={setContentPopup}
+        setOpenConfirmPopup={setOpenConfirmPopup}
+      />
+    ))}
+</BodyTable>
+</ContainerTable> */
+}
