@@ -42,7 +42,7 @@ export const CustomPaginator = ({
       handleSpecificPage(Number(activePage));
       setActiveTablePage(activePage);
     },
-    [handleSpecificPage, setActiveTablePage]
+    [handleSpecificPage, setActiveTablePage] //possibly add variable to the []
   );
 
   useEffect(() => {
@@ -55,8 +55,6 @@ export const CustomPaginator = ({
     display: disableArrows ? "none" : "initial",
   };
 
-  //Error if passedData is not an Array
-
   if (
     !(
       Array.isArray(passedData) ||
@@ -66,6 +64,7 @@ export const CustomPaginator = ({
     console.warn("You need to provide an array inside passedData prop!");
     throw new Error("You need to provide an array inside passedData prop.");
   }
+
   return (
     <div
       style={{
@@ -82,11 +81,14 @@ export const CustomPaginator = ({
           disablePaginator ? "containerWrapper--active" : ""
         }`}
       >
-        {data.length > 1 ? (
+        {passedData.length > 1 ? (
           <>
             <IconButton
               className="containerWrapper-arrowIcon"
-              onClick={() => handlePreviousPage()}
+              onClick={() => {
+                handlePreviousPage();
+                setActiveTablePage(actualPage - 1);
+              }}
               disabled={disablePrevBtn}
               disableRipple
               style={displayArrow}
@@ -97,7 +99,10 @@ export const CustomPaginator = ({
             {!disableDigits && paginNumbers(pages, actualPage, handleClick)}
             <IconButton
               className="containerWrapper-arrowIcon"
-              onClick={() => handleNextPage()}
+              onClick={() => {
+                handleNextPage();
+                setActiveTablePage(actualPage + 1);
+              }}
               disabled={disableNextBtn}
               disableRipple
               style={displayArrow}
