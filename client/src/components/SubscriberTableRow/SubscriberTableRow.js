@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -45,8 +46,8 @@ const SubscriberTableRow = (props) => {
   const {
     subscriber,
     index,
+    actualPage,
     dataPerPage,
-    activatedTablePage,
     setSelectedData,
     handleSubscriberDetails,
     setOpenConfirmPopup,
@@ -55,6 +56,7 @@ const SubscriberTableRow = (props) => {
 
   const classes = useStyles();
   const location = useLocation();
+  const [indexPage] = useState(actualPage);
 
   const setTextPopupByStatus = () =>
     subscriber.fields.status === "pending"
@@ -90,7 +92,7 @@ const SubscriberTableRow = (props) => {
   return (
     <TableRow
       className="table-row"
-      key={`${subscriber.id}`}
+      key={`key-${subscriber.id}`}
       style={{
         backgroundColor: isEven(index, "#F5F5F5"),
         animation: `fadeIn 0.3s ease-in-out  forwards`,
@@ -102,7 +104,7 @@ const SubscriberTableRow = (props) => {
           variant="subtitle1"
           className={classes.cellNo}
         >
-          {`${(activatedTablePage - 1) * dataPerPage + index + 1}`}
+          {(indexPage - 1) * dataPerPage + index + 1}
         </Typography>
       </TableCell>
       <TableCell>
