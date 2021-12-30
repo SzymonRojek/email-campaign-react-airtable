@@ -35,23 +35,24 @@ const CampaignsStatusPage = (props) => {
             />
           ) : (
             <>
-              <StyledHeading label="Campaigns Status:" />
+              <StyledHeading label="Campaigns Status" />
+              <div style={{ marginBottom: 100 }}>
+                <CampaignStatus
+                  subHeading="Sent"
+                  dataHeadEmailTable={dataHeadEmailTable}
+                  passedData={campaignsData.data}
+                  status="sent"
+                  setSelectedData={setSelectedData}
+                  handleEditDetailsCampaign={handleEditDetailsCampaign}
+                  setContentPopup={setContentPopup}
+                  setOpenConfirmPopup={setOpenConfirmPopup}
+                />
+              </div>
 
               <CampaignStatus
-                subHeading="Sent:"
+                subHeading="Draft"
                 dataHeadEmailTable={dataHeadEmailTable}
-                campaignsData={campaignsData.data}
-                status="sent"
-                setSelectedData={setSelectedData}
-                handleEditDetailsCampaign={handleEditDetailsCampaign}
-                setContentPopup={setContentPopup}
-                setOpenConfirmPopup={setOpenConfirmPopup}
-              />
-
-              <CampaignStatus
-                subHeading="Draft:"
-                dataHeadEmailTable={dataHeadEmailTable}
-                campaignsData={campaignsData.data}
+                passedData={campaignsData.data}
                 status="draft"
                 setSelectedData={setSelectedData}
                 handleEditDetailsCampaign={handleEditDetailsCampaign}
@@ -70,7 +71,6 @@ CampaignsStatusPage.propTypes = {
   campaignsData: PropTypes.shape({
     status: PropTypes.string,
     data: PropTypes.arrayOf(PropTypes.object),
-    latestAddedItem: PropTypes.arrayOf(PropTypes.object),
   }),
   handleEditDetailsCampaign: PropTypes.func.isRequired,
   setSelectedData: PropTypes.func.isRequired,

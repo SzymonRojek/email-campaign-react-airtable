@@ -1,14 +1,16 @@
 import PropTypes from "prop-types";
-import { TableCell } from "@material-ui/core";
 
-import { ContainerTable, HeadTable, BodyTable } from "../Table";
-import { CampaignTableRow } from "../CampaignTableRow";
+import { ContainerTable, HeadTable, BodyTable } from "components/Table";
+import { CampaignTableRow } from "components/CampaignTableRow";
+import CustomPaginator from "components/PaginationPackage/CustomPaginator";
+
+const dataPerPage = 5;
 
 const CampaignStatus = (props) => {
   const {
     subHeading,
     dataHeadEmailTable,
-    campaignsData,
+    passedData,
     status,
     handleEditDetailsCampaign,
     setSelectedData,
@@ -16,33 +18,38 @@ const CampaignStatus = (props) => {
     setOpenConfirmPopup,
   } = props;
 
-  return campaignsData &&
-    campaignsData.some((el) => el.fields.status === status) ? (
-    <ContainerTable subHeading={subHeading}>
-      <HeadTable dataHeadTable={dataHeadEmailTable} />
+  return passedData && passedData.some((el) => el.fields.status === status) ? (
+    <CustomPaginator
+      passedData={
+        passedData &&
+        passedData.filter((subscriber) => subscriber.fields.status === status)
+      }
+      dataPerPage={dataPerPage}
+      disableDuration={400}
+      disableArrows={false}
+      disableDigits={false}
+      renderData={(data, actualPage) => (
+        <ContainerTable subHeading={subHeading}>
+          <HeadTable dataHeadTable={dataHeadEmailTable} />
 
-      <BodyTable>
-        {campaignsData &&
-          campaignsData
-            .filter((subscriber) => subscriber.fields.status === status)
-            .map((campaign, index) => (
+          <BodyTable>
+            {data.map((campaign, index) => (
               <CampaignTableRow
-                children={
-                  <TableCell component="th" scope="row">
-                    {++index}.
-                  </TableCell>
-                }
                 key={`id-${campaign.id}`}
                 campaign={{ ...campaign, group: "campaigns" }}
                 index={index}
+                actualPage={actualPage}
+                dataPerPage={dataPerPage}
                 setSelectedData={setSelectedData}
                 handleEditDetailsCampaign={handleEditDetailsCampaign}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
             ))}
-      </BodyTable>
-    </ContainerTable>
+          </BodyTable>
+        </ContainerTable>
+      )}
+    />
   ) : (
     ""
   );
@@ -51,7 +58,6 @@ const CampaignStatus = (props) => {
 CampaignStatus.propTypes = {
   subHeading: PropTypes.string.isRequired,
   dataHeadEmailTable: PropTypes.array.isRequired,
-  campaignsData: PropTypes.array.isRequired,
   status: PropTypes.string.isRequired,
   handleEditDetailsCampaign: PropTypes.func.isRequired,
   setSelectedData: PropTypes.func.isRequired,
