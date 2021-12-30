@@ -1,26 +1,28 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 
-export const usePagination = (dataArr, dataPerPage, disableDuration) => {
-  const [data, setData] = useState([]);
+const usePagination = (dataArr, dataPerPage, disableDuration) => {
+  const [paginatedData, setPaginatedData] = useState([]);
   const [pages, setPages] = useState(1);
   const [actualPage, setActualPage] = useState(1);
   const [disablePaginator, setDisablePaginator] = useState(false);
   const [disablePrevBtn, setDisablePrevBtn] = useState(true);
   const [disableNextBtn, setDisableNextBtn] = useState(false);
 
-  let firstPage = useMemo(() => {
+  const firstPage = useMemo(() => {
     return actualPage - 1 === 0;
   }, [actualPage]);
-  let lastPage = useMemo(() => {
+
+  const lastPage = useMemo(() => {
     return dataArr && dataArr.length - actualPage * dataPerPage <= 0;
   }, [dataArr, actualPage, dataPerPage]);
 
-  const setNewData = useCallback(() => {
-    const newData = dataArr.slice(
+  const setNewPaginatedData = useCallback(() => {
+    const slicedData = dataArr.slice(
       (actualPage - 1) * dataPerPage,
       (actualPage - 1) * dataPerPage + dataPerPage
     );
-    return setData(newData);
+
+    return setPaginatedData(slicedData);
   }, [actualPage, dataArr, dataPerPage]);
 
   const handlePageNumber = useCallback(() => {
@@ -53,8 +55,8 @@ export const usePagination = (dataArr, dataPerPage, disableDuration) => {
     if (dataArr && dataArr.length <= dataPerPage && dataArr.length > 0) {
       handlePageNumber();
       setDisableNextBtn(true);
-      setData(dataArr);
-      setNewData();
+      setPaginatedData(dataArr);
+      setNewPaginatedData();
 
       setTimeout(() => {
         setDisablePaginator(false);
@@ -64,7 +66,7 @@ export const usePagination = (dataArr, dataPerPage, disableDuration) => {
 
     if (dataArr && dataArr.length !== 0) {
       handlePageNumber();
-      setNewData();
+      setNewPaginatedData();
 
       setTimeout(() => {
         setDisablePaginator(false);
@@ -85,16 +87,16 @@ export const usePagination = (dataArr, dataPerPage, disableDuration) => {
         setDisableNextBtn(false);
       }, disableDuration);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    setNewData,
-    /*, firstPage, lastPage, disableDelay, dataArr, handlePageNumber */
-  ]);
+  }, [setNewPaginatedData]);
 
   return {
-    data,
+    paginatedData,
     paginatorStatus: {
       actualPage,
+      lastPage,
+      setActualPage,
       handleNextPage,
       handlePreviousPage,
       handleSpecificPage,
