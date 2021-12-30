@@ -1,6 +1,7 @@
+import PropTypes from "prop-types";
+import { useCallback, useEffect } from "react";
 import { IconButton } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import { useCallback, useEffect } from "react";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import usePagination from "./usePagination";
@@ -8,87 +9,72 @@ import paginNumbers from "./switchPages";
 
 import "./styles.css";
 
-export const CustomPaginator = ({
-  passedData = [],
-  dataPerPage = 2,
+const CustomPaginator = ({
+  passedData,
+  dataPerPage,
   disableDuration,
-  disableArrows = false,
-  disableDigits = false,
+  disableArrows,
+  disableDigits,
   renderData,
-  setActiveTablePage,
 }) => {
-  const fromPassedDataFnToArr =
-    typeof passedData === "function" && Array.isArray(passedData())
-      ? passedData()
-      : passedData;
-
   const {
-    data,
+    paginatedData,
     paginatorStatus: {
       actualPage,
+      setActualPage,
+      lastPage,
+      pages,
       handleNextPage,
       handlePreviousPage,
       handleSpecificPage,
-      pages,
       disablePaginator,
       disablePrevBtn,
       disableNextBtn,
     },
     setDisablePaginator,
-  } = usePagination(fromPassedDataFnToArr, dataPerPage, disableDuration);
+  } = usePagination(passedData, dataPerPage, disableDuration);
+
+  // when the last element on the last page is deleted go to the prev page
+  useEffect(() => {
+    if (lastPage && paginatedData.length === 0)
+      setActualPage((prev) => (prev !== 1 ? prev - 1 : prev));
+  }, [pages, lastPage, paginatedData.length, setActualPage]);
 
   const handleClick = useCallback(
     (activePage) => {
       handleSpecificPage(Number(activePage));
-      setActiveTablePage(activePage);
     },
-    [handleSpecificPage, setActiveTablePage] //possibly add variable to the []
+    [handleSpecificPage]
   );
 
   useEffect(() => {
     return () => {
       clearTimeout(setDisablePaginator(false));
     };
-  }, []);
+  }, [setDisablePaginator]);
 
   const displayArrow = {
     display: disableArrows ? "none" : "initial",
   };
 
-  if (
-    !(
-      Array.isArray(passedData) ||
-      (typeof passedData === "function" && Array.isArray(passedData()))
-    )
-  ) {
-    console.warn("You need to provide an array inside passedData prop!");
-    throw new Error("You need to provide an array inside passedData prop.");
+  if (!Array.isArray(passedData)) {
+    throw new Error("Provide an array inside passedData prop.");
   }
 
   return (
-    <div
-      style={{
-        boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-        overflow: "hidden",
-        borderRadius: "15px 15px",
-        backgroundColor: "white",
-      }}
-    >
-      {renderData && renderData(data)}
+    <div className="mainContainerWrapper">
+      {renderData(paginatedData, actualPage)}
 
       <div
-        className={`containerWrapper ${
+        className={`containerPaginatorWrapper ${
           disablePaginator ? "containerWrapper--active" : ""
         }`}
       >
-        {passedData.length > 1 ? (
-          <>
+        {passedData.length > dataPerPage && passedData.length > 1 ? (
+          <div className="contentWrapper">
             <IconButton
-              className="containerWrapper-arrowIcon"
-              onClick={() => {
-                handlePreviousPage();
-                setActiveTablePage(actualPage - 1);
-              }}
+              className="contentWrapper-arrowIcon"
+              onClick={() => handlePreviousPage()}
               disabled={disablePrevBtn}
               disableRipple
               style={displayArrow}
@@ -98,24 +84,25 @@ export const CustomPaginator = ({
 
             {!disableDigits && paginNumbers(pages, actualPage, handleClick)}
             <IconButton
-              className="containerWrapper-arrowIcon"
-              onClick={() => {
-                handleNextPage();
-                setActiveTablePage(actualPage + 1);
-              }}
+              className="contentWrapper-arrowIcon"
+              onClick={() => handleNextPage()}
               disabled={disableNextBtn}
               disableRipple
               style={displayArrow}
             >
               <ArrowForwardIosIcon />
             </IconButton>
-          </>
+          </div>
         ) : (
           ""
         )}
       </div>
     </div>
   );
+};
+
+CustomPaginator.propTypes = {
+  passedData: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default CustomPaginator;
