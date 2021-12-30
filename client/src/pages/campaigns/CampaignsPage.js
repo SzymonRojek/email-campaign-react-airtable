@@ -17,6 +17,7 @@ const CampaignsPage = ({
   sortDataAlphabetically(campaignsData.data);
 
   const latestAddedCampaign = getLatestAddedItem(campaignsData.data);
+
   return (
     <>
       {campaignsData.status === "loading" ? (
@@ -28,15 +29,7 @@ const CampaignsPage = ({
           titleThree="Also, please check your internet connection."
         />
       ) : (
-        <StyledContainer
-          style={{
-            // padding: "10px 50px",
-            marginTop: 40,
-            backgroundColor: "rgba(255,255,255,0.1)",
-            backdropFilter: "blur(5px)",
-            borderRadius: 6,
-          }}
-        >
+        <StyledContainer>
           {campaignsData.status === "success" && !campaignsData.data.length ? (
             <Error
               titleOne="There are not campaigns added yet."
@@ -44,26 +37,26 @@ const CampaignsPage = ({
               titleThree="🙂"
             />
           ) : (
-            <>
-              <StyledHeading label="Campaigns:" />
+            <div style={{ marginBottom: 100 }}>
+              <StyledHeading label="Campaigns" />
 
               <CampaignsList
-                subHeading="List:"
+                subHeading="List"
                 dataHeadEmailTable={dataHeadEmailTable}
-                campaignsData={campaignsData.data}
+                passedData={campaignsData.data}
                 setSelectedData={setSelectedData}
                 handleEditDetailsCampaign={handleEditDetailsCampaign}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
-            </>
+            </div>
           )}
 
           {campaignsData.data.length > 1 ? (
             <CampaignsList
-              subHeading="Latest added Campaign:"
+              subHeading="Latest added Campaign"
               dataHeadEmailTable={dataHeadEmailTable}
-              campaignsData={latestAddedCampaign}
+              passedData={latestAddedCampaign}
               handleEditDetailsCampaign={handleEditDetailsCampaign}
               setSelectedData={setSelectedData}
               setContentPopup={setContentPopup}

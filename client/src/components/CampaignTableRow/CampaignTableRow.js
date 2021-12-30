@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Tooltip, Zoom } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -46,13 +47,16 @@ const useStyles = makeStyles(() => ({
     padding: "3px 10px",
     display: "inline-block",
   },
+  cellNo: { width: 25 },
+  cell: { wordWrap: "break-word", width: 100 },
 }));
 
 const RowCampaign = (props) => {
   const {
     campaign,
     index,
-    children,
+    actualPage,
+    dataPerPage,
     setSelectedData,
     handleEditDetailsCampaign,
     setOpenConfirmPopup,
@@ -60,25 +64,49 @@ const RowCampaign = (props) => {
   } = props;
   const navigate = useNavigate();
   const classes = useStyles();
+  const [indexPage] = useState(actualPage);
 
   return (
     <TableRow
       key={`${campaign.id}`}
-      style={{ backgroundColor: isEven(index, "#F5F5F5") }}
+      style={{
+        backgroundColor: isEven(index, "#F5F5F5"),
+        animation: `fadeIn 0.3s ease-in-out  forwards`,
+      }}
     >
-      {children}
       <TableCell>
-        <Typography color="textSecondary" variant="subtitle1">
+        <Typography
+          color="textSecondary"
+          variant="subtitle1"
+          className={classes.cellNo}
+        >
+          {(indexPage - 1) * dataPerPage + index + 1}
+        </Typography>
+      </TableCell>
+      <TableCell>
+        <Typography
+          color="textSecondary"
+          variant="subtitle1"
+          className={classes.cell}
+        >
           {capitalizeFirstLetter(campaign.fields.title)}
         </Typography>
       </TableCell>
       <TableCell>
-        <Typography color="textSecondary" variant="subtitle1">
+        <Typography
+          color="textSecondary"
+          variant="subtitle1"
+          className={classes.cell}
+        >
           {campaign.fields.description}
         </Typography>
       </TableCell>
       <TableCell>
-        <Typography color="textSecondary" variant="subtitle1">
+        <Typography
+          color="textSecondary"
+          variant="subtitle1"
+          className={classes.cell}
+        >
           {getFormattedData(campaign.createdTime)}
         </Typography>
       </TableCell>
