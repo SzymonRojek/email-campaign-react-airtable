@@ -10,6 +10,7 @@ export const generalDataHeadTable = [
 ];
 
 export const detailsDataHeadTableFirst = [
+  "No",
   "Name",
   "Surname",
   "Profession",
