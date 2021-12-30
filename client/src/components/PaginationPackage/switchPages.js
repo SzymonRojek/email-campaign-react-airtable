@@ -1,16 +1,10 @@
-export const paginNumbers = (
-  lastPage = 10,
-  currentPage = 1,
-  setCurrentPage
-) => {
+const paginNumbers = (lastPage, currentPage, setCurrentPage) => {
   const arrayToMap = [...Array(lastPage + 1).keys()];
   return arrayToMap.map((el, i) => {
     if (lastPage <= 7 && i >= 1) {
       return (
         <span
-          onClick={() => {
-            setCurrentPage(i);
-          }}
+          onClick={() => setCurrentPage(i)}
           key={el + i}
           className={currentPage === i ? "activeClass" : ""}
         >
@@ -23,12 +17,7 @@ export const paginNumbers = (
     if (currentPage >= 1 && currentPage <= 4) {
       if (i === 5) {
         return (
-          <span
-            onClick={() => {
-              setCurrentPage(i);
-            }}
-            key={el + i}
-          >
+          <span onClick={() => setCurrentPage(i)} key={el + i}>
             {i}
           </span>
         );
@@ -49,12 +38,7 @@ export const paginNumbers = (
 
       if (i === 7) {
         return (
-          <span
-            onClick={() => {
-              setCurrentPage(lastPage);
-            }}
-            key={el + i}
-          >
+          <span onClick={() => setCurrentPage(lastPage)} key={el + i}>
             {lastPage}
           </span>
         );
@@ -63,9 +47,7 @@ export const paginNumbers = (
       if (i >= 1 && i <= 4) {
         return (
           <span
-            onClick={() => {
-              setCurrentPage(i);
-            }}
+            onClick={() => setCurrentPage(i)}
             key={el + i}
             className={currentPage === i ? "activeClass" : ""}
           >
@@ -79,12 +61,7 @@ export const paginNumbers = (
     if (currentPage >= 5 && currentPage <= lastPage - 4) {
       if (i === 1) {
         return (
-          <span
-            onClick={() => {
-              setCurrentPage(i);
-            }}
-            key={el + i}
-          >
+          <span onClick={() => setCurrentPage(i)} key={el + i}>
             {i}
           </span>
         );
@@ -104,9 +81,7 @@ export const paginNumbers = (
       if (i === 3) {
         return (
           <span
-            onClick={() => {
-              setCurrentPage(currentPage - 1);
-            }}
+            onClick={() => setCurrentPage(currentPage - 1)}
             key={el + i - 1}
           >
             {currentPage - 1}
@@ -114,7 +89,7 @@ export const paginNumbers = (
         );
       }
 
-      //HOW TO ADD ACTIVECLASS HERE
+      // ADD ACTIVE CLASS
       if (i === 4) {
         return (
           <span
@@ -133,9 +108,7 @@ export const paginNumbers = (
       if (i === 5) {
         return (
           <span
-            onClick={(e) => {
-              setCurrentPage(currentPage + 1);
-            }}
+            onClick={() => setCurrentPage(currentPage + 1)}
             key={el + i - 1}
           >
             {currentPage + 1}
@@ -158,9 +131,7 @@ export const paginNumbers = (
       if (i === 7) {
         return (
           <span
-            onClick={() => {
-              setCurrentPage(lastPage - 3 + (i - 4));
-            }}
+            onClick={() => setCurrentPage(lastPage - 3 + (i - 4))}
             key={el + i}
           >
             {lastPage - 3 + (i - 4)}
@@ -169,16 +140,11 @@ export const paginNumbers = (
       }
     }
 
-    // 4 LAST DIGITS PATTERN
+    // 3 LAST DIGITS PATTERN
     if (currentPage >= lastPage - 3 && currentPage <= lastPage) {
       if (i === 1) {
         return (
-          <span
-            onClick={() => {
-              setCurrentPage(i);
-            }}
-            key={el + i}
-          >
+          <span onClick={() => setCurrentPage(i)} key={el + i}>
             {i}
           </span>
         );
@@ -198,12 +164,7 @@ export const paginNumbers = (
 
       if (i === 3) {
         return (
-          <span
-            onClick={() => {
-              setCurrentPage(lastPage - 4);
-            }}
-            key={el + i}
-          >
+          <span onClick={() => setCurrentPage(lastPage - 4)} key={el + i}>
             {lastPage - 4}
           </span>
         );
@@ -212,9 +173,7 @@ export const paginNumbers = (
       if (i >= 4 && i <= 7) {
         return (
           <span
-            onClick={() => {
-              setCurrentPage(lastPage - 3 + (i - 4));
-            }}
+            onClick={() => setCurrentPage(lastPage - 3 + (i - 4))}
             key={el + i}
             className={
               currentPage === lastPage - 3 + (i - 4) ? " activeClass" : ""
