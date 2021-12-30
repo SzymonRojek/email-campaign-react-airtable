@@ -2,12 +2,12 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import { TableCell, TableHead, TableRow } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   tableHeaderCell: {
     minWidth: 100,
     fontWeight: "bold",
     backgroundColor: "#142f43",
-    color: theme.palette.getContrastText(theme.palette.primary.dark),
+    color: "rgb(221, 220, 220)",
   },
 }));
 
