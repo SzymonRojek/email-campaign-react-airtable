@@ -1,64 +1,64 @@
-.containerWrapper {
+.mainContainerWrapper {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  overflow: hidden;
+  border-radius: 15px 15px;
+  background-color: white;
+}
+
+.containerPaginatorWrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 6px;
   background-color: #142f43;
   border-radius: 0 0 15px 15px;
-  padding: 6px;
 }
-.containerWrapper button {
-  cursor: pointer;
-}
-.containerWrapper button:disabled {
-  cursor: initial;
-}
-.containerWrapper span {
-  margin: 3px;
+
+.contentWrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.contentWrapper button {
   cursor: pointer;
-  border: 1px solid transparent;
-  color: white;
-  border-radius: 100px;
+}
+
+.contentWrapper button:disabled {
+  cursor: initial;
+}
+
+.contentWrapper span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 3px;
+  padding: 12px 12px;
   width: 10px;
   height: 10px;
-  padding: 12px;
-  transition: all 0.15s ease-in-out;
   font-size: 18px;
-}
-.containerWrapper span:hover {
-  background-color: #2c3e50 0e;
-  border: 1px solid #2c3e50 49;
-}
-.containerWrapper span:nth-child(2) {
-  margin-left: 10px;
-}
-.containerWrapper span:nth-child(8) {
-  margin-right: 20px;
-  margin-left: 10px;
-}
-.containerWrapper .pagination-dots {
-  cursor: context-menu;
-}
-.containerWrapper .pagination-dots:hover {
-  cursor: context-menu;
-  background-color: transparent;
+  color: rgb(221, 220, 220);
   border: 1px solid transparent;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
 }
-.containerWrapper .containerWrapper-arrowIcon {
+
+.containerPaginatorWrapper .contentWrapper-arrowIcon {
+  padding-top: 14px;
   color: orange;
   cursor: pointer;
 }
 
-.containerWrapper .containerWrapper-arrowIcon.Mui-disabled {
+.containerPaginatorWrapper .contentWrapper-arrowIcon.Mui-disabled {
   color: #949ba0;
 }
 
-.containerWrapper .activeClass {
-  color: orange !important;
+.containerPaginatorWrapper .activeClass {
   font-weight: bold;
+  color: orange;
 }
-.containerWrapper--active {
+
+.containerPaginatorWrapper--active {
   opacity: 0.9;
 }
