@@ -36,34 +36,37 @@ const SubscribersStatusPage = (props) => {
             />
           ) : (
             <>
-              <StyledHeading label="Subscribers status:" />
+              <StyledHeading label="Subscribers status" />
+              <div style={{ marginBottom: 100 }}>
+                <SubscriberStatus
+                  subHeading="Active"
+                  generalDataHeadTable={generalDataHeadTable}
+                  passedData={subscribersData.data}
+                  status="active"
+                  setSelectedData={setSelectedData}
+                  handleSubscriberDetails={handleSubscriberDetails}
+                  setContentPopup={setContentPopup}
+                  setOpenConfirmPopup={setOpenConfirmPopup}
+                />
+              </div>
+
+              <div style={{ marginBottom: 100 }}>
+                <SubscriberStatus
+                  subHeading="Pending"
+                  generalDataHeadTable={generalDataHeadTable}
+                  passedData={subscribersData.data}
+                  status="pending"
+                  setSelectedData={setSelectedData}
+                  handleSubscriberDetails={handleSubscriberDetails}
+                  setContentPopup={setContentPopup}
+                  setOpenConfirmPopup={setOpenConfirmPopup}
+                />
+              </div>
 
               <SubscriberStatus
-                subHeading="Active:"
+                subHeading="Blocked"
                 generalDataHeadTable={generalDataHeadTable}
-                subscribersData={subscribersData.data}
-                status="active"
-                setSelectedData={setSelectedData}
-                handleSubscriberDetails={handleSubscriberDetails}
-                setContentPopup={setContentPopup}
-                setOpenConfirmPopup={setOpenConfirmPopup}
-              />
-
-              <SubscriberStatus
-                subHeading="Pending:"
-                generalDataHeadTable={generalDataHeadTable}
-                subscribersData={subscribersData.data}
-                status="pending"
-                setSelectedData={setSelectedData}
-                handleSubscriberDetails={handleSubscriberDetails}
-                setContentPopup={setContentPopup}
-                setOpenConfirmPopup={setOpenConfirmPopup}
-              />
-
-              <SubscriberStatus
-                subHeading="Blocked:"
-                generalDataHeadTable={generalDataHeadTable}
-                subscribersData={subscribersData.data}
+                passedData={subscribersData.data}
                 status="blocked"
                 setSelectedData={setSelectedData}
                 handleSubscriberDetails={handleSubscriberDetails}
@@ -82,7 +85,6 @@ SubscribersStatusPage.propTypes = {
   subscribersData: PropTypes.shape({
     status: PropTypes.string,
     data: PropTypes.arrayOf(PropTypes.object),
-    latestAddedItem: PropTypes.arrayOf(PropTypes.object),
   }),
   handleSubscriberDetails: PropTypes.func.isRequired,
   setOpenConfirmPopup: PropTypes.func.isRequired,

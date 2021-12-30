@@ -1,14 +1,16 @@
 import PropTypes from "prop-types";
-import { TableCell } from "@material-ui/core";
 
-import { ContainerTable, HeadTable, BodyTable } from "../Table";
-import { SubscriberTableRow } from "../SubscriberTableRow";
+import { ContainerTable, HeadTable, BodyTable } from "components/Table";
+import { SubscriberTableRow } from "components/SubscriberTableRow";
+import CustomPaginator from "components/PaginationPackage/CustomPaginator";
+
+const dataPerPage = 5;
 
 const SubscriberStatus = (props) => {
   const {
     subHeading,
     generalDataHeadTable,
-    subscribersData,
+    passedData,
     status,
     handleSubscriberDetails,
     setSelectedData,
@@ -16,33 +18,38 @@ const SubscriberStatus = (props) => {
     setOpenConfirmPopup,
   } = props;
 
-  return subscribersData &&
-    subscribersData.some((el) => el.fields.status === status) ? (
-    <ContainerTable subHeading={subHeading}>
-      <HeadTable dataHeadTable={generalDataHeadTable} />
+  return passedData && passedData.some((el) => el.fields.status === status) ? (
+    <CustomPaginator
+      passedData={
+        passedData &&
+        passedData.filter((subscriber) => subscriber.fields.status === status)
+      }
+      dataPerPage={dataPerPage}
+      disableDuration={400}
+      disableArrows={false}
+      disableDigits={false}
+      renderData={(data, actualPage) => (
+        <ContainerTable subHeading={subHeading}>
+          <HeadTable dataHeadTable={generalDataHeadTable} />
 
-      <BodyTable>
-        {subscribersData &&
-          subscribersData
-            .filter((subscriber) => subscriber.fields.status === status)
-            .map((subscriber, index) => (
+          <BodyTable>
+            {data.map((subscriber, index) => (
               <SubscriberTableRow
-                children={
-                  <TableCell component="th" scope="row">
-                    {++index}.
-                  </TableCell>
-                }
                 key={`id-${subscriber.id}`}
                 subscriber={{ ...subscriber, group: "subscribers" }}
                 index={index}
+                actualPage={actualPage}
+                dataPerPage={dataPerPage}
                 setSelectedData={setSelectedData}
                 handleSubscriberDetails={handleSubscriberDetails}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
             ))}
-      </BodyTable>
-    </ContainerTable>
+          </BodyTable>
+        </ContainerTable>
+      )}
+    />
   ) : (
     ""
   );
@@ -51,7 +58,6 @@ const SubscriberStatus = (props) => {
 SubscriberStatus.propTypes = {
   subHeading: PropTypes.string.isRequired,
   generalDataHeadTable: PropTypes.array.isRequired,
-  subscribersData: PropTypes.array.isRequired,
   status: PropTypes.string.isRequired,
   handleSubscriberDetails: PropTypes.func.isRequired,
   setSelectedData: PropTypes.func.isRequired,
