@@ -1,6 +1,11 @@
 # App still in progress
 
-- working on pagination, layout, connection to Email.js external resource
+Actually I am working on:
+
+- general layout
+- connect the app to Email.js external resource
+- maybe on the status page I will add additional main select status
+- possibly I will add login component (password confirmation and connect app to the local session when application is running in the browser)
 
 Check demo on Herokuapp:[link demo](https://email-campaign-subscribers.herokuapp.com/)
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -12,10 +17,17 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 <br>
 <br>
-## Set env variables
 
-- REACT_APP_DB_ID - it is your database id
-- REACT_APP_API_KEY - it is your api key
+## Technologies used:
+
+- React.js
+- useForm hook for contact page and yep validation scheme
+- Email.js
+- Airtable data base
+- CRUD / REST API
+- Express.js
+- Proxy
+- env variables
 
 ## Available Scripts
 
