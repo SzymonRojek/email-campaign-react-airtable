@@ -41,33 +41,51 @@ const useStyles = makeStyles({
   },
 });
 
-const style = {
-  textError: { color: "crimson", paddingTop: 10 },
-};
-
 const SelectInputController = ({ ...props }) => {
-  const { control, name, error, message, defaultValue, data } = props;
+  const {
+    control,
+    name,
+    error,
+    message,
+    defaultValue,
+    data,
+    setSelectValue,
+    styles,
+  } = props;
   const classes = useStyles();
   const customId = `${name}-id`;
 
   return (
     <FormControl fullWidth className={classes.root}>
       <Controller
-        render={({ field: { ref, ...field } }) => (
-          <Select {...field} inputRef={ref} id={customId} error={error}>
-            {data.map(({ value, label }) => (
-              <MenuItem key={`key-${label}`} value={value}>
-                {label}
-              </MenuItem>
-            ))}
+        render={({ field: { ref, onChange, value, ...field } }) => (
+          <Select
+            {...field}
+            inputRef={ref}
+            id={customId}
+            error={error}
+            onChange={(e) => setSelectValue(e.target.value)}
+            selected={value}
+            defaultValue={defaultValue}
+          >
+            {data.map(({ value, label }) => {
+              return (
+                <MenuItem
+                  key={`key-${label}`}
+                  value={value}
+                  style={styles.menuItem}
+                >
+                  {label}
+                </MenuItem>
+              );
+            })}
           </Select>
         )}
         control={control}
         name={name}
-        defaultValue={defaultValue}
       />
 
-      <Typography variant="inherit" style={style.textError}>
+      <Typography variant="inherit" style={styles.textError}>
         {message}
       </Typography>
     </FormControl>
@@ -88,3 +106,32 @@ SelectInputController.propTypes = {
   ),
 };
 export default SelectInputController;
+
+// const SelectInputController = ({ ...props }) => {
+//   const { control, name, error, message, defaultValue, data } = props;
+//   const classes = useStyles();
+//   const customId = `${name}-id`;
+
+//   return (
+//     <FormControl fullWidth className={classes.root}>
+//       <Controller
+//         render={({ field: { ref, ...field } }) => (
+//           <Select {...field} inputRef={ref} id={customId} error={error}>
+//             {data.map(({ value, label }) => (
+//               <MenuItem key={`key-${label}`} value={value}>
+//                 {label}
+//               </MenuItem>
+//             ))}
+//           </Select>
+//         )}
+//         control={control}
+//         name={name}
+//         defaultValue={defaultValue}
+//       />
+
+//       <Typography variant="inherit" style={style.textError}>
+//         {message}
+//       </Typography>
+//     </FormControl>
+//   );
+// };
