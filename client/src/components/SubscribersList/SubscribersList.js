@@ -5,8 +5,6 @@ import { ContainerTable, HeadTable, BodyTable } from "components/Table";
 import { SubscriberTableRow } from "components/SubscriberTableRow";
 import CustomPaginator from "components/PaginationPackage/CustomPaginator";
 
-// const dataPerPage = 5;
-
 const SubscribersList = ({
   subHeading,
   dataHeadTable,
