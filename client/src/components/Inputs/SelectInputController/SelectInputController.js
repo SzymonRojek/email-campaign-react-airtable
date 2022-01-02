@@ -12,7 +12,6 @@ const SelectInputController = ({ ...props }) => {
     message,
     defaultValue,
     data,
-    setSelectValue,
     useStyles,
     styles,
   } = props;
@@ -22,31 +21,33 @@ const SelectInputController = ({ ...props }) => {
   return (
     <FormControl fullWidth className={classes.root}>
       <Controller
-        render={({ field: { ref, onChange, value, ...field } }) => (
-          <Select
-            {...field}
-            inputRef={ref}
-            id={customId}
-            error={error}
-            onChange={(e) => setSelectValue(e.target.value)}
-            selected={value}
-            defaultValue={defaultValue}
-          >
-            {data.map(({ value, label }) => {
-              return (
-                <MenuItem
-                  key={`key-${label}`}
-                  value={value}
-                  style={styles.menuItem}
-                >
-                  {label}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        )}
         control={control}
         name={name}
+        defaultValue={defaultValue}
+        render={({ field: { ref, value, ...field } }) => {
+          return (
+            <Select
+              {...field}
+              inputRef={ref}
+              id={customId}
+              error={error}
+              selected={value}
+              value={value}
+            >
+              {data.map(({ value, label }) => {
+                return (
+                  <MenuItem
+                    key={`key-${label}`}
+                    value={value}
+                    style={styles.menuItem}
+                  >
+                    {label}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          );
+        }}
       />
 
       <Typography variant="inherit" style={styles.textError}>
