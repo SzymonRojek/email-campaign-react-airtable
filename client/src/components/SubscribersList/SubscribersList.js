@@ -16,14 +16,6 @@ const SubscribersList = ({
 }) => {
   const [selectValue, setSelectValue] = useState(4);
 
-  const selectSubscribersNumber = [
-    { value: "4", label: "4" },
-    { value: "6", label: "6" },
-    { value: "8", label: "8" },
-    { value: "10", label: "10" },
-    { value: `${passedData.length}`, label: `${passedData.length}` },
-  ];
-
   return (
     <CustomPaginator
       passedData={passedData}
@@ -34,9 +26,9 @@ const SubscribersList = ({
       renderData={(data, actualPage) => (
         <ContainerTable
           subHeading={subHeading}
+          passedData={passedData}
           setSelectValue={setSelectValue}
           disableSelect={passedData.length > 4 ? true : false}
-          data={selectSubscribersNumber}
         >
           <HeadTable dataHeadTable={dataHeadTable} />
 
