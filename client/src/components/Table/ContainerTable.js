@@ -70,10 +70,18 @@ const ContainerTable = ({
   subHeading,
   setSelectValue,
   disableSelect,
-  data,
+  passedData,
   children,
 }) => {
   const { control } = useForm();
+
+  const selectSubscribersNumber = [
+    { value: "4", label: "4" },
+    { value: "6", label: "6" },
+    { value: "8", label: "8" },
+    { value: "10", label: "10" },
+    { value: `${passedData.length}`, label: `${passedData.length}` },
+  ];
 
   return (
     <>
@@ -90,7 +98,7 @@ const ContainerTable = ({
                 name="rowsNumbers"
                 styles={styles.select}
                 defaultValue="4"
-                data={data}
+                data={selectSubscribersNumber}
                 setSelectValue={setSelectValue}
                 message=""
                 error={false}
