@@ -1,10 +1,9 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 
 import { ContainerTable, HeadTable, BodyTable } from "components/Table";
 import { SubscriberTableRow } from "components/SubscriberTableRow";
 import CustomPaginator from "components/PaginationPackage/CustomPaginator";
-
-const dataPerPage = 5;
 
 const SubscriberStatus = (props) => {
   const {
@@ -18,17 +17,24 @@ const SubscriberStatus = (props) => {
     setOpenConfirmPopup,
   } = props;
 
+  const [selectValue, setSelectValue] = useState(4);
+
   return passedData && passedData.some((el) => el.fields.status === status) ? (
     <CustomPaginator
       passedData={passedData.filter(
         (subscriber) => subscriber.fields.status === status
       )}
-      dataPerPage={dataPerPage}
+      dataPerPage={parseInt(selectValue)}
       disableDuration={400}
       disableArrows={false}
       disableDigits={false}
       renderData={(data, actualPage) => (
-        <ContainerTable subHeading={subHeading}>
+        <ContainerTable
+          subHeading={subHeading}
+          passedData={passedData}
+          setSelectValue={setSelectValue}
+          disableSelect={passedData.length > 4 ? true : false}
+        >
           <HeadTable dataHeadTable={generalDataHeadTable} />
 
           <BodyTable>
@@ -38,7 +44,7 @@ const SubscriberStatus = (props) => {
                 subscriber={{ ...subscriber, group: "subscribers" }}
                 index={index}
                 actualPage={actualPage}
-                dataPerPage={dataPerPage}
+                dataPerPage={parseInt(selectValue)}
                 setSelectedData={setSelectedData}
                 handleSubscriberDetails={handleSubscriberDetails}
                 setContentPopup={setContentPopup}

@@ -20,10 +20,9 @@ const CampaignStatus = (props) => {
 
   return passedData && passedData.some((el) => el.fields.status === status) ? (
     <CustomPaginator
-      passedData={
-        passedData &&
-        passedData.filter((subscriber) => subscriber.fields.status === status)
-      }
+      passedData={passedData.filter(
+        (subscriber) => subscriber.fields.status === status
+      )}
       dataPerPage={dataPerPage}
       disableDuration={400}
       disableArrows={false}
