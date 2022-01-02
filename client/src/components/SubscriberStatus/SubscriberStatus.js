@@ -1,9 +1,10 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 
-import { ContainerTable, HeadTable, BodyTable } from "components/Table";
-import { SubscriberTableRow } from "components/SubscriberTableRow";
-import CustomPaginator from "components/PaginationPackage/CustomPaginator";
+import { ContainerTable, HeadTable, BodyTable } from "../Table";
+import { SubscriberTableRow } from "../SubscriberTableRow";
+import CustomPaginator from "../PaginationPackage/CustomPaginator";
+import { getFilteredDataByStatus } from "helpers";
 
 const SubscriberStatus = (props) => {
   const {
@@ -21,9 +22,7 @@ const SubscriberStatus = (props) => {
 
   return passedData && passedData.some((el) => el.fields.status === status) ? (
     <CustomPaginator
-      passedData={passedData.filter(
-        (subscriber) => subscriber.fields.status === status
-      )}
+      passedData={getFilteredDataByStatus(passedData, status)}
       dataPerPage={parseInt(selectValue)}
       disableDuration={400}
       disableArrows={false}
@@ -33,7 +32,11 @@ const SubscriberStatus = (props) => {
           subHeading={subHeading}
           passedData={passedData}
           setSelectValue={setSelectValue}
-          disableSelect={passedData.length > 4 ? true : false}
+          disableSelect={
+            getFilteredDataByStatus(passedData, status).length > 4
+              ? true
+              : false
+          }
         >
           <HeadTable dataHeadTable={generalDataHeadTable} />
 
