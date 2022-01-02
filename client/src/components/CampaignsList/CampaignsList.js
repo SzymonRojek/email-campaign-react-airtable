@@ -1,11 +1,9 @@
 import PropTypes from "prop-types";
-import { TableCell } from "@material-ui/core";
+import { useState } from "react";
 
 import { ContainerTable, HeadTable, BodyTable } from "components/Table";
 import { CampaignTableRow } from "components/CampaignTableRow";
 import CustomPaginator from "components/PaginationPackage/CustomPaginator";
-
-const dataPerPage = 5;
 
 const CampaignsList = ({
   subHeading,
@@ -15,36 +13,45 @@ const CampaignsList = ({
   setSelectedData,
   setContentPopup,
   setOpenConfirmPopup,
-}) => (
-  <CustomPaginator
-    passedData={passedData}
-    dataPerPage={dataPerPage}
-    disableDuration={400}
-    disableArrows={false}
-    disableDigits={false}
-    renderData={(data, actualPage) => (
-      <ContainerTable subHeading={subHeading}>
-        <HeadTable dataHeadTable={dataHeadEmailTable} />
-        <BodyTable>
-          {data &&
-            data.map((campaign, index) => (
-              <CampaignTableRow
-                key={`id-${campaign.id}`}
-                campaign={{ ...campaign, group: "campaigns" }}
-                index={index}
-                actualPage={actualPage}
-                dataPerPage={dataPerPage}
-                setSelectedData={setSelectedData}
-                handleEditDetailsCampaign={handleEditDetailsCampaign}
-                setContentPopup={setContentPopup}
-                setOpenConfirmPopup={setOpenConfirmPopup}
-              />
-            ))}
-        </BodyTable>
-      </ContainerTable>
-    )}
-  />
-);
+}) => {
+  const [selectValue, setSelectValue] = useState(4);
+
+  return (
+    <CustomPaginator
+      passedData={passedData}
+      dataPerPage={parseInt(selectValue)}
+      disableDuration={400}
+      disableArrows={false}
+      disableDigits={false}
+      renderData={(data, actualPage) => (
+        <ContainerTable
+          subHeading={subHeading}
+          passedData={passedData}
+          setSelectValue={setSelectValue}
+          disableSelect={passedData.length > 4 ? true : false}
+        >
+          <HeadTable dataHeadTable={dataHeadEmailTable} />
+          <BodyTable>
+            {data &&
+              data.map((campaign, index) => (
+                <CampaignTableRow
+                  key={`id-${campaign.id}`}
+                  campaign={{ ...campaign, group: "campaigns" }}
+                  index={index}
+                  actualPage={actualPage}
+                  dataPerPage={parseInt(selectValue)}
+                  setSelectedData={setSelectedData}
+                  handleEditDetailsCampaign={handleEditDetailsCampaign}
+                  setContentPopup={setContentPopup}
+                  setOpenConfirmPopup={setOpenConfirmPopup}
+                />
+              ))}
+          </BodyTable>
+        </ContainerTable>
+      )}
+    />
+  );
+};
 
 CampaignsList.propTypes = {
   subHeading: PropTypes.string.isRequired,
