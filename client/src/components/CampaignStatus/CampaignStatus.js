@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 
-import { ContainerTable, HeadTable, BodyTable } from "components/Table";
-import { CampaignTableRow } from "components/CampaignTableRow";
-import CustomPaginator from "components/PaginationPackage/CustomPaginator";
-
-const dataPerPage = 5;
+import { ContainerTable, HeadTable, BodyTable } from "../Table";
+import { CampaignTableRow } from "../CampaignTableRow";
+import CustomPaginator from "../PaginationPackage/CustomPaginator";
+import { getFilteredDataByStatus } from "helpers";
 
 const CampaignStatus = (props) => {
   const {
@@ -18,17 +18,26 @@ const CampaignStatus = (props) => {
     setOpenConfirmPopup,
   } = props;
 
+  const [selectValue, setSelectValue] = useState(4);
+
   return passedData && passedData.some((el) => el.fields.status === status) ? (
     <CustomPaginator
-      passedData={passedData.filter(
-        (subscriber) => subscriber.fields.status === status
-      )}
-      dataPerPage={dataPerPage}
+      passedData={getFilteredDataByStatus(passedData, status)}
+      dataPerPage={parseInt(selectValue)}
       disableDuration={400}
       disableArrows={false}
       disableDigits={false}
       renderData={(data, actualPage) => (
-        <ContainerTable subHeading={subHeading}>
+        <ContainerTable
+          subHeading={subHeading}
+          passedData={passedData}
+          setSelectValue={setSelectValue}
+          disableSelect={
+            getFilteredDataByStatus(passedData, status).length > 4
+              ? true
+              : false
+          }
+        >
           <HeadTable dataHeadTable={dataHeadEmailTable} />
 
           <BodyTable>
@@ -38,7 +47,7 @@ const CampaignStatus = (props) => {
                 campaign={{ ...campaign, group: "campaigns" }}
                 index={index}
                 actualPage={actualPage}
-                dataPerPage={dataPerPage}
+                dataPerPage={parseInt(selectValue)}
                 setSelectedData={setSelectedData}
                 handleEditDetailsCampaign={handleEditDetailsCampaign}
                 setContentPopup={setContentPopup}
