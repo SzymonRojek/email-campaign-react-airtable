@@ -1,17 +1,64 @@
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
-import { Grid, Table, TableContainer } from "@material-ui/core";
+import { Table, TableContainer } from "@material-ui/core";
 import { Paper } from "@mui/material";
+import { makeStyles } from "@material-ui/core/styles";
 
 import SelectInputConroller from "../Inputs/SelectInputController";
 
-const styles = {
-  heading: { padding: "10px 0 5px 20px", letterSpacing: 2 },
-  paper: {
-    width: 65,
-    backgroundColor: "#142F43",
+const useStyles = makeStyles({
+  root: {
+    "& .MuiOutlinedInput-input": {
+      color: "white",
+      padding: "5px 10px",
+      backgroundColor: "#142f43",
+      width: 30,
+    },
+    "& .MuiInputLabel-root": {
+      color: "white",
+    },
+    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      borderColor: "white",
+      border: "none",
+    },
+    "& .MuiSvgIcon-root": {
+      color: "white",
+    },
+    "&:hover .MuiOutlinedInput-input": {
+      color: "white",
+    },
+    "&:hover .MuiInputLabel-root": {
+      color: "white",
+    },
+    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      borderColor: "white",
+    },
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+      color: "white",
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "white",
+    },
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#ffa500",
+    },
   },
+});
+
+const styles = {
+  headerWrapper: {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "0 20px",
+  },
+  heading: { letterSpacing: 2 },
   select: {
+    wrapper: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: 10,
+    },
     textError: { paddingTop: 0 },
     menuItem: {
       borderBottom: "1px solid #ddd",
@@ -30,34 +77,29 @@ const ContainerTable = ({
 
   return (
     <>
-      <Grid container>
-        <Grid item xs={disableSelect ? 5 : 12} sm={8} md={9} lg={10}>
-          <header>
-            <h3 style={styles.heading}>{subHeading}</h3>
-          </header>
-        </Grid>
+      <header style={styles.headerWrapper}>
+        <h3 style={styles.heading}>{subHeading}</h3>
+
         {disableSelect && (
-          <Grid container item xs={7} sm={4} md={3} lg={2}>
-            <Grid item xs={5}>
-              <h3 style={styles.heading}>Rows</h3>
-            </Grid>
-            <Grid item xs={7} style={{ margin: "10px 0 10px 0" }}>
-              <Paper elevation={14} style={styles.paper}>
-                <SelectInputConroller
-                  control={control}
-                  name="rowsNumbers"
-                  styles={styles.select}
-                  defaultValue="4"
-                  data={data}
-                  setSelectValue={setSelectValue}
-                  message=""
-                  error={false}
-                />
-              </Paper>
-            </Grid>
-          </Grid>
+          <div style={styles.select.wrapper}>
+            <h3 style={styles.heading}>Rows</h3>
+
+            <Paper elevation={14}>
+              <SelectInputConroller
+                control={control}
+                name="rowsNumbers"
+                styles={styles.select}
+                defaultValue="4"
+                data={data}
+                setSelectValue={setSelectValue}
+                message=""
+                error={false}
+                useStyles={useStyles}
+              />
+            </Paper>
+          </div>
         )}
-      </Grid>
+      </header>
 
       <TableContainer>
         <Table aria-label="subscribers table">{children}</Table>
