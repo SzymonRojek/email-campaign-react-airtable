@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Table, TableContainer } from "@material-ui/core";
 import { Paper } from "@mui/material";
@@ -10,9 +11,9 @@ const useStyles = makeStyles({
   root: {
     "& .MuiOutlinedInput-input": {
       color: "white",
-      padding: "5px 10px",
+      padding: "5px 12px",
       backgroundColor: "#142f43",
-      width: 30,
+      minWidth: 20,
     },
     "& .MuiInputLabel-root": {
       color: "white",
@@ -73,15 +74,22 @@ const ContainerTable = ({
   passedData,
   children,
 }) => {
-  const { control } = useForm();
+  const { control, watch } = useForm();
 
   const selectSubscribersNumber = [
     { value: "4", label: "4" },
     { value: "6", label: "6" },
     { value: "8", label: "8" },
     { value: "10", label: "10" },
-    { value: `${passedData.length}`, label: `${passedData.length}` },
+    ![4, 6, 8, 10].includes(passedData.length)
+      ? { value: `${passedData.length}`, label: `all (${passedData.length})` }
+      : "",
   ];
+
+  useEffect(() => {
+    const watchNumber = watch((value) => setSelectValue(+value.rowsNumbers));
+    return () => watchNumber.unsubscribe();
+  }, [watch, setSelectValue]);
 
   return (
     <>
@@ -99,7 +107,6 @@ const ContainerTable = ({
                 styles={styles.select}
                 defaultValue="4"
                 data={selectSubscribersNumber}
-                setSelectValue={setSelectValue}
                 message=""
                 error={false}
                 useStyles={useStyles}
