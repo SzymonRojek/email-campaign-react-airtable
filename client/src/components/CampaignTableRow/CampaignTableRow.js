@@ -181,7 +181,6 @@ RowCampaign.propTypes = {
     }).isRequired,
   }),
   index: PropTypes.number.isRequired,
-  children: PropTypes.object.isRequired,
   setSelectedData: PropTypes.func.isRequired,
   handleEditDetailsCampaign: PropTypes.func.isRequired,
   setOpenConfirmPopup: PropTypes.func.isRequired,
