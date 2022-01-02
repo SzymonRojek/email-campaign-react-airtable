@@ -1,45 +1,8 @@
 import PropTypes from "prop-types";
 import { Controller } from "react-hook-form";
 
-import { FormControl, Select, MenuItem, Divider } from "@mui/material";
+import { FormControl, Select, MenuItem } from "@mui/material";
 import { Typography } from "@material-ui/core";
-
-import { makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles({
-  root: {
-    "& .MuiOutlinedInput-input": {
-      color: "white",
-    },
-    "& .MuiInputLabel-root": {
-      color: "white",
-    },
-    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "white",
-    },
-    "& .MuiSvgIcon-root": {
-      color: "white",
-    },
-    "&:hover .MuiOutlinedInput-input": {
-      color: "white",
-    },
-    "&:hover .MuiInputLabel-root": {
-      color: "white",
-    },
-    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "white",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-      color: "white",
-    },
-    "& .MuiInputLabel-root.Mui-focused": {
-      color: "white",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#ffa500",
-    },
-  },
-});
 
 const SelectInputController = ({ ...props }) => {
   const {
@@ -50,6 +13,7 @@ const SelectInputController = ({ ...props }) => {
     defaultValue,
     data,
     setSelectValue,
+    useStyles,
     styles,
   } = props;
   const classes = useStyles();
