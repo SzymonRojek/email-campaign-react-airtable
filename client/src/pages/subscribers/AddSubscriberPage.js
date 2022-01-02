@@ -2,7 +2,8 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Paper, Box, Collapse, Divider } from "@mui/material";
+import { makeStyles } from "@material-ui/core/styles";
+import { Paper, Box, Collapse } from "@mui/material";
 import { Grid, Typography } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 
@@ -24,7 +25,42 @@ const selectStatusData = [
   { value: "active", label: "active" },
 ];
 
-const style = {
+const useStyles = makeStyles({
+  root: {
+    "& .MuiOutlinedInput-input": {
+      color: "white",
+    },
+    "& .MuiInputLabel-root": {
+      color: "white",
+    },
+    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      borderColor: "white",
+    },
+    "& .MuiSvgIcon-root": {
+      color: "white",
+    },
+    "&:hover .MuiOutlinedInput-input": {
+      color: "white",
+    },
+    "&:hover .MuiInputLabel-root": {
+      color: "white",
+    },
+    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      borderColor: "white",
+    },
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+      color: "white",
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "white",
+    },
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#ffa500",
+    },
+  },
+});
+
+const styles = {
   paper: {
     maxWidth: 600,
     margin: "auto",
@@ -48,6 +84,12 @@ const style = {
     },
   },
   icon: { color: "orange", fontSize: 30, marginTop: 6 },
+  select: {
+    textError: { color: "crimson", paddingTop: 10 },
+    menuItem: {
+      borderBottom: "1px solid #ddd",
+    },
+  },
 };
 
 const AddSubscriberPage = ({
@@ -100,11 +142,11 @@ const AddSubscriberPage = ({
     });
 
     setContentPopup({
-      title: <span style={style.titlePopup}>That's great 🎊</span>,
+      title: <span style={styles.titlePopup}>That's great 🎊</span>,
       text: (
         <>
           Subscriber
-          <span style={style.subscriberName}>
+          <span style={styles.subscriberName}>
             <strong> {capitalizeFirstLetter(data.name)} </strong>
           </span>
           has been added to the Airtable 😁
@@ -123,9 +165,9 @@ const AddSubscriberPage = ({
 
   return (
     <StyledContainer>
-      <StyledHeading label="Add Subscriber:" />
+      <StyledHeading label="Add Subscriber" />
 
-      <Paper elevation={14} style={style.paper}>
+      <Paper elevation={14} style={styles.paper}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box px={3} py={3}>
             <Grid container spacing={4}>
@@ -133,7 +175,7 @@ const AddSubscriberPage = ({
                 <Typography
                   color="textSecondary"
                   variant="body2"
-                  style={style.typographyRequiredText}
+                  style={styles.typographyRequiredText}
                 >
                   *Fields required
                 </Typography>
@@ -165,8 +207,8 @@ const AddSubscriberPage = ({
               <Grid container item xs={12}>
                 <Grid item xs={11}>
                   <StyledCheckbox
-                    sx={style.checkbox}
-                    style={style.labelCheckbox}
+                    sx={styles.checkbox}
+                    style={styles.labelCheckbox}
                     defaultValue={false}
                     onChange={handleCheckboxOnChange}
                     label="Add More Details"
@@ -174,9 +216,9 @@ const AddSubscriberPage = ({
                 </Grid>
                 <Grid item xs={1}>
                   {isCheckboxChecked ? (
-                    <ExpandLess style={style.icon} />
+                    <ExpandLess style={styles.icon} />
                   ) : (
-                    <ExpandMore style={style.icon} />
+                    <ExpandMore style={styles.icon} />
                   )}
                 </Grid>
               </Grid>
@@ -188,6 +230,8 @@ const AddSubscriberPage = ({
                       <SelectInputController
                         control={control}
                         name="status"
+                        styles={styles.select}
+                        useStyles={useStyles}
                         error={!!errors.status}
                         message={errors.status?.message ?? ""}
                         defaultValue="change status"
