@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import emailjs from "emailjs-com";
+// import { init } from "emailjs-com";
 
 import api from "api";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
@@ -13,6 +14,7 @@ import { FormCampaign } from "components/FormCampaign";
 
 const { REACT_APP_MAIL_USER, REACT_APP_MAIL_TEMPLATE, REACT_APP_MAIL_KEY } =
   process.env;
+// init("service_hz69k5r");
 
 const postData = (data, status) => {
   const endpoint = "/campaigns";
@@ -24,6 +26,8 @@ const postData = (data, status) => {
       status: status,
     },
   });
+
+  // possibly add getCampaigns back
 };
 
 const AddCampaignPage = ({
@@ -92,6 +96,8 @@ const AddCampaignPage = ({
   };
 
   const handleSendCampaign = (data) => {
+    if (!data) return;
+
     if (subscribersData.data) {
       subscribersData.data
         .filter((subscriber) => subscriber.fields.status === "active")
@@ -105,7 +111,7 @@ const AddCampaignPage = ({
           // REACT_APP_MAIL_USER,
           emailjs
             .send(
-              "sgswdgsdg",
+              "lllll",
               REACT_APP_MAIL_TEMPLATE,
               inputsData,
               REACT_APP_MAIL_KEY
