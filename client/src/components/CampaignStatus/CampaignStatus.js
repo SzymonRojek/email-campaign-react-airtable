@@ -30,7 +30,7 @@ const CampaignStatus = (props) => {
       renderData={(data, actualPage) => (
         <ContainerTable
           subHeading={subHeading}
-          passedData={passedData}
+          passedData={getFilteredDataByStatus(passedData, status)}
           setSelectValue={setSelectValue}
           disableSelect={
             getFilteredDataByStatus(passedData, status).length > 4
