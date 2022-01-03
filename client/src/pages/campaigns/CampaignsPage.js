@@ -38,7 +38,7 @@ const CampaignsPage = ({
             />
           ) : (
             <div style={{ marginBottom: 100 }}>
-              <StyledHeading label="Campaigns" />
+              <StyledHeading label="All Campaigns" />
 
               <CampaignsList
                 subHeading="List"

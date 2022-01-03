@@ -40,7 +40,7 @@ const SubscribersPage = (props) => {
             />
           ) : (
             <div style={{ marginBottom: 100 }}>
-              <StyledHeading label="Subscribers" />
+              <StyledHeading label="All Subscribers" />
 
               <SubscribersList
                 subHeading="List"
