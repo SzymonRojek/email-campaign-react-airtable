@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 const headingStyles = {
   textAlign: "center",
   marginTop: 60,
+  paddingTop: 35,
   marginBottom: 40,
   color: "#142F43",
   letterSpacing: 2,
