@@ -14,6 +14,7 @@ const SubscriberStatus = (props) => {
     status,
     handleSubscriberDetails,
     setSelectedData,
+    setSelectStatus,
     setContentPopup,
     setOpenConfirmPopup,
   } = props;
@@ -30,8 +31,9 @@ const SubscriberStatus = (props) => {
       renderData={(data, actualPage) => (
         <ContainerTable
           subHeading={subHeading}
-          passedData={passedData}
+          passedData={getFilteredDataByStatus(passedData, status)}
           setSelectValue={setSelectValue}
+          setSelectStatus={setSelectStatus}
           disableSelect={
             getFilteredDataByStatus(passedData, status).length > 4
               ? true
