@@ -15,6 +15,7 @@ const commonStyles = {
 
 const activeLink = {
   color: "#003049",
+  backgroundColor: "white",
   border: "3px solid #003049",
   ...commonStyles,
 };
