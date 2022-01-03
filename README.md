@@ -6,6 +6,7 @@ Actually I am working on:
 - connect the app to Email.js external resource
 - maybe on the status page I will add additional main select status
 - possibly I will add login component (password confirmation and connect app to the local session when application is running in the browser)
+- scubsribers details (working on layouts of the tables)
 
 Check demo on Herokuapp:[link demo](https://email-campaign-subscribers.herokuapp.com/)
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
