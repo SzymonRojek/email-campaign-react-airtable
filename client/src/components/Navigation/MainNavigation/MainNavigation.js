@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px 0 20px 0",
   },
   logoContainer: {
-    [theme.breakpoints.down("lg")]: {
+    [theme.breakpoints.up("md")]: {
       marginBottom: 10,
       width: 50,
       height: 50,
