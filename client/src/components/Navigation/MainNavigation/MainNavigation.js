@@ -9,13 +9,13 @@ import {
   CssBaseline,
   useMediaQuery,
 } from "@material-ui/core";
-import { GoMailRead } from "react-icons/go";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
 
 import { StyledTabs } from "./StyledTabs";
 import { DrawerMenu } from "./DrawerMenu";
+import Logo from "../../../img/logo.svg"; // remove dots!
 
 const mainNavigationLinks = [
   {
@@ -41,9 +41,12 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     backgroundColor: "#142f43",
     minHeight: "5vh",
-    [theme.breakpoints.down("xs")]: {
+    width: "100%",
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      justifyContent: "space-between",
       minHeight: "5vh",
-      padding: "10px 0",
+      padding: "10px 0 10px 20px",
     },
   },
   navLinksContainer: {
@@ -53,14 +56,15 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px 0 20px 0",
   },
   logoContainer: {
-    [theme.breakpoints.down("sm")]: {
-      flexGrow: 1,
+    [theme.breakpoints.down("lg")]: {
+      marginBottom: 10,
+      width: 50,
+      height: 50,
     },
-  },
-  logo: {
-    fontSize: 30,
-    color: "orange",
-    cursor: "pointer",
+    [theme.breakpoints.down("sm")]: {
+      width: 40,
+      height: 40,
+    },
   },
   link: {
     textDecoration: "none",
@@ -91,12 +95,13 @@ function MainNavigation({ tabsValue, setTabsValue }) {
   }, []);
 
   return (
-    <AppBar className={classes.container} position="static">
+    <AppBar position="static">
       <CssBaseline />
-      <Toolbar>
+
+      <Toolbar className={classes.container}>
         <div className={classes.logoContainer}>
           <Link to="/">
-            <GoMailRead className={classes.logo} />
+            <img src={Logo} alt="logo" />
           </Link>
         </div>
 
