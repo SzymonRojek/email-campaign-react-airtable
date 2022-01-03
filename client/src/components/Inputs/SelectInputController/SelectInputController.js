@@ -1,8 +1,21 @@
 import PropTypes from "prop-types";
 import { Controller } from "react-hook-form";
-
 import { FormControl, Select, MenuItem } from "@mui/material";
 import { Typography } from "@material-ui/core";
+import { withStyles } from "@material-ui/styles";
+
+const MyMenuItem = withStyles({
+  root: {
+    backgroundColor: "#22445f !important",
+    borderBottom: "1px solid rgb(221, 220, 220) !important",
+    color: "rgb(221, 220, 220) !important",
+
+    "&:hover": {
+      color: "rgb(221, 220, 220)",
+      backgroundColor: "#142f43 !important",
+    },
+  },
+})(MenuItem);
 
 const SelectInputController = ({ ...props }) => {
   const {
@@ -34,17 +47,11 @@ const SelectInputController = ({ ...props }) => {
               selected={value}
               value={value}
             >
-              {data.map(({ value, label }) => {
-                return (
-                  <MenuItem
-                    key={`key-${label}`}
-                    value={value}
-                    style={styles.menuItem}
-                  >
-                    {label}
-                  </MenuItem>
-                );
-              })}
+              {data.map(({ value, label }) => (
+                <MyMenuItem key={`key-${label}`} value={value}>
+                  {label}
+                </MyMenuItem>
+              ))}
             </Select>
           );
         }}
@@ -71,32 +78,3 @@ SelectInputController.propTypes = {
   ),
 };
 export default SelectInputController;
-
-// const SelectInputController = ({ ...props }) => {
-//   const { control, name, error, message, defaultValue, data } = props;
-//   const classes = useStyles();
-//   const customId = `${name}-id`;
-
-//   return (
-//     <FormControl fullWidth className={classes.root}>
-//       <Controller
-//         render={({ field: { ref, ...field } }) => (
-//           <Select {...field} inputRef={ref} id={customId} error={error}>
-//             {data.map(({ value, label }) => (
-//               <MenuItem key={`key-${label}`} value={value}>
-//                 {label}
-//               </MenuItem>
-//             ))}
-//           </Select>
-//         )}
-//         control={control}
-//         name={name}
-//         defaultValue={defaultValue}
-//       />
-
-//       <Typography variant="inherit" style={style.textError}>
-//         {message}
-//       </Typography>
-//     </FormControl>
-//   );
-// };
