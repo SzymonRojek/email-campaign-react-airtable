@@ -1,10 +1,60 @@
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { makeStyles } from "@material-ui/core/styles";
 
-import { dataHeadEmailTable } from "data/dataHeadEmailTable";
 import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
 import { CampaignStatus } from "components/CampaignStatus";
+import SelectInputController from "../../components/Inputs/SelectInputController";
+
+const useStyles = makeStyles({
+  root: {
+    "& .MuiOutlinedInput-input": {
+      color: "rgb(221, 220, 220)",
+      fontWeight: "bold",
+      padding: "5px 12px",
+      backgroundColor: "#142f43",
+      minWidth: 20,
+      fontSize: 14,
+      transition: ".3 easy-out",
+    },
+    "& .MuiInputLabel-root": {
+      color: "rgb(221, 220, 220)",
+    },
+    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      border: "none",
+    },
+    "& .MuiSvgIcon-root": {
+      color: "rgb(221, 220, 220)",
+    },
+    "&:hover .MuiOutlinedInput-input": {
+      color: "rgb(221, 220, 220)",
+    },
+    "&:hover .MuiInputLabel-root": {
+      color: "rgb(221, 220, 220)",
+    },
+    "&:hover .MuiMenuItem-root": {
+      backgroundColor: "red",
+    },
+  },
+});
+
+const styles = {
+  select: {
+    menuItem: {
+      backgroundColor: "#142f43",
+      color: "rgb(221, 220, 220)",
+      borderBottom: "1px solid #ddd",
+    },
+  },
+};
+
+const selectCampaignsStatus = [
+  { value: "sent", label: "sent" },
+  { value: "draft", label: "draft" },
+];
 
 const CampaignsStatusPage = (props) => {
   const {
@@ -14,6 +64,33 @@ const CampaignsStatusPage = (props) => {
     setSelectedData,
     setContentPopup,
   } = props;
+
+  const { control, watch } = useForm();
+  const [selectStatus, setSelectStatus] = useState("sent");
+
+  const statusDataHeadTable = [
+    "no",
+    "title",
+    "description",
+    <SelectInputController
+      control={control}
+      name="status"
+      styles={styles.select}
+      defaultValue={selectStatus}
+      data={selectCampaignsStatus}
+      message=""
+      error={false}
+      useStyles={useStyles}
+    />,
+    "created",
+    "details",
+    "delete",
+  ];
+
+  useEffect(() => {
+    const watchStatus = watch((value) => setSelectStatus(value.status));
+    return () => watchStatus.unsubscribe();
+  }, [watch]);
 
   return (
     <>
@@ -36,24 +113,12 @@ const CampaignsStatusPage = (props) => {
           ) : (
             <>
               <StyledHeading label="Campaigns Status" />
-              <div style={{ marginBottom: 100 }}>
-                <CampaignStatus
-                  subHeading="Sent"
-                  dataHeadEmailTable={dataHeadEmailTable}
-                  passedData={campaignsData.data}
-                  status="sent"
-                  setSelectedData={setSelectedData}
-                  handleEditDetailsCampaign={handleEditDetailsCampaign}
-                  setContentPopup={setContentPopup}
-                  setOpenConfirmPopup={setOpenConfirmPopup}
-                />
-              </div>
 
               <CampaignStatus
-                subHeading="Draft"
-                dataHeadEmailTable={dataHeadEmailTable}
+                subHeading="List"
+                dataHeadEmailTable={statusDataHeadTable}
                 passedData={campaignsData.data}
-                status="draft"
+                status={selectStatus}
                 setSelectedData={setSelectedData}
                 handleEditDetailsCampaign={handleEditDetailsCampaign}
                 setContentPopup={setContentPopup}
