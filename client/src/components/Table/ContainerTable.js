@@ -19,29 +19,11 @@ const useStyles = makeStyles({
       color: "white",
     },
     "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "white",
+      borderColor: "#142f43",
       border: "none",
     },
     "& .MuiSvgIcon-root": {
       color: "white",
-    },
-    "&:hover .MuiOutlinedInput-input": {
-      color: "white",
-    },
-    "&:hover .MuiInputLabel-root": {
-      color: "white",
-    },
-    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "white",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-      color: "white",
-    },
-    "& .MuiInputLabel-root.Mui-focused": {
-      color: "white",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#ffa500",
     },
   },
 });
@@ -61,9 +43,6 @@ const styles = {
       gap: 10,
     },
     textError: { paddingTop: 0 },
-    menuItem: {
-      borderBottom: "1px solid #ddd",
-    },
   },
 };
 
@@ -81,10 +60,12 @@ const ContainerTable = ({
     { value: "6", label: "6" },
     { value: "8", label: "8" },
     { value: "10", label: "10" },
-    ![4, 6, 8, 10].includes(passedData.length)
-      ? { value: `${passedData.length}`, label: `all (${passedData.length})` }
-      : "",
+    { value: `${passedData.length}`, label: `all (${passedData.length})` },
   ];
+
+  // ![4, 6, 8, 10].includes(passedData.length)
+  // ? { value: `${passedData.length}`, label: `all (${passedData.length})` }
+  // : "",
 
   useEffect(() => {
     const watchNumber = watch((value) => setSelectValue(+value.rowsNumbers));
@@ -100,7 +81,7 @@ const ContainerTable = ({
           <div style={styles.select.wrapper}>
             <h3 style={styles.heading}>Rows</h3>
 
-            <Paper elevation={14}>
+            <Paper elevation={8}>
               <SelectInputConroller
                 control={control}
                 name="rowsNumbers"
