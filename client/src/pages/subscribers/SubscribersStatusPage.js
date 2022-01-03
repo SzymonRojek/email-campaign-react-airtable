@@ -1,10 +1,62 @@
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { makeStyles } from "@material-ui/core/styles";
 
-import { generalDataHeadTable } from "data/dataHeadTable";
 import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
 import { SubscriberStatus } from "components/SubscriberStatus";
+
+import SelectInputController from "../../components/Inputs/SelectInputController";
+
+const useStyles = makeStyles({
+  root: {
+    "& .MuiOutlinedInput-input": {
+      color: "rgb(221, 220, 220)",
+      fontWeight: "bold",
+      padding: "5px 12px",
+      backgroundColor: "#142f43",
+      minWidth: 20,
+      fontSize: 14,
+      transition: ".3 easy-out",
+    },
+    "& .MuiInputLabel-root": {
+      color: "rgb(221, 220, 220)",
+    },
+    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      border: "none",
+    },
+    "& .MuiSvgIcon-root": {
+      color: "rgb(221, 220, 220)",
+    },
+    "&:hover .MuiOutlinedInput-input": {
+      color: "rgb(221, 220, 220)",
+    },
+    "&:hover .MuiInputLabel-root": {
+      color: "rgb(221, 220, 220)",
+    },
+    "&:hover .MuiMenuItem-root": {
+      backgroundColor: "red",
+    },
+  },
+});
+
+const styles = {
+  select: {
+    menuItem: {
+      backgroundColor: "#142f43",
+      color: "rgb(221, 220, 220)",
+      borderBottom: "1px solid #ddd",
+    },
+  },
+};
+
+const selectSubscribersStatus = [
+  { value: "active", label: "active" },
+  { value: "pending", label: "pending" },
+  { value: "blocked", label: "blocked" },
+];
 
 const SubscribersStatusPage = (props) => {
   const {
@@ -14,7 +66,33 @@ const SubscribersStatusPage = (props) => {
     setSelectedData,
     setContentPopup,
   } = props;
+  const { control, watch } = useForm();
+  const [selectStatus, setSelectStatus] = useState("active");
 
+  const statusDataHeadTable = [
+    "no",
+    "name",
+    "surname",
+    "profession",
+    <SelectInputController
+      control={control}
+      name="status"
+      styles={styles.select}
+      defaultValue={selectStatus}
+      data={selectSubscribersStatus}
+      message=""
+      error={false}
+      useStyles={useStyles}
+    />,
+    "created",
+    "details",
+    "delete",
+  ];
+
+  useEffect(() => {
+    const watchStatus = watch((value) => setSelectStatus(value.status));
+    return () => watchStatus.unsubscribe();
+  }, [watch]);
   return (
     <>
       {subscribersData.status === "loading" ? (
@@ -37,37 +115,13 @@ const SubscribersStatusPage = (props) => {
           ) : (
             <>
               <StyledHeading label="Subscribers status" />
-              <div style={{ marginBottom: 100 }}>
-                <SubscriberStatus
-                  subHeading="Active"
-                  generalDataHeadTable={generalDataHeadTable}
-                  passedData={subscribersData.data}
-                  status="active"
-                  setSelectedData={setSelectedData}
-                  handleSubscriberDetails={handleSubscriberDetails}
-                  setContentPopup={setContentPopup}
-                  setOpenConfirmPopup={setOpenConfirmPopup}
-                />
-              </div>
-
-              <div style={{ marginBottom: 100 }}>
-                <SubscriberStatus
-                  subHeading="Pending"
-                  generalDataHeadTable={generalDataHeadTable}
-                  passedData={subscribersData.data}
-                  status="pending"
-                  setSelectedData={setSelectedData}
-                  handleSubscriberDetails={handleSubscriberDetails}
-                  setContentPopup={setContentPopup}
-                  setOpenConfirmPopup={setOpenConfirmPopup}
-                />
-              </div>
 
               <SubscriberStatus
-                subHeading="Blocked"
-                generalDataHeadTable={generalDataHeadTable}
+                subHeading="List"
+                generalDataHeadTable={statusDataHeadTable}
                 passedData={subscribersData.data}
-                status="blocked"
+                status={selectStatus}
+                setSelectStatus={setSelectStatus}
                 setSelectedData={setSelectedData}
                 handleSubscriberDetails={handleSubscriberDetails}
                 setContentPopup={setContentPopup}
