@@ -87,11 +87,16 @@ function MainNavigation({ tabsValue, setTabsValue }) {
 
   useEffect(() => {
     const path = location.pathname;
-    if (window.location.href.indexOf("subscribers") > -1 && tabsValue !== 0)
+    if (window.location.href.indexOf("subscribers") > -1 && tabsValue !== 0) {
       setTabsValue(0);
-    else if (window.location.href.indexOf("campaigns") > -1 && tabsValue !== 1)
+    } else if (
+      window.location.href.indexOf("campaigns") > -1 &&
+      tabsValue !== 1
+    ) {
       setTabsValue(1);
-    else if (path === "/" && tabsValue !== 2) setTabsValue(2);
+    } else if (path === "/" && tabsValue !== 2) {
+      setTabsValue(2);
+    }
   }, []);
 
   return (
@@ -100,7 +105,7 @@ function MainNavigation({ tabsValue, setTabsValue }) {
 
       <Toolbar className={classes.container}>
         <div className={classes.logoContainer}>
-          <Link to="/">
+          <Link to="/" onClick={() => setTabsValue(2)}>
             <img src={Logo} alt="logo" />
           </Link>
         </div>
