@@ -3,14 +3,17 @@ import { Link } from "@mui/material";
 import { Container, Box, Grid, Typography } from "@mui/material";
 import { SiAirtable } from "react-icons/si";
 
-import homeImg from "img/graphic.svg";
+import homeImg from "img/heroPlus.svg";
+import homeEnvelope from "img/envelope.svg";
 
 const style = {
   box: {
     maxWidth: 1224,
     margin: "auto",
-    color: "#ffffff8c",
-    backgroundColor: "rgb(20, 47, 67, 0.8)",
+    // color: "#ffffff8c",
+    color: "#142f43",
+    // backgroundColor: "rgb(20, 47, 67, 0.8)",
+    backgroundColor: "rgba(255, 255, 255, 0.55)",
     borderRadius: 6,
     backdropFilter: "blur(25px)",
   },
@@ -21,24 +24,43 @@ const style = {
 };
 
 const useStyles = makeStyles((theme) => ({
+  homeEnvelope: {
+    maxWidth: 150,
+    alignItems: "center",
+  },
   "@media (min-width:960px)": {
     container: {
       marginTop: 40,
     },
     mainHeading: {
       padding: "100px",
+      backgroundColor: "#142f43",
+    },
+    homeImg: {
+      alignItems: "center",
     },
   },
-  "@media (max-width:600px)": {
+  "@media (max-width:780px)": {
     container: {
       marginTop: 40,
     },
     homeImg: {
-      maxWidth: 200,
+      maxWidth: 450,
+    },
+  },
+  "@media (min-width:780px)": {
+    container: {
+      marginTop: 40,
+    },
+    homeImg: {
+      minWidth: 100,
+      maxWidth: 400,
     },
   },
   mainHeading: {
     color: "orange",
+    backgroundColor: "#142f43",
+    padding: 20,
   },
   link: {
     color: "orange",
@@ -53,7 +75,7 @@ const HomePage = () => {
     <Container className={classes.container}>
       <Box boxShadow={3} p={4} style={style.box}>
         <Grid container direction="row" spacing={4}>
-          <Grid item sm={12} xs={12} md={6}>
+          <Grid item xs={12}>
             <Typography
               variant="h1"
               gutterBottom
@@ -63,14 +85,14 @@ const HomePage = () => {
               Hello, there.
             </Typography>
           </Grid>
-          <Grid item sm={6} md={6}>
+          <Grid item sm={12} md={6} order={{ md: 4 }}>
             <Typography variant="h2" paragraph>
               This is the <strong>Email Campaign </strong>
               application. You can write @mail to all your subscribers just by
               one CLICK - easy peasy!
             </Typography>
           </Grid>
-          <Grid item sm={6} xs={12} md={6} order={{ md: 4 }}>
+          <Grid item xs={12} md={6} order={{ md: 4 }}>
             <Grid
               container
               direction="column"
@@ -80,9 +102,9 @@ const HomePage = () => {
               <img src={homeImg} alt="campaign" className={classes.homeImg} />
             </Grid>
           </Grid>
-          <Grid item xs={12} md={6} order={{ md: 3 }}>
+          <Grid item order={{ md: 4 }}>
             <Grid container spacing={3}>
-              <Grid item>
+              <Grid item md={6}>
                 <Typography variant="h3">
                   The app is connected to the
                   <span style={{ display: "inline-block" }}>
@@ -99,7 +121,7 @@ const HomePage = () => {
                   connect and change them as needed.
                 </Typography>
               </Grid>
-              <Grid item>
+              <Grid item md={6}>
                 <Typography variant="h3">
                   Airtable base will provide its own <strong>rest API </strong>
                   to create, read, update, and delete any records.
@@ -109,7 +131,21 @@ const HomePage = () => {
           </Grid>
           <Grid item xs={12} order={{ md: 5 }}>
             <Grid container spacing={3}>
-              <Grid item>
+              <Grid
+                container
+                direction="column"
+                alignItems="center"
+                justify="center"
+                xs={12}
+                md={2}
+              >
+                <img
+                  src={homeEnvelope}
+                  alt="envelope"
+                  className={classes.homeEnvelope}
+                />
+              </Grid>
+              <Grid item md={10}>
                 <Typography variant="body2">
                   Add new subscriber, wait for an admin confirmation to get an
                   active status and get more their details. Finally create an
