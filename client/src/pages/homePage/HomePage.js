@@ -8,14 +8,13 @@ import homeEnvelope from "img/envelope.svg";
 
 const style = {
   box: {
+    padding: "0 16px 0 32px",
     maxWidth: 1224,
     margin: "auto",
-    // color: "#ffffff8c",
     color: "#142f43",
-    // backgroundColor: "rgb(20, 47, 67, 0.8)",
     backgroundColor: "rgba(255, 255, 255, 0.55)",
     borderRadius: 6,
-    backdropFilter: "blur(25px)",
+    backdropFilter: "blur(35px)",
   },
   link: {
     color: "orange",
@@ -31,10 +30,6 @@ const useStyles = makeStyles((theme) => ({
   "@media (min-width:960px)": {
     container: {
       marginTop: 40,
-    },
-    mainHeading: {
-      padding: "100px",
-      backgroundColor: "#142f43",
     },
     homeImg: {
       alignItems: "center",
@@ -60,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   mainHeading: {
     color: "orange",
     backgroundColor: "#142f43",
-    padding: 20,
+    padding: 30,
   },
   link: {
     color: "orange",
@@ -73,15 +68,10 @@ const HomePage = () => {
 
   return (
     <Container className={classes.container}>
-      <Box boxShadow={3} p={4} style={style.box}>
+      <Box boxShadow={3} style={style.box}>
         <Grid container direction="row" spacing={4}>
           <Grid item xs={12}>
-            <Typography
-              variant="h1"
-              gutterBottom
-              md={12}
-              className={classes.mainHeading}
-            >
+            <Typography variant="h1" md={12} className={classes.mainHeading}>
               Hello, there.
             </Typography>
           </Grid>
@@ -129,7 +119,12 @@ const HomePage = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12} order={{ md: 5 }}>
+          <Grid
+            item
+            xs={12}
+            order={{ md: 5 }}
+            style={{ padding: "40px 16px 20px 32px" }}
+          >
             <Grid container spacing={3}>
               <Grid
                 container
@@ -145,7 +140,7 @@ const HomePage = () => {
                   className={classes.homeEnvelope}
                 />
               </Grid>
-              <Grid item md={10}>
+              <Grid item md={10} style={{ paddingRight: 0 }}>
                 <Typography variant="body2">
                   Add new subscriber, wait for an admin confirmation to get an
                   active status and get more their details. Finally create an
