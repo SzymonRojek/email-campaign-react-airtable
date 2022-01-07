@@ -16,37 +16,37 @@ theme.typography.h1 = {
 
 theme.typography.h2 = {
   [theme.breakpoints.down("sm")]: {
-    fontSize: "1.5rem",
+    fontSize: "1.3rem",
   },
   [theme.breakpoints.up("sm")]: {
-    fontSize: "2rem",
+    fontSize: "1.5rem",
   },
   [theme.breakpoints.up("md")]: {
-    fontSize: "2.5rem",
+    fontSize: "1.8rem",
   },
 };
 
 theme.typography.h3 = {
   [theme.breakpoints.down("sm")]: {
-    fontSize: "1.3rem",
+    fontSize: "1.2rem",
   },
   [theme.breakpoints.up("sm")]: {
-    fontSize: "1.7rem",
+    fontSize: "1.4rem",
   },
   [theme.breakpoints.up("md")]: {
-    fontSize: "2rem",
+    fontSize: "1.7rem",
   },
 };
 
 theme.typography.body2 = {
   [theme.breakpoints.down("sm")]: {
-    fontSize: "1.2rem",
+    fontSize: "1rem",
   },
   [theme.breakpoints.up("sm")]: {
-    fontSize: "1.5rem",
+    fontSize: "1.3rem",
   },
   [theme.breakpoints.up("md")]: {
-    fontSize: "1.7rem",
+    fontSize: "1.5rem",
   },
 };
 
