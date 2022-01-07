@@ -9,9 +9,9 @@ import envelopeImg from "img/envelope.svg";
 
 const style = {
   box: {
-    padding: "0 16px 0 32px",
+    padding: "40px 16px 40px 32px",
     maxWidth: 1224,
-    margin: "auto",
+    margin: "0 5px",
     color: "#142f43",
     backgroundColor: "rgba(255, 255, 255, 0.55)",
     borderRadius: 6,
@@ -88,7 +88,7 @@ const HomePage = () => {
 
   return (
     <Container className={classes.container}>
-      <Box boxShadow={3} style={style.box}>
+      <Box boxShadow={10} style={style.box}>
         <Grid container direction="row" spacing={4}>
           <Grid item xs={12}>
             <Typography variant="h1" className={classes.mainHeading}>
