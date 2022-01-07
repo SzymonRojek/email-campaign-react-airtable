@@ -39,9 +39,9 @@ const useStyles = makeStyles((theme) => ({
   container: {
     position: "fixed",
     top: 0,
-    backgroundColor: "#142f43",
     minHeight: "5vh",
     width: "100%",
+    backgroundColor: "#142f43",
     boxShadow: "0 4px 2px -2px rgba(0, 0, 0, .2)",
     [theme.breakpoints.down("sm")]: {
       display: "flex",
@@ -102,6 +102,8 @@ function MainNavigation({ tabsValue, setTabsValue }) {
 
   return (
     <AppBar position="static">
+      <CssBaseline />
+
       <Toolbar className={classes.container}>
         <div className={classes.logoContainer}>
           <Link to="/" onClick={() => setTabsValue(2)}>
