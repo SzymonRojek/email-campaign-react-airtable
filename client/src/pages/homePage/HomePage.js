@@ -3,8 +3,9 @@ import { Link } from "@mui/material";
 import { Container, Box, Grid, Typography } from "@mui/material";
 import { SiAirtable } from "react-icons/si";
 
-import homeImg from "img/heroPlus.svg";
-import homeEnvelope from "img/envelope.svg";
+import peopleImg from "img/people.svg";
+import computerImg from "img/computer.svg";
+import envelopeImg from "img/envelope.svg";
 
 const style = {
   box: {
@@ -17,21 +18,40 @@ const style = {
     backdropFilter: "blur(35px)",
   },
   link: {
-    color: "orange",
     padding: "0 10px",
+    color: "#4caf50",
+    fontWeight: "bold",
+  },
+  linkReadMe: {
+    color: "orange",
+  },
+  airtableIcon: {
+    color: "orange",
   },
 };
 
 const useStyles = makeStyles((theme) => ({
-  homeEnvelope: {
+  peopleImg: {
     maxWidth: 150,
     alignItems: "center",
   },
+  envelopeImg: {
+    display: "none",
+    maxWidth: 100,
+    paddingTop: 40,
+    [theme.breakpoints.up("md")]: {
+      display: "inline-block",
+    },
+    "@media (min-width:1239px)": {
+      paddingTop: 60,
+    },
+  },
+
   "@media (min-width:960px)": {
     container: {
       marginTop: 40,
     },
-    homeImg: {
+    computerImg: {
       alignItems: "center",
     },
   },
@@ -39,15 +59,15 @@ const useStyles = makeStyles((theme) => ({
     container: {
       marginTop: 40,
     },
-    homeImg: {
-      maxWidth: 450,
+    computerImg: {
+      maxWidth: 300,
     },
   },
   "@media (min-width:780px)": {
     container: {
       marginTop: 40,
     },
-    homeImg: {
+    computerImg: {
       minWidth: 100,
       maxWidth: 400,
     },
@@ -56,10 +76,10 @@ const useStyles = makeStyles((theme) => ({
     color: "orange",
     backgroundColor: "#142f43",
     padding: 30,
-  },
-  link: {
-    color: "orange",
-    padding: "0 10px",
+    maxWidth: "50%",
+    "@media (max-width:729px)": {
+      maxWidth: "75%",
+    },
   },
 }));
 
@@ -71,8 +91,8 @@ const HomePage = () => {
       <Box boxShadow={3} style={style.box}>
         <Grid container direction="row" spacing={4}>
           <Grid item xs={12}>
-            <Typography variant="h1" md={12} className={classes.mainHeading}>
-              Hello, there.
+            <Typography variant="h1" className={classes.mainHeading}>
+              Hello, there
             </Typography>
           </Grid>
           <Grid item sm={12} md={6} order={{ md: 4 }}>
@@ -81,7 +101,20 @@ const HomePage = () => {
               application. You can write @mail to all your subscribers just by
               one CLICK - easy peasy!
             </Typography>
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justify="center"
+            >
+              <img
+                src={envelopeImg}
+                alt="envelope"
+                className={classes.envelopeImg}
+              />
+            </Grid>
           </Grid>
+
           <Grid item xs={12} md={6} order={{ md: 4 }}>
             <Grid
               container
@@ -89,7 +122,11 @@ const HomePage = () => {
               alignItems="center"
               justify="center"
             >
-              <img src={homeImg} alt="campaign" className={classes.homeImg} />
+              <img
+                src={computerImg}
+                alt="hero graphic - people, envelopes, computer"
+                className={classes.computerImg}
+              />
             </Grid>
           </Grid>
           <Grid item order={{ md: 4 }}>
@@ -104,7 +141,7 @@ const HomePage = () => {
                       underline="hover"
                       style={style.link}
                     >
-                      <SiAirtable /> Airtable
+                      <SiAirtable style={style.airtableIcon} /> Airtable
                     </Link>
                   </span>
                   base. Easily brings all information together - organize,
@@ -135,9 +172,9 @@ const HomePage = () => {
                 md={2}
               >
                 <img
-                  src={homeEnvelope}
-                  alt="envelope"
-                  className={classes.homeEnvelope}
+                  src={peopleImg}
+                  alt="people"
+                  className={classes.peopleImg}
                 />
               </Grid>
               <Grid item md={10} style={{ paddingRight: 0 }}>
@@ -160,14 +197,14 @@ const HomePage = () => {
                     underline="hover"
                     style={style.link}
                   >
-                    ReadMe
+                    <span style={style.linkReadMe}>Read</span>Me
                   </Link>
                   file of this project.
                 </Typography>
               </Grid>
 
               <Grid item>
-                <Typography variant="body2">Thanks! 🙏</Typography>
+                <Typography variant="body2">Thank you 🙏</Typography>
               </Grid>
             </Grid>
           </Grid>
