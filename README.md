@@ -11,12 +11,12 @@ Check demo on Herokuapp: [demo](https://email-campaign-subscribers.herokuapp.com
 
 ## Technologies used:
 
-- React.js: useForm hook for contact page and yep validation scheme, router v6
+- React.js: useForm hook, custom hooks, router v6 etc.
 - Email.js
 - Airtable data base
 - CRUD / REST API
-- Express.js on server side - Proxy (hide api_key, id_base), env variables
-- Postman for testing requests
+- Express.js - Proxy (hide api_key, id_base), env variables
+- Postman
 
 # General description
 
@@ -36,8 +36,7 @@ Send one email to all active subscribers - one click but many emaisl to all of t
 
 App is devided for two parts: client side and server side.
 
-Clinet side:
-Client side has got another two aprts: subscribers and campaigns
+**Clinet side -** subscribers and campaigns
 
 Subscribers:
 
@@ -53,7 +52,8 @@ Campaigns:
 - get a details each subscriber in the table
 - add a new email campaign to all subscriber with an active status
 
-Server side:
+**Server side:**
+<br>
 I have used an expres.js to build a server which allows to create a proxy between client side and backend. In this reason I can hide all sensitive information like api_key or id_base. In this case please see the concept app at the beginning of the readme file.
 
 I have used a tool such as **Postman** to test for valid, invalid, authorised and unauthorised requests, to ensure that the API responds correctly to every possible endpoint.
