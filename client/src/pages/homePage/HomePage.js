@@ -76,9 +76,8 @@ const useStyles = makeStyles((theme) => ({
     color: "orange",
     backgroundColor: "#142f43",
     padding: 30,
-    maxWidth: "50%",
-    "@media (max-width:729px)": {
-      maxWidth: "75%",
+    "@media (min-width:800px)": {
+      maxWidth: "50%",
     },
   },
 }));
