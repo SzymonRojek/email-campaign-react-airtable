@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 
-import { ContainerTable, HeadTable, BodyTable } from "../Table";
+import { ContainerTable, HeadTable, BodyTable, FooterText } from "../Table";
 import { CampaignTableRow } from "../CampaignTableRow";
 import CustomPaginator from "../PaginationPackage/CustomPaginator";
 import { getFilteredDataByStatus } from "helpers";
@@ -20,46 +20,52 @@ const CampaignStatus = (props) => {
 
   const [selectValue, setSelectValue] = useState(4);
 
-  return passedData && passedData.some((el) => el.fields.status === status) ? (
+  const filteredData = getFilteredDataByStatus(passedData, status);
+
+  return (
     <CustomPaginator
-      passedData={getFilteredDataByStatus(passedData, status)}
+      passedData={filteredData}
       dataPerPage={parseInt(selectValue)}
       disableDuration={400}
       disableArrows={false}
       disableDigits={false}
       renderData={(data, actualPage) => (
-        <ContainerTable
-          subHeading={subHeading}
-          passedData={getFilteredDataByStatus(passedData, status)}
-          setSelectValue={setSelectValue}
-          disableSelect={
-            getFilteredDataByStatus(passedData, status).length > 4
-              ? true
-              : false
-          }
-        >
-          <HeadTable dataHeadTable={dataHeadEmailTable} />
+        <>
+          <ContainerTable
+            subHeading={subHeading}
+            passedData={filteredData}
+            setSelectValue={setSelectValue}
+            disableSelect={filteredData.length > 4 ? true : false}
+          >
+            <HeadTable dataHeadTable={dataHeadEmailTable} />
 
-          <BodyTable>
-            {data.map((campaign, index) => (
-              <CampaignTableRow
-                key={`id-${campaign.id}`}
-                campaign={{ ...campaign, group: "campaigns" }}
-                index={index}
-                actualPage={actualPage}
-                dataPerPage={parseInt(selectValue)}
-                setSelectedData={setSelectedData}
-                handleEditDetailsCampaign={handleEditDetailsCampaign}
-                setContentPopup={setContentPopup}
-                setOpenConfirmPopup={setOpenConfirmPopup}
-              />
-            ))}
-          </BodyTable>
-        </ContainerTable>
+            <BodyTable>
+              {data.some((el) => el.fields.status === status)
+                ? data.map((campaign, index) => (
+                    <CampaignTableRow
+                      key={`id-${campaign.id}`}
+                      campaign={{ ...campaign, group: "campaigns" }}
+                      index={index}
+                      actualPage={actualPage}
+                      dataPerPage={parseInt(selectValue)}
+                      setSelectedData={setSelectedData}
+                      handleEditDetailsCampaign={handleEditDetailsCampaign}
+                      setContentPopup={setContentPopup}
+                      setOpenConfirmPopup={setOpenConfirmPopup}
+                    />
+                  ))
+                : []}
+            </BodyTable>
+          </ContainerTable>
+          {filteredData.length < 1 ? (
+            <FooterText
+              text="There are not campaigns with the status - "
+              status={status}
+            />
+          ) : null}
+        </>
       )}
     />
-  ) : (
-    ""
   );
 };
 
