@@ -32,31 +32,29 @@ Send one email to all active subscribers - one click but many emaisl to all of t
 <br>
 <br>
 
-### General app description
-
 App is devided for two parts: client side and server side.
 
-**Clinet side -** subscribers and campaigns
+1. **Clinet side -** subscribers and campaigns
 
-Subscribers:
+a) Subscribers:
 
 - get a list of the subscribers and general data in the table
-- get a status list in the table
-- get a details each subscriber in the table
-- add a new subscriber (form)
+- get a status list and general data in the table
+- get a details of each subscriber and detailed data in the table
+- add a new subscriber in the form
 
-Campaigns:
+b) Campaigns:
 
 - get a list of campaigns and general data in the table
-- get a status list in the table
-- get a details each subscriber in the table
-- add a new email campaign to all subscriber with an active status
+- get a status list and general data in the table
+- get a details of each campaign to edit in the form
+- add a new email campaign in the form
 
-**Server side:**
-<br>
-I have used an expres.js to build a server which allows to create a proxy between client side and backend. In this reason I can hide all sensitive information like api_key or id_base. In this case please see the concept app at the beginning of the readme file.
+2. **Server side:**
+   <br>
+   I have used an **express.js** to build a server which allows to create a proxy between client side and backend - it helps to hide sensitive data like key, id_base.
 
-I have used a tool such as **Postman** to test for valid, invalid, authorised and unauthorised requests, to ensure that the API responds correctly to every possible endpoint.
+Also, I have used a tool such as **Postman** to test for valid, invalid, authorised and unauthorised requests, to ensure that the API responds correctly to every possible endpoint.
 
 # Available Scripts:
 
