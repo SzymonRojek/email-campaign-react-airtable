@@ -4,12 +4,25 @@ Actually I am working on:
 
 - general layout
 - connect the app to Email.js external resource
-- maybe on the status page I will add additional main select status
 - possibly I will add login component (password confirmation and connect app to the local session when application is running in the browser)
 - scubsribers details (working on layouts of the tables)
 
-Check demo on Herokuapp:[link demo](https://email-campaign-subscribers.herokuapp.com/)
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Check demo on Herokuapp: [demo](https://email-campaign-subscribers.herokuapp.com/)
+
+## Technologies used:
+
+- React.js: useForm hook for contact page and yep validation scheme, router v6
+- Email.js
+- Airtable data base
+- CRUD / REST API
+- Express.js on server side - Proxy (hide api_key, id_base), env variables
+- Postman for testing requests
+
+# General description
+
+## Main goal
+
+Send one email to all active subscribers - one click but many emaisl to all of them.
 
 <br>
 <br>
@@ -19,18 +32,33 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 <br>
 <br>
 
-## Technologies used:
+### General app description
 
-- React.js
-- useForm hook for contact page and yep validation scheme
-- Email.js
-- Airtable data base
-- CRUD / REST API
-- Express.js
-- Proxy
-- env variables
+App is devided for two parts: client side and server side.
 
-## Available Scripts
+Clinet side:
+Client side has got another two aprts: subscribers and campaigns
+
+Subscribers:
+
+- get a list of the subscribers and general data in the table
+- get a status list in the table
+- get a details each subscriber in the table
+- add a new subscriber (form)
+
+Campaigns:
+
+- get a list of campaigns and general data in the table
+- get a status list in the table
+- get a details each subscriber in the table
+- add a new email campaign to all subscriber with an active status
+
+Server side:
+I have used an expres.js to build a server which allows to create a proxy between client side and backend. In this reason I can hide all sensitive information like api_key or id_base. In this case please see the concept app at the beginning of the readme file.
+
+I have used a tool such as **Postman** to test for valid, invalid, authorised and unauthorised requests, to ensure that the API responds correctly to every possible endpoint.
+
+# Available Scripts:
 
 In the project directory, you can run:
 
@@ -73,32 +101,4 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
