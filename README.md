@@ -12,17 +12,19 @@ Check demo on Herokuapp: [demo](https://email-campaign-subscribers.herokuapp.com
 ## Technologies used:
 
 - React.js: useForm hook, custom hooks, router v6 etc.
+- Material UI
 - Email.js
 - Airtable data base
-- CRUD / REST API
-- Express.js - Proxy (hide api_key, id_base), env variables
+- REST API
 - Postman
+- Express.js - Proxy (hide api_key, id_base), env variables
+- Heroku
 
 # General description
 
 ## Main goal
 
-Send one email to all active subscribers - one click but many emaisl to all of them.
+Personalized email - by one click send same email content to the all of active subscribers.
 
 <br>
 <br>
@@ -32,7 +34,7 @@ Send one email to all active subscribers - one click but many emaisl to all of t
 <br>
 <br>
 
-App is devided for two parts: client side and server side.
+App is devided for two parts: client and server side.
 
 1. **Clinet side -** subscribers and campaigns
 
@@ -52,9 +54,12 @@ b) Campaigns:
 
 2. **Server side:**
    <br>
-   I have used an **express.js** to build a server which allows to create a proxy between client side and backend - it helps to hide sensitive data like key, id_base.
 
-Also, I have used a tool such as **Postman** to test for valid, invalid, authorised and unauthorised requests, to ensure that the API responds correctly to every possible endpoint.
+   The data are downloading from the Airtable - it uses simple token=based authentication "Authorization: Bearer YOUR_API_KEY" - authenticate to the API by providing my API key in the HTTP authorization bearer token header. I didn't want to provide my API key with api_key query parameter because of slightly lower-security approach.
+
+   I have used an **express.js** to build a backend proxy server - backend API that will make requests to the Airtable, get back that response and then respond to someone who made that request. In this case sensitive data like key or id_base are hidden and are not available in the response header.
+
+Also, I have used a tool such as **Postman** to test for valid, invalid, authorised and unauthorised requests, to ensure that the API responds correctly to every endpoint.
 
 # Available Scripts:
 
