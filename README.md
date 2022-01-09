@@ -13,11 +13,11 @@ Check demo on Herokuapp: [demo](https://email-campaign-subscribers.herokuapp.com
 
 - React.js: useForm hook, custom hooks, router v6 etc.
 - Material UI
-- Email.js
-- Airtable data base
+- [Airtable data base](https://airtable.com/)
 - REST API
 - Postman
 - Express.js - Proxy (hide api_key, id_base), env variables
+- [Email.js](https://www.emailjs.com/)
 - Heroku
 
 # General description
@@ -105,3 +105,5 @@ Instead, it will copy all the configuration files and the transitive dependencie
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+- I have used images from the [Email.js](https://www.emailjs.com/) website.
