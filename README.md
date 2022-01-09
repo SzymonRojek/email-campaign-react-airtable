@@ -53,13 +53,26 @@ b) Campaigns:
 - add a new email campaign in the form
 
 2. **Server side:**
-   <br>
 
    The data are downloading from the Airtable - it uses simple token=based authentication "Authorization: Bearer YOUR_API_KEY" - authenticate to the API by providing my API key in the HTTP authorization bearer token header. I didn't want to provide my API key with api_key query parameter because of slightly lower-security approach.
+
+   <br>
+
+      <img src="./client/src/img/responseHeaders.png">
+
+   <br>
+   <br>
 
    I have used an **express.js** to build a backend proxy server - backend API that will make requests to the Airtable, get back that response and then respond to someone who made that request. In this case sensitive data like key or id_base are hidden and are not available in the response header.
 
 Also, I have used a tool such as **Postman** to test for valid, invalid, authorised and unauthorised requests, to ensure that the API responds correctly to every endpoint.
+
+<br>
+
+<img src="./client/src/img/postman.png">
+
+<br>
+<br>
 
 # Available Scripts:
 
