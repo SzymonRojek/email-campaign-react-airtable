@@ -4,7 +4,6 @@ Actually I am working on:
 
 - general layout
 - connect the app to Email.js external resource
-- possibly I will add login component (password confirmation and connect app to the local session when application is running in the browser)
 - scubsribers details (working on layouts of the tables)
 
 Check demo on Herokuapp: [demo](https://email-campaign-subscribers.herokuapp.com/)
@@ -40,17 +39,17 @@ App is devided for two parts: client and server side.
 
 a) Subscribers:
 
-- get a list of the subscribers and general data in the table
-- get a status list and general data in the table
-- get a details of each subscriber and detailed data in the table
+- get a list of the subscribers and general data
+- get a status list and general data
+- get a details of each subscriber
 - add a new subscriber in the form
 
 b) Campaigns:
 
-- get a list of campaigns and general data in the table
-- get a status list and general data in the table
-- get a details of each campaign to edit in the form
-- add a new email campaign in the form
+- get a list of campaigns and general data
+- get a status list and general data
+- get a details of each campaign to edit them
+- add a new email campaign
 
 2. **Server side:**
 
@@ -74,6 +73,12 @@ Also, I have used a tool such as **Postman** to test for valid, invalid, authori
 <br>
 <br>
 
+Exmaple of API tests and automating their execution by Postman's runner:
+
+<br>
+<img src="./client/src/img/runnerTests.png">
+<br>
+<br>
 # Available Scripts:
 
 In the project directory, you can run:
