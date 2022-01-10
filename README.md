@@ -73,12 +73,20 @@ Also, I have used a tool such as **Postman** to test for valid, invalid, authori
 <br>
 <br>
 
+Example of API tests:
+
+<br>
+<img src="./client/src/img/tests.png">
+<br>
+<br>
+
 Results of API tests and automating their execution by Postman's runner:
 
 <br>
 <img src="./client/src/img/runnerTests.png">
 <br>
 <br>
+
 # Available Scripts:
 
 In the project directory, you can run:
