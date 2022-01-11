@@ -47,7 +47,6 @@ const AddCampaignPage = ({
 
   const [isEmailError, setEmailError] = useState(false);
 
-  console.log(isEmailError);
   useEffect(() => {
     if (formState.isSubmitSuccessful)
       reset({
@@ -118,16 +117,20 @@ const AddCampaignPage = ({
             )
             .then(() => {
               setEmailError(false);
-              postData(data, "sent");
-              displayPopup(data, true);
             })
             .catch((err) => {
               console.log("Unfortunately,", err);
               setEmailError(true);
-              postData(data, "draft");
-              displayPopup(data, false);
             });
         });
+    }
+
+    if (!isEmailError) {
+      postData(data, "sent");
+      displayPopup(data, true);
+    } else {
+      postData(data, "draft");
+      displayPopup(data, false);
     }
 
     getCampaignsData();
