@@ -12,6 +12,7 @@ import { StyledHeading } from "components/StyledHeading";
 import { ContainerTable, HeadTable } from "components/Table";
 import { SubscriberTableRow } from "components/SubscriberTableRow";
 import { Loader, Error } from "components/DisplayMessage";
+import SubscribersList from "../../components/SubscribersList/SubscribersList";
 
 const SubscriberDetailsPage = ({ subscribersData }) => {
   const { id } = useParams();
@@ -36,33 +37,25 @@ const SubscriberDetailsPage = ({ subscribersData }) => {
     );
   }
 
+  console.log(subscriberData);
   return (
     <>
       {subscriberData && subscriberData.status === "loading" ? (
         <Loader title="Subscriber" />
       ) : (
         <StyledContainer>
-          <StyledHeading label="Subscribers Details:" />
+          <StyledHeading label="Subscriber Details" />
 
-          <ContainerTable subHeading="General:">
-            <HeadTable dataHeadTable={detailsDataHeadTableFirst} />
+          <SubscribersList
+            subHeading="General data"
+            dataHeadTable={detailsDataHeadTableFirst}
+            passedData={[subscriberData.data]}
+          />
 
-            <TableBody>
-              {subscriberData &&
-                [subscriberData.data].map((subscriber, index) => (
-                  <SubscriberTableRow
-                    key={`id-${subscriber.id}`}
-                    index={index}
-                    subscriber={subscriber}
-                  />
-                ))}
-            </TableBody>
-          </ContainerTable>
+          {/* <ContainerTable subHeading="Details:">
+            <HeadTable dataHeadTable={detailsDataHeadTableSecond} /> */}
 
-          <ContainerTable subHeading="Details:">
-            <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
-
-            <TableBody>
+          {/* <TableBody>
               {subscriberData &&
                 [subscriberData.data].map((subscriber, index) => (
                   <TableRow key={`i-${index}`}>
@@ -83,8 +76,8 @@ const SubscriberDetailsPage = ({ subscribersData }) => {
                     </TableCell>
                   </TableRow>
                 ))}
-            </TableBody>
-          </ContainerTable>
+            </TableBody> */}
+          {/* </ContainerTable> */}
         </StyledContainer>
       )}
     </>
