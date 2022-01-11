@@ -149,7 +149,8 @@ const CampaignEditPage = ({
       patchData(data, "draft");
     }
 
-    displayPopup(data, false, () => navigate("/campaigns"));
+    displayPopup(data, true, navigate("/campaigns"));
+    getCampaignsData();
   };
 
   const handleSendCampaign = (data) => {
@@ -174,18 +175,19 @@ const CampaignEditPage = ({
               REACT_APP_EMAIL_USER_ID
             )
             .then(() => {
-              patchData(data, "sent");
-
-              displayPopup(data, true, navigate("/campaigns"));
-
-              getCampaignsData();
+              setEmailError(false);
             })
             .catch((err) => {
               console.log("Unfortunately,", err);
-
               setEmailError(err);
             });
         });
+    }
+
+    if (!isEmailError) {
+      patchData(data, "sent");
+      displayPopup(data, true, navigate("/campaigns"));
+      getCampaignsData();
     }
   };
 
