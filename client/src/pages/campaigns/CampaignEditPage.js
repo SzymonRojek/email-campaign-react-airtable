@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
-import { Container } from "@material-ui/core";
 import emailjs from "emailjs-com";
 
 import api from "api";
@@ -15,8 +14,11 @@ import { FormCampaign } from "components/FormCampaign";
 import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
 
-const { REACT_APP_MAIL_USER, REACT_APP_MAIL_TEMPLATE, REACT_APP_MAIL_KEY } =
-  process.env;
+const {
+  REACT_APP_EMAIL_SERVICE_ID,
+  REACT_APP_EMAIL_TEMPLATE_ID,
+  REACT_APP_EMAIL_USER_ID,
+} = process.env;
 
 const CampaignEditPage = ({
   campaignsData,
@@ -63,6 +65,8 @@ const CampaignEditPage = ({
         status: status,
       },
     });
+
+    getCampaignsData();
   };
 
   // check if Campaign's id is available, otherwise return Error
@@ -96,8 +100,6 @@ const CampaignEditPage = ({
     const addTimeout = () => {
       const timeoutId = setTimeout(() => {
         setOpenInfoPopup(false);
-
-        changeRoute();
       }, 3_000);
 
       return () => clearTimeout(timeoutId);
@@ -145,31 +147,31 @@ const CampaignEditPage = ({
       data.description !== campaignData.data.fields.description
     ) {
       patchData(data, "draft");
-
-      getCampaignsData();
     }
 
     displayPopup(data, false, () => navigate("/campaigns"));
   };
 
   const handleSendCampaign = (data) => {
+    if (!data) return;
+
     if (subscribersData.data) {
       subscribersData.data
         .filter((subscriber) => subscriber.fields.status === "active")
         .forEach((subscriber) => {
-          const inputsData = {
+          const paramsScheme = {
             name: subscriber.fields.name,
             email: subscriber.fields.email,
             title: data.title,
             description: data.description,
           };
-          // REACT_APP_MAIL_USER,
+
           emailjs
             .send(
-              "ereyeryery",
-              REACT_APP_MAIL_TEMPLATE,
-              inputsData,
-              REACT_APP_MAIL_KEY
+              REACT_APP_EMAIL_SERVICE_ID,
+              REACT_APP_EMAIL_TEMPLATE_ID,
+              paramsScheme,
+              REACT_APP_EMAIL_USER_ID
             )
             .then(() => {
               patchData(data, "sent");
@@ -181,7 +183,7 @@ const CampaignEditPage = ({
             .catch((err) => {
               console.log("Unfortunately,", err);
 
-              setEmailError(true);
+              setEmailError(err);
             });
         });
     }
@@ -192,7 +194,7 @@ const CampaignEditPage = ({
       {isEmailError ? (
         <Error
           titleOne="Unfortunately, the Campaign has not been sent"
-          titleTwo="Probably there is a problem with EmailJS application at the moment"
+          titleTwo="Probably there is a problem with EmailJS application at the moment..."
           titleThree="That's why the Campaign has been drafted"
         />
       ) : campaignData.status === "loading" ? (
