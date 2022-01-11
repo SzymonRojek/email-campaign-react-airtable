@@ -2,8 +2,7 @@ import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import emailjs from "emailjs-com";
-// import { init } from "emailjs-com";
+import emailjs from "@emailjs/browser";
 
 import api from "api";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
@@ -12,22 +11,22 @@ import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
 import { FormCampaign } from "components/FormCampaign";
 
-const { REACT_APP_MAIL_USER, REACT_APP_MAIL_TEMPLATE, REACT_APP_MAIL_KEY } =
-  process.env;
-// init("service_hz69k5r");
+const {
+  REACT_APP_EMAIL_SERVICE_ID,
+  REACT_APP_EMAIL_TEMPLATE_ID,
+  REACT_APP_EMAIL_USER_ID,
+} = process.env;
 
 const postData = (data, status) => {
   const endpoint = "/campaigns";
 
-  api.post(endpoint, {
+  return api.post(endpoint, {
     fields: {
       title: capitalizeFirstLetter(data.title),
       description: capitalizeFirstLetter(data.description),
       status: status,
     },
   });
-
-  // possibly add getCampaigns back
 };
 
 const AddCampaignPage = ({
@@ -48,6 +47,7 @@ const AddCampaignPage = ({
 
   const [isEmailError, setEmailError] = useState(false);
 
+  console.log(isEmailError);
   useEffect(() => {
     if (formState.isSubmitSuccessful)
       reset({
@@ -102,32 +102,34 @@ const AddCampaignPage = ({
       subscribersData.data
         .filter((subscriber) => subscriber.fields.status === "active")
         .forEach((subscriber) => {
-          const inputsData = {
+          const paramsScheme = {
             name: subscriber.fields.name,
             email: subscriber.fields.email,
             title: data.title,
             description: data.description,
           };
-          // REACT_APP_MAIL_USER,
+
           emailjs
             .send(
-              "lllll",
-              REACT_APP_MAIL_TEMPLATE,
-              inputsData,
-              REACT_APP_MAIL_KEY
+              REACT_APP_EMAIL_SERVICE_ID,
+              REACT_APP_EMAIL_TEMPLATE_ID,
+              paramsScheme,
+              REACT_APP_EMAIL_USER_ID
             )
             .then(() => {
+              setEmailError(false);
               postData(data, "sent");
               displayPopup(data, true);
             })
             .catch((err) => {
               console.log("Unfortunately,", err);
-              postData(data, "draft");
               setEmailError(true);
+              postData(data, "draft");
               displayPopup(data, false);
             });
         });
     }
+
     getCampaignsData();
   };
 
