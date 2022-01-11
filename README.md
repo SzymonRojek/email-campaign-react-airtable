@@ -3,7 +3,6 @@
 Actually I am working on:
 
 - general layout
-- connect the app to Email.js external resource
 - scubsribers details (working on layouts of the tables)
 
 Check demo on Herokuapp: [demo](https://email-campaign-subscribers.herokuapp.com/)
@@ -30,12 +29,12 @@ Saving subscriebrs and campaigns data - connect the app to the Email.js and send
 <br>
 <br>
 
-## Final template email:
+## Final template email example:
 
 <br>
 <br>
 
-<img src="./client/src/img/sentEmail.png">
+<img src="./client/src/img/exampleEmails.png">
 
 <br>
 <br>
