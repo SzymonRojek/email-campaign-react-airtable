@@ -4,6 +4,7 @@ Actually I am working on:
 
 - general layout
 - scubsribers details (working on layouts of the tables)
+- Email.js is connected to the app, works locally but doesn't work on heroku, bug will be fixed soon
 
 Check demo on Herokuapp: [demo](https://email-campaign-subscribers.herokuapp.com/)
 
