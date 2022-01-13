@@ -95,10 +95,9 @@ const HomePage = () => {
             </Typography>
           </Grid>
           <Grid item sm={12} md={6} order={{ md: 4 }}>
-            <Typography variant="h2" paragraph>
-              This is the <strong>Email Campaign </strong>
-              application. You can write @mail to all your subscribers just by
-              one CLICK - easy peasy!
+            <Typography variant="h2" paragraph style={{ fontWeight: "bold" }}>
+              That's Email Campaign application. You don't have to send e-mails
+              separately. Now you can send one email to all active subscribers.
             </Typography>
             <Grid
               container
@@ -196,7 +195,7 @@ const HomePage = () => {
                     underline="hover"
                     style={style.link}
                   >
-                    <span style={style.linkReadMe}>Read</span>Me
+                    ReadMe
                   </Link>
                   file of this project.
                 </Typography>
