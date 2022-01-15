@@ -10,6 +10,7 @@ import { Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
 import { FormCampaign } from "components/FormCampaign";
+import axios from "axios";
 
 const {
   REACT_APP_EMAIL_SERVICE_ID,
@@ -108,19 +109,41 @@ const AddCampaignPage = ({
             description: data.description,
           };
 
-          emailjs
-            .send(
-              REACT_APP_EMAIL_SERVICE_ID,
-              REACT_APP_EMAIL_TEMPLATE_ID,
-              paramsScheme,
-              REACT_APP_EMAIL_USER_ID
-            )
-            .then(() => {
+          var dataAPI = {
+            service_id: REACT_APP_EMAIL_SERVICE_ID,
+            template_id: REACT_APP_EMAIL_TEMPLATE_ID,
+            user_id: REACT_APP_EMAIL_USER_ID,
+            template_params: paramsScheme,
+          };
+
+          // emailjs
+          //   .send(
+          //     REACT_APP_EMAIL_SERVICE_ID,
+          //     REACT_APP_EMAIL_TEMPLATE_ID,
+          //     paramsScheme,
+          //     REACT_APP_EMAIL_USER_ID
+          //   )
+          //   .then(() => {
+          //     setEmailError(false);
+          //   })
+          //   .catch((err) => {
+          //     console.log("Unfortunately,", err);
+          //     setEmailError(true);
+          //   });
+
+          axios({
+            method: "post",
+            url: "https://api.emailjs.com/api/v1.0/email/send",
+            data: dataAPI,
+            headers: { "Content-Type": "application/json" },
+          })
+            .then((response) => {
               setEmailError(false);
+              console.log(response);
             })
-            .catch((err) => {
-              console.log("Unfortunately,", err);
+            .catch((response) => {
               setEmailError(true);
+              console.log(response);
             });
         });
     }
