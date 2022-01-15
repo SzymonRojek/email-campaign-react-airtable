@@ -109,41 +109,41 @@ const AddCampaignPage = ({
             description: data.description,
           };
 
-          var dataAPI = {
-            service_id: REACT_APP_EMAIL_SERVICE_ID,
-            template_id: REACT_APP_EMAIL_TEMPLATE_ID,
-            user_id: REACT_APP_EMAIL_USER_ID,
-            template_params: paramsScheme,
-          };
+          // var dataAPI = {
+          //   service_id: REACT_APP_EMAIL_SERVICE_ID,
+          //   template_id: REACT_APP_EMAIL_TEMPLATE_ID,
+          //   user_id: REACT_APP_EMAIL_USER_ID,
+          //   template_params: paramsScheme,
+          // };
 
-          // emailjs
-          //   .send(
-          //     REACT_APP_EMAIL_SERVICE_ID,
-          //     REACT_APP_EMAIL_TEMPLATE_ID,
-          //     paramsScheme,
-          //     REACT_APP_EMAIL_USER_ID
-          //   )
-          //   .then(() => {
-          //     setEmailError(false);
-          //   })
-          //   .catch((err) => {
-          //     console.log("Unfortunately,", err);
-          //     setEmailError(true);
-          //   });
-
-          axios("https://api.emailjs.com/api/v1.0/email/send", {
-            method: "post",
-            data: dataAPI,
-            headers: { "Content-Type": "application/json" },
-          })
-            .then((response) => {
+          emailjs
+            .send(
+              REACT_APP_EMAIL_SERVICE_ID,
+              REACT_APP_EMAIL_TEMPLATE_ID,
+              paramsScheme,
+              REACT_APP_EMAIL_USER_ID
+            )
+            .then(() => {
               setEmailError(false);
-              console.log(response);
             })
-            .catch((response) => {
+            .catch((err) => {
+              console.log("Unfortunately,", err);
               setEmailError(true);
-              console.log(response);
             });
+
+          // axios("https://api.emailjs.com/api/v1.0/email/send", {
+          //   method: "post",
+          //   data: dataAPI,
+          //   headers: { "Content-Type": "application/json" },
+          // })
+          //   .then((response) => {
+          //     setEmailError(false);
+          //     console.log(response);
+          //   })
+          //   .catch((response) => {
+          //     setEmailError(true);
+          //     console.log(response);
+          //   });
         });
     }
     // checking
