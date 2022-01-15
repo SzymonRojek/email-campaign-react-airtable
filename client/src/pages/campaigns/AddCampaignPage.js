@@ -146,7 +146,7 @@ const AddCampaignPage = ({
             });
         });
     }
-
+    // checking
     if (!isEmailError) {
       postData(data, "sent");
       displayPopup(data, true);
