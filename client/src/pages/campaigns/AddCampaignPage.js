@@ -131,9 +131,8 @@ const AddCampaignPage = ({
           //     setEmailError(true);
           //   });
 
-          axios({
+          axios("https://api.emailjs.com/api/v1.0/email/send", {
             method: "post",
-            url: "https://api.emailjs.com/api/v1.0/email/send",
             data: dataAPI,
             headers: { "Content-Type": "application/json" },
           })
