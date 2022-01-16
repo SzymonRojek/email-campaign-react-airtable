@@ -1,0 +1,21 @@
+.buttonLog {
+  padding: 10px 20px;
+  background-color: orange;
+  border: none;
+  text-transform: uppercase;
+  border-radius: 3px;
+  font-weight: bold;
+  color: #142f43;
+  cursor: pointer;
+  max-width: 120px;
+}
+
+/* .buttonLog:hover {
+  transform: translateY(-1px);
+  background-color: blue;
+}
+
+.buttonLog:active {
+  color: red;
+  transform: translateY(2px);
+} */
