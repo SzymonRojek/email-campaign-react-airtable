@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import { TableBody, TableCell, TableRow, Typography } from "@material-ui/core";
 
@@ -17,31 +17,21 @@ import SubscribersList from "../../components/SubscribersList/SubscribersList";
 const SubscriberDetailsPage = ({ subscribersData }) => {
   const { id } = useParams();
   const endpoint = `/subscribers/${id}`;
-
   const { itemData: subscriberData } = useFetchDetailsById(endpoint);
 
-  // check if the subscriber id is available, otherwise return an Error
-  let isIdCorrect = null;
-
-  if (id !== undefined && subscribersData.data !== null) {
-    isIdCorrect = Boolean(subscribersData.data.find((item) => item.id === id));
-  }
-
-  if (isIdCorrect === false || subscriberData.status === "error") {
-    return (
-      <Error
-        titleOne="Unfortunately, Subscriber does not exist."
-        titleTwo="Check the url address."
-        titleThree="Back to Subscribers."
-      />
-    );
-  }
-
-  console.log(subscriberData);
   return (
     <>
       {subscriberData && subscriberData.status === "loading" ? (
         <Loader title="Subscriber" />
+      ) : !Boolean(
+          subscribersData.data &&
+            subscribersData.data.find((item) => item.id === id)
+        ) ? (
+        <Error
+          titleOne="Unfortunately, this Campaign does not exist"
+          titleTwo="Check the url address"
+          titleThree="Back to Campaigns"
+        />
       ) : (
         <StyledContainer>
           <StyledHeading label="Subscriber Details" />
@@ -84,11 +74,11 @@ const SubscriberDetailsPage = ({ subscribersData }) => {
   );
 };
 
-SubscriberDetailsPage.propTypes = {
-  subscribersData: PropTypes.shape({
-    status: PropTypes.string,
-    data: PropTypes.arrayOf(PropTypes.object),
-  }),
-};
+// SubscriberDetailsPage.propTypes = {
+//   subscribersData: PropTypes.shape({
+//     status: PropTypes.string,
+//     data: PropTypes.arrayOf(PropTypes.object),
+//   }),
+// };
 
 export default SubscriberDetailsPage;
