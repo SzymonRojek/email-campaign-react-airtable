@@ -55,10 +55,10 @@ const SubscribersList = ({
 SubscribersList.propTypes = {
   subHeading: PropTypes.string.isRequired,
   dataHeadTable: PropTypes.array.isRequired,
-  handleSubscriberDetails: PropTypes.func.isRequired,
-  setSelectedData: PropTypes.func.isRequired,
-  setContentPopup: PropTypes.func.isRequired,
-  setOpenConfirmPopup: PropTypes.func.isRequired,
+  handleSubscriberDetails: PropTypes.func,
+  setSelectedData: PropTypes.func,
+  setContentPopup: PropTypes.func,
+  setOpenConfirmPopup: PropTypes.func,
 };
 
 export default SubscribersList;

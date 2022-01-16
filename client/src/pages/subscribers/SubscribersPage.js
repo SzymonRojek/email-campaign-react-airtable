@@ -80,9 +80,9 @@ SubscribersPage.propTypes = {
     latestAddedItem: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
   setSelectedData: PropTypes.func.isRequired,
-  handleSubscriberDetails: PropTypes.func.isRequired,
-  setOpenInfoPopup: PropTypes.func.isRequired,
-  setContentPopup: PropTypes.func.isRequired,
+  handleSubscriberDetails: PropTypes.func,
+  setOpenInfoPopup: PropTypes.func,
+  setContentPopup: PropTypes.func,
 };
 
 export default SubscribersPage;

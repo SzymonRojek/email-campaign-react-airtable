@@ -291,9 +291,9 @@ const AddSubscriberPage = ({
 };
 
 AddSubscriberPage.propTypes = {
-  getSubscribersData: PropTypes.func.isRequired,
-  setOpenInfoPopup: PropTypes.func.isRequired,
-  setContentPopup: PropTypes.func.isRequired,
+  getSubscribersData: PropTypes.func,
+  setOpenInfoPopup: PropTypes.func,
+  setContentPopup: PropTypes.func,
 };
 
 export default AddSubscriberPage;

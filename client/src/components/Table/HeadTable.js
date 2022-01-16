@@ -28,7 +28,7 @@ const HeadTable = ({ dataHeadTable }) => {
 };
 
 HeadTable.propTypes = {
-  dataHeadTable: PropTypes.arrayOf(PropTypes.string),
+  dataHeadTable: PropTypes.array,
 };
 
 export default HeadTable;

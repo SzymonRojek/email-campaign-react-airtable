@@ -7,7 +7,6 @@ import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
 import { SubscriberStatus } from "components/SubscriberStatus";
-
 import SelectInputController from "../../components/Inputs/SelectInputController";
 
 const useStyles = makeStyles({
@@ -77,11 +76,11 @@ const SubscribersStatusPage = (props) => {
     <SelectInputController
       control={control}
       name="status"
-      styles={styles.select}
       defaultValue={selectStatus}
       data={selectSubscribersStatus}
       message=""
       error={false}
+      styles={styles.select}
       useStyles={useStyles}
     />,
     "created",
@@ -93,6 +92,7 @@ const SubscribersStatusPage = (props) => {
     const watchStatus = watch((value) => setSelectStatus(value.status));
     return () => watchStatus.unsubscribe();
   }, [watch]);
+
   return (
     <>
       {subscribersData.status === "loading" ? (
@@ -141,9 +141,9 @@ SubscribersStatusPage.propTypes = {
     data: PropTypes.arrayOf(PropTypes.object),
   }),
   handleSubscriberDetails: PropTypes.func.isRequired,
-  setOpenConfirmPopup: PropTypes.func.isRequired,
-  setSelectedData: PropTypes.func.isRequired,
-  setContentPopup: PropTypes.func.isRequired,
+  setOpenConfirmPopup: PropTypes.func,
+  setSelectedData: PropTypes.func,
+  setContentPopup: PropTypes.func,
 };
 
 export default SubscribersStatusPage;

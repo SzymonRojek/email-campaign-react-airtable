@@ -76,9 +76,9 @@ SubscriberStatus.propTypes = {
   generalDataHeadTable: PropTypes.array.isRequired,
   status: PropTypes.string.isRequired,
   handleSubscriberDetails: PropTypes.func.isRequired,
-  setSelectedData: PropTypes.func.isRequired,
-  setContentPopup: PropTypes.func.isRequired,
-  setOpenConfirmPopup: PropTypes.func.isRequired,
+  setSelectedData: PropTypes.func,
+  setContentPopup: PropTypes.func,
+  setOpenConfirmPopup: PropTypes.func,
 };
 
 export default SubscriberStatus;
