@@ -16,6 +16,7 @@ import { AiFillHome } from "react-icons/ai";
 import { StyledTabs } from "./StyledTabs";
 import { DrawerMenu } from "./DrawerMenu";
 import Logo from "../../../img/logo.svg"; // remove dots!
+import LogFormButton from "../../LogFormButton/LogFormButton";
 
 const mainNavigationLinks = [
   {
@@ -78,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function MainNavigation({ tabsValue, setTabsValue }) {
+function MainNavigation({ tabsValue, setTabsValue, setLoginValue }) {
   const theme = useTheme();
   const classes = useStyles();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
@@ -114,21 +115,24 @@ function MainNavigation({ tabsValue, setTabsValue }) {
         {isSmallDevice ? (
           <DrawerMenu setTabsValue={setTabsValue} />
         ) : (
-          <div className={classes.navLinksContainer}>
-            <StyledTabs onChange={handleClickTab} value={tabsValue}>
-              {mainNavigationLinks.map(({ icon, name, to }) => (
-                <Tab
-                  key={name}
-                  icon={icon}
-                  disableRipple
-                  label={name}
-                  component={Link}
-                  to={to}
-                  className={classes.link}
-                />
-              ))}
-            </StyledTabs>
-          </div>
+          <>
+            <div className={classes.navLinksContainer}>
+              <StyledTabs onChange={handleClickTab} value={tabsValue}>
+                {mainNavigationLinks.map(({ icon, name, to }) => (
+                  <Tab
+                    key={name}
+                    icon={icon}
+                    disableRipple
+                    label={name}
+                    component={Link}
+                    to={to}
+                    className={classes.link}
+                  />
+                ))}
+              </StyledTabs>
+            </div>
+            <LogFormButton label="log out" onClick={() => setLoginValue("")} />
+          </>
         )}
       </Toolbar>
     </AppBar>
