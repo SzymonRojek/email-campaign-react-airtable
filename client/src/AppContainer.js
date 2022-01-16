@@ -26,7 +26,7 @@ import {
 } from "data/dataLinksNavigation";
 import { NotFoundPage } from "pages/notFoundPage";
 
-const AppContainer = () => {
+const AppContainer = ({ setLoginValue }) => {
   const navigate = useNavigate();
   const [openInfoPopup, setOpenInfoPopup] = useState(false);
   const [contentPopup, setContentPopup] = useState({});
@@ -200,12 +200,13 @@ const AppContainer = () => {
 
   return (
     <>
-      <MainNavigation tabsValue={tabsValue} setTabsValue={setTabsValue} />
-
+      <MainNavigation
+        tabsValue={tabsValue}
+        setTabsValue={setTabsValue}
+        setLoginValue={setLoginValue}
+      />
       <div className="routing-children">{routing}</div>
-
       <StyledFooter label="Coded By Szymon Rojek © 2021" />
-
       <InfoPopup
         contentPopup={contentPopup}
         openInfoPopup={openInfoPopup}
