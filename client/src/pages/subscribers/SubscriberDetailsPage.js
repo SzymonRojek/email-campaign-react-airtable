@@ -28,9 +28,9 @@ const SubscriberDetailsPage = ({ subscribersData }) => {
             subscribersData.data.find((item) => item.id === id)
         ) ? (
         <Error
-          titleOne="Unfortunately, this Campaign does not exist"
+          titleOne="Unfortunately, this Subscriber does not exist"
           titleTwo="Check the url address"
-          titleThree="Back to Campaigns"
+          titleThree="Back to Subscribers List"
         />
       ) : (
         <StyledContainer>
