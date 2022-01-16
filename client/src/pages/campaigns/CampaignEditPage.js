@@ -44,8 +44,10 @@ const CampaignEditPage = ({
   const [isEmailError, setEmailError] = useState(false);
 
   const defaultValues = {
-    title: campaignData.data ? campaignData.data.fields.title : "",
-    description: campaignData.data ? campaignData.data.fields.description : "",
+    title: campaignData.data?.fields ? campaignData.data.fields.title : "",
+    description: campaignData.data?.fields
+      ? campaignData.data.fields.description
+      : "",
   };
 
   useEffect(() => {
@@ -69,23 +71,6 @@ const CampaignEditPage = ({
     getCampaignsData();
   };
 
-  // check if Campaign's id is available, otherwise return Error
-  let isIdCorrect = null;
-
-  if (id !== undefined && campaignsData.data !== null) {
-    isIdCorrect = Boolean(campaignsData.data.find((item) => item.id === id));
-  }
-
-  if (isIdCorrect === false || campaignData.status === "error") {
-    return (
-      <Error
-        titleOne="Unfortunately, this Campaign does not exist."
-        titleTwo="Check the url address."
-        titleThree="Back to Subscribers."
-      />
-    );
-  }
-
   const displayPopup = (data, status, changeRoute) => {
     const isCampaignChanged =
       data.title !== campaignData.data.fields.title ||
@@ -96,14 +81,6 @@ const CampaignEditPage = ({
         <strong> {capitalizeFirstLetter(data.title)} </strong>
       </span>
     );
-
-    const addTimeout = () => {
-      const timeoutId = setTimeout(() => {
-        setOpenInfoPopup(false);
-      }, 3_000);
-
-      return () => clearTimeout(timeoutId);
-    };
 
     setContentPopup({
       title: status ? (
@@ -137,8 +114,6 @@ const CampaignEditPage = ({
     });
 
     setOpenInfoPopup(true);
-
-    addTimeout();
   };
 
   const handleDraftCampaign = (data) => {
@@ -149,7 +124,7 @@ const CampaignEditPage = ({
       patchData(data, "draft");
     }
 
-    displayPopup(data, true, navigate("/campaigns"));
+    displayPopup(data, false, navigate("/campaigns"));
     getCampaignsData();
   };
 
@@ -201,11 +176,14 @@ const CampaignEditPage = ({
         />
       ) : campaignData.status === "loading" ? (
         <Loader title="Campaign Details" />
-      ) : campaignData.status === "error" ? (
+      ) : !Boolean(
+          campaignsData.data &&
+            campaignsData.data.find((item) => item.id === id)
+        ) ? (
         <Error
-          titleOne="ERROR MESSAGE"
-          titleTwo="Check the url address again."
-          titleThree="Maybe there is no an access to the internet."
+          titleOne="Unfortunately, this Campaign does not exist"
+          titleTwo="Check the url address"
+          titleThree="Back to Campaigns"
         />
       ) : (
         <StyledContainer>
