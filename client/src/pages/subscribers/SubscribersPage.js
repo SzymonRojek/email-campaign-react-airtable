@@ -7,6 +7,12 @@ import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
 import { SubscribersList } from "components/SubscribersList";
 
+const styles = {
+  container: {
+    marginBottom: 100,
+  },
+};
+
 const SubscribersPage = (props) => {
   const {
     subscribersData,
@@ -39,7 +45,7 @@ const SubscribersPage = (props) => {
               titleThree="🙂"
             />
           ) : (
-            <div style={{ marginBottom: 100 }}>
+            <div style={styles.container}>
               <StyledHeading label="All Subscribers" />
 
               <SubscribersList
