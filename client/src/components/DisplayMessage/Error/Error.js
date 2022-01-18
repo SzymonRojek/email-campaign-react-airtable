@@ -3,10 +3,12 @@ import PropTypes from "prop-types";
 import "./styles.css";
 
 const Error = ({ titleOne, titleTwo, titleThree }) => (
-  <div className="error-container">
-    <p className="error-text error-mainText">{titleOne}</p>
-    <p className="error-text error-subText">{titleTwo}</p>
-    <p className="error-text error-subText">{titleThree}</p>
+  <div className="main-container">
+    <div className="error-content">
+      <p className="error-text error-mainText">{titleOne}</p>
+      <p className="error-text error-subText">{titleTwo}</p>
+      <p className="error-text error-subText">{titleThree}</p>
+    </div>
   </div>
 );
 

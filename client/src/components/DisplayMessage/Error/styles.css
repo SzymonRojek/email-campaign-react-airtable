@@ -1,10 +1,10 @@
-.error-container {
+.error-content {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin: 15% auto 0 auto;
-  max-width: 300px;
+  margin: 250px auto 0 auto;
+  max-width: 400px;
   padding: 40px 20px;
   text-align: center;
   background-color: #142f43;
