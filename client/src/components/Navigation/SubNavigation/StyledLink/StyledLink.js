@@ -4,26 +4,22 @@ import { Link, useLocation, useResolvedLocation } from "react-router-dom";
 const commonStyles = {
   display: "flex",
   justifyContent: "center",
-  padding: "8px 23px",
-  width: 130,
+  padding: "10px",
+  width: 110,
   fontSize: 12,
   textDecoration: "none",
   letterSpacing: 2,
-  borderRadius: 4,
   textTransform: "uppercase",
 };
 
 const activeLink = {
-  color: "#003049",
-  backgroundColor: "white",
-  border: "3px solid #003049",
+  color: "white",
+  borderBottom: "2px solid orange",
   ...commonStyles,
 };
 
 const unactiveLink = {
-  color: "#fff",
-  backgroundColor: "#003049",
-  border: "3px solid #003049",
+  color: "#b8c0c6",
   ...commonStyles,
 };
 
