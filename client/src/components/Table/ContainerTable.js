@@ -63,10 +63,6 @@ const ContainerTable = ({
     { value: `${passedData.length}`, label: `all (${passedData.length})` },
   ];
 
-  // ![4, 6, 8, 10].includes(passedData.length)
-  // ? { value: `${passedData.length}`, label: `all (${passedData.length})` }
-  // : "",
-
   useEffect(() => {
     const watchNumber = watch((value) => setSelectValue(+value.rowsNumbers));
     return () => watchNumber.unsubscribe();
