@@ -1,12 +1,29 @@
 import PropTypes from "prop-types";
 import { Outlet } from "react-router-dom";
-import { Container, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useTheme } from "@material-ui/core/styles";
 import { useMediaQuery } from "@material-ui/core";
 
 import StyledLink from "./StyledLink";
 
-const styleGrid = { margin: "10px auto", maxWidth: 480, paddingRight: 20 };
+const styles = {
+  nav: {
+    position: "fixed",
+    top: 100,
+    left: 0,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 200,
+    width: "100%",
+  },
+  grid: {
+    maxWidth: 480,
+    padding: "20px 20px 20px 15px",
+    backgroundColor: "#142f43",
+    borderRadius: "0 0 5px 5px",
+  },
+};
 
 const SubNavigation = ({ dataLinks }) => {
   const theme = useTheme();
@@ -15,11 +32,11 @@ const SubNavigation = ({ dataLinks }) => {
   return (
     <>
       {!isSmallDevice ? (
-        <Container>
-          <nav>
+        <div>
+          <nav style={styles.nav}>
             <Grid
               container
-              style={styleGrid}
+              style={styles.grid}
               direction="row"
               justifyContent="space-evenly"
             >
@@ -36,7 +53,7 @@ const SubNavigation = ({ dataLinks }) => {
           <div>
             <Outlet />
           </div>
-        </Container>
+        </div>
       ) : (
         <div>
           <Outlet />
