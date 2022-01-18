@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
   "@media (min-width:960px)": {
     container: {
-      marginTop: 40,
+      marginTop: 240,
     },
     computerImg: {
       alignItems: "center",
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
   "@media (max-width:780px)": {
     container: {
-      marginTop: 40,
+      marginTop: 140,
     },
     computerImg: {
       maxWidth: 300,
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   },
   "@media (min-width:780px)": {
     container: {
-      marginTop: 40,
+      marginTop: 160,
     },
     computerImg: {
       minWidth: 100,
@@ -78,6 +78,22 @@ const useStyles = makeStyles((theme) => ({
     padding: 30,
     "@media (min-width:800px)": {
       maxWidth: "50%",
+      fontSize: "4rem",
+    },
+  },
+  secondHeading: {
+    "@media (min-width:800px)": {
+      fontSize: "2rem",
+    },
+  },
+  thirdHeading: {
+    "@media (min-width:800px)": {
+      fontSize: "1.5rem",
+    },
+  },
+  paragraph: {
+    "@media (min-width:800px)": {
+      fontSize: "1rem",
     },
   },
 }));
@@ -90,15 +106,13 @@ const HomePage = () => {
       <Box boxShadow={10} style={style.box}>
         <Grid container direction="row" spacing={4}>
           <Grid item xs={12}>
-            <Typography variant="h1" className={classes.mainHeading}>
-              Hello, there
-            </Typography>
+            <h1 className={classes.mainHeading}>Hello, there</h1>
           </Grid>
           <Grid item sm={12} md={6} order={{ md: 4 }}>
-            <Typography variant="h2" paragraph style={{ fontWeight: "bold" }}>
+            <h2 className={classes.secondHeading}>
               That's Email Campaign application. You don't have to send e-mails
               separately. Now you can send one email to all active subscribers.
-            </Typography>
+            </h2>
             <Grid
               container
               direction="column"
@@ -130,7 +144,7 @@ const HomePage = () => {
           <Grid item order={{ md: 4 }}>
             <Grid container spacing={3}>
               <Grid item md={6}>
-                <Typography variant="h3">
+                <h3 className={classes.thirdHeading}>
                   The app is connected to the
                   <span style={{ display: "inline-block" }}>
                     <Link
@@ -144,13 +158,13 @@ const HomePage = () => {
                   </span>
                   base. Easily brings all information together - organize,
                   connect and change them as needed.
-                </Typography>
+                </h3>
               </Grid>
               <Grid item md={6}>
-                <Typography variant="h3">
+                <h3 className={classes.thirdHeading}>
                   Airtable base will provide its own <strong>rest API </strong>
                   to create, read, update, and delete any records.
-                </Typography>
+                </h3>
               </Grid>
             </Grid>
           </Grid>
@@ -176,16 +190,16 @@ const HomePage = () => {
                 />
               </Grid>
               <Grid item md={10} style={{ paddingRight: 0 }}>
-                <Typography variant="body2">
+                <p className={classes.paragraph}>
                   Add new subscriber, wait for an admin confirmation to get an
                   active status and get more their details. Finally create an
                   email campaign and send it to all your active subscribers just
                   by one <strong>simple click</strong>!
-                </Typography>
+                </p>
               </Grid>
 
               <Grid item>
-                <Typography variant="body2">
+                <p className={classes.paragraph}>
                   If you would like to read the detailed description of the
                   application or just to get more information about used
                   technologies, please check out the
@@ -198,7 +212,7 @@ const HomePage = () => {
                     ReadMe
                   </Link>
                   file of this project.
-                </Typography>
+                </p>
               </Grid>
 
               <Grid item>
@@ -213,3 +227,51 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+// theme.typography.h1 = {
+//   [theme.breakpoints.down("sm")]: {
+//     fontSize: "2rem",
+//   },
+//   [theme.breakpoints.up("sm")]: {
+//     fontSize: "3rem",
+//   },
+//   [theme.breakpoints.up("md")]: {
+//     fontSize: "4rem",
+//   },
+// };
+
+// theme.typography.h2 = {
+//   [theme.breakpoints.down("sm")]: {
+//     fontSize: "1.3rem",
+//   },
+//   [theme.breakpoints.up("sm")]: {
+//     fontSize: "1.5rem",
+//   },
+//   [theme.breakpoints.up("md")]: {
+//     fontSize: "1.8rem",
+//   },
+// };
+
+// theme.typography.h3 = {
+//   [theme.breakpoints.down("sm")]: {
+//     fontSize: "1.2rem",
+//   },
+//   [theme.breakpoints.up("sm")]: {
+//     fontSize: "1.4rem",
+//   },
+//   [theme.breakpoints.up("md")]: {
+//     fontSize: "1.7rem",
+//   },
+// };
+
+// theme.typography.body2 = {
+//   [theme.breakpoints.down("sm")]: {
+//     fontSize: "1rem",
+//   },
+//   [theme.breakpoints.up("sm")]: {
+//     fontSize: "1.3rem",
+//   },
+//   [theme.breakpoints.up("md")]: {
+//     fontSize: "1.5rem",
+//   },
+// };
