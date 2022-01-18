@@ -1,9 +1,9 @@
-import { Container } from "@material-ui/core";
-
 import "./styles.css";
 
 const StyledContainer = ({ children }) => (
-  <Container className="styled-container">{children}</Container>
+  <div className="main-container">
+    <div className="children-container">{children}</div>
+  </div>
 );
 
 export default StyledContainer;
