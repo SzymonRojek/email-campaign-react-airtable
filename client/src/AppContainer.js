@@ -205,8 +205,11 @@ const AppContainer = ({ setLoginValue }) => {
         setTabsValue={setTabsValue}
         setLoginValue={setLoginValue}
       />
-      <div className="routing-children">{routing}</div>
+
+      {routing}
+
       <StyledFooter label="Coded By Szymon Rojek © 2021" />
+
       <InfoPopup
         contentPopup={contentPopup}
         openInfoPopup={openInfoPopup}
