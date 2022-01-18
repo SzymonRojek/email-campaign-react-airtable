@@ -56,7 +56,7 @@ if (process.env.NODE_ENV) {
 
 app.listen(PORT, (err) => {
   if (err) {
-    return console.log(err);
+    console.log(err);
   }
   console.log(`sever is running on the port ${PORT}`);
 });
