@@ -16,6 +16,8 @@ const style = {
     backgroundColor: "rgba(255, 255, 255, 0.55)",
     borderRadius: 6,
     backdropFilter: "blur(35px)",
+    "-webkit-backdropFilter": "blur(35px)",
+    "-moz-backdropFfilter": "blur(35px)",
   },
   link: {
     padding: "0 10px",
@@ -57,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   },
   "@media (max-width:780px)": {
     container: {
-      marginTop: 140,
+      marginTop: 100,
     },
     computerImg: {
       maxWidth: 300,
