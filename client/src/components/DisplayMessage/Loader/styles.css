@@ -60,9 +60,9 @@
   }
 }
 
-@media (min-width: 769px) {
+@media (min-width: 960px) {
   .loader-container {
-    margin-top: 25%;
+    margin-top: 240px;
   }
 }
 
@@ -135,7 +135,7 @@
     flex-direction: column;
   }
   .dot-container {
-    margin-top: -80px;
+    /* margin-top: -80px; */
     margin-left: 0;
   }
 }
