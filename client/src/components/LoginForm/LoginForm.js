@@ -1,26 +1,20 @@
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Paper, Box, Grid, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 
 import { TextInputController } from "../Inputs";
 import { LogFormButton } from "../LogFormButton";
 import validationLogin from "../../helpers/validationLogin";
+import { StyledContainer } from "../StyledContainer";
 
-const useStyles = makeStyles(() => ({
+const styles = {
   paper: {
     maxWidth: 600,
-    margin: "120px auto",
+    margin: "0 auto",
     borderRadius: 8,
     backgroundColor: "#142F43",
-
-    "@media (min-width:960px)": {
-      marginTop: 240,
-    },
   },
-}));
-
-const style = {
   typography: { color: "orange", letterSpacing: 2, wordSpacing: 3 },
   heading: {
     color: "orange",
@@ -28,10 +22,11 @@ const style = {
     letterSpacing: 2,
     wordSpacing: 3,
   },
+  logFormButton: { margin: "50px auto" },
 };
 
-const LoginForm = ({ setLoginValue }) => {
-  const classes = useStyles();
+const LoginForm = ({ setIsLogIn }) => {
+  const navigate = useNavigate();
 
   const {
     handleSubmit,
@@ -43,58 +38,67 @@ const LoginForm = ({ setLoginValue }) => {
 
   const onSubmit = (data) => {
     if (data.password === data.confirmPassword) {
-      setLoginValue(true);
+      setIsLogIn(true);
     }
   };
 
-  return (
-    <Paper elevation={14} className={classes.paper}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Box px={3} py={3}>
-          <Grid container spacing={4}>
-            <Grid item xs={12}>
-              <Typography
-                color="textSecondary"
-                variant="body2"
-                style={style.typography}
-              >
-                *Fields required
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <h1 color="textSecondary" variant="h1" style={style.heading}>
-                Email Campaign
-              </h1>
-            </Grid>
-            <Grid item xs={12}>
-              <TextInputController
-                control={control}
-                name="password"
-                error={!!errors.password}
-                message={errors.password?.message ?? ""}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextInputController
-                control={control}
-                name="confirmPassword"
-                error={!!errors.confirmPassword}
-                message={errors.confirmPassword?.message ?? ""}
-              />
-            </Grid>
+  const handleHomeRoute = () => navigate("/");
 
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-evenly"
-              alignItems="center"
-            >
-              <LogFormButton label="log in" style={{ margin: "50px auto" }} />
+  return (
+    <StyledContainer>
+      <Paper elevation={14} style={styles.paper}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Box px={3} py={3}>
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <Typography
+                  color="textSecondary"
+                  variant="body2"
+                  style={styles.typography}
+                >
+                  *Fields required - type "admin"
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <h1 color="textSecondary" variant="h1" style={styles.heading}>
+                  Email Campaign
+                </h1>
+              </Grid>
+              <Grid item xs={12}>
+                <TextInputController
+                  control={control}
+                  name="password"
+                  error={!!errors.password}
+                  message={errors.password?.message ?? ""}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextInputController
+                  control={control}
+                  name="confirmPassword"
+                  error={!!errors.confirmPassword}
+                  message={errors.confirmPassword?.message ?? ""}
+                />
+              </Grid>
+
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-evenly"
+                alignItems="center"
+              >
+                <LogFormButton
+                  aria-label="log in button"
+                  label="log in"
+                  style={styles.logFormButton}
+                  onClick={handleHomeRoute}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-        </Box>
-      </form>
-    </Paper>
+          </Box>
+        </form>
+      </Paper>
+    </StyledContainer>
   );
 };
 
