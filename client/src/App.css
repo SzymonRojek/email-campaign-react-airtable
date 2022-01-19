@@ -13,7 +13,7 @@ body {
 
 @media (max-width: 480px) {
   .routing-children {
-    margin-top: 70px;
+    margin: 10px;
   }
 }
 
