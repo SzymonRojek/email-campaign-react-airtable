@@ -1,18 +1,33 @@
-import AppContainer from "./AppContainer";
+import { useEffect } from "react";
+
 import "./App.css";
+import AppContainer from "./AppContainer";
 import LoginForm from "./components/LoginForm/LoginForm";
-import { useStateWithLocalStorage } from "./useStateWithLocalStorage";
+import { useLocalStorageValue } from "./useLocalStorageValue";
+import { Loader } from "components/DisplayMessage";
 
 const App = () => {
-  const [loginValue, setLoginValue] = useStateWithLocalStorage("login");
-  const defaultLogIn = "admin";
+  const [status, setStatus] = useLocalStorageValue("status", false);
+  const [loginValue, setLoginValue] = useLocalStorageValue("login", false);
+
+  useEffect(() => {
+    const timeID = setTimeout(() => {
+      if (loginValue) {
+        setStatus(true);
+      }
+    }, 3_000);
+
+    return () => clearTimeout(timeID);
+  });
 
   return (
     <div className="page-container">
-      {loginValue === defaultLogIn ? (
-        <AppContainer setLoginValue={setLoginValue} />
+      {loginValue && !status ? (
+        <Loader title="Log In" />
+      ) : loginValue && status ? (
+        <AppContainer setLoginValue={setLoginValue} setStatus={setStatus} />
       ) : (
-        <LoginForm setValue={setLoginValue} />
+        <LoginForm setLoginValue={setLoginValue} />
       )}
     </div>
   );
