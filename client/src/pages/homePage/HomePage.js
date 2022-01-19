@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "@mui/material";
-import { Container, Box, Grid, Typography } from "@mui/material";
+import { Container, Box, Grid } from "@mui/material";
 import { SiAirtable } from "react-icons/si";
 
 import peopleImg from "img/people.svg";
@@ -34,7 +34,7 @@ const style = {
 
 const useStyles = makeStyles((theme) => ({
   peopleImg: {
-    maxWidth: 150,
+    maxWidth: 170,
     alignItems: "center",
   },
   envelopeImg: {
@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 30,
     "@media (min-width:800px)": {
       maxWidth: "50%",
-      fontSize: "4rem",
+      fontSize: "3.5rem",
     },
   },
   secondHeading: {
@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paragraph: {
     "@media (min-width:800px)": {
-      fontSize: "1rem",
+      fontSize: "1.3rem",
     },
   },
 }));
@@ -108,7 +108,7 @@ const HomePage = () => {
       <Box boxShadow={10} style={style.box}>
         <Grid container direction="row" spacing={4}>
           <Grid item xs={12}>
-            <h1 className={classes.mainHeading}>Hello, there</h1>
+            <h1 className={classes.mainHeading}>Hello 👋</h1>
           </Grid>
           <Grid item sm={12} md={6} order={{ md: 4 }}>
             <h2 className={classes.secondHeading}>
@@ -140,7 +140,7 @@ const HomePage = () => {
             >
               <img
                 src={computerImg}
-                alt="hero graphic - people, envelopes, computer"
+                alt="computer img and envelopes"
                 className={classes.computerImg}
               />
             </Grid>
@@ -172,12 +172,7 @@ const HomePage = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid
-            item
-            xs={12}
-            order={{ md: 5 }}
-            style={{ padding: "40px 16px 20px 32px" }}
-          >
+          <Grid item xs={12} order={{ md: 5 }}>
             <Grid container spacing={3}>
               <Grid
                 container
@@ -190,11 +185,11 @@ const HomePage = () => {
               >
                 <img
                   src={peopleImg}
-                  alt="people"
+                  alt="people and envelopes"
                   className={classes.peopleImg}
                 />
               </Grid>
-              <Grid item md={10} style={{ paddingRight: 0 }}>
+              <Grid item md={10}>
                 <p className={classes.paragraph}>
                   Add new subscriber, wait for an admin confirmation to get an
                   active status and get more their details. Finally create an
@@ -221,7 +216,7 @@ const HomePage = () => {
               </Grid>
 
               <Grid item>
-                <Typography variant="body2">Thank you 🙏</Typography>
+                <p className={classes.paragraph}>Thank you 🙏</p>
               </Grid>
             </Grid>
           </Grid>
@@ -232,51 +227,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-// theme.typography.h1 = {
-//   [theme.breakpoints.down("sm")]: {
-//     fontSize: "2rem",
-//   },
-//   [theme.breakpoints.up("sm")]: {
-//     fontSize: "3rem",
-//   },
-//   [theme.breakpoints.up("md")]: {
-//     fontSize: "4rem",
-//   },
-// };
-
-// theme.typography.h2 = {
-//   [theme.breakpoints.down("sm")]: {
-//     fontSize: "1.3rem",
-//   },
-//   [theme.breakpoints.up("sm")]: {
-//     fontSize: "1.5rem",
-//   },
-//   [theme.breakpoints.up("md")]: {
-//     fontSize: "1.8rem",
-//   },
-// };
-
-// theme.typography.h3 = {
-//   [theme.breakpoints.down("sm")]: {
-//     fontSize: "1.2rem",
-//   },
-//   [theme.breakpoints.up("sm")]: {
-//     fontSize: "1.4rem",
-//   },
-//   [theme.breakpoints.up("md")]: {
-//     fontSize: "1.7rem",
-//   },
-// };
-
-// theme.typography.body2 = {
-//   [theme.breakpoints.down("sm")]: {
-//     fontSize: "1rem",
-//   },
-//   [theme.breakpoints.up("sm")]: {
-//     fontSize: "1.3rem",
-//   },
-//   [theme.breakpoints.up("md")]: {
-//     fontSize: "1.5rem",
-//   },
-// };
