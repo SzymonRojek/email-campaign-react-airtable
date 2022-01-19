@@ -95,7 +95,7 @@ const CampaignsStatusPage = (props) => {
   return (
     <>
       {campaignsData.status === "loading" ? (
-        <Loader title="Campaigns" />
+        <Loader title="Status" />
       ) : campaignsData.status === "error" ? (
         <Error
           titleOne="ERROR MESSAGE"

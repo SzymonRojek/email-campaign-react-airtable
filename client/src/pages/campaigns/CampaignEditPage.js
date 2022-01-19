@@ -175,7 +175,7 @@ const CampaignEditPage = ({
           titleThree="That's why the Campaign has been drafted"
         />
       ) : campaignData.status === "loading" ? (
-        <Loader title="Campaign Details" />
+        <Loader title="Details" />
       ) : !Boolean(
           campaignsData.data &&
             campaignsData.data.find((item) => item.id === id)

@@ -96,7 +96,7 @@ const SubscribersStatusPage = (props) => {
   return (
     <>
       {subscribersData.status === "loading" ? (
-        <Loader title="Subscribers" />
+        <Loader title="Status" />
       ) : subscribersData.status === "error" ? (
         <Error
           titleOne="ERROR MESSAGE"

@@ -22,7 +22,7 @@ const SubscriberDetailsPage = ({ subscribersData }) => {
   return (
     <>
       {subscriberData && subscriberData.status === "loading" ? (
-        <Loader title="Subscriber" />
+        <Loader title="Details" />
       ) : !Boolean(
           subscribersData.data &&
             subscribersData.data.find((item) => item.id === id)
