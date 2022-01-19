@@ -5,7 +5,6 @@ import "App.css";
 import api from "api";
 import { useFetchData } from "useFetchData";
 import { MainNavigation, SubNavigation } from "components/Navigation";
-import { StyledFooter } from "components/StyledFooter";
 import { HomePage } from "pages/homePage";
 import {
   SubscribersPage,
@@ -26,7 +25,7 @@ import {
 } from "data/dataLinksNavigation";
 import { NotFoundPage } from "pages/notFoundPage";
 
-const AppContainer = ({ setLoginValue, setStatus }) => {
+const AppContainer = ({ setIsLogIn, setStatusLog }) => {
   const navigate = useNavigate();
   const [openInfoPopup, setOpenInfoPopup] = useState(false);
   const [contentPopup, setContentPopup] = useState({});
@@ -203,13 +202,11 @@ const AppContainer = ({ setLoginValue, setStatus }) => {
       <MainNavigation
         tabsValue={tabsValue}
         setTabsValue={setTabsValue}
-        setLoginValue={setLoginValue}
-        setStatus={setStatus}
+        setIsLogIn={setIsLogIn}
+        setStatusLog={setStatusLog}
       />
 
       <div className="routing-container">{routing}</div>
-
-      <StyledFooter label="Coded By Szymon Rojek © 2021" />
 
       <InfoPopup
         contentPopup={contentPopup}
