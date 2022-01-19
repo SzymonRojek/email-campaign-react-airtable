@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function MainNavigation({ tabsValue, setTabsValue, setLoginValue, setStatus }) {
+function MainNavigation({ tabsValue, setTabsValue, setIsLogIn, setStatusLog }) {
   const theme = useTheme();
   const classes = useStyles();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
@@ -101,6 +101,15 @@ function MainNavigation({ tabsValue, setTabsValue, setLoginValue, setStatus }) {
       setTabsValue(2);
     }
   }, []);
+
+  const handleChangeStates = () => {
+    const timeID = setTimeout(() => {
+      setIsLogIn(false);
+      setStatusLog("loadingIn");
+    }, 2_000);
+
+    return () => clearTimeout(timeID);
+  };
 
   return (
     <AppBar position="static">
@@ -133,10 +142,11 @@ function MainNavigation({ tabsValue, setTabsValue, setLoginValue, setStatus }) {
               </StyledTabs>
             </div>
             <LogFormButton
+              aria-label="log out button"
               label="log out"
               onClick={() => {
-                setLoginValue(false);
-                setStatus(false);
+                setStatusLog("loadingOut");
+                handleChangeStates();
               }}
             />
           </>
