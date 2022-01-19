@@ -7,3 +7,4 @@ export { default as sortDataAlphabetically } from "./sortDataAlphabetically";
 export { default as capitalizeFirstLetter } from "./capitalizeFirstLetter";
 export { default as getLatestAddedItem } from "./getLatestAddedItem";
 export { default as getFilteredDataByStatus } from "./getFilteredDataByStatus";
+export { default as validationLogin } from "./validationLogin";
