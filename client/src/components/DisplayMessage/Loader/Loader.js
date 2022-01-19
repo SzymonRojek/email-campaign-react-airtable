@@ -8,10 +8,8 @@ const Loader = ({ title }) => (
       <div className="load"></div>
 
       <div className="text-container">
-        <p className="loader-text">{title} Data</p>
-
         <div className="dot-container">
-          <p className="loader-text">loading</p>
+          <p className="loader-text">{title}</p>
           <div className="dot-flashing"></div>
         </div>
       </div>
@@ -20,7 +18,7 @@ const Loader = ({ title }) => (
 );
 
 Loader.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
 };
 
 export default Loader;
