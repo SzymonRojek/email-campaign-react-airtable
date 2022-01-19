@@ -16,8 +16,8 @@ const style = {
     backgroundColor: "rgba(255, 255, 255, 0.55)",
     borderRadius: 6,
     backdropFilter: "blur(35px)",
-    "-webkit-backdropFilter": "blur(35px)",
-    "-moz-backdropFfilter": "blur(35px)",
+    WebkitBackdropFilter: "blur(35px)",
+    MozBackdropFfilter: "blur(35px)",
   },
   link: {
     padding: "0 10px",
@@ -117,6 +117,7 @@ const HomePage = () => {
             </h2>
             <Grid
               container
+              item
               direction="column"
               alignItems="center"
               justify="center"
@@ -132,6 +133,7 @@ const HomePage = () => {
           <Grid item xs={12} md={6} order={{ md: 4 }}>
             <Grid
               container
+              item
               direction="column"
               alignItems="center"
               justify="center"
@@ -179,6 +181,7 @@ const HomePage = () => {
             <Grid container spacing={3}>
               <Grid
                 container
+                item
                 direction="column"
                 alignItems="center"
                 justify="center"
