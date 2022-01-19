@@ -5,16 +5,15 @@ import AppContainer from "./AppContainer";
 import LoginForm from "./components/LoginForm/LoginForm";
 import { useLocalStorageValue } from "./useLocalStorageValue";
 import { Loader } from "components/DisplayMessage";
+import { StyledFooter } from "./components/StyledFooter";
 
 const App = () => {
-  const [status, setStatus] = useLocalStorageValue("status", false);
-  const [loginValue, setLoginValue] = useLocalStorageValue("login", false);
+  const [statusLog, setStatusLog] = useLocalStorageValue("status", "loadingIn");
+  const [isLogIn, setIsLogIn] = useLocalStorageValue("login", false);
 
   useEffect(() => {
     const timeID = setTimeout(() => {
-      if (loginValue) {
-        setStatus(true);
-      }
+      if (isLogIn) setStatusLog("success");
     }, 3_000);
 
     return () => clearTimeout(timeID);
@@ -22,13 +21,17 @@ const App = () => {
 
   return (
     <div className="page-container">
-      {loginValue && !status ? (
+      {isLogIn && statusLog === "loadingIn" ? (
         <Loader title="Log In" />
-      ) : loginValue && status ? (
-        <AppContainer setLoginValue={setLoginValue} setStatus={setStatus} />
+      ) : isLogIn && statusLog === "success" ? (
+        <AppContainer setIsLogIn={setIsLogIn} setStatusLog={setStatusLog} />
+      ) : isLogIn && statusLog === "loadingOut" ? (
+        <Loader title="Log Out" />
       ) : (
-        <LoginForm setLoginValue={setLoginValue} />
+        <LoginForm setIsLogIn={setIsLogIn} />
       )}
+
+      <StyledFooter label="Coded By Szymon Rojek © 2022" />
     </div>
   );
 };
