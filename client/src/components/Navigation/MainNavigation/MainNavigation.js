@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function MainNavigation({ tabsValue, setTabsValue, setLoginValue }) {
+function MainNavigation({ tabsValue, setTabsValue, setLoginValue, setStatus }) {
   const theme = useTheme();
   const classes = useStyles();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
@@ -132,7 +132,13 @@ function MainNavigation({ tabsValue, setTabsValue, setLoginValue }) {
                 ))}
               </StyledTabs>
             </div>
-            <LogFormButton label="log out" onClick={() => setLoginValue("")} />
+            <LogFormButton
+              label="log out"
+              onClick={() => {
+                setLoginValue(false);
+                setStatus(false);
+              }}
+            />
           </>
         )}
       </Toolbar>
