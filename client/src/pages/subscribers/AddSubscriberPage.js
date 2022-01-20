@@ -123,8 +123,6 @@ const AddSubscriberPage = ({
         salary: "",
         telephone: "",
       });
-
-      // setCheckboxState(false);
     }
   }, [formState, reset]);
 

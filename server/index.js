@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
-const subscribers = require("../routes/subscribers");
-const campaigns = require("../routes/campaigns");
+const subscribers = require("./routes/subscribers");
+const campaigns = require("./routes/campaigns");
 const path = require("path");
 
 require("dotenv").config();

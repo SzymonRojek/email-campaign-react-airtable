@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-import { dataHeadEmailTable } from "data/dataHeadEmailTable";
+import { dataHeadEmailTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
 import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";

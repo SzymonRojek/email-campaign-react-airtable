@@ -1,9 +1,14 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 
-import { ContainerTable, HeadTable, BodyTable, FooterText } from "../Table";
-import { CampaignTableRow } from "../CampaignTableRow";
-import CustomPaginator from "../PaginationPackage/CustomPaginator";
+import {
+  ContainerTable,
+  HeadTable,
+  BodyTable,
+  FooterText,
+} from "components/Table";
+import { CampaignTableRow } from "components/CampaignTableRow";
+import CustomPaginator from "components/PaginationPackage/CustomPaginator";
 import { getFilteredDataByStatus } from "helpers";
 
 const CampaignStatus = (props) => {

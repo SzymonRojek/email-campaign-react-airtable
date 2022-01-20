@@ -5,7 +5,7 @@ import { Table, TableContainer } from "@material-ui/core";
 import { Paper } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 
-import SelectInputConroller from "../Inputs/SelectInputController";
+import SelectInputConroller from "components/Inputs/SelectInputController";
 
 const useStyles = makeStyles({
   root: {

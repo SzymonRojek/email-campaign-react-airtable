@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
 import "./styles.css";
-import { StyledContainer } from "../../StyledContainer";
+import { StyledContainer } from "components/StyledContainer";
 
 const Error = ({ titleOne, titleTwo, titleThree }) => (
   <StyledContainer>

@@ -7,7 +7,7 @@ import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
 import { CampaignStatus } from "components/CampaignStatus";
-import SelectInputController from "../../components/Inputs/SelectInputController";
+import SelectInputController from "components/Inputs/SelectInputController";
 
 const useStyles = makeStyles({
   root: {

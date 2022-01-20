@@ -15,8 +15,8 @@ import { AiFillHome } from "react-icons/ai";
 
 import { StyledTabs } from "./StyledTabs";
 import { DrawerMenu } from "./DrawerMenu";
-import Logo from "../../../img/logo.svg"; // remove dots!
-import LogFormButton from "../../LogFormButton/LogFormButton";
+import Logo from "img/logo.svg";
+import { LogFormButton } from "components/LogFormButton";
 
 const mainNavigationLinks = [
   {

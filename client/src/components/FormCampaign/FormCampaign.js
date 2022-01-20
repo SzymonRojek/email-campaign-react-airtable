@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import { Paper, Box, Grid, Typography } from "@material-ui/core";
 
-import { TextInputController } from "../Inputs";
-import { StyledButton } from "../StyledButton";
+import { TextInputController } from "components/Inputs";
+import { StyledButton } from "components/StyledButton";
 
 const style = {
   paper: {

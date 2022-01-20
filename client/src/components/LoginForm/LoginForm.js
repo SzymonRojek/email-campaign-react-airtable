@@ -3,9 +3,9 @@ import { useNavigate } from "react-router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Paper, Box, Grid, Typography } from "@material-ui/core";
 
-import { LogFormButton } from "../LogFormButton";
-import validationLogin from "../../helpers/validationLogin";
-import { StyledContainer } from "../StyledContainer";
+import { LogFormButton } from "components/LogFormButton";
+import { validationLogin } from "helpers";
+import { StyledContainer } from "components/StyledContainer";
 import { PasswordInput } from "./PasswordInput";
 
 const styles = {
