@@ -10,7 +10,7 @@ const inputLabelProps = {
     color: "#fff",
     [`&.${inputLabelClasses.shrink}`]: {
       // set the color of the label when shrinked (usually when the TextField is focused)
-      color: "#ffa500 !important",
+      // color: "#ffa500 !important",
       letterSpacing: 1,
     },
   },
@@ -19,17 +19,17 @@ const inputLabelProps = {
 const StyledTextField = withStyles({
   root: {
     "& .MuiInputBase-root": {
-      color: "white",
+      color: "rgb(221, 220, 220)",
     },
     "& label.Mui-focused": {
-      color: "#fff",
+      color: "rgb(221, 220, 220)",
     },
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
-        borderColor: "#fff",
+        borderColor: "rgb(221, 220, 220)",
       },
       "&:hover fieldset": {
-        borderColor: "#fff",
+        borderColor: "rgb(221, 220, 220)",
       },
       "&.Mui-focused fieldset": {
         borderColor: "#ffa500",
