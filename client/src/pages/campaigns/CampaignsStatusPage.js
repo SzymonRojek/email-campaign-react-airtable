@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { Loader, Error } from "components/DisplayMessage";
+import { Loader, Error } from "../../components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
-import { CampaignStatus } from "components/CampaignStatus";
+import { CampaignStatus } from "../../components/CampaignStatus";
 import SelectInputController from "components/Inputs/SelectInputController";
 
 const useStyles = makeStyles({

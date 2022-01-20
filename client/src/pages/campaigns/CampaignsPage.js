@@ -2,10 +2,10 @@ import PropTypes from "prop-types";
 
 import { dataHeadEmailTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
-import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
-import { CampaignsList } from "components/CampaignsList";
+import { CampaignsList } from "../../components/CampaignsList";
+import { Error, Loader } from "../../components/DisplayMessage";
 
 const CampaignsPage = ({
   campaignsData,

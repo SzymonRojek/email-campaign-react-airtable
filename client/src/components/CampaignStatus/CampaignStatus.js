@@ -7,7 +7,7 @@ import {
   BodyTable,
   FooterText,
 } from "components/Table";
-import { CampaignTableRow } from "components/CampaignTableRow";
+import { CampaignTableRow } from "../CampaignTableRow";
 import CustomPaginator from "components/PaginationPackage/CustomPaginator";
 import { getFilteredDataByStatus } from "helpers";
 

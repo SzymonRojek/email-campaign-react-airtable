@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useRoutes, useNavigate } from "react-router-dom";
 
-import "App.css";
-import api from "api";
+import "./App.css";
+import api from "./api";
 import { useFetchData } from "useFetchData";
-import { MainNavigation, SubNavigation } from "components/Navigation";
+import { MainNavigation, SubNavigation } from "./components/Navigation";
 import { HomePage } from "pages/homePage";
 import {
   SubscribersPage,
@@ -17,12 +17,12 @@ import {
   AddCampaignPage,
   CampaignsPage,
   CampaignsStatusPage,
-} from "pages/campaigns";
-import { InfoPopup, ConfirmPopup } from "components/DisplayMessage";
+} from "./pages/campaigns";
+import { InfoPopup, ConfirmPopup } from "./components/DisplayMessage";
 import {
   subscribersLinksNavigation,
   campaignsLinksNavigation,
-} from "data/dataLinksNavigation";
+} from "./data/dataLinksNavigation";
 import { NotFoundPage } from "pages/notFoundPage";
 
 const AppContainer = ({ setIsLogIn, setStatusLog }) => {
