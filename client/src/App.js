@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import "./App.css";
 import AppContainer from "./AppContainer";
-import { LoginForm } from "components/LoginForm";
+import { LoginForm } from "./components/LoginForm";
 import { Loader } from "components/DisplayMessage";
 import { StyledFooter } from "components/StyledFooter";
 import { useLocalStorageValue } from "./useLocalStorageValue";
