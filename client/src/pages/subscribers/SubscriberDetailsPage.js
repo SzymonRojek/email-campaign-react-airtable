@@ -1,18 +1,23 @@
 // import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
-import { TableBody, TableCell, TableRow, Typography } from "@material-ui/core";
 
 import { useFetchDetailsById } from "useFetchDetailsById";
-import {
-  detailsDataHeadTableFirst,
-  detailsDataHeadTableSecond,
-} from "data/dataHeadTable";
+import { detailsDataHeadTableFirst } from "data/dataHeadTable";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
 import { ContainerTable, HeadTable } from "components/Table";
-import { SubscriberTableRow } from "components/SubscriberTableRow";
 import { Loader, Error } from "components/DisplayMessage";
-import SubscribersList from "../../components/SubscribersList/SubscribersList";
+import SubscribersList from "components/SubscribersList/SubscribersList";
+import { SubscriberDetailsData } from "components/SubscriberTableRow/SubscriberDetailsData";
+import { BodyTable } from "components/Table";
+import CustomPaginator from "components/PaginationPackage/CustomPaginator";
+import { detailsDataHeadTableSecond } from "data/dataHeadTable";
+
+const styles = {
+  container: {
+    marginTop: 100,
+  },
+};
 
 const SubscriberDetailsPage = ({ subscribersData }) => {
   const { id } = useParams();
@@ -42,32 +47,31 @@ const SubscriberDetailsPage = ({ subscribersData }) => {
             passedData={[subscriberData.data]}
           />
 
-          {/* <ContainerTable subHeading="Details:">
-            <HeadTable dataHeadTable={detailsDataHeadTableSecond} /> */}
+          <div style={styles.container}>
+            <CustomPaginator
+              passedData={[subscriberData.data]}
+              renderData={() => {
+                return (
+                  <ContainerTable
+                    subHeading="Details data"
+                    passedData={[subscriberData.data]}
+                  >
+                    <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
 
-          {/* <TableBody>
-              {subscriberData &&
-                [subscriberData.data].map((subscriber, index) => (
-                  <TableRow key={`i-${index}`}>
-                    <TableCell>
-                      <Typography color="textSecondary" variant="subtitle1">
-                        {subscriber.fields?.email}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography color="textSecondary" variant="subtitle1">
-                        {subscriber.fields?.salary}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography color="textSecondary" variant="subtitle1">
-                        {subscriber.fields?.telephone}
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody> */}
-          {/* </ContainerTable> */}
+                    <BodyTable>
+                      {[subscriberData.data].map((subscriber, index) => (
+                        <SubscriberDetailsData
+                          key={`id-${subscriber.id}`}
+                          subscriber={subscriber}
+                          index={index}
+                        />
+                      ))}
+                    </BodyTable>
+                  </ContainerTable>
+                );
+              }}
+            />
+          </div>
         </StyledContainer>
       )}
     </>
