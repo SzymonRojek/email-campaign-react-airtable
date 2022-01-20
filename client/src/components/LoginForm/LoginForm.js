@@ -3,10 +3,10 @@ import { useNavigate } from "react-router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Paper, Box, Grid, Typography } from "@material-ui/core";
 
-import { TextInputController } from "../Inputs";
 import { LogFormButton } from "../LogFormButton";
 import validationLogin from "../../helpers/validationLogin";
 import { StyledContainer } from "../StyledContainer";
+import { PasswordInput } from "./PasswordInput";
 
 const styles = {
   paper: {
@@ -30,7 +30,7 @@ const LoginForm = ({ setIsLogIn }) => {
 
   const {
     handleSubmit,
-    control,
+    register,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationLogin),
@@ -65,17 +65,17 @@ const LoginForm = ({ setIsLogIn }) => {
                 </h1>
               </Grid>
               <Grid item xs={12}>
-                <TextInputController
-                  control={control}
+                <PasswordInput
                   name="password"
+                  register={register}
                   error={!!errors.password}
                   message={errors.password?.message ?? ""}
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextInputController
-                  control={control}
+                <PasswordInput
                   name="confirmPassword"
+                  register={register}
                   error={!!errors.confirmPassword}
                   message={errors.confirmPassword?.message ?? ""}
                 />
