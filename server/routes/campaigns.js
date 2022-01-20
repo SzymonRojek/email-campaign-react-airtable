@@ -28,9 +28,7 @@ router.get("/", async (request, response) => {
 });
 
 router.post("/", async (request, response) => {
-  const title = request.body.fields.title;
-  const description = request.body.fields.description;
-  const status = request.body.fields.status;
+  const { title, description, status } = request.body.fields;
 
   const configRequest = {
     method: "post",

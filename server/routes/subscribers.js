@@ -31,13 +31,8 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", (request, response) => {
-  const name = request.body.fields.name;
-  const surname = request.body.fields.surname;
-  const email = request.body.fields.email;
-  const status = request.body.fields.status;
-  const profession = request.body.fields.profession;
-  const salary = request.body.fields.salary;
-  const telephone = request.body.fields.telephone;
+  const { name, surname, email, status, profession, salary, telephone } =
+    request.body.fields;
 
   const configRequest = {
     method: "post",
