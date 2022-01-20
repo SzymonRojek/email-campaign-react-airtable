@@ -1,21 +1,35 @@
 export const generalDataHeadTable = [
-  "No",
-  "Name",
-  "Surname",
-  "Profession",
-  "Status",
-  "Created",
-  "Details",
-  "Delete",
+  "no",
+  "name",
+  "surname",
+  "status",
+  "created",
+  "details",
+  "delete",
 ];
 
 export const detailsDataHeadTableFirst = [
-  "No",
-  "Name",
-  "Surname",
-  "Profession",
-  "Status",
-  "Created",
+  "no",
+  "name",
+  "surname",
+  "status",
+  "created",
 ];
 
-export const detailsDataHeadTableSecond = ["Email", "Salary", "Telephone"];
+export const detailsDataHeadTableSecond = [
+  "no",
+  "e-mail",
+  "profession",
+  "salary",
+  "telephone",
+];
+
+export const dataHeadEmailTable = [
+  "no",
+  "title",
+  "content",
+  "created",
+  "status",
+  "edit",
+  "remove",
+];
