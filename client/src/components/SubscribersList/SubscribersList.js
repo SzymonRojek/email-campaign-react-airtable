@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 
 import { ContainerTable, HeadTable, BodyTable } from "components/Table";
-import { SubscriberTableRow } from "components/SubscriberTableRow";
+import { SubscriberGeneralData } from "components/SubscriberTableRow/SubscriberGeneralData";
 import CustomPaginator from "components/PaginationPackage/CustomPaginator";
 
 const SubscribersList = ({
@@ -34,7 +34,7 @@ const SubscribersList = ({
 
           <BodyTable>
             {data.map((subscriber, index) => (
-              <SubscriberTableRow
+              <SubscriberGeneralData
                 key={`id-${subscriber.id}`}
                 subscriber={{ ...subscriber, group: "subscribers" }}
                 index={index}
@@ -52,6 +52,7 @@ const SubscribersList = ({
     />
   );
 };
+
 SubscribersList.propTypes = {
   subHeading: PropTypes.string.isRequired,
   dataHeadTable: PropTypes.array.isRequired,

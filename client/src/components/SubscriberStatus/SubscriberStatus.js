@@ -1,9 +1,14 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 
-import { ContainerTable, HeadTable, BodyTable, FooterText } from "../Table";
-import { SubscriberTableRow } from "../SubscriberTableRow";
-import CustomPaginator from "../PaginationPackage/CustomPaginator";
+import {
+  ContainerTable,
+  HeadTable,
+  BodyTable,
+  FooterText,
+} from "components/Table";
+import { SubscriberGeneralData } from "components/SubscriberTableRow/SubscriberGeneralData";
+import CustomPaginator from "components/PaginationPackage/CustomPaginator";
 import { getFilteredDataByStatus } from "helpers";
 
 const SubscriberStatus = (props) => {
@@ -44,7 +49,7 @@ const SubscriberStatus = (props) => {
             <BodyTable>
               {data.some((el) => el.fields.status === status)
                 ? data.map((subscriber, index) => (
-                    <SubscriberTableRow
+                    <SubscriberGeneralData
                       key={`id-${subscriber.id}`}
                       subscriber={{ ...subscriber, group: "subscribers" }}
                       index={index}
