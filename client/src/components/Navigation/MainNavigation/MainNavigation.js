@@ -123,7 +123,11 @@ function MainNavigation({ tabsValue, setTabsValue, setIsLogIn, setStatusLog }) {
         </div>
 
         {isSmallDevice ? (
-          <DrawerMenu setTabsValue={setTabsValue} />
+          <DrawerMenu
+            setTabsValue={setTabsValue}
+            setIsLogIn={setIsLogIn}
+            setStatusLog={setStatusLog}
+          />
         ) : (
           <>
             <div className={classes.navLinksContainer}>
