@@ -27,6 +27,8 @@ import { IoIosPeople } from "react-icons/io";
 import { MdAlternateEmail } from "react-icons/md";
 import { MdOutlineMarkEmailRead } from "react-icons/md";
 
+import { LogFormButton } from "../../../LogFormButton";
+
 const style = {
   drawer: { zIndex: 10 },
   icon: { fontSize: 35 },
@@ -109,7 +111,7 @@ const StyledListItem = withStyles({
   },
 })(ListItem);
 
-function DrawerMenu({ setTabsValue }) {
+function DrawerMenu({ setTabsValue, setIsLogIn, setStatusLog }) {
   const classes = useStyles();
   const location = useLocation();
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -131,6 +133,15 @@ function DrawerMenu({ setTabsValue }) {
   const handleCampaignsClick = () => {
     setOpenCampaignsLinks(!openCampaignsLinks);
     setOpenSubscribersLinks(false);
+  };
+
+  const handleChangeStates = () => {
+    const timeID = setTimeout(() => {
+      setIsLogIn(false);
+      setStatusLog("loadingIn");
+    }, 2_000);
+
+    return () => clearTimeout(timeID);
   };
 
   return (
@@ -253,6 +264,17 @@ function DrawerMenu({ setTabsValue }) {
               </StyledListItem>
             </Link>
             <Divider className={classes.subDivider} />
+
+            <div style={{ textAlign: "center", marginTop: 80 }}>
+              <LogFormButton
+                aria-label="log out button"
+                label="log out"
+                onClick={() => {
+                  setStatusLog("loadingOut");
+                  handleChangeStates();
+                }}
+              />
+            </div>
           </Grid>
         </Grid>
       </Drawer>
