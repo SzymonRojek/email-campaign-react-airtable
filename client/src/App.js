@@ -2,10 +2,10 @@ import { useEffect } from "react";
 
 import "./App.css";
 import AppContainer from "./AppContainer";
-import LoginForm from "./components/LoginForm/LoginForm";
-import { useLocalStorageValue } from "./useLocalStorageValue";
+import { LoginForm } from "components/LoginForm";
 import { Loader } from "components/DisplayMessage";
-import { StyledFooter } from "./components/StyledFooter";
+import { StyledFooter } from "components/StyledFooter";
+import { useLocalStorageValue } from "./useLocalStorageValue";
 
 const App = () => {
   const [statusLog, setStatusLog] = useLocalStorageValue("status", "loadingIn");
@@ -23,9 +23,9 @@ const App = () => {
     <div className="page-container">
       {isLogIn && statusLog === "loadingIn" ? (
         <Loader title="Log In" />
-      ) : isLogIn && statusLog === "success" ? (
+      ) : statusLog === "success" ? (
         <AppContainer setIsLogIn={setIsLogIn} setStatusLog={setStatusLog} />
-      ) : isLogIn && statusLog === "loadingOut" ? (
+      ) : statusLog === "loadingOut" ? (
         <Loader title="Log Out" />
       ) : (
         <LoginForm setIsLogIn={setIsLogIn} />
