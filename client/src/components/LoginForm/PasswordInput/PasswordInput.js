@@ -66,7 +66,7 @@ const PasswordInput = ({ name, register, message }) => {
         htmlFor="outlined-adornment-password"
         className={classes.label}
       >
-        {name}
+        {`${name}*`}
       </InputLabel>
       <OutlinedInput
         className={classes.root}
