@@ -14,10 +14,6 @@ const CampaignsPage = ({
   setOpenConfirmPopup,
   setContentPopup,
 }) => {
-  sortDataAlphabetically(campaignsData.data);
-
-  const latestAddedCampaign = getLatestAddedItem(campaignsData.data);
-
   return (
     <>
       {campaignsData.status === "loading" ? (
@@ -25,16 +21,15 @@ const CampaignsPage = ({
       ) : campaignsData.status === "error" ? (
         <Error
           titleOne="ERROR MESSAGE"
-          titleTwo="Check access to the data from airtable base."
+          titleTwo={`${campaignsData.data?.error.message || "Check endpoints"}`}
           titleThree="Also, please check your internet connection."
         />
       ) : (
         <StyledContainer>
-          {campaignsData.status === "success" && !campaignsData.data.length ? (
+          {campaignsData.status === "success" && campaignsData.data?.error ? (
             <Error
-              titleOne="There are not campaigns added yet."
-              titleTwo="Please add a new campaign."
-              titleThree="🙂"
+              titleOne={`${campaignsData.data.error.messageOne}`}
+              titleTwo={`${campaignsData.data.error.messageTwo}`}
             />
           ) : (
             <div style={{ marginBottom: 100 }}>
@@ -43,7 +38,7 @@ const CampaignsPage = ({
               <CampaignsList
                 subHeading="List"
                 dataHeadEmailTable={dataHeadEmailTable}
-                passedData={campaignsData.data}
+                passedData={sortDataAlphabetically(campaignsData.data)}
                 setSelectedData={setSelectedData}
                 handleEditDetailsCampaign={handleEditDetailsCampaign}
                 setContentPopup={setContentPopup}
@@ -56,7 +51,7 @@ const CampaignsPage = ({
             <CampaignsList
               subHeading="Latest added Campaign"
               dataHeadEmailTable={dataHeadEmailTable}
-              passedData={latestAddedCampaign}
+              passedData={getLatestAddedItem(campaignsData.data)}
               handleEditDetailsCampaign={handleEditDetailsCampaign}
               setSelectedData={setSelectedData}
               setContentPopup={setContentPopup}
