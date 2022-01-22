@@ -24,7 +24,7 @@ router.get("/", async (request, response) => {
 
     if (!data.records.length) {
       response.json({
-        error: {
+        info: {
           messageOne: "There is no campaigns added yet",
           messageTwo: "Please add a campaign",
         },

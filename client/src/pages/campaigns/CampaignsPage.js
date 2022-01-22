@@ -26,10 +26,10 @@ const CampaignsPage = ({
         />
       ) : (
         <StyledContainer>
-          {campaignsData.status === "success" && campaignsData.data?.error ? (
+          {campaignsData.data?.info ? (
             <Error
-              titleOne={`${campaignsData.data.error.messageOne}`}
-              titleTwo={`${campaignsData.data.error.messageTwo}`}
+              titleOne={`${campaignsData.data.info.messageOne}`}
+              titleTwo={`${campaignsData.data.info.messageTwo}`}
             />
           ) : (
             <div style={{ marginBottom: 100 }}>
