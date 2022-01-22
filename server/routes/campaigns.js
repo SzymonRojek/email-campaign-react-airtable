@@ -6,7 +6,8 @@ require("dotenv").config();
 
 const { REACT_APP_DB_ID, REACT_APP_API_KEY } = process.env;
 
-const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/campaigns`;
+const campaigns = "campaigns";
+const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/${campaigns}`;
 
 const headers = {
   Authorization: `Bearer ${REACT_APP_API_KEY}`,
@@ -21,7 +22,16 @@ router.get("/", async (request, response) => {
 
     const { data } = await axios.get(api_url, requestConfig);
 
-    response.status(200).json(data.records);
+    if (!data.records.length) {
+      response.json({
+        error: {
+          messageOne: "There is no campaigns added yet",
+          messageTwo: "Please add a campaign",
+        },
+      });
+    } else {
+      response.status(200).json(data.records);
+    }
   } catch (error) {
     response.json({ error });
   }
