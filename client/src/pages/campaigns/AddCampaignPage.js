@@ -4,9 +4,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import emailjs from "@emailjs/browser";
 
-import api from "../../api";
+import api from "api";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
-import { Error } from "../../components/DisplayMessage";
+import { Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
 import { FormCampaign } from "components/FormCampaign";

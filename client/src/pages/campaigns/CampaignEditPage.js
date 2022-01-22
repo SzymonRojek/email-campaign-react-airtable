@@ -6,13 +6,13 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
 import emailjs from "emailjs-com";
 
-import api from "../../api";
+import api from "api";
 import { useFetchDetailsById } from "useFetchDetailsById";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { FormCampaign } from "components/FormCampaign";
 import { StyledHeading } from "components/StyledHeading";
-import { Loader, Error } from "../../components/DisplayMessage";
+import { Loader, Error } from "components/DisplayMessage";
 
 const {
   REACT_APP_EMAIL_SERVICE_ID,

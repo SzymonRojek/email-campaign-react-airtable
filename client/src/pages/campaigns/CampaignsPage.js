@@ -4,8 +4,8 @@ import { dataHeadEmailTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
-import { CampaignsList } from "../../components/CampaignsList";
-import { Error, Loader } from "../../components/DisplayMessage";
+import { CampaignsList } from "components/CampaignsList";
+import { Error, Loader } from "components/DisplayMessage";
 
 const CampaignsPage = ({
   campaignsData,
