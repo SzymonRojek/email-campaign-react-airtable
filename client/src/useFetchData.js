@@ -9,21 +9,17 @@ export function useFetchData(endpoint) {
   });
 
   const getData = async () => {
-    if (!endpoint) {
-      setData({ status: "error" });
-    } else {
-      try {
-        const data = await api.get(endpoint);
+    try {
+      const data = await api.get(endpoint);
 
-        setData({
-          status: "success",
-          data,
-        });
-      } catch (error) {
-        setData({
-          status: "error",
-        });
-      }
+      setData({
+        status: data?.error ? "error" : "success",
+        data,
+      });
+    } catch (error) {
+      setData({
+        status: "error",
+      });
     }
   };
 
