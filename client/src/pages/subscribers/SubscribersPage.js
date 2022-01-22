@@ -22,9 +22,6 @@ const SubscribersPage = (props) => {
     setContentPopup,
   } = props;
 
-  sortDataAlphabetically(subscribersData.data);
-  const latestAddedSubscriber = getLatestAddedItem(subscribersData.data);
-
   return (
     <>
       {subscribersData.status === "loading" ? (
@@ -32,17 +29,18 @@ const SubscribersPage = (props) => {
       ) : subscribersData.status === "error" ? (
         <Error
           titleOne="ERROR MESSAGE"
-          titleTwo="Check access to the data from airtable base."
+          titleTwo={`${
+            subscribersData.data?.error.message || "Check endpoints"
+          }`}
           titleThree="Also, please check your internet connection."
         />
       ) : (
         <StyledContainer>
           {subscribersData.status === "success" &&
-          !subscribersData.data.length ? (
+          subscribersData.data?.error ? (
             <Error
-              titleOne="There are not subscribers added yet."
-              titleTwo="Please add a new subscriber."
-              titleThree="🙂"
+              titleOne={`${subscribersData.data.error.messageOne}`}
+              titleTwo={`${subscribersData.data.error.messageTwo}`}
             />
           ) : (
             <div style={styles.container}>
@@ -51,7 +49,7 @@ const SubscribersPage = (props) => {
               <SubscribersList
                 subHeading="List"
                 dataHeadTable={generalDataHeadTable}
-                passedData={subscribersData.data}
+                passedData={sortDataAlphabetically(subscribersData.data)}
                 setSelectedData={setSelectedData}
                 handleSubscriberDetails={handleSubscriberDetails}
                 setContentPopup={setContentPopup}
@@ -59,12 +57,11 @@ const SubscribersPage = (props) => {
               />
             </div>
           )}
-
-          {subscribersData.data.length > 1 ? (
+          {subscribersData.data && subscribersData.data.length > 1 ? (
             <SubscribersList
               subHeading="Latest added Subscriber"
               dataHeadTable={generalDataHeadTable}
-              passedData={latestAddedSubscriber}
+              passedData={getLatestAddedItem(subscribersData.data)}
               setSelectedData={setSelectedData}
               handleSubscriberDetails={handleSubscriberDetails}
               setContentPopup={setContentPopup}
