@@ -6,14 +6,15 @@ require("dotenv").config();
 
 const { REACT_APP_DB_ID, REACT_APP_API_KEY } = process.env;
 
-const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/subscribers`;
+const subscribers = "subscribers";
+const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/${subscribers}`;
 
 const headers = {
   Authorization: `Bearer ${REACT_APP_API_KEY}`,
   "Content-Type": "application/json",
 };
 
-router.get("/", async (req, res) => {
+router.get("/", async (request, response) => {
   try {
     const requestConfig = {
       headers: {
@@ -24,9 +25,18 @@ router.get("/", async (req, res) => {
 
     const { data } = await axios.get(api_url, requestConfig);
 
-    res.status(200).json(data.records);
+    if (!data.records.length) {
+      response.json({
+        error: {
+          messageOne: "There is no subscribers added yet",
+          messageTwo: "Please add a subscriber",
+        },
+      });
+    } else {
+      response.status(200).json(data.records);
+    }
   } catch (error) {
-    res.json({ error });
+    response.json({ error });
   }
 });
 
