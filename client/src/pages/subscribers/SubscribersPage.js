@@ -36,11 +36,10 @@ const SubscribersPage = (props) => {
         />
       ) : (
         <StyledContainer>
-          {subscribersData.status === "success" &&
-          subscribersData.data?.error ? (
+          {subscribersData.data?.info ? (
             <Error
-              titleOne={`${subscribersData.data.error.messageOne}`}
-              titleTwo={`${subscribersData.data.error.messageTwo}`}
+              titleOne={`${subscribersData.data.info.messageOne}`}
+              titleTwo={`${subscribersData.data.info.messageTwo}`}
             />
           ) : (
             <div style={styles.container}>
