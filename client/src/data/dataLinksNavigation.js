@@ -11,7 +11,7 @@ export const subscribersLinksNavigation = [
     name: "Subscribers",
   },
   {
-    to: "filter",
+    to: "status",
     name: "Status",
   },
   {
@@ -27,7 +27,7 @@ export const campaignsLinksNavigation = [
     name: "Campaigns",
   },
   {
-    to: "filter",
+    to: "status",
     name: "Status",
   },
   {
