@@ -9,17 +9,15 @@ const { REACT_APP_DB_ID, REACT_APP_API_KEY } = process.env;
 const campaigns = "campaigns";
 const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/${campaigns}`;
 
-const headers = {
-  Authorization: `Bearer ${REACT_APP_API_KEY}`,
-  "Content-Type": "application/json",
+const requestConfig = {
+  headers: {
+    Authorization: `Bearer ${REACT_APP_API_KEY}`,
+    "Content-Type": "application/json",
+  },
 };
 
 router.get("/", async (request, response) => {
   try {
-    const requestConfig = {
-      headers,
-    };
-
     const { data } = await axios.get(api_url, requestConfig);
 
     if (!data.records.length) {
@@ -37,13 +35,30 @@ router.get("/", async (request, response) => {
   }
 });
 
+router.get("/:id", async (request, response) => {
+  const id = request.params.id;
+
+  try {
+    const { data } = await axios(`${api_url}/${id}`, requestConfig);
+
+    await response.status(200).json(data);
+  } catch (error) {
+    response.json({
+      error: {
+        messageOne: "Campaign does not exist",
+        messageTwo: "Please you have to write a proper ID",
+      },
+    });
+  }
+});
+
 router.post("/", async (request, response) => {
   const { title, description, status } = request.body.fields;
 
   const configRequest = {
     method: "post",
     url: api_url,
-    headers,
+    ...requestConfig,
     data: {
       fields: { title, description, status },
     },
@@ -68,7 +83,7 @@ router.patch("/:id", async (request, response) => {
   const configRequest = {
     method: "patch",
     url: `${api_url}/${id}`,
-    headers,
+    ...requestConfig,
     params: {
       id: id,
     },
@@ -91,7 +106,7 @@ router.delete("/:id", async (request, response) => {
 
   const configRequest = {
     method: "delete",
-    headers,
+    ...requestConfig,
     url: `${api_url}/${id}`,
     params: {
       id: id,
