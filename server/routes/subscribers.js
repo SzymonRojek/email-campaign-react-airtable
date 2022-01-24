@@ -9,26 +9,21 @@ const { REACT_APP_DB_ID, REACT_APP_API_KEY } = process.env;
 const subscribers = "subscribers";
 const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/${subscribers}`;
 
-const headers = {
-  Authorization: `Bearer ${REACT_APP_API_KEY}`,
-  "Content-Type": "application/json",
+const requestConfig = {
+  headers: {
+    Authorization: `Bearer ${REACT_APP_API_KEY}`,
+    "Content-Type": "application/json",
+  },
 };
 
 router.get("/", async (request, response) => {
   try {
-    const requestConfig = {
-      headers: {
-        Authorization: `Bearer ${REACT_APP_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-    };
-
     const { data } = await axios.get(api_url, requestConfig);
 
     if (!data.records.length) {
       response.json({
         info: {
-          messageOne: "There is no subscribers added yet",
+          messageOne: "There are no subscribers added yet",
           messageTwo: "Please add a subscriber",
         },
       });
@@ -40,6 +35,24 @@ router.get("/", async (request, response) => {
   }
 });
 
+router.get("/:id", async (request, response) => {
+  const id = request.params.id;
+
+  try {
+    const { data } = await axios(`${api_url}/${id}`, requestConfig);
+
+    response.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    response.json({
+      error: {
+        messageOne: "Subscriber does not exist",
+        messageTwo: "Please you have to write a proper url",
+      },
+    });
+  }
+});
+
 router.post("/", (request, response) => {
   const { name, surname, email, status, profession, salary, telephone } =
     request.body.fields;
@@ -47,7 +60,7 @@ router.post("/", (request, response) => {
   const configRequest = {
     method: "post",
     url: api_url,
-    headers,
+    ...requestConfig,
     data: {
       fields: { name, surname, email, status, profession, salary, telephone },
     },
@@ -67,7 +80,7 @@ router.delete("/:id", async (request, response) => {
 
   const configRequest = {
     method: "delete",
-    headers,
+    ...requestConfig,
     url: `${api_url}/${id}`,
     params: {
       id: id,
