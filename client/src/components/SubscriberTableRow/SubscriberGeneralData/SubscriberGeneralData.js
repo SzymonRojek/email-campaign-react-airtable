@@ -148,7 +148,8 @@ const SubscriberGeneralData = (props) => {
           {getFormattedData(subscriber.createdTime)}
         </Typography>
       </TableCell>
-      {location.pathname !== `/subscribers/${subscriber.id}` && (
+      {location.pathname === "/subscribers" ||
+      location.pathname === "/subscribers/status" ? (
         <>
           <TableCell>
             <Button
@@ -180,6 +181,8 @@ const SubscriberGeneralData = (props) => {
             />
           </TableCell>
         </>
+      ) : (
+        []
       )}
     </TableRow>
   );
@@ -201,7 +204,7 @@ SubscriberGeneralData.propTypes = {
     }).isRequired,
   }),
   index: PropTypes.number.isRequired,
-  children: PropTypes.any,
+  // children: PropTypes.any,
   setSelectedData: PropTypes.func,
   handleSubscriberDetails: PropTypes.func,
   setOpenConfirmPopup: PropTypes.func,
