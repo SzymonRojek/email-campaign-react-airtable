@@ -133,7 +133,7 @@ const RowCampaign = (props) => {
             variant="contained"
             onClick={() => {
               handleEditDetailsCampaign(campaign);
-              navigate(`/campaigns/${campaign.id}`);
+              navigate(`/campaigns/item/${campaign.id}`);
             }}
           >
             Edit
