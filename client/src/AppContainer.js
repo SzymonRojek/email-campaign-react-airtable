@@ -118,7 +118,7 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
           ),
         },
         {
-          path: "filter",
+          path: "status",
           element: (
             <SubscribersStatusPage
               subscribersData={subscribersData}
@@ -132,7 +132,7 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
         },
         {
           path: ":id",
-          element: <SubscriberDetailsPage subscribersData={subscribersData} />,
+          element: <SubscriberDetailsPage />,
         },
         { path: "*", element: <NotFoundPage /> },
       ],
@@ -154,7 +154,7 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
           ),
         },
         {
-          path: "filter",
+          path: "status",
           element: (
             <CampaignsStatusPage
               campaignsData={campaignsData}
@@ -181,7 +181,6 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
           path: ":id",
           element: (
             <CampaignEditPage
-              campaignsData={campaignsData}
               subscribersData={subscribersData}
               getCampaignsData={getCampaignsData}
               selectedData={selectedData}
