@@ -72,7 +72,6 @@ const SubscribersStatusPage = (props) => {
     "no",
     "name",
     "surname",
-    "profession",
     <SelectInputController
       control={control}
       name="status"
