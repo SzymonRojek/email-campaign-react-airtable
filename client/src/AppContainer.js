@@ -78,12 +78,12 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
 
   const handleSubscriberDetails = (subscriber) =>
     subscriber.fields.status === "active"
-      ? navigate(`/subscribers/${subscriber.id}`)
+      ? navigate(`/subscribers/item/${subscriber.id}`)
       : setOpenInfoPopup(true);
 
   const handleEditDetailsCampaign = (campaign) => {
     campaign.fields.status === "draft"
-      ? navigate(`/campaigns/${campaign.id}`)
+      ? navigate(`/campaigns/item/${campaign.id}`)
       : setOpenInfoPopup(true);
   };
 
@@ -131,7 +131,7 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
           ),
         },
         {
-          path: ":id",
+          path: "/item/:id",
           element: <SubscriberDetailsPage />,
         },
         { path: "*", element: <NotFoundPage /> },
@@ -178,7 +178,7 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
           ),
         },
         {
-          path: ":id",
+          path: "/item/:id",
           element: (
             <CampaignEditPage
               subscribersData={subscribersData}
