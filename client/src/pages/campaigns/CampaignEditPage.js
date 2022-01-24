@@ -21,7 +21,6 @@ const {
 } = process.env;
 
 const CampaignEditPage = ({
-  campaignsData,
   subscribersData,
   getCampaignsData,
   setOpenInfoPopup,
@@ -38,9 +37,9 @@ const CampaignEditPage = ({
 
   const { id } = useParams();
   const navigate = useNavigate();
-  const endpoint = `/campaigns/${id}`;
+  const endpoint = `/campaigns`;
 
-  const { itemData: campaignData } = useFetchDetailsById(endpoint);
+  const { itemData: campaignData } = useFetchDetailsById(endpoint, id);
   const [isEmailError, setEmailError] = useState(false);
 
   const defaultValues = {
@@ -166,6 +165,15 @@ const CampaignEditPage = ({
     }
   };
 
+  if (campaignData.data?.error) {
+    return (
+      <Error
+        titleOne={`${campaignData.data?.error.messageOne}`}
+        titleTwo={`${campaignData.data?.error.messageTwo}`}
+      />
+    );
+  }
+
   return (
     <>
       {isEmailError ? (
@@ -176,37 +184,26 @@ const CampaignEditPage = ({
         />
       ) : campaignData.status === "loading" ? (
         <Loader title="Details" />
-      ) : !Boolean(
-          campaignsData.data &&
-            campaignsData.data.find((item) => item.id === id)
-        ) ? (
-        <Error
-          titleOne="Unfortunately, this Campaign does not exist"
-          titleTwo="Check the url address"
-          titleThree="Back to Campaigns"
-        />
       ) : (
-        <StyledContainer>
-          <StyledHeading label="Edit Campaign:" />
+        campaignData.status === "success" && (
+          <StyledContainer>
+            <StyledHeading label="Edit Campaign:" />
 
-          <FormCampaign
-            handleSubmit={handleSubmit}
-            handleDraftData={handleDraftCampaign}
-            handleSendData={handleSendCampaign}
-            control={control}
-            errors={errors}
-          />
-        </StyledContainer>
+            <FormCampaign
+              handleSubmit={handleSubmit}
+              handleDraftData={handleDraftCampaign}
+              handleSendData={handleSendCampaign}
+              control={control}
+              errors={errors}
+            />
+          </StyledContainer>
+        )
       )}
     </>
   );
 };
 
 CampaignEditPage.propTypes = {
-  campaignsData: PropTypes.shape({
-    status: PropTypes.string,
-    data: PropTypes.arrayOf(PropTypes.object),
-  }).isRequired,
   subscribersData: PropTypes.shape({
     status: PropTypes.string,
     data: PropTypes.arrayOf(PropTypes.object),
