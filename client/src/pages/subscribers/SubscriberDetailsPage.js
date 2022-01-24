@@ -1,4 +1,3 @@
-// import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 
 import { useFetchDetailsById } from "useFetchDetailsById";
@@ -19,70 +18,66 @@ const styles = {
   },
 };
 
-const SubscriberDetailsPage = ({ subscribersData }) => {
+const SubscriberDetailsPage = () => {
   const { id } = useParams();
-  const endpoint = `/subscribers/${id}`;
-  const { itemData: subscriberData } = useFetchDetailsById(endpoint);
+  const endpoint = `/subscribers`;
+
+  const { itemData: subscriberData } = useFetchDetailsById(endpoint, id);
+
+  if (subscriberData.data?.error) {
+    return (
+      <Error
+        titleOne={`${subscriberData.data?.error.messageOne}`}
+        titleTwo={`${subscriberData.data?.error.messageTwo}`}
+      />
+    );
+  }
 
   return (
     <>
       {subscriberData && subscriberData.status === "loading" ? (
         <Loader title="Details" />
-      ) : !Boolean(
-          subscribersData.data &&
-            subscribersData.data.find((item) => item.id === id)
-        ) ? (
-        <Error
-          titleOne="Unfortunately, this Subscriber does not exist"
-          titleTwo="Check the url address"
-          titleThree="Back to Subscribers List"
-        />
       ) : (
-        <StyledContainer>
-          <StyledHeading label="Subscriber Details" />
+        subscriberData.status === "success" && (
+          <StyledContainer>
+            <StyledHeading label="Subscriber Details" />
 
-          <SubscribersList
-            subHeading="General data"
-            dataHeadTable={detailsDataHeadTableFirst}
-            passedData={[subscriberData.data]}
-          />
-
-          <div style={styles.container}>
-            <CustomPaginator
+            <SubscribersList
+              subHeading="General data"
+              dataHeadTable={detailsDataHeadTableFirst}
               passedData={[subscriberData.data]}
-              renderData={() => {
-                return (
-                  <ContainerTable
-                    subHeading="Details data"
-                    passedData={[subscriberData.data]}
-                  >
-                    <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
-
-                    <BodyTable>
-                      {[subscriberData.data].map((subscriber, index) => (
-                        <SubscriberDetailsData
-                          key={`id-${subscriber.id}`}
-                          subscriber={subscriber}
-                          index={index}
-                        />
-                      ))}
-                    </BodyTable>
-                  </ContainerTable>
-                );
-              }}
             />
-          </div>
-        </StyledContainer>
+
+            <div style={styles.container}>
+              <CustomPaginator
+                passedData={[subscriberData.data]}
+                renderData={() => {
+                  return (
+                    <ContainerTable
+                      subHeading="Details data"
+                      passedData={[subscriberData.data]}
+                    >
+                      <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
+
+                      <BodyTable>
+                        {[subscriberData.data].map((subscriber, index) => (
+                          <SubscriberDetailsData
+                            key={`id-${subscriber.id}`}
+                            subscriber={subscriber}
+                            index={index}
+                          />
+                        ))}
+                      </BodyTable>
+                    </ContainerTable>
+                  );
+                }}
+              />
+            </div>
+          </StyledContainer>
+        )
       )}
     </>
   );
 };
-
-// SubscriberDetailsPage.propTypes = {
-//   subscribersData: PropTypes.shape({
-//     status: PropTypes.string,
-//     data: PropTypes.arrayOf(PropTypes.object),
-//   }),
-// };
 
 export default SubscriberDetailsPage;
