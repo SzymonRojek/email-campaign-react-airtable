@@ -1,13 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
-const subscribers = require("./routes/subscribers");
-const campaigns = require("./routes/campaigns");
 const path = require("path");
 
-require("dotenv").config();
+const subscribersRoutes = require("./routes/subscribers");
+const campaignsRoutes = require("./routes/campaigns");
 
-const { REACT_APP_DB_ID, REACT_APP_API_KEY } = process.env;
+require("dotenv").config();
 
 const app = express();
 
@@ -16,34 +15,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/subscribers", subscribers);
-app.use("/campaigns", campaigns);
+app.use("/subscribers", subscribersRoutes);
 
-const getItemDetails = async (request, response, group) => {
-  try {
-    const requestConfig = {
-      headers: {
-        Authorization: `Bearer ${REACT_APP_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-    };
-    const id = request.params.id;
-    const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/${group}/${id}`;
-    const { data } = await axios(api_url, requestConfig);
-
-    return await response.status(200).json(data);
-  } catch (error) {
-    return response.json({ error });
-  }
-};
-
-app.get("/subscribers/:id", (request, response) =>
-  getItemDetails(request, response, "subscribers")
-);
-
-app.get("/campaigns/:id", (request, response) =>
-  getItemDetails(request, response, "campaigns")
-);
+app.use("/campaigns", campaignsRoutes);
+app.use("/:id", campaignsRoutes);
+app.use("/:id", subscribersRoutes);
 
 const PORT = process.env.PORT || 5000;
 
