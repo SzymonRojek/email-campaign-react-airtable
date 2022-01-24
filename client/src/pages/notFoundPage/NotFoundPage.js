@@ -20,8 +20,7 @@ const NotFoundPage = () => {
       ) : (
         <Error
           titleOne="Page Not Found"
-          titleTwo="Please make sure that url address is correct."
-          titleThree="🙂"
+          titleTwo="Please make sure that url address is correct"
         />
       )}
     </>
