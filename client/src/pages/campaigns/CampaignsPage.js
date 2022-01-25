@@ -24,14 +24,15 @@ const CampaignsPage = ({
           titleTwo={`${campaignsData.data?.error.message || "Check endpoints"}`}
           titleThree="Also, please check your internet connection."
         />
+      ) : !campaignsData.data.length ? (
+        <Error
+          titleOne="MESSAGE"
+          titleTwo="There are no Email Campaigns added yet"
+          titleThree="Please add a New Email Campaign"
+        />
       ) : (
-        <StyledContainer>
-          {campaignsData.data?.info ? (
-            <Error
-              titleOne={`${campaignsData.data.info.messageOne}`}
-              titleTwo={`${campaignsData.data.info.messageTwo}`}
-            />
-          ) : (
+        campaignsData.status === "success" && (
+          <StyledContainer>
             <div style={{ marginBottom: 100 }}>
               <StyledHeading label="All Campaigns" />
 
@@ -45,22 +46,22 @@ const CampaignsPage = ({
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
             </div>
-          )}
 
-          {campaignsData.data.length > 1 ? (
-            <CampaignsList
-              subHeading="Latest added Campaign"
-              dataHeadEmailTable={dataHeadEmailTable}
-              passedData={getLatestAddedItem(campaignsData.data)}
-              handleEditDetailsCampaign={handleEditDetailsCampaign}
-              setSelectedData={setSelectedData}
-              setContentPopup={setContentPopup}
-              setOpenConfirmPopup={setOpenConfirmPopup}
-            />
-          ) : (
-            ""
-          )}
-        </StyledContainer>
+            {campaignsData.data.length > 1 ? (
+              <CampaignsList
+                subHeading="Latest added Campaign"
+                dataHeadEmailTable={dataHeadEmailTable}
+                passedData={getLatestAddedItem(campaignsData.data)}
+                handleEditDetailsCampaign={handleEditDetailsCampaign}
+                setSelectedData={setSelectedData}
+                setContentPopup={setContentPopup}
+                setOpenConfirmPopup={setOpenConfirmPopup}
+              />
+            ) : (
+              ""
+            )}
+          </StyledContainer>
+        )
       )}
     </>
   );
