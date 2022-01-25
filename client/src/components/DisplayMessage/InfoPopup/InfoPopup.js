@@ -2,9 +2,10 @@ import PropTypes from "prop-types";
 import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 
-const style = {
+const styles = {
   titleContainer: { display: "flex" },
   title: { flexGrow: 1 },
+  infoText: { color: "green", fontSize: 16 },
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -42,8 +43,8 @@ const InfoPopup = ({ openInfoPopup, setOpenInfoPopup, contentPopup }) => {
   return (
     <Dialog open={openInfoPopup} classes={{ paper: classes.paper }}>
       <DialogTitle>
-        <div style={style.titleContainer}>
-          <p style={style.title} className={classes.heading}>
+        <div style={styles.titleContainer}>
+          <p style={styles.title} className={classes.heading}>
             {contentPopup.title}
           </p>
           <Button
@@ -62,6 +63,7 @@ const InfoPopup = ({ openInfoPopup, setOpenInfoPopup, contentPopup }) => {
       </DialogTitle>
       <DialogContent dividers>
         <p className={classes.contentText}>{contentPopup.text}</p>
+        <p style={styles.infoText}>{contentPopup.additionalText}</p>
       </DialogContent>
     </Dialog>
   );
