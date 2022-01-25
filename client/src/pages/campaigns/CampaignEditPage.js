@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
-import emailjs from "emailjs-com";
 
 import api from "api";
 import { useFetchDetailsById } from "useFetchDetailsById";
@@ -13,12 +12,7 @@ import { StyledContainer } from "components/StyledContainer";
 import { FormCampaign } from "components/FormCampaign";
 import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
-
-const {
-  REACT_APP_EMAIL_SERVICE_ID,
-  REACT_APP_EMAIL_TEMPLATE_ID,
-  REACT_APP_EMAIL_USER_ID,
-} = process.env;
+import { sendEmail } from "../../sendEmail";
 
 const CampaignEditPage = ({
   subscribersData,
@@ -36,11 +30,8 @@ const CampaignEditPage = ({
   });
 
   const { id } = useParams();
-  const navigate = useNavigate();
-  const endpoint = `/campaigns`;
-
+  const endpoint = "campaigns";
   const { itemData: campaignData } = useFetchDetailsById(endpoint, id);
-  const [isEmailError, setEmailError] = useState(false);
 
   const defaultValues = {
     title: campaignData.data?.fields ? campaignData.data.fields.title : "",
@@ -48,6 +39,8 @@ const CampaignEditPage = ({
       ? campaignData.data.fields.description
       : "",
   };
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -58,8 +51,10 @@ const CampaignEditPage = ({
     return () => clearTimeout(timeoutId);
   }, [setValue, defaultValues.title, defaultValues.description]);
 
-  const patchData = (data, status) => {
-    api.patch(endpoint, {
+  const [isEmailError, setEmailError] = useState(false);
+
+  const patchData = (data, status) =>
+    api.patch(`${endpoint}/${id}`, {
       fields: {
         title: capitalizeFirstLetter(data.title),
         description: capitalizeFirstLetter(data.description),
@@ -67,10 +62,7 @@ const CampaignEditPage = ({
       },
     });
 
-    getCampaignsData();
-  };
-
-  const displayPopup = (data, status, changeRoute) => {
+  const displayPopup = (data, status, emailInfo) => {
     const isCampaignChanged =
       data.title !== campaignData.data.fields.title ||
       data.description !== campaignData.data.fields.description;
@@ -109,6 +101,7 @@ const CampaignEditPage = ({
         ) : (
           <>Campaign {campaignTitle} has not been changed but finally sent 🙂</>
         ),
+      additionalText: emailInfo,
       colorButton: "success",
     });
 
@@ -121,47 +114,46 @@ const CampaignEditPage = ({
       data.description !== campaignData.data.fields.description
     ) {
       patchData(data, "draft");
+      getCampaignsData();
     }
 
     displayPopup(data, false, navigate("/campaigns"));
-    getCampaignsData();
   };
 
   const handleSendCampaign = (data) => {
-    if (!data) return;
+    const activeSubscribers =
+      subscribersData.data &&
+      subscribersData.data.filter(
+        (subscriber) => subscriber.fields.status === "active"
+      );
 
-    if (subscribersData.data) {
-      subscribersData.data
-        .filter((subscriber) => subscriber.fields.status === "active")
-        .forEach((subscriber) => {
-          const paramsScheme = {
-            name: subscriber.fields.name,
-            email: subscriber.fields.email,
-            title: data.title,
-            description: data.description,
-          };
+    activeSubscribers.forEach((subscriber) => {
+      const paramsScheme = {
+        name: subscriber.fields.name,
+        email: subscriber.fields.email,
+        title: data.title,
+        description: data.description,
+      };
 
-          emailjs
-            .send(
-              REACT_APP_EMAIL_SERVICE_ID,
-              REACT_APP_EMAIL_TEMPLATE_ID,
-              paramsScheme,
-              REACT_APP_EMAIL_USER_ID
-            )
-            .then(() => {
-              setEmailError(false);
-            })
-            .catch((err) => {
-              console.log("Unfortunately,", err);
-              setEmailError(err);
-            });
-        });
-    }
+      sendEmail(paramsScheme, setEmailError);
+    });
 
-    if (!isEmailError) {
+    const additionalText = !activeSubscribers.length
+      ? "There are no active subscribers at the moment - that's why email has been drafted"
+      : "Email has been sent to active subscribers";
+
+    console.log("active subscribers:", activeSubscribers);
+
+    if (!isEmailError && activeSubscribers.length > 0) {
       patchData(data, "sent");
-      displayPopup(data, true, navigate("/campaigns"));
       getCampaignsData();
+      displayPopup(data, true, additionalText);
+      navigate("/campaigns");
+    } else {
+      patchData(data, "draft");
+      getCampaignsData();
+      displayPopup(data, false, additionalText);
+      navigate("/campaigns");
     }
   };
 
