@@ -3,7 +3,7 @@ import axios from "axios";
 const request = async (endpoint, method = "GET", data = null) => {
   const requestConfig = {
     method,
-    url: `${endpoint}`,
+    url: endpoint,
     data: method === "POST" || method === "PATCH" ? data : null,
   };
 
