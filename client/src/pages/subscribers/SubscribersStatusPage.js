@@ -102,33 +102,30 @@ const SubscribersStatusPage = (props) => {
           titleTwo="Probably there is no an access to the internet."
           titleThree="Contact with your internet provider."
         />
+      ) : !subscribersData.data.length ? (
+        <Error
+          titleOne="MESSAGE"
+          titleTwo="There are no Subscribers added yet"
+          titleThree="Please add a New Subscriber"
+        />
       ) : (
-        <StyledContainer>
-          {subscribersData.status === "success" &&
-          !subscribersData.data.length ? (
-            <Error
-              titleOne="There are not subscribers added yet."
-              titleTwo="Please add a new subscriber."
-              titleThree="🙂"
-            />
-          ) : (
-            <>
-              <StyledHeading label="Subscribers status" />
+        subscribersData.status === "success" && (
+          <StyledContainer>
+            <StyledHeading label="Subscribers status" />
 
-              <SubscriberStatus
-                subHeading="List"
-                generalDataHeadTable={statusDataHeadTable}
-                passedData={subscribersData.data}
-                status={selectStatus}
-                setSelectStatus={setSelectStatus}
-                setSelectedData={setSelectedData}
-                handleSubscriberDetails={handleSubscriberDetails}
-                setContentPopup={setContentPopup}
-                setOpenConfirmPopup={setOpenConfirmPopup}
-              />
-            </>
-          )}
-        </StyledContainer>
+            <SubscriberStatus
+              subHeading="List"
+              generalDataHeadTable={statusDataHeadTable}
+              passedData={subscribersData.data}
+              status={selectStatus}
+              setSelectStatus={setSelectStatus}
+              setSelectedData={setSelectedData}
+              handleSubscriberDetails={handleSubscriberDetails}
+              setContentPopup={setContentPopup}
+              setOpenConfirmPopup={setOpenConfirmPopup}
+            />
+          </StyledContainer>
+        )
       )}
     </>
   );
