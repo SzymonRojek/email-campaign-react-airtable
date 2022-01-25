@@ -1,11 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const axios = require("axios");
 const path = require("path");
-
 const subscribersRoutes = require("./routes/subscribers");
 const campaignsRoutes = require("./routes/campaigns");
-
 require("dotenv").config();
 
 const app = express();
@@ -16,10 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/subscribers", subscribersRoutes);
-
 app.use("/campaigns", campaignsRoutes);
-app.use("/:id", campaignsRoutes);
-app.use("/:id", subscribersRoutes);
 
 const PORT = process.env.PORT || 5000;
 
