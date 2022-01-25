@@ -17,6 +17,7 @@ import {
 } from "components/Inputs";
 import { StyledButton } from "components/StyledButton";
 import { StyledHeading } from "components/StyledHeading";
+import { Loader, Error } from "components/DisplayMessage";
 
 const selectStatusData = [
   { value: "change status", label: "change status*" },
@@ -93,6 +94,7 @@ const styles = {
 };
 
 const AddSubscriberPage = ({
+  subscribersData,
   getSubscribersData,
   setOpenInfoPopup,
   setContentPopup,
@@ -154,137 +156,145 @@ const AddSubscriberPage = ({
     });
 
     getSubscribersData();
-
     setOpenInfoPopup(true);
-    setTimeout(() => {
-      setOpenInfoPopup(false);
-    }, 3_000);
   };
 
   return (
-    <StyledContainer>
-      <StyledHeading label="Add Subscriber" />
+    <>
+      {subscribersData.status === "loading" ? (
+        <Loader title="Add New" />
+      ) : subscribersData.status === "error" ? (
+        <Error
+          titleOne="ERROR MESSAGE"
+          titleTwo="Probably there is no an access to the internet."
+          titleThree="Contact with your internet provider."
+        />
+      ) : (
+        <StyledContainer>
+          <StyledHeading label="Add Subscriber" />
 
-      <Paper elevation={14} style={styles.paper}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Box px={3} py={3}>
-            <Grid container spacing={4}>
-              <Grid item xs={12}>
-                <Typography
-                  color="textSecondary"
-                  variant="body2"
-                  style={styles.typographyRequiredText}
-                >
-                  *Fields required
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <TextInputController
-                  control={control}
-                  name="name"
-                  error={!!errors.name}
-                  message={errors.name?.message ?? ""}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextInputController
-                  control={control}
-                  name="surname"
-                  error={!!errors.surname}
-                  message={errors.surname?.message ?? ""}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextInputController
-                  control={control}
-                  name="email"
-                  error={!!errors.email}
-                  message={errors.email?.message ?? ""}
-                />
-              </Grid>
-              <Grid container item xs={12}>
-                <Grid item xs={11}>
-                  <StyledCheckbox
-                    sx={styles.checkbox}
-                    style={styles.labelCheckbox}
-                    defaultValue={false}
-                    onChange={handleCheckboxOnChange}
-                    label="Add More Details"
-                  />
-                </Grid>
-                <Grid item xs={1}>
-                  {isCheckboxChecked ? (
-                    <ExpandLess style={styles.icon} />
-                  ) : (
-                    <ExpandMore style={styles.icon} />
-                  )}
-                </Grid>
-              </Grid>
+          <Paper elevation={14} style={styles.paper}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Box px={3} py={3}>
+                <Grid container spacing={4}>
+                  <Grid item xs={12}>
+                    <Typography
+                      color="textSecondary"
+                      variant="body2"
+                      style={styles.typographyRequiredText}
+                    >
+                      *Fields required
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextInputController
+                      control={control}
+                      name="name"
+                      error={!!errors.name}
+                      message={errors.name?.message ?? ""}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextInputController
+                      control={control}
+                      name="surname"
+                      error={!!errors.surname}
+                      message={errors.surname?.message ?? ""}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextInputController
+                      control={control}
+                      name="email"
+                      error={!!errors.email}
+                      message={errors.email?.message ?? ""}
+                    />
+                  </Grid>
+                  <Grid container item xs={12}>
+                    <Grid item xs={11}>
+                      <StyledCheckbox
+                        sx={styles.checkbox}
+                        style={styles.labelCheckbox}
+                        defaultValue={false}
+                        onChange={handleCheckboxOnChange}
+                        label="Add More Details"
+                      />
+                    </Grid>
+                    <Grid item xs={1}>
+                      {isCheckboxChecked ? (
+                        <ExpandLess style={styles.icon} />
+                      ) : (
+                        <ExpandMore style={styles.icon} />
+                      )}
+                    </Grid>
+                  </Grid>
 
-              <Collapse in={isCheckboxChecked} timeout="auto" unmountOnExit>
-                <Box px={2} py={3}>
-                  <Grid container spacing={4}>
-                    <Grid item xs={12}>
-                      <SelectInputController
-                        control={control}
-                        name="status"
-                        styles={styles.select}
-                        useStyles={useStyles}
-                        error={!!errors.status}
-                        message={errors.status?.message ?? ""}
-                        defaultValue="change status"
-                        data={selectStatusData}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextInputController
-                        control={control}
-                        name="profession"
-                        error={!!errors.profession}
-                        message={errors.profession?.message ?? ""}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextInputController
-                        control={control}
-                        name="salary"
-                        error={!!errors.salary}
-                        message={errors.salary?.message ?? ""}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextInputController
-                        control={control}
-                        name="telephone"
-                        error={!!errors.telephone}
-                        message={errors.telephone?.message ?? ""}
+                  <Collapse in={isCheckboxChecked} timeout="auto" unmountOnExit>
+                    <Box px={2} py={3}>
+                      <Grid container spacing={4}>
+                        <Grid item xs={12}>
+                          <SelectInputController
+                            control={control}
+                            name="status"
+                            styles={styles.select}
+                            useStyles={useStyles}
+                            error={!!errors.status}
+                            message={errors.status?.message ?? ""}
+                            defaultValue="change status"
+                            data={selectStatusData}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextInputController
+                            control={control}
+                            name="profession"
+                            error={!!errors.profession}
+                            message={errors.profession?.message ?? ""}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextInputController
+                            control={control}
+                            name="salary"
+                            error={!!errors.salary}
+                            message={errors.salary?.message ?? ""}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextInputController
+                            control={control}
+                            name="telephone"
+                            error={!!errors.telephone}
+                            message={errors.telephone?.message ?? ""}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </Collapse>
+
+                  <Grid
+                    container
+                    direction="row"
+                    justifyContent="space-evenly"
+                    alignItems="center"
+                  >
+                    <Grid item>
+                      <StyledButton
+                        hover="#286a2b"
+                        bgc="#2e7d32"
+                        label="submit"
+                        ariaLabel="add"
+                        type="submit"
                       />
                     </Grid>
                   </Grid>
-                </Box>
-              </Collapse>
-
-              <Grid
-                container
-                direction="row"
-                justifyContent="space-evenly"
-                alignItems="center"
-              >
-                <Grid item>
-                  <StyledButton
-                    hover="#286a2b"
-                    bgc="#2e7d32"
-                    label="submit"
-                    ariaLabel="add"
-                    type="submit"
-                  />
                 </Grid>
-              </Grid>
-            </Grid>
-          </Box>
-        </form>
-      </Paper>
-    </StyledContainer>
+              </Box>
+            </form>
+          </Paper>
+        </StyledContainer>
+      )}
+    </>
   );
 };
 
