@@ -6,10 +6,9 @@ require("dotenv").config();
 
 const { REACT_APP_DB_ID, REACT_APP_API_KEY } = process.env;
 
-const subscribers = "subscribers";
-const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/${subscribers}`;
+const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/subscribers`;
 
-const requestConfig = {
+const headers = {
   headers: {
     Authorization: `Bearer ${REACT_APP_API_KEY}`,
     "Content-Type": "application/json",
@@ -18,7 +17,7 @@ const requestConfig = {
 
 router.get("/", async (request, response) => {
   try {
-    const { data } = await axios.get(api_url, requestConfig);
+    const { data } = await axios.get(api_url, headers);
 
     if (!data.records.length) {
       response.json({
@@ -39,7 +38,7 @@ router.get("/:id", async (request, response) => {
   const id = request.params.id;
 
   try {
-    const { data } = await axios(`${api_url}/${id}`, requestConfig);
+    const { data } = await axios(`${api_url}/${id}`, headers);
 
     response.status(200).json(data);
   } catch (error) {
@@ -56,18 +55,17 @@ router.get("/:id", async (request, response) => {
 router.post("/", (request, response) => {
   const { name, surname, email, status, profession, salary, telephone } =
     request.body.fields;
-
-  const configRequest = {
+  const config = {
     method: "post",
     url: api_url,
-    ...requestConfig,
+    ...headers,
     data: {
       fields: { name, surname, email, status, profession, salary, telephone },
     },
   };
 
   try {
-    const { data } = axios(configRequest);
+    const { data } = axios(config);
 
     response.status(200).json(data);
   } catch (error) {
@@ -77,18 +75,17 @@ router.post("/", (request, response) => {
 
 router.delete("/:id", async (request, response) => {
   const id = request.params.id;
-
-  const configRequest = {
+  const config = {
     method: "delete",
-    ...requestConfig,
+    ...headers,
     url: `${api_url}/${id}`,
     params: {
-      id: id,
+      id,
     },
   };
 
   try {
-    const { data } = await axios(configRequest);
+    const { data } = await axios(config);
 
     request.status(200).json(data);
   } catch (error) {
