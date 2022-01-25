@@ -110,7 +110,7 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
           path: "add",
           element: (
             <AddSubscriberPage
-              setSubscribersData={setSubscribersData}
+              subscribersData={subscribersData}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
               getSubscribersData={getSubscribersData}
