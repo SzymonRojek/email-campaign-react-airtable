@@ -6,10 +6,9 @@ require("dotenv").config();
 
 const { REACT_APP_DB_ID, REACT_APP_API_KEY } = process.env;
 
-const campaigns = "campaigns";
-const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/${campaigns}`;
+const api_url = `https://api.airtable.com/v0/${REACT_APP_DB_ID}/campaigns`;
 
-const requestConfig = {
+const headers = {
   headers: {
     Authorization: `Bearer ${REACT_APP_API_KEY}`,
     "Content-Type": "application/json",
@@ -18,7 +17,7 @@ const requestConfig = {
 
 router.get("/", async (request, response) => {
   try {
-    const { data } = await axios.get(api_url, requestConfig);
+    const { data } = await axios.get(api_url, headers);
 
     if (!data.records.length) {
       response.json({
@@ -39,14 +38,15 @@ router.get("/:id", async (request, response) => {
   const id = request.params.id;
 
   try {
-    const { data } = await axios(`${api_url}/${id}`, requestConfig);
+    const { data } = await axios(`${api_url}/${id}`, headers);
 
-    await response.status(200).json(data);
+    response.status(200).json(data);
   } catch (error) {
     response.json({
       error: {
         messageOne: "Campaign does not exist",
-        messageTwo: "Please you have to write a proper ID",
+        messageTwo:
+          "Please make sure that you have a proper ID of Campaign in the URL",
       },
     });
   }
@@ -55,17 +55,17 @@ router.get("/:id", async (request, response) => {
 router.post("/", async (request, response) => {
   const { title, description, status } = request.body.fields;
 
-  const configRequest = {
+  const config = {
     method: "post",
     url: api_url,
-    ...requestConfig,
+    ...headers,
     data: {
       fields: { title, description, status },
     },
   };
 
   try {
-    const { data } = await axios(configRequest);
+    const { data } = await axios(config);
 
     response.status(200).json(data);
   } catch (error) {
@@ -74,18 +74,14 @@ router.post("/", async (request, response) => {
 });
 
 router.patch("/:id", async (request, response) => {
-  const title = request.body.fields.title;
-  const description = request.body.fields.description;
-  const status = request.body.fields.status;
-
+  const { title, description, status } = request.body.fields;
   const id = request.params.id;
-
-  const configRequest = {
+  const config = {
     method: "patch",
     url: `${api_url}/${id}`,
-    ...requestConfig,
+    ...headers,
     params: {
-      id: id,
+      id,
     },
     data: {
       fields: { title, description, status },
@@ -93,7 +89,7 @@ router.patch("/:id", async (request, response) => {
   };
 
   try {
-    const { data } = await axios(configRequest);
+    const { data } = await axios(config);
 
     response.status(200).json(data);
   } catch (error) {
@@ -103,18 +99,17 @@ router.patch("/:id", async (request, response) => {
 
 router.delete("/:id", async (request, response) => {
   const id = request.params.id;
-
-  const configRequest = {
+  const config = {
     method: "delete",
-    ...requestConfig,
+    ...headers,
     url: `${api_url}/${id}`,
     params: {
-      id: id,
+      id,
     },
   };
 
   try {
-    const { data } = await axios(configRequest);
+    const { data } = await axios(config);
 
     request.status(200).json(data);
   } catch (error) {
