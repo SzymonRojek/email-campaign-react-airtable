@@ -2,32 +2,23 @@ import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import emailjs from "@emailjs/browser";
 
 import api from "api";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
-import { Error } from "components/DisplayMessage";
+import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
 import { FormCampaign } from "components/FormCampaign";
+import { sendEmail } from "../../sendEmail";
 
-const {
-  REACT_APP_EMAIL_SERVICE_ID,
-  REACT_APP_EMAIL_TEMPLATE_ID,
-  REACT_APP_EMAIL_USER_ID,
-} = process.env;
-
-const postData = (data, status) => {
-  const endpoint = "/campaigns";
-
-  return api.post(endpoint, {
+const postData = (data, status) =>
+  api.post("/campaigns", {
     fields: {
       title: capitalizeFirstLetter(data.title),
       description: capitalizeFirstLetter(data.description),
       status: status,
     },
   });
-};
 
 const AddCampaignPage = ({
   subscribersData,
@@ -55,18 +46,10 @@ const AddCampaignPage = ({
       });
   }, [formState, reset]);
 
-  const displayPopup = (data, status) => {
+  const displayPopup = (data, status, text = "") => {
     const styledTextPopup = status
       ? { color: "green", fontWeight: "bold" }
       : { color: "orange", fontWeight: "bold" };
-
-    const addTimeout = () => {
-      const timeoutId = setTimeout(() => {
-        setOpenInfoPopup(false);
-      }, 3_000);
-
-      return () => clearTimeout(timeoutId);
-    };
 
     setContentPopup({
       title: (
@@ -81,10 +64,10 @@ const AddCampaignPage = ({
           has been {status ? "sent" : "drafted and added"} to the Airtable 😁
         </>
       ),
+      additionalText: text,
       colorButton: "success",
     });
 
-    addTimeout();
     setOpenInfoPopup(true);
   };
 
@@ -95,45 +78,38 @@ const AddCampaignPage = ({
   };
 
   const handleSendCampaign = (data) => {
-    if (!data) return;
+    const activeSubscribers =
+      subscribersData.data &&
+      subscribersData.data.filter(
+        (subscriber) => subscriber.fields.status === "active"
+      );
 
-    if (subscribersData.data) {
-      subscribersData.data
-        .filter((subscriber) => subscriber.fields.status === "active")
-        .forEach((subscriber) => {
-          const paramsScheme = {
-            name: subscriber.fields.name,
-            email: subscriber.fields.email,
-            title: data.title,
-            description: data.description,
-          };
+    activeSubscribers.forEach((subscriber) => {
+      const paramsScheme = {
+        name: subscriber.fields.name,
+        email: subscriber.fields.email,
+        title: data.title,
+        description: data.description,
+      };
 
-          emailjs
-            .send(
-              REACT_APP_EMAIL_SERVICE_ID,
-              REACT_APP_EMAIL_TEMPLATE_ID,
-              paramsScheme,
-              REACT_APP_EMAIL_USER_ID
-            )
-            .then(() => {
-              setEmailError(false);
-            })
-            .catch((err) => {
-              console.log("Unfortunately,", err);
-              setEmailError(true);
-            });
-        });
-    }
+      sendEmail(paramsScheme, setEmailError);
+    });
 
-    if (!isEmailError) {
+    const additionalText = !activeSubscribers.length
+      ? "There are no active subscribers at the moment - that's why email has been drafted"
+      : "Email has been sent to active subscribers";
+
+    console.log("active subscribers:", activeSubscribers);
+
+    if (!isEmailError && activeSubscribers.length > 0) {
       postData(data, "sent");
-      displayPopup(data, true);
+      getCampaignsData();
+      displayPopup(data, true, additionalText);
     } else {
       postData(data, "draft");
-      displayPopup(data, false);
+      getCampaignsData();
+      displayPopup(data, false, additionalText);
     }
-
-    getCampaignsData();
   };
 
   return (
@@ -143,6 +119,14 @@ const AddCampaignPage = ({
           titleOne="Unfortunately, the Campaign has not been sent"
           titleTwo="Probably there is a problem with EmailJS application at the moment"
           titleThree="That's why the Campaign has been drafted now"
+        />
+      ) : subscribersData.status === "loading" ? (
+        <Loader title="Add New" />
+      ) : subscribersData.status === "error" ? (
+        <Error
+          titleOne="ERROR MESSAGE"
+          titleTwo="Probably there is no an access to the internet."
+          titleThree="Contact with your internet provider."
         />
       ) : (
         <StyledContainer
