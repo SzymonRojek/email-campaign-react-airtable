@@ -34,14 +34,15 @@ const SubscribersPage = (props) => {
           }`}
           titleThree="Also, please check your internet connection."
         />
+      ) : !subscribersData.data.length ? (
+        <Error
+          titleOne="MESSAGE"
+          titleTwo="There are no Subscribers added yet"
+          titleThree="Please add a New Subscriber"
+        />
       ) : (
-        <StyledContainer>
-          {subscribersData.data?.info ? (
-            <Error
-              titleOne={`${subscribersData.data.info.messageOne}`}
-              titleTwo={`${subscribersData.data.info.messageTwo}`}
-            />
-          ) : (
+        subscribersData.status === "success" && (
+          <StyledContainer>
             <div style={styles.container}>
               <StyledHeading label="All Subscribers" />
 
@@ -55,21 +56,22 @@ const SubscribersPage = (props) => {
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
             </div>
-          )}
-          {subscribersData.data && subscribersData.data.length > 1 ? (
-            <SubscribersList
-              subHeading="Latest added Subscriber"
-              dataHeadTable={generalDataHeadTable}
-              passedData={getLatestAddedItem(subscribersData.data)}
-              setSelectedData={setSelectedData}
-              handleSubscriberDetails={handleSubscriberDetails}
-              setContentPopup={setContentPopup}
-              setOpenConfirmPopup={setOpenConfirmPopup}
-            />
-          ) : (
-            ""
-          )}
-        </StyledContainer>
+
+            {subscribersData.data && subscribersData.data.length > 1 ? (
+              <SubscribersList
+                subHeading="Latest added Subscriber"
+                dataHeadTable={generalDataHeadTable}
+                passedData={getLatestAddedItem(subscribersData.data)}
+                setSelectedData={setSelectedData}
+                handleSubscriberDetails={handleSubscriberDetails}
+                setContentPopup={setContentPopup}
+                setOpenConfirmPopup={setOpenConfirmPopup}
+              />
+            ) : (
+              ""
+            )}
+          </StyledContainer>
+        )
       )}
     </>
   );
