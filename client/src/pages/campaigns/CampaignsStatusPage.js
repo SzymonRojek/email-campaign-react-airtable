@@ -102,31 +102,29 @@ const CampaignsStatusPage = (props) => {
           titleTwo="Probably there is no an access to the internet."
           titleThree="Contact with your internet provider."
         />
+      ) : !campaignsData.data.length ? (
+        <Error
+          titleOne="MESSAGE"
+          titleTwo="There are no Email Campaigns added yet"
+          titleThree="Please add a New Email Campaign"
+        />
       ) : (
-        <StyledContainer>
-          {campaignsData.status === "success" && !campaignsData.data.length ? (
-            <Error
-              titleOne="There are not campaigns added yet."
-              titleTwo="Please add a new campaign."
-              titleThree="🙂"
-            />
-          ) : (
-            <>
-              <StyledHeading label="Campaigns Status" />
+        campaignsData.status === "success" && (
+          <StyledContainer>
+            <StyledHeading label="Campaigns Status" />
 
-              <CampaignStatus
-                subHeading="List"
-                dataHeadEmailTable={statusDataHeadTable}
-                passedData={campaignsData.data}
-                status={selectStatus}
-                setSelectedData={setSelectedData}
-                handleEditDetailsCampaign={handleEditDetailsCampaign}
-                setContentPopup={setContentPopup}
-                setOpenConfirmPopup={setOpenConfirmPopup}
-              />
-            </>
-          )}
-        </StyledContainer>
+            <CampaignStatus
+              subHeading="List"
+              dataHeadEmailTable={statusDataHeadTable}
+              passedData={campaignsData.data}
+              status={selectStatus}
+              setSelectedData={setSelectedData}
+              handleEditDetailsCampaign={handleEditDetailsCampaign}
+              setContentPopup={setContentPopup}
+              setOpenConfirmPopup={setOpenConfirmPopup}
+            />
+          </StyledContainer>
+        )
       )}
     </>
   );
@@ -144,3 +142,5 @@ CampaignsStatusPage.propTypes = {
 };
 
 export default CampaignsStatusPage;
+
+// !campaignsData.data.length ?
