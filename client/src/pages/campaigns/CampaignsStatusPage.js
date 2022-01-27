@@ -60,8 +60,8 @@ const CampaignsStatusPage = (props) => {
   const {
     campaignsData,
     handleEditDetailsCampaign,
+    removeCampaign,
     setOpenConfirmPopup,
-    setSelectedData,
     setContentPopup,
   } = props;
 
@@ -118,8 +118,8 @@ const CampaignsStatusPage = (props) => {
               dataHeadEmailTable={statusDataHeadTable}
               passedData={campaignsData.data}
               status={selectStatus}
-              setSelectedData={setSelectedData}
               handleEditDetailsCampaign={handleEditDetailsCampaign}
+              removeCampaign={removeCampaign}
               setContentPopup={setContentPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
             />
@@ -142,5 +142,3 @@ CampaignsStatusPage.propTypes = {
 };
 
 export default CampaignsStatusPage;
-
-// !campaignsData.data.length ?
