@@ -13,6 +13,7 @@ import {
   getStatusColor,
   capitalizeFirstLetter,
 } from "helpers";
+import { usePopup } from "popupContext";
 
 const style = {
   paragraph: {
@@ -48,15 +49,16 @@ const SubscriberGeneralData = (props) => {
     index,
     actualPage,
     dataPerPage,
-    setSelectedData,
     handleSubscriberDetails,
-    setOpenConfirmPopup,
+    removeSubscriber,
     setContentPopup,
   } = props;
 
   const classes = useStyles();
   const location = useLocation();
   const [indexPage] = useState(actualPage);
+
+  const { setIsOpenPopup, addTextPopup, handleAction } = usePopup();
 
   const setTextPopupByStatus = () =>
     subscriber.fields.status === "pending"
@@ -158,7 +160,6 @@ const SubscriberGeneralData = (props) => {
               variant="contained"
               startIcon={<DetailsIcon style={style.icon} />}
               onClick={() => {
-                setSelectedData(subscriber);
                 handleSubscriberDetails(subscriber);
                 setTextPopupByStatus();
               }}
@@ -172,11 +173,14 @@ const SubscriberGeneralData = (props) => {
               variant="contained"
               startIcon={<DeleteIcon style={style.icon} />}
               onClick={() => {
-                setOpenConfirmPopup(true);
-                setSelectedData(subscriber);
-                setContentPopup({
-                  title: capitalizeFirstLetter(subscriber.fields.name),
+                handleAction(() => ({
+                  change: () => removeSubscriber(subscriber.id, "subscribers"),
+                }));
+                addTextPopup({
+                  titleTwo: `Are you sure you want to remove`,
+                  titleItem: `${capitalizeFirstLetter(subscriber.fields.name)}`,
                 });
+                setIsOpenPopup(true);
               }}
             />
           </TableCell>
@@ -188,27 +192,27 @@ const SubscriberGeneralData = (props) => {
   );
 };
 
-SubscriberGeneralData.propTypes = {
-  subscriber: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    group: PropTypes.string,
-    createdTime: PropTypes.string.isRequired,
-    fields: PropTypes.shape({
-      status: PropTypes.string,
-      name: PropTypes.string,
-      surname: PropTypes.string,
-      profession: PropTypes.string,
-      email: PropTypes.string,
-      salary: PropTypes.string,
-      telephone: PropTypes.string,
-    }).isRequired,
-  }),
-  index: PropTypes.number.isRequired,
-  // children: PropTypes.any,
-  setSelectedData: PropTypes.func,
-  handleSubscriberDetails: PropTypes.func,
-  setOpenConfirmPopup: PropTypes.func,
-  setContentPopup: PropTypes.func,
-};
+// SubscriberGeneralData.propTypes = {
+//   subscriber: PropTypes.shape({
+//     id: PropTypes.string.isRequired,
+//     group: PropTypes.string,
+//     createdTime: PropTypes.string.isRequired,
+//     fields: PropTypes.shape({
+//       status: PropTypes.string,
+//       name: PropTypes.string,
+//       surname: PropTypes.string,
+//       profession: PropTypes.string,
+//       email: PropTypes.string,
+//       salary: PropTypes.string,
+//       telephone: PropTypes.string,
+//     }).isRequired,
+//   }),
+//   index: PropTypes.number.isRequired,
+//   // children: PropTypes.any,
+//   setSelectedData: PropTypes.func,
+//   handleSubscriberDetails: PropTypes.func,
+//   setOpenConfirmPopup: PropTypes.func,
+//   setContentPopup: PropTypes.func,
+// };
 
 export default SubscriberGeneralData;
