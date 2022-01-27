@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { makeStyles } from "@material-ui/core/styles";
 import { Paper, Box, Collapse } from "@mui/material";
@@ -18,6 +19,8 @@ import {
 import { StyledButton } from "components/StyledButton";
 import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
+
+import { usePopup } from "popupContext";
 
 const selectStatusData = [
   { value: "change status", label: "change status*" },
@@ -69,7 +72,6 @@ const styles = {
     backgroundColor: "#142F43",
   },
   typographyRequiredText: { color: "orange", letterSpacing: 2, wordSpacing: 3 },
-  titlePopup: { color: "green", fontWeight: "bold" },
   subscriberName: { color: "green" },
   labelCheckbox: {
     fontSize: "1rem",
@@ -112,6 +114,11 @@ const AddSubscriberPage = ({
     resolver: yupResolver(validationSubscriber(isCheckboxChecked)),
   });
 
+  const { openPopup, handleAction, addTextPopup } = usePopup();
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const handleCheckboxOnChange = () => setCheckboxState(!isCheckboxChecked);
 
   useEffect(() => {
@@ -128,6 +135,21 @@ const AddSubscriberPage = ({
     }
   }, [formState, reset]);
 
+  const setTextConfirmPopup = (data) => ({
+    titleOne: "That's great 🎊",
+    description: (
+      <>
+        Subscriber
+        <span style={styles.subscriberName}>
+          <strong> {capitalizeFirstLetter(data.name)} </strong>
+        </span>
+        has been added to the Airtable 😁
+      </>
+    ),
+    titleTwo: "Would you like to come back to",
+    titleItem: "Subscribers",
+  });
+
   const onSubmit = (data) => {
     api.post(endpoint, {
       fields: {
@@ -141,22 +163,16 @@ const AddSubscriberPage = ({
       },
     });
 
-    setContentPopup({
-      title: <span style={styles.titlePopup}>That's great 🎊</span>,
-      text: (
-        <>
-          Subscriber
-          <span style={styles.subscriberName}>
-            <strong> {capitalizeFirstLetter(data.name)} </strong>
-          </span>
-          has been added to the Airtable 😁
-        </>
-      ),
-      colorButton: "success",
-    });
-
     getSubscribersData();
-    setOpenInfoPopup(true);
+
+    addTextPopup(setTextConfirmPopup(data));
+    handleAction(() => ({
+      change: () =>
+        location.pathname === "/subscribers/add"
+          ? navigate("/subscribers")
+          : "",
+    }));
+    openPopup();
   };
 
   return (
@@ -285,6 +301,12 @@ const AddSubscriberPage = ({
                         label="submit"
                         ariaLabel="add"
                         type="submit"
+                        onClick={() => {
+                          openPopup(true);
+                          addTextPopup(
+                            "Would you like to back to Subscribers?"
+                          );
+                        }}
                       />
                     </Grid>
                   </Grid>
@@ -300,8 +322,8 @@ const AddSubscriberPage = ({
 
 AddSubscriberPage.propTypes = {
   getSubscribersData: PropTypes.func,
-  setOpenInfoPopup: PropTypes.func,
-  setContentPopup: PropTypes.func,
+  // setOpenInfoPopup: PropTypes.func,
+  // setContentPopup: PropTypes.func,
 };
 
 export default AddSubscriberPage;
