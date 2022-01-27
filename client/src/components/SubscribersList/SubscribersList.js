@@ -10,7 +10,7 @@ const SubscribersList = ({
   dataHeadTable,
   passedData,
   handleSubscriberDetails,
-  setSelectedData,
+  removeSubscriber,
   setContentPopup,
   setOpenConfirmPopup,
 }) => {
@@ -36,12 +36,12 @@ const SubscribersList = ({
             {data.map((subscriber, index) => (
               <SubscriberGeneralData
                 key={`id-${subscriber.id}`}
-                subscriber={{ ...subscriber, group: "subscribers" }}
+                subscriber={subscriber}
                 index={index}
                 actualPage={actualPage}
                 dataPerPage={parseInt(selectValue)}
-                setSelectedData={setSelectedData}
                 handleSubscriberDetails={handleSubscriberDetails}
+                removeSubscriber={removeSubscriber}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
