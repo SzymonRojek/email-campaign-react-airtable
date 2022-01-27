@@ -140,7 +140,6 @@ const AddCampaignPage = ({ subscribersData, getCampaignsData }) => {
           <StyledHeading label="Add Campaign:" />
 
           <FormCampaign
-            openPopup={openPopup}
             handleSubmit={handleSubmit}
             handleDraftData={handleDraftCampaign}
             handleSendData={handleSendCampaign}
