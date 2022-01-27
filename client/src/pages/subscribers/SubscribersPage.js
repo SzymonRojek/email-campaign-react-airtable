@@ -16,8 +16,8 @@ const styles = {
 const SubscribersPage = (props) => {
   const {
     subscribersData,
-    setSelectedData,
     handleSubscriberDetails,
+    removeSubscriber,
     setOpenConfirmPopup,
     setContentPopup,
   } = props;
@@ -50,8 +50,8 @@ const SubscribersPage = (props) => {
                 subHeading="List"
                 dataHeadTable={generalDataHeadTable}
                 passedData={sortDataAlphabetically(subscribersData.data)}
-                setSelectedData={setSelectedData}
                 handleSubscriberDetails={handleSubscriberDetails}
+                removeSubscriber={removeSubscriber}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
@@ -62,8 +62,8 @@ const SubscribersPage = (props) => {
                 subHeading="Latest added Subscriber"
                 dataHeadTable={generalDataHeadTable}
                 passedData={getLatestAddedItem(subscribersData.data)}
-                setSelectedData={setSelectedData}
                 handleSubscriberDetails={handleSubscriberDetails}
+                removeSubscriber={removeSubscriber}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
