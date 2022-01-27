@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import api from "api";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
@@ -9,7 +10,8 @@ import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
 import { FormCampaign } from "components/FormCampaign";
-import { sendEmail } from "../../sendEmail";
+import { sendEmail } from "sendEmail";
+import { usePopup } from "popupContext";
 
 const postData = (data, status) =>
   api.post("/campaigns", {
@@ -20,12 +22,7 @@ const postData = (data, status) =>
     },
   });
 
-const AddCampaignPage = ({
-  subscribersData,
-  getCampaignsData,
-  setOpenInfoPopup,
-  setContentPopup,
-}) => {
+const AddCampaignPage = ({ subscribersData, getCampaignsData }) => {
   const {
     handleSubmit,
     control,
@@ -35,6 +32,10 @@ const AddCampaignPage = ({
   } = useForm({
     resolver: yupResolver(validationCampaign),
   });
+
+  const { openPopup, addTextPopup, handleAction } = usePopup();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const [isEmailError, setEmailError] = useState(false);
 
@@ -46,35 +47,31 @@ const AddCampaignPage = ({
       });
   }, [formState, reset]);
 
-  const displayPopup = (data, status, text = "") => {
-    const styledTextPopup = status
-      ? { color: "green", fontWeight: "bold" }
-      : { color: "orange", fontWeight: "bold" };
-
-    setContentPopup({
-      title: (
-        <span style={styledTextPopup}>{status ? "Sent!" : "Drafted!"} 🎊"</span>
-      ),
-      text: (
-        <>
-          Campaign
-          <span style={styledTextPopup}>
-            <strong> {capitalizeFirstLetter(data.title)} </strong>
-          </span>
-          has been {status ? "sent" : "drafted and added"} to the Airtable 😁
-        </>
-      ),
-      additionalText: text,
-      colorButton: "success",
-    });
-
-    setOpenInfoPopup(true);
-  };
+  const setTextConfirmPopup = (data, status, addText = "") => ({
+    titleOne: `${status ? "Sent!" : "Drafted!"} 🎊`,
+    description: (
+      <>
+        Campaign
+        <strong style={{ color: "green" }}>
+          {capitalizeFirstLetter(data.title)}{" "}
+        </strong>
+        has been {status ? "sent" : "drafted and added"} to the Airtable 😁
+      </>
+    ),
+    titleTwo: "Would you like to come back to",
+    titleItem: "Campaigns",
+    additionalText: addText,
+  });
 
   const handleDraftCampaign = (data) => {
     postData(data, "draft");
     getCampaignsData();
-    displayPopup(data, false);
+    addTextPopup(setTextConfirmPopup(data, false));
+    handleAction(() => ({
+      change: () =>
+        location.pathname === "/campaigns/add" ? navigate("/campaigns") : "",
+    }));
+    openPopup();
   };
 
   const handleSendCampaign = (data) => {
@@ -96,19 +93,21 @@ const AddCampaignPage = ({
     });
 
     const additionalText = !activeSubscribers.length
-      ? "There are no active subscribers at the moment - that's why email has been drafted"
-      : "Email has been sent to active subscribers";
+      ? "There are no active subscribers yet - campaign has been drafted"
+      : "Email has been sent to active subscribers & Email.js has been used";
 
     console.log("active subscribers:", activeSubscribers);
 
     if (!isEmailError && activeSubscribers.length > 0) {
       postData(data, "sent");
       getCampaignsData();
-      displayPopup(data, true, additionalText);
+      addTextPopup(setTextConfirmPopup(data, true, additionalText));
+      openPopup();
     } else {
       postData(data, "draft");
       getCampaignsData();
-      displayPopup(data, false, additionalText);
+      addTextPopup(setTextConfirmPopup(data, false, additionalText));
+      openPopup();
     }
   };
 
@@ -141,6 +140,7 @@ const AddCampaignPage = ({
           <StyledHeading label="Add Campaign:" />
 
           <FormCampaign
+            openPopup={openPopup}
             handleSubmit={handleSubmit}
             handleDraftData={handleDraftCampaign}
             handleSendData={handleSendCampaign}
