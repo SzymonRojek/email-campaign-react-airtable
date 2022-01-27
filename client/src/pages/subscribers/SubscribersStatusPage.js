@@ -61,8 +61,7 @@ const SubscribersStatusPage = (props) => {
   const {
     subscribersData,
     handleSubscriberDetails,
-    setOpenConfirmPopup,
-    setSelectedData,
+    removeSubscriber,
     setContentPopup,
   } = props;
   const { control, watch } = useForm();
@@ -119,10 +118,9 @@ const SubscribersStatusPage = (props) => {
               passedData={subscribersData.data}
               status={selectStatus}
               setSelectStatus={setSelectStatus}
-              setSelectedData={setSelectedData}
               handleSubscriberDetails={handleSubscriberDetails}
+              removeSubscriber={removeSubscriber}
               setContentPopup={setContentPopup}
-              setOpenConfirmPopup={setOpenConfirmPopup}
             />
           </StyledContainer>
         )
@@ -131,15 +129,15 @@ const SubscribersStatusPage = (props) => {
   );
 };
 
-SubscribersStatusPage.propTypes = {
-  subscribersData: PropTypes.shape({
-    status: PropTypes.string,
-    data: PropTypes.arrayOf(PropTypes.object),
-  }),
-  handleSubscriberDetails: PropTypes.func.isRequired,
-  setOpenConfirmPopup: PropTypes.func,
-  setSelectedData: PropTypes.func,
-  setContentPopup: PropTypes.func,
-};
+// SubscribersStatusPage.propTypes = {
+//   subscribersData: PropTypes.shape({
+//     status: PropTypes.string,
+//     data: PropTypes.arrayOf(PropTypes.object),
+//   }),
+//   handleSubscriberDetails: PropTypes.func.isRequired,
+//   setOpenConfirmPopup: PropTypes.func,
+//   setSelectedData: PropTypes.func,
+//   setContentPopup: PropTypes.func,
+// };
 
 export default SubscribersStatusPage;
