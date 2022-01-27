@@ -10,7 +10,7 @@ const CampaignsList = ({
   dataHeadEmailTable,
   passedData,
   handleEditDetailsCampaign,
-  setSelectedData,
+  removeCampaign,
   setContentPopup,
   setOpenConfirmPopup,
 }) => {
@@ -36,12 +36,12 @@ const CampaignsList = ({
               data.map((campaign, index) => (
                 <CampaignTableRow
                   key={`id-${campaign.id}`}
-                  campaign={{ ...campaign, group: "campaigns" }}
+                  campaign={campaign}
                   index={index}
                   actualPage={actualPage}
                   dataPerPage={parseInt(selectValue)}
-                  setSelectedData={setSelectedData}
                   handleEditDetailsCampaign={handleEditDetailsCampaign}
+                  removeCampaign={removeCampaign}
                   setContentPopup={setContentPopup}
                   setOpenConfirmPopup={setOpenConfirmPopup}
                 />
@@ -53,12 +53,12 @@ const CampaignsList = ({
   );
 };
 
-CampaignsList.propTypes = {
-  subHeading: PropTypes.string.isRequired,
-  dataHeadEmailTable: PropTypes.array.isRequired,
-  setSelectedData: PropTypes.func.isRequired,
-  setContentPopup: PropTypes.func.isRequired,
-  setOpenConfirmPopup: PropTypes.func.isRequired,
-};
+// CampaignsList.propTypes = {
+//   subHeading: PropTypes.string.isRequired,
+//   dataHeadEmailTable: PropTypes.array.isRequired,
+//   setSelectedData: PropTypes.func.isRequired,
+//   setContentPopup: PropTypes.func.isRequired,
+//   setOpenConfirmPopup: PropTypes.func.isRequired,
+// };
 
 export default CampaignsList;
