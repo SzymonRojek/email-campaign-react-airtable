@@ -12,7 +12,7 @@ import { StyledContainer } from "components/StyledContainer";
 import { FormCampaign } from "components/FormCampaign";
 import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
-import { sendEmail } from "../../sendEmail";
+import { sendEmail } from "sendEmail";
 
 const CampaignEditPage = ({
   subscribersData,
