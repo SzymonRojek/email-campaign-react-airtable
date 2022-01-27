@@ -13,6 +13,7 @@ import {
   getStatusColor,
   capitalizeFirstLetter,
 } from "helpers";
+import { usePopup } from "popupContext";
 
 const style = {
   typography: {
@@ -51,20 +52,19 @@ const useStyles = makeStyles(() => ({
   cell: { wordWrap: "break-word", width: 100 },
 }));
 
-const RowCampaign = (props) => {
-  const {
-    campaign,
-    index,
-    actualPage,
-    dataPerPage,
-    setSelectedData,
-    handleEditDetailsCampaign,
-    setOpenConfirmPopup,
-    setContentPopup,
-  } = props;
+const CampaignTableRow = ({
+  campaign,
+  index,
+  actualPage,
+  dataPerPage,
+  handleEditDetailsCampaign,
+  removeCampaign,
+  // setContentPopup,
+}) => {
   const navigate = useNavigate();
   const classes = useStyles();
   const [indexPage] = useState(actualPage);
+  const { setIsOpenPopup, addTextPopup, handleAction } = usePopup();
 
   return (
     <TableRow
@@ -157,11 +157,14 @@ const RowCampaign = (props) => {
           variant="contained"
           startIcon={<DeleteIcon style={style.icon} />}
           onClick={() => {
-            setOpenConfirmPopup(true);
-            setSelectedData(campaign);
-            setContentPopup({
-              title: capitalizeFirstLetter(campaign.fields.title),
+            handleAction(() => ({
+              change: () => removeCampaign(campaign.id, "campaigns"),
+            }));
+            addTextPopup({
+              titleTwo: `Are you sure you want to remove`,
+              titleItem: `${capitalizeFirstLetter(campaign.fields.title)}`,
             });
+            setIsOpenPopup(true);
           }}
         />
       </TableCell>
@@ -169,22 +172,22 @@ const RowCampaign = (props) => {
   );
 };
 
-RowCampaign.propTypes = {
-  campaign: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    group: PropTypes.string.isRequired,
-    createdTime: PropTypes.string.isRequired,
-    fields: PropTypes.shape({
-      status: PropTypes.string,
-      title: PropTypes.string,
-      description: PropTypes.string,
-    }).isRequired,
-  }),
-  index: PropTypes.number.isRequired,
-  setSelectedData: PropTypes.func.isRequired,
-  handleEditDetailsCampaign: PropTypes.func.isRequired,
-  setOpenConfirmPopup: PropTypes.func.isRequired,
-  setContentPopup: PropTypes.func.isRequired,
-};
+// RowCampaign.propTypes = {
+//   campaign: PropTypes.shape({
+//     id: PropTypes.string.isRequired,
+//     group: PropTypes.string.isRequired,
+//     createdTime: PropTypes.string.isRequired,
+//     fields: PropTypes.shape({
+//       status: PropTypes.string,
+//       title: PropTypes.string,
+//       description: PropTypes.string,
+//     }).isRequired,
+//   }),
+//   index: PropTypes.number.isRequired,
+//   setSelectedData: PropTypes.func.isRequired,
+//   handleEditDetailsCampaign: PropTypes.func.isRequired,
+//   setOpenConfirmPopup: PropTypes.func.isRequired,
+//   setContentPopup: PropTypes.func.isRequired,
+// };
 
-export default RowCampaign;
+export default CampaignTableRow;
