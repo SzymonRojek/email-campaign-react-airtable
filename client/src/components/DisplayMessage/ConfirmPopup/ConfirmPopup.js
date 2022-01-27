@@ -1,57 +1,85 @@
 import PropTypes from "prop-types";
-import { Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import Button from "@mui/material/Button";
+import { usePopup } from "popupContext.js";
 
-const style = {
-  dialog: {
+const styles = {
+  dialogContent: {
     display: "flex",
     justifyContent: "space-around",
     padding: "30px 0 25px 0",
   },
+  dialogTitleTwo: { textAlign: "center" },
   span: { color: "crimson" },
   button: { color: "white" },
 };
 
-const ConfirmPopup = ({
-  openConfirmPopup,
-  setOpenConfirmPopup,
-  handleRemoveItem,
-  contentPopup,
-}) => (
-  <Dialog open={openConfirmPopup} maxWidth="sm">
-    <DialogTitle>
-      <div>
-        <Typography variant="h6" p={2}>
-          Are you sure you want to remove
-          <span style={style.span}> {contentPopup.title}</span> ?
-        </Typography>
-      </div>
-    </DialogTitle>
-    <DialogContent dividers style={style.dialog}>
-      <Button
-        variant="contained"
-        color="error"
-        onClick={() => handleRemoveItem()}
-      >
-        YES
-      </Button>
-      <Button
-        variant="contained"
-        color="success"
-        style={style.button}
-        onClick={() => setOpenConfirmPopup(false)}
-      >
-        NO
-      </Button>
-    </DialogContent>
-  </Dialog>
-);
+const ConfirmPopup = () => {
+  const { isOpenPopup, text, closePopup, action } = usePopup();
 
-ConfirmPopup.propTypes = {
-  openConfirmPopup: PropTypes.bool.isRequired,
-  setOpenConfirmPopup: PropTypes.func.isRequired,
-  handleRemoveItem: PropTypes.func.isRequired,
-  contentPopup: PropTypes.object.isRequired,
+  return (
+    <Dialog open={isOpenPopup} maxWidth="sm">
+      {text.titleOne && (
+        <>
+          <DialogTitle>
+            <p
+              style={{
+                color: "green",
+                textAlign: "center",
+                fontWeight: "bold",
+              }}
+            >
+              {text.titleOne}
+            </p>
+          </DialogTitle>
+          <DialogContent>
+            <DialogContent dividers>
+              <p style={{ fontSize: 18, textAlign: "center" }}>
+                {text.description}
+              </p>
+
+              <p style={{ fontSize: 18, textAlign: "center" }}>
+                {text.additionalText}
+              </p>
+            </DialogContent>
+          </DialogContent>
+        </>
+      )}
+      <DialogTitle style={styles.dialogTitleTwo}>
+        <p>
+          {text.titleTwo}
+          <span style={{ color: "crimson" }}> {text.titleItem} </span> ?
+        </p>
+      </DialogTitle>
+      <DialogContent dividers style={styles.dialogContent}>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => {
+            action.change();
+            closePopup();
+          }}
+        >
+          YES
+        </Button>
+        <Button
+          variant="contained"
+          color="success"
+          style={styles.button}
+          onClick={() => closePopup()}
+        >
+          NO
+        </Button>
+      </DialogContent>
+    </Dialog>
+  );
 };
+
+// ConfirmPopup.propTypes = {
+//   openConfirmPopup: PropTypes.bool.isRequired,
+//   setOpenConfirmPopup: PropTypes.func.isRequired,
+//   handleAction: PropTypes.func.isRequired,
+//   contentPopup: PropTypes.object.isRequired,
+// };
 
 export default ConfirmPopup;
