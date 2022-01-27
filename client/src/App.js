@@ -1,34 +1,27 @@
-import { useEffect } from "react";
-
 import AppContainer from "./AppContainer";
-import { LoginForm } from "./components/LoginForm";
-import { Loader } from "./components/DisplayMessage";
+import { ConfirmPopup } from "./components/DisplayMessage";
 import { StyledFooter } from "./components/StyledFooter";
 import { useLocalStorageValue } from "./useLocalStorageValue";
+import { PopupProvider } from "./popupContext";
+import { Login } from "./Login";
 
 const App = () => {
   const [statusLog, setStatusLog] = useLocalStorageValue("status", "loadingIn");
   const [isLogIn, setIsLogIn] = useLocalStorageValue("login", false);
 
-  useEffect(() => {
-    const timeID = setTimeout(() => {
-      if (isLogIn) setStatusLog("success");
-    }, 3_000);
-
-    return () => clearTimeout(timeID);
-  });
-
   return (
     <div className="page-container">
-      {isLogIn && statusLog === "loadingIn" ? (
-        <Loader title="Log In" />
-      ) : statusLog === "success" ? (
-        <AppContainer setIsLogIn={setIsLogIn} setStatusLog={setStatusLog} />
-      ) : statusLog === "loadingOut" ? (
-        <Loader title="Log Out" />
-      ) : (
-        <LoginForm setIsLogIn={setIsLogIn} />
-      )}
+      <Login
+        isLogIn={isLogIn}
+        setIsLogIn={setIsLogIn}
+        statusLog={statusLog}
+        setStatusLog={setStatusLog}
+      >
+        <PopupProvider>
+          <AppContainer setIsLogIn={setIsLogIn} setStatusLog={setStatusLog} />
+          <ConfirmPopup />
+        </PopupProvider>
+      </Login>
 
       <StyledFooter label="Coded By Szymon Rojek © 2022" />
     </div>
