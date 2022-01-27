@@ -9,8 +9,8 @@ import { Error, Loader } from "components/DisplayMessage";
 
 const CampaignsPage = ({
   campaignsData,
-  setSelectedData,
   handleEditDetailsCampaign,
+  removeCampaign,
   setOpenConfirmPopup,
   setContentPopup,
 }) => {
@@ -40,8 +40,8 @@ const CampaignsPage = ({
                 subHeading="List"
                 dataHeadEmailTable={dataHeadEmailTable}
                 passedData={sortDataAlphabetically(campaignsData.data)}
-                setSelectedData={setSelectedData}
                 handleEditDetailsCampaign={handleEditDetailsCampaign}
+                removeCampaign={removeCampaign}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
@@ -53,7 +53,7 @@ const CampaignsPage = ({
                 dataHeadEmailTable={dataHeadEmailTable}
                 passedData={getLatestAddedItem(campaignsData.data)}
                 handleEditDetailsCampaign={handleEditDetailsCampaign}
-                setSelectedData={setSelectedData}
+                removeCampaign={removeCampaign}
                 setContentPopup={setContentPopup}
                 setOpenConfirmPopup={setOpenConfirmPopup}
               />
@@ -67,15 +67,15 @@ const CampaignsPage = ({
   );
 };
 
-CampaignsPage.propTypes = {
-  campaignsData: PropTypes.shape({
-    status: PropTypes.string,
-    data: PropTypes.arrayOf(PropTypes.object),
-  }).isRequired,
-  setSelectedData: PropTypes.func.isRequired,
-  handleEditDetailsCampaign: PropTypes.func.isRequired,
-  setOpenConfirmPopup: PropTypes.func.isRequired,
-  setContentPopup: PropTypes.func.isRequired,
-};
+// CampaignsPage.propTypes = {
+//   campaignsData: PropTypes.shape({
+//     status: PropTypes.string,
+//     data: PropTypes.arrayOf(PropTypes.object),
+//   }).isRequired,
+//   setSelectedData: PropTypes.func.isRequired,
+//   handleEditDetailsCampaign: PropTypes.func.isRequired,
+//   setOpenConfirmPopup: PropTypes.func.isRequired,
+//   setContentPopup: PropTypes.func.isRequired,
+// };
 
 export default CampaignsPage;
