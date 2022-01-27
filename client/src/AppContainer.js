@@ -18,7 +18,7 @@ import {
   CampaignsPage,
   CampaignsStatusPage,
 } from "pages/campaigns";
-import { InfoPopup, ConfirmPopup } from "components/DisplayMessage";
+import { InfoPopup } from "components/DisplayMessage";
 import {
   subscribersLinksNavigation,
   campaignsLinksNavigation,
@@ -29,8 +29,7 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
   const navigate = useNavigate();
   const [openInfoPopup, setOpenInfoPopup] = useState(false);
   const [contentPopup, setContentPopup] = useState({});
-  const [openConfirmPopup, setOpenConfirmPopup] = useState(false);
-  const [selectedData, setSelectedData] = useState({});
+  const [setOpenConfirmPopup] = useState(false);
   const [tabsValue, setTabsValue] = useState(0);
 
   const endpointSubscribers = "/subscribers";
@@ -48,32 +47,25 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
     getData: getCampaignsData,
   } = useFetchData(endpointCampaigns);
 
-  const removeItemFromAirtable = async (endpoint, id) =>
-    await api.delete(`/${endpoint}/${id}`);
-
-  const handleRemoveItem = () => {
-    const nameGroup = selectedData?.group;
-    const selectedId = selectedData.id;
+  const handleRemoveItem = (id, endpoint) => {
+    api.delete(`/${endpoint}/${id}`);
 
     const filteredGroup = (group) =>
-      group.data.filter((item) => item.id !== selectedId);
+      group.data.filter((item) => item.id !== id);
 
-    if (nameGroup === "subscribers") {
+    if (endpoint === "subscribers") {
       setSubscribersData({
         status: "success",
         data: filteredGroup(subscribersData),
       });
     }
 
-    if (nameGroup === "campaigns") {
+    if (endpoint === "campaigns") {
       setCampaignsData({
         status: "success",
         data: filteredGroup(campaignsData),
       });
     }
-
-    removeItemFromAirtable(nameGroup, selectedId);
-    setOpenConfirmPopup(false);
   };
 
   const handleSubscriberDetails = (subscriber) =>
@@ -98,8 +90,8 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
           element: (
             <SubscribersPage
               subscribersData={subscribersData}
-              setSelectedData={setSelectedData}
               handleSubscriberDetails={handleSubscriberDetails}
+              removeSubscriber={handleRemoveItem}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
@@ -122,8 +114,8 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
           element: (
             <SubscribersStatusPage
               subscribersData={subscribersData}
-              setSelectedData={setSelectedData}
               handleSubscriberDetails={handleSubscriberDetails}
+              removeSubscriber={handleRemoveItem}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
@@ -146,8 +138,8 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
           element: (
             <CampaignsPage
               campaignsData={campaignsData}
-              setSelectedData={setSelectedData}
               handleEditDetailsCampaign={handleEditDetailsCampaign}
+              removeCampaign={handleRemoveItem}
               setContentPopup={setContentPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
             />
@@ -158,8 +150,8 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
           element: (
             <CampaignsStatusPage
               campaignsData={campaignsData}
-              setSelectedData={setSelectedData}
               handleEditDetailsCampaign={handleEditDetailsCampaign}
+              removeCampaign={handleRemoveItem}
               setContentPopup={setContentPopup}
               setOpenInfoPopup={setOpenInfoPopup}
               setOpenConfirmPopup={setOpenConfirmPopup}
@@ -183,7 +175,6 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
             <CampaignEditPage
               subscribersData={subscribersData}
               getCampaignsData={getCampaignsData}
-              selectedData={selectedData}
               setOpenInfoPopup={setOpenInfoPopup}
               setContentPopup={setContentPopup}
             />
@@ -211,12 +202,6 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
         contentPopup={contentPopup}
         openInfoPopup={openInfoPopup}
         setOpenInfoPopup={setOpenInfoPopup}
-      />
-      <ConfirmPopup
-        handleRemoveItem={handleRemoveItem}
-        contentPopup={contentPopup}
-        openConfirmPopup={openConfirmPopup}
-        setOpenConfirmPopup={setOpenConfirmPopup}
       />
     </>
   );
