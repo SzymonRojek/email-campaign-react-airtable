@@ -18,10 +18,9 @@ const SubscriberStatus = (props) => {
     passedData,
     status,
     handleSubscriberDetails,
-    setSelectedData,
+    removeSubscriber,
     setSelectStatus,
     setContentPopup,
-    setOpenConfirmPopup,
   } = props;
 
   const [selectValue, setSelectValue] = useState(4);
@@ -55,10 +54,9 @@ const SubscriberStatus = (props) => {
                       index={index}
                       actualPage={actualPage}
                       dataPerPage={parseInt(selectValue)}
-                      setSelectedData={setSelectedData}
                       handleSubscriberDetails={handleSubscriberDetails}
+                      removeSubscriber={removeSubscriber}
                       setContentPopup={setContentPopup}
-                      setOpenConfirmPopup={setOpenConfirmPopup}
                     />
                   ))
                 : []}
