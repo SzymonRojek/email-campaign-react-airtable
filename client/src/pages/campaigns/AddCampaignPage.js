@@ -13,6 +13,11 @@ import { FormCampaign } from "components/FormCampaign";
 import { sendEmail } from "sendEmail";
 import { usePopup } from "popupContext";
 
+const styles = {
+  questionSpan: { color: "crimson", fontWeight: "bold" },
+  campaignName: { color: "green", fontWeight: "bold" },
+};
+
 const postData = (data, status) =>
   api.post("/campaigns", {
     fields: {
@@ -48,19 +53,24 @@ const AddCampaignPage = ({ subscribersData, getCampaignsData }) => {
   }, [formState, reset]);
 
   const setTextConfirmPopup = (data, status, addText = "") => ({
-    titleOne: `${status ? "Sent!" : "Drafted!"} 🎊`,
-    description: (
+    additionalText: addText,
+    title: (
       <>
-        Campaign
-        <strong style={{ color: "green" }}>
+        Email{" "}
+        <span style={styles.campaignName}>
+          {" "}
           {capitalizeFirstLetter(data.title)}{" "}
-        </strong>
-        has been {status ? "sent" : "drafted and added"} to the Airtable 😁
+        </span>
+        has been {status ? "sent" : "drafted and added"} to active subscribers
+        😁
       </>
     ),
-    titleTwo: "Would you like to come back to",
-    titleItem: "Campaigns",
-    additionalText: addText,
+    question: (
+      <>
+        Would you like to come back to
+        <span style={styles.questionSpan}> the Campaigns List</span> ?
+      </>
+    ),
   });
 
   const handleDraftCampaign = (data) => {
@@ -93,8 +103,8 @@ const AddCampaignPage = ({ subscribersData, getCampaignsData }) => {
     });
 
     const additionalText = !activeSubscribers.length
-      ? "There are no active subscribers yet - campaign has been drafted"
-      : "Email has been sent to active subscribers & Email.js has been used";
+      ? "No active Susbcribers!"
+      : "";
 
     console.log("active subscribers:", activeSubscribers);
 
