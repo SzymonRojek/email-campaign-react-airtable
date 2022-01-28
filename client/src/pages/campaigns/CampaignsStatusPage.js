@@ -68,17 +68,19 @@ const CampaignsStatusPage = ({
     "no",
     "title",
     "description",
-    <SelectInputController
-      control={control}
-      name="status"
-      styles={styles.select}
-      defaultValue={selectStatus}
-      data={selectCampaignsStatus}
-      message=""
-      error={false}
-      useStyles={useStyles}
-    />,
     "created",
+    <div style={{ border: "2px solid orange", borderRadius: 3 }}>
+      <SelectInputController
+        control={control}
+        name="status"
+        styles={styles.select}
+        defaultValue={selectStatus}
+        data={selectCampaignsStatus}
+        message=""
+        error={false}
+        useStyles={useStyles}
+      />
+    </div>,
     "details",
     "delete",
   ];
