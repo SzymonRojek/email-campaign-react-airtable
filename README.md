@@ -3,7 +3,10 @@
 Actually I am working on:
 
 - general layout
-- scubsribers details (working on layouts of the tables)
+- add react context for all popups, add functional implementation, remove unnecessary props and so on
+- probably add possibility to edit subscribers data
+- edit proptypes
+- remove errors from dev tools console
 
 Check demo on Herokuapp: [demo](https://email-campaign-subscribers.herokuapp.com/)
 
