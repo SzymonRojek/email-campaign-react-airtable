@@ -5,15 +5,14 @@ import { ContainerTable, HeadTable, BodyTable } from "components/Table";
 import { CampaignTableRow } from "components/CampaignTableRow";
 import CustomPaginator from "components/PaginationPackage/CustomPaginator";
 
-const CampaignsList = ({
-  subHeading,
-  dataHeadEmailTable,
-  passedData,
-  handleEditDetailsCampaign,
-  removeCampaign,
-  setContentPopup,
-  setOpenConfirmPopup,
-}) => {
+const CampaignsList = (props) => {
+  const {
+    subHeading,
+    dataHeadEmailTable,
+    passedData,
+    handleEditDetailsCampaign,
+    removeCampaign,
+  } = props;
   const [selectValue, setSelectValue] = useState(4);
 
   return (
@@ -42,8 +41,6 @@ const CampaignsList = ({
                   dataPerPage={parseInt(selectValue)}
                   handleEditDetailsCampaign={handleEditDetailsCampaign}
                   removeCampaign={removeCampaign}
-                  setContentPopup={setContentPopup}
-                  setOpenConfirmPopup={setOpenConfirmPopup}
                 />
               ))}
           </BodyTable>

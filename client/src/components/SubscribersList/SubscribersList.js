@@ -5,15 +5,14 @@ import { ContainerTable, HeadTable, BodyTable } from "components/Table";
 import { SubscriberGeneralData } from "components/SubscriberTableRow/SubscriberGeneralData";
 import CustomPaginator from "components/PaginationPackage/CustomPaginator";
 
-const SubscribersList = ({
-  subHeading,
-  dataHeadTable,
-  passedData,
-  handleSubscriberDetails,
-  removeSubscriber,
-  setContentPopup,
-  setOpenConfirmPopup,
-}) => {
+const SubscribersList = (props) => {
+  const {
+    subHeading,
+    dataHeadTable,
+    passedData,
+    handleSubscriberDetails,
+    removeSubscriber,
+  } = props;
   const [selectValue, setSelectValue] = useState(4);
 
   return (
@@ -42,8 +41,6 @@ const SubscribersList = ({
                 dataPerPage={parseInt(selectValue)}
                 handleSubscriberDetails={handleSubscriberDetails}
                 removeSubscriber={removeSubscriber}
-                setContentPopup={setContentPopup}
-                setOpenConfirmPopup={setOpenConfirmPopup}
               />
             ))}
           </BodyTable>
@@ -58,8 +55,6 @@ SubscribersList.propTypes = {
   dataHeadTable: PropTypes.array.isRequired,
   handleSubscriberDetails: PropTypes.func,
   setSelectedData: PropTypes.func,
-  setContentPopup: PropTypes.func,
-  setOpenConfirmPopup: PropTypes.func,
 };
 
 export default SubscribersList;

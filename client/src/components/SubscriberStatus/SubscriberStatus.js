@@ -20,7 +20,6 @@ const SubscriberStatus = (props) => {
     handleSubscriberDetails,
     removeSubscriber,
     setSelectStatus,
-    setContentPopup,
   } = props;
 
   const [selectValue, setSelectValue] = useState(4);
@@ -56,7 +55,6 @@ const SubscriberStatus = (props) => {
                       dataPerPage={parseInt(selectValue)}
                       handleSubscriberDetails={handleSubscriberDetails}
                       removeSubscriber={removeSubscriber}
-                      setContentPopup={setContentPopup}
                     />
                   ))
                 : []}
@@ -80,8 +78,6 @@ SubscriberStatus.propTypes = {
   status: PropTypes.string.isRequired,
   handleSubscriberDetails: PropTypes.func.isRequired,
   setSelectedData: PropTypes.func,
-  setContentPopup: PropTypes.func,
-  setOpenConfirmPopup: PropTypes.func,
 };
 
 export default SubscriberStatus;

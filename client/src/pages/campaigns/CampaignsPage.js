@@ -11,61 +11,53 @@ const CampaignsPage = ({
   campaignsData,
   handleEditDetailsCampaign,
   removeCampaign,
-  setOpenConfirmPopup,
-  setContentPopup,
-}) => {
-  return (
-    <>
-      {campaignsData.status === "loading" ? (
-        <Loader title="Campaigns" />
-      ) : campaignsData.status === "error" ? (
-        <Error
-          titleOne="ERROR MESSAGE"
-          titleTwo={`${campaignsData.data?.error.message || "Check endpoints"}`}
-          titleThree="Also, please check your internet connection."
-        />
-      ) : !campaignsData.data.length ? (
-        <Error
-          titleOne="MESSAGE"
-          titleTwo="There are no Email Campaigns added yet"
-          titleThree="Please add a New Email Campaign"
-        />
-      ) : (
-        campaignsData.status === "success" && (
-          <StyledContainer>
-            <div style={{ marginBottom: 100 }}>
-              <StyledHeading label="All Campaigns" />
+}) => (
+  <>
+    {campaignsData.status === "loading" ? (
+      <Loader title="Campaigns" />
+    ) : campaignsData.status === "error" ? (
+      <Error
+        titleOne="ERROR MESSAGE"
+        titleTwo={`${campaignsData.data?.error.message || "Check endpoints"}`}
+        titleThree="Also, please check your internet connection."
+      />
+    ) : !campaignsData.data.length ? (
+      <Error
+        titleOne="MESSAGE"
+        titleTwo="There are no Email Campaigns added yet"
+        titleThree="Please add a New Email Campaign"
+      />
+    ) : (
+      campaignsData.status === "success" && (
+        <StyledContainer>
+          <div style={{ marginBottom: 100 }}>
+            <StyledHeading label="All Campaigns" />
 
-              <CampaignsList
-                subHeading="List"
-                dataHeadEmailTable={dataHeadEmailTable}
-                passedData={sortDataAlphabetically(campaignsData.data)}
-                handleEditDetailsCampaign={handleEditDetailsCampaign}
-                removeCampaign={removeCampaign}
-                setContentPopup={setContentPopup}
-                setOpenConfirmPopup={setOpenConfirmPopup}
-              />
-            </div>
+            <CampaignsList
+              subHeading="List"
+              dataHeadEmailTable={dataHeadEmailTable}
+              passedData={sortDataAlphabetically(campaignsData.data)}
+              handleEditDetailsCampaign={handleEditDetailsCampaign}
+              removeCampaign={removeCampaign}
+            />
+          </div>
 
-            {campaignsData.data.length > 1 ? (
-              <CampaignsList
-                subHeading="Latest added Campaign"
-                dataHeadEmailTable={dataHeadEmailTable}
-                passedData={getLatestAddedItem(campaignsData.data)}
-                handleEditDetailsCampaign={handleEditDetailsCampaign}
-                removeCampaign={removeCampaign}
-                setContentPopup={setContentPopup}
-                setOpenConfirmPopup={setOpenConfirmPopup}
-              />
-            ) : (
-              ""
-            )}
-          </StyledContainer>
-        )
-      )}
-    </>
-  );
-};
+          {campaignsData.data.length > 1 ? (
+            <CampaignsList
+              subHeading="Latest added Campaign"
+              dataHeadEmailTable={dataHeadEmailTable}
+              passedData={getLatestAddedItem(campaignsData.data)}
+              handleEditDetailsCampaign={handleEditDetailsCampaign}
+              removeCampaign={removeCampaign}
+            />
+          ) : (
+            ""
+          )}
+        </StyledContainer>
+      )
+    )}
+  </>
+);
 
 // CampaignsPage.propTypes = {
 //   campaignsData: PropTypes.shape({

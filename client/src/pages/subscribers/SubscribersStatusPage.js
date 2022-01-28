@@ -57,13 +57,10 @@ const selectSubscribersStatus = [
   { value: "blocked", label: "blocked" },
 ];
 
-const SubscribersStatusPage = (props) => {
-  const {
-    subscribersData,
-    handleSubscriberDetails,
-    removeSubscriber,
-    setContentPopup,
-  } = props;
+const SubscribersStatusPage = ({
+  subscribersData,
+  handleSubscriberDetails,
+}) => {
   const { control, watch } = useForm();
   const [selectStatus, setSelectStatus] = useState("active");
 
@@ -119,8 +116,6 @@ const SubscribersStatusPage = (props) => {
               status={selectStatus}
               setSelectStatus={setSelectStatus}
               handleSubscriberDetails={handleSubscriberDetails}
-              removeSubscriber={removeSubscriber}
-              setContentPopup={setContentPopup}
             />
           </StyledContainer>
         )

@@ -56,15 +56,11 @@ const selectCampaignsStatus = [
   { value: "draft", label: "draft" },
 ];
 
-const CampaignsStatusPage = (props) => {
-  const {
-    campaignsData,
-    handleEditDetailsCampaign,
-    removeCampaign,
-    setOpenConfirmPopup,
-    setContentPopup,
-  } = props;
-
+const CampaignsStatusPage = ({
+  campaignsData,
+  handleEditDetailsCampaign,
+  removeCampaign,
+}) => {
   const { control, watch } = useForm();
   const [selectStatus, setSelectStatus] = useState("sent");
 
@@ -120,8 +116,6 @@ const CampaignsStatusPage = (props) => {
               status={selectStatus}
               handleEditDetailsCampaign={handleEditDetailsCampaign}
               removeCampaign={removeCampaign}
-              setContentPopup={setContentPopup}
-              setOpenConfirmPopup={setOpenConfirmPopup}
             />
           </StyledContainer>
         )
@@ -137,8 +131,6 @@ CampaignsStatusPage.propTypes = {
   }),
   handleEditDetailsCampaign: PropTypes.func.isRequired,
   setSelectedData: PropTypes.func.isRequired,
-  setOpenConfirmPopup: PropTypes.func.isRequired,
-  setContentPopup: PropTypes.func.isRequired,
 };
 
 export default CampaignsStatusPage;

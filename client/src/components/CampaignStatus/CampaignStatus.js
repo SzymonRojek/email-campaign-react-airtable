@@ -11,21 +11,18 @@ import { CampaignTableRow } from "components/CampaignTableRow";
 import CustomPaginator from "components/PaginationPackage/CustomPaginator";
 import { getFilteredDataByStatus } from "helpers";
 
-const CampaignStatus = ({
-  subHeading,
-  dataHeadEmailTable,
-  passedData,
-  status,
-  handleEditDetailsCampaign,
-  removeCampaign,
-  setContentPopup,
-  setOpenConfirmPopup,
-}) => {
+const CampaignStatus = (props) => {
+  const {
+    subHeading,
+    dataHeadEmailTable,
+    passedData,
+    status,
+    handleEditDetailsCampaign,
+    removeCampaign,
+  } = props;
   const [selectValue, setSelectValue] = useState(4);
-
   const filteredData = getFilteredDataByStatus(passedData, status);
 
-  console.log("stat", removeCampaign);
   return (
     <CustomPaginator
       passedData={filteredData}
@@ -45,23 +42,17 @@ const CampaignStatus = ({
 
             <BodyTable>
               {data.some((el) => el.fields.status === status)
-                ? data.map((campaign, index) => {
-                    console.log("status", campaign);
-                    console.log("rem", removeCampaign);
-                    return (
-                      <CampaignTableRow
-                        key={`id-${campaign.id}`}
-                        campaign={campaign}
-                        index={index}
-                        actualPage={actualPage}
-                        dataPerPage={parseInt(selectValue)}
-                        handleEditDetailsCampaign={handleEditDetailsCampaign}
-                        removeCampaign={removeCampaign}
-                        setContentPopup={setContentPopup}
-                        setOpenConfirmPopup={setOpenConfirmPopup}
-                      />
-                    );
-                  })
+                ? data.map((campaign, index) => (
+                    <CampaignTableRow
+                      key={`id-${campaign.id}`}
+                      campaign={campaign}
+                      index={index}
+                      actualPage={actualPage}
+                      dataPerPage={parseInt(selectValue)}
+                      handleEditDetailsCampaign={handleEditDetailsCampaign}
+                      removeCampaign={removeCampaign}
+                    />
+                  ))
                 : []}
             </BodyTable>
           </ContainerTable>

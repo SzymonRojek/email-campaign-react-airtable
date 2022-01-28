@@ -14,12 +14,7 @@ import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
 import { sendEmail } from "sendEmail";
 
-const CampaignEditPage = ({
-  subscribersData,
-  getCampaignsData,
-  setOpenInfoPopup,
-  setContentPopup,
-}) => {
+const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
   const {
     handleSubmit,
     formState: { errors },
@@ -73,39 +68,39 @@ const CampaignEditPage = ({
       </span>
     );
 
-    setContentPopup({
-      title: status ? (
-        <span style={{ color: "green", fontWeight: "bold" }}>
-          That's great 🎊
-        </span>
-      ) : (
-        <span style={{ color: "orange", fontWeight: "bold" }}>
-          Still draft... 🙂
-        </span>
-      ),
-      text:
-        isCampaignChanged && status ? (
-          <> Campaign {campaignTitle} has been changed and finally sent 🙂</>
-        ) : !isCampaignChanged && !status ? (
-          <>
-            Campaign {campaignTitle} has not been changed and status still is
-            draft 🙂
-          </>
-        ) : !isCampaignChanged && status ? (
-          <>Campaign {campaignTitle} has not been changed but finally sent 🙂</>
-        ) : isCampaignChanged && !status ? (
-          <>
-            Campaign {campaignTitle} has been changed and status still is draft
-            🙂
-          </>
-        ) : (
-          <>Campaign {campaignTitle} has not been changed but finally sent 🙂</>
-        ),
-      additionalText: emailInfo,
-      colorButton: "success",
-    });
+    // setContentPopup({
+    //   title: status ? (
+    //     <span style={{ color: "green", fontWeight: "bold" }}>
+    //       That's great 🎊
+    //     </span>
+    //   ) : (
+    //     <span style={{ color: "orange", fontWeight: "bold" }}>
+    //       Still draft... 🙂
+    //     </span>
+    //   ),
+    //   text:
+    //     isCampaignChanged && status ? (
+    //       <> Campaign {campaignTitle} has been changed and finally sent 🙂</>
+    //     ) : !isCampaignChanged && !status ? (
+    //       <>
+    //         Campaign {campaignTitle} has not been changed and status still is
+    //         draft 🙂
+    //       </>
+    //     ) : !isCampaignChanged && status ? (
+    //       <>Campaign {campaignTitle} has not been changed but finally sent 🙂</>
+    //     ) : isCampaignChanged && !status ? (
+    //       <>
+    //         Campaign {campaignTitle} has been changed and status still is draft
+    //         🙂
+    //       </>
+    //     ) : (
+    //       <>Campaign {campaignTitle} has not been changed but finally sent 🙂</>
+    //     ),
+    //   additionalText: emailInfo,
+    //   colorButton: "success",
+    // });
 
-    setOpenInfoPopup(true);
+    // setOpenInfoPopup(true);
   };
 
   const handleDraftCampaign = (data) => {
@@ -201,8 +196,6 @@ CampaignEditPage.propTypes = {
     data: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
   getCampaignsData: PropTypes.func.isRequired,
-  setOpenInfoPopup: PropTypes.func.isRequired,
-  setContentPopup: PropTypes.func.isRequired,
 };
 
 export default CampaignEditPage;

@@ -52,19 +52,20 @@ const useStyles = makeStyles(() => ({
   cell: { wordWrap: "break-word", width: 100 },
 }));
 
-const CampaignTableRow = ({
-  campaign,
-  index,
-  actualPage,
-  dataPerPage,
-  handleEditDetailsCampaign,
-  removeCampaign,
-  // setContentPopup,
-}) => {
+const CampaignTableRow = (props) => {
+  const {
+    campaign,
+    index,
+    actualPage,
+    dataPerPage,
+    handleEditDetailsCampaign,
+    removeCampaign,
+  } = props;
+
   const navigate = useNavigate();
   const classes = useStyles();
   const [indexPage] = useState(actualPage);
-  const { setIsOpenPopup, addTextPopup, handleAction } = usePopup();
+  const { openConfirmPopup, addTextPopup, handleActionPopup } = usePopup();
 
   return (
     <TableRow
@@ -157,14 +158,14 @@ const CampaignTableRow = ({
           variant="contained"
           startIcon={<DeleteIcon style={style.icon} />}
           onClick={() => {
-            handleAction(() => ({
+            handleActionPopup(() => ({
               change: () => removeCampaign(campaign.id, "campaigns"),
             }));
             addTextPopup({
               titleTwo: `Are you sure you want to remove`,
               titleItem: `${capitalizeFirstLetter(campaign.fields.title)}`,
             });
-            setIsOpenPopup(true);
+            openConfirmPopup();
           }}
         />
       </TableCell>

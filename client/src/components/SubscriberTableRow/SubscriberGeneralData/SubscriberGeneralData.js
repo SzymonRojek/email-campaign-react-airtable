@@ -51,45 +51,50 @@ const SubscriberGeneralData = (props) => {
     dataPerPage,
     handleSubscriberDetails,
     removeSubscriber,
-    setContentPopup,
   } = props;
 
   const classes = useStyles();
   const location = useLocation();
   const [indexPage] = useState(actualPage);
 
-  const { setIsOpenPopup, addTextPopup, handleAction } = usePopup();
+  const { openInfoPopup, openConfirmPopup, addTextPopup, handleActionPopup } =
+    usePopup();
 
-  const setTextPopupByStatus = () =>
-    subscriber.fields.status === "pending"
-      ? setContentPopup({
-          title: "Please wait...",
-          text: (
-            <>
-              {capitalizeFirstLetter(subscriber.fields.name)}'s status is
-              <span style={style.pending}>
-                <strong> pending </strong>
-              </span>
-              at the moment - subscription has to be confirmed by an admin 🙂
-            </>
-          ),
-          colorButton: "error",
-        })
-      : subscriber.fields.status === "blocked"
-      ? setContentPopup({
-          title: "Unfortunately...",
-          text: (
-            <>
-              {capitalizeFirstLetter(subscriber.fields.name)}'s status is
-              <span style={style.blocked}>
-                <strong> blocked </strong>
-              </span>
-              - can not get an access to more details 🙁
-            </>
-          ),
-          colorButton: "error",
-        })
-      : {};
+  const setTextPopupByStatus = (subscriber) => {
+    if (subscriber.fields.status === "pending") {
+      addTextPopup({
+        title: "Please wait...",
+        paragraph: (
+          <>
+            {capitalizeFirstLetter(subscriber.fields.name)}'s status is
+            <span style={style.pending}>
+              <strong> pending </strong>
+            </span>
+            at the moment - subscription has to be confirmed by an admin 🙂
+          </>
+        ),
+        colorButton: "error",
+      });
+
+      openInfoPopup();
+    } else if (subscriber.fields.status === "blocked") {
+      addTextPopup({
+        title: "Unfortunately...",
+        paragraph: (
+          <>
+            {capitalizeFirstLetter(subscriber.fields.name)}'s status is
+            <span style={style.blocked}>
+              <strong> blocked </strong>
+            </span>
+            - can not get an access to more details 🙁
+          </>
+        ),
+        colorButton: "error",
+      });
+
+      openInfoPopup();
+    }
+  };
 
   return (
     <TableRow
@@ -161,7 +166,7 @@ const SubscriberGeneralData = (props) => {
               startIcon={<DetailsIcon style={style.icon} />}
               onClick={() => {
                 handleSubscriberDetails(subscriber);
-                setTextPopupByStatus();
+                setTextPopupByStatus(subscriber);
               }}
             />
           </TableCell>
@@ -173,14 +178,14 @@ const SubscriberGeneralData = (props) => {
               variant="contained"
               startIcon={<DeleteIcon style={style.icon} />}
               onClick={() => {
-                handleAction(() => ({
+                handleActionPopup(() => ({
                   change: () => removeSubscriber(subscriber.id, "subscribers"),
                 }));
                 addTextPopup({
                   titleTwo: `Are you sure you want to remove`,
                   titleItem: `${capitalizeFirstLetter(subscriber.fields.name)}`,
                 });
-                setIsOpenPopup(true);
+                openConfirmPopup();
               }}
             />
           </TableCell>

@@ -95,12 +95,7 @@ const styles = {
   },
 };
 
-const AddSubscriberPage = ({
-  subscribersData,
-  getSubscribersData,
-  setOpenInfoPopup,
-  setContentPopup,
-}) => {
+const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
   const [isCheckboxChecked, setCheckboxState] = useState(false);
   const endpoint = "/subscribers";
 
@@ -114,7 +109,7 @@ const AddSubscriberPage = ({
     resolver: yupResolver(validationSubscriber(isCheckboxChecked)),
   });
 
-  const { openPopup, handleAction, addTextPopup } = usePopup();
+  const { openConfirmPopup, handleActionPopup, addTextPopup } = usePopup();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -166,13 +161,13 @@ const AddSubscriberPage = ({
     getSubscribersData();
 
     addTextPopup(setTextConfirmPopup(data));
-    handleAction(() => ({
+    handleActionPopup(() => ({
       change: () =>
         location.pathname === "/subscribers/add"
           ? navigate("/subscribers")
           : "",
     }));
-    openPopup();
+    openConfirmPopup();
   };
 
   return (
@@ -302,7 +297,7 @@ const AddSubscriberPage = ({
                         ariaLabel="add"
                         type="submit"
                         onClick={() => {
-                          openPopup(true);
+                          openConfirmPopup(true);
                           addTextPopup(
                             "Would you like to back to Subscribers?"
                           );
