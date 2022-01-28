@@ -58,7 +58,7 @@ const CampaignTableRow = (props) => {
     index,
     actualPage,
     dataPerPage,
-    handleEditDetailsCampaign,
+    editCampaign,
     removeCampaign,
   } = props;
 
@@ -133,7 +133,7 @@ const CampaignTableRow = (props) => {
             color="success"
             variant="contained"
             onClick={() => {
-              handleEditDetailsCampaign(campaign);
+              editCampaign(campaign);
               navigate(`/campaigns/item/${campaign.id}`);
             }}
           >
@@ -186,7 +186,7 @@ const CampaignTableRow = (props) => {
 //   }),
 //   index: PropTypes.number.isRequired,
 //   setSelectedData: PropTypes.func.isRequired,
-//   handleEditDetailsCampaign: PropTypes.func.isRequired,
+//   editCampaign: PropTypes.func.isRequired,
 //   setOpenConfirmPopup: PropTypes.func.isRequired,
 //   setContentPopup: PropTypes.func.isRequired,
 // };

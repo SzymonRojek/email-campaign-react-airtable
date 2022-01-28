@@ -7,11 +7,7 @@ import { StyledHeading } from "components/StyledHeading";
 import { CampaignsList } from "components/CampaignsList";
 import { Error, Loader } from "components/DisplayMessage";
 
-const CampaignsPage = ({
-  campaignsData,
-  handleEditDetailsCampaign,
-  removeCampaign,
-}) => (
+const CampaignsPage = ({ campaignsData, editCampaign, removeCampaign }) => (
   <>
     {campaignsData.status === "loading" ? (
       <Loader title="Campaigns" />
@@ -37,7 +33,7 @@ const CampaignsPage = ({
               subHeading="List"
               dataHeadEmailTable={dataHeadEmailTable}
               passedData={sortDataAlphabetically(campaignsData.data)}
-              handleEditDetailsCampaign={handleEditDetailsCampaign}
+              editCampaign={editCampaign}
               removeCampaign={removeCampaign}
             />
           </div>
@@ -47,7 +43,7 @@ const CampaignsPage = ({
               subHeading="Latest added Campaign"
               dataHeadEmailTable={dataHeadEmailTable}
               passedData={getLatestAddedItem(campaignsData.data)}
-              handleEditDetailsCampaign={handleEditDetailsCampaign}
+              editCampaign={editCampaign}
               removeCampaign={removeCampaign}
             />
           ) : (
@@ -65,7 +61,7 @@ const CampaignsPage = ({
 //     data: PropTypes.arrayOf(PropTypes.object),
 //   }).isRequired,
 //   setSelectedData: PropTypes.func.isRequired,
-//   handleEditDetailsCampaign: PropTypes.func.isRequired,
+//   editCampaign: PropTypes.func.isRequired,
 //   setOpenConfirmPopup: PropTypes.func.isRequired,
 //   setContentPopup: PropTypes.func.isRequired,
 // };

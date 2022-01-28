@@ -10,7 +10,7 @@ const CampaignsList = (props) => {
     subHeading,
     dataHeadEmailTable,
     passedData,
-    handleEditDetailsCampaign,
+    editCampaign,
     removeCampaign,
   } = props;
   const [selectValue, setSelectValue] = useState(4);
@@ -39,7 +39,7 @@ const CampaignsList = (props) => {
                   index={index}
                   actualPage={actualPage}
                   dataPerPage={parseInt(selectValue)}
-                  handleEditDetailsCampaign={handleEditDetailsCampaign}
+                  editCampaign={editCampaign}
                   removeCampaign={removeCampaign}
                 />
               ))}

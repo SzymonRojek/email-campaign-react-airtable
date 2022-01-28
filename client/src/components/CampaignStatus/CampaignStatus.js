@@ -17,7 +17,7 @@ const CampaignStatus = (props) => {
     dataHeadEmailTable,
     passedData,
     status,
-    handleEditDetailsCampaign,
+    editCampaign,
     removeCampaign,
   } = props;
   const [selectValue, setSelectValue] = useState(4);
@@ -49,7 +49,7 @@ const CampaignStatus = (props) => {
                       index={index}
                       actualPage={actualPage}
                       dataPerPage={parseInt(selectValue)}
-                      handleEditDetailsCampaign={handleEditDetailsCampaign}
+                      editCampaign={editCampaign}
                       removeCampaign={removeCampaign}
                     />
                   ))
@@ -72,7 +72,7 @@ const CampaignStatus = (props) => {
 //   subHeading: PropTypes.string.isRequired,
 //   dataHeadEmailTable: PropTypes.array.isRequired,
 //   status: PropTypes.string.isRequired,
-//   handleEditDetailsCampaign: PropTypes.func.isRequired,
+//   editCampaign: PropTypes.func.isRequired,
 //   setSelectedData: PropTypes.func.isRequired,
 //   setContentPopup: PropTypes.func.isRequired,
 //   setOpenConfirmPopup: PropTypes.func.isRequired,

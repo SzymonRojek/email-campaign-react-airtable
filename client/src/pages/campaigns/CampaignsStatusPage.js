@@ -58,7 +58,7 @@ const selectCampaignsStatus = [
 
 const CampaignsStatusPage = ({
   campaignsData,
-  handleEditDetailsCampaign,
+  editCampaign,
   removeCampaign,
 }) => {
   const { control, watch } = useForm();
@@ -114,7 +114,7 @@ const CampaignsStatusPage = ({
               dataHeadEmailTable={statusDataHeadTable}
               passedData={campaignsData.data}
               status={selectStatus}
-              handleEditDetailsCampaign={handleEditDetailsCampaign}
+              editCampaign={editCampaign}
               removeCampaign={removeCampaign}
             />
           </StyledContainer>
@@ -129,7 +129,7 @@ CampaignsStatusPage.propTypes = {
     status: PropTypes.string,
     data: PropTypes.arrayOf(PropTypes.object),
   }),
-  handleEditDetailsCampaign: PropTypes.func.isRequired,
+  editCampaign: PropTypes.func.isRequired,
   setSelectedData: PropTypes.func.isRequired,
 };
 

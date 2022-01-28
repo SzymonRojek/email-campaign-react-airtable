@@ -71,7 +71,7 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
       navigate(`/subscribers/item/${subscriber.id}`);
   };
 
-  const handleEditDetailsCampaign = (campaign) => {
+  const handleEditCampaign = (campaign) => {
     campaign.fields.status === "draft"
       ? navigate(`/campaigns/item/${campaign.id}`)
       : openInfoPopup();
@@ -128,7 +128,7 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
           element: (
             <CampaignsPage
               campaignsData={campaignsData}
-              handleEditDetailsCampaign={handleEditDetailsCampaign}
+              editCampaign={handleEditCampaign}
               removeCampaign={handleRemoveItem}
             />
           ),
@@ -138,7 +138,7 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
           element: (
             <CampaignsStatusPage
               campaignsData={campaignsData}
-              handleEditDetailsCampaign={handleEditDetailsCampaign}
+              editCampaign={handleEditCampaign}
               removeCampaign={handleRemoveItem}
             />
           ),
