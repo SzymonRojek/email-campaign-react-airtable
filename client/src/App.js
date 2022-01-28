@@ -1,5 +1,5 @@
 import AppContainer from "./AppContainer";
-import { ConfirmPopup } from "./components/DisplayMessage";
+import { ConfirmPopup, InfoPopup } from "./components/DisplayMessage";
 import { StyledFooter } from "./components/StyledFooter";
 import { useLocalStorageValue } from "./useLocalStorageValue";
 import { PopupProvider } from "./popupContext";
@@ -20,6 +20,7 @@ const App = () => {
         <PopupProvider>
           <AppContainer setIsLogIn={setIsLogIn} setStatusLog={setStatusLog} />
           <ConfirmPopup />
+          <InfoPopup />
         </PopupProvider>
       </Login>
 
