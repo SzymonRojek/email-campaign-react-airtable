@@ -182,8 +182,15 @@ const SubscriberGeneralData = (props) => {
                   change: () => removeSubscriber(subscriber.id, "subscribers"),
                 }));
                 addTextPopup({
-                  titleTwo: `Are you sure you want to remove`,
-                  titleItem: `${capitalizeFirstLetter(subscriber.fields.name)}`,
+                  question: (
+                    <>
+                      Are you sure you want to remove{" "}
+                      <span style={{ color: "crimson", fontWeight: "bold" }}>
+                        {capitalizeFirstLetter(subscriber.fields.name)}
+                      </span>
+                      ?
+                    </>
+                  ),
                 });
                 openConfirmPopup();
               }}
