@@ -15,10 +15,11 @@ const styles = {
 };
 
 const ConfirmPopup = () => {
-  const { isOpenPopup, text, closePopup, action } = usePopup();
+  const { isOpenConfirmPopup, text, closeConfirmPopup, actionPopup } =
+    usePopup();
 
   return (
-    <Dialog open={isOpenPopup} maxWidth="sm">
+    <Dialog open={isOpenConfirmPopup} maxWidth="sm">
       {text.titleOne && (
         <>
           <DialogTitle>
@@ -56,8 +57,8 @@ const ConfirmPopup = () => {
           variant="contained"
           color="error"
           onClick={() => {
-            action.change();
-            closePopup();
+            actionPopup.change();
+            closeConfirmPopup();
           }}
         >
           YES
@@ -66,7 +67,7 @@ const ConfirmPopup = () => {
           variant="contained"
           color="success"
           style={styles.button}
-          onClick={() => closePopup()}
+          onClick={() => closeConfirmPopup()}
         >
           NO
         </Button>
@@ -78,7 +79,7 @@ const ConfirmPopup = () => {
 // ConfirmPopup.propTypes = {
 //   openConfirmPopup: PropTypes.bool.isRequired,
 //   setOpenConfirmPopup: PropTypes.func.isRequired,
-//   handleAction: PropTypes.func.isRequired,
+//   handleActionPopup: PropTypes.func.isRequired,
 //   contentPopup: PropTypes.object.isRequired,
 // };
 
