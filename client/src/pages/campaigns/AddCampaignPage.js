@@ -33,7 +33,7 @@ const AddCampaignPage = ({ subscribersData, getCampaignsData }) => {
     resolver: yupResolver(validationCampaign),
   });
 
-  const { openPopup, addTextPopup, handleAction } = usePopup();
+  const { openConfirmPopup, addTextPopup, handleActionPopup } = usePopup();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -67,11 +67,11 @@ const AddCampaignPage = ({ subscribersData, getCampaignsData }) => {
     postData(data, "draft");
     getCampaignsData();
     addTextPopup(setTextConfirmPopup(data, false));
-    handleAction(() => ({
+    handleActionPopup(() => ({
       change: () =>
         location.pathname === "/campaigns/add" ? navigate("/campaigns") : "",
     }));
-    openPopup();
+    openConfirmPopup();
   };
 
   const handleSendCampaign = (data) => {
@@ -102,12 +102,12 @@ const AddCampaignPage = ({ subscribersData, getCampaignsData }) => {
       postData(data, "sent");
       getCampaignsData();
       addTextPopup(setTextConfirmPopup(data, true, additionalText));
-      openPopup();
+      openConfirmPopup();
     } else {
       postData(data, "draft");
       getCampaignsData();
       addTextPopup(setTextConfirmPopup(data, false, additionalText));
-      openPopup();
+      openConfirmPopup();
     }
   };
 
