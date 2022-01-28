@@ -103,7 +103,7 @@ const AddCampaignPage = ({ subscribersData, getCampaignsData }) => {
     });
 
     const additionalText = !activeSubscribers.length
-      ? "No active Susbcribers!"
+      ? "No active Subscribers!"
       : "";
 
     console.log("active subscribers:", activeSubscribers);
