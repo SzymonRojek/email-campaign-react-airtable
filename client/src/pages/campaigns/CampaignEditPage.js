@@ -13,6 +13,7 @@ import { FormCampaign } from "components/FormCampaign";
 import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
 import { sendEmail } from "sendEmail";
+import { usePopup } from "popupContext";
 
 const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
   const {
@@ -23,8 +24,10 @@ const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
   } = useForm({
     resolver: yupResolver(validationCampaign),
   });
-
+  const [isEmailError, setEmailError] = useState(false);
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { openInfoPopup, addTextPopup } = usePopup();
   const endpoint = "campaigns";
   const { itemData: campaignData } = useFetchDetailsById(endpoint, id);
 
@@ -35,8 +38,6 @@ const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
       : "",
   };
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setValue("title", defaultValues.title);
@@ -45,8 +46,6 @@ const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
 
     return () => clearTimeout(timeoutId);
   }, [setValue, defaultValues.title, defaultValues.description]);
-
-  const [isEmailError, setEmailError] = useState(false);
 
   const patchData = (data, status) =>
     api.patch(`${endpoint}/${id}`, {
@@ -57,50 +56,49 @@ const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
       },
     });
 
-  const displayPopup = (data, status, emailInfo) => {
+  const displayPopup = (data, status, additionalText) => {
+    const styles = {
+      sent: { color: "green", fontWeight: "bold", letterSpacing: 2 },
+      draft: { color: "orange", fontWeight: "bold", letterSpacing: 2 },
+      title: { color: "green", fontWeight: "bold", letterSpacing: 2 },
+    };
+
     const isCampaignChanged =
       data.title !== campaignData.data.fields.title ||
       data.description !== campaignData.data.fields.description;
 
     const campaignTitle = (
-      <span style={status ? { color: "green" } : { color: "orange" }}>
-        <strong> {capitalizeFirstLetter(data.title)} </strong>
-      </span>
+      <span style={styles.title}>{capitalizeFirstLetter(data.title)}</span>
     );
 
-    // setContentPopup({
-    //   title: status ? (
-    //     <span style={{ color: "green", fontWeight: "bold" }}>
-    //       That's great 🎊
-    //     </span>
-    //   ) : (
-    //     <span style={{ color: "orange", fontWeight: "bold" }}>
-    //       Still draft... 🙂
-    //     </span>
-    //   ),
-    //   text:
-    //     isCampaignChanged && status ? (
-    //       <> Campaign {campaignTitle} has been changed and finally sent 🙂</>
-    //     ) : !isCampaignChanged && !status ? (
-    //       <>
-    //         Campaign {campaignTitle} has not been changed and status still is
-    //         draft 🙂
-    //       </>
-    //     ) : !isCampaignChanged && status ? (
-    //       <>Campaign {campaignTitle} has not been changed but finally sent 🙂</>
-    //     ) : isCampaignChanged && !status ? (
-    //       <>
-    //         Campaign {campaignTitle} has been changed and status still is draft
-    //         🙂
-    //       </>
-    //     ) : (
-    //       <>Campaign {campaignTitle} has not been changed but finally sent 🙂</>
-    //     ),
-    //   additionalText: emailInfo,
-    //   colorButton: "success",
-    // });
+    addTextPopup({
+      title: status ? (
+        <span style={styles.sent}>That's great 🎊</span>
+      ) : (
+        <span style={styles.draft}>Still draft... 🙂</span>
+      ),
+      mainText:
+        isCampaignChanged && status ? (
+          <> Email {campaignTitle} has been changed and finally sent 👋</>
+        ) : !isCampaignChanged && !status ? (
+          <>
+            Email {campaignTitle} has not been changed and status still is draft
+            😕
+          </>
+        ) : !isCampaignChanged && status ? (
+          <>Email {campaignTitle} has not been changed but finally sent 👋</>
+        ) : isCampaignChanged && !status ? (
+          <>
+            Email {campaignTitle} has been changed and status still is draft 😕
+          </>
+        ) : (
+          <>Email {campaignTitle} has not been changed but finally sent 👋</>
+        ),
+      additionalText,
+      colorButton: "success",
+    });
 
-    // setOpenInfoPopup(true);
+    openInfoPopup();
   };
 
   const handleDraftCampaign = (data) => {
@@ -134,21 +132,19 @@ const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
     });
 
     const additionalText = !activeSubscribers.length
-      ? "There are no active subscribers at the moment - that's why email has been drafted"
-      : "Email has been sent to active subscribers";
+      ? "No active Subscribers!"
+      : "";
 
     console.log("active subscribers:", activeSubscribers);
 
     if (!isEmailError && activeSubscribers.length > 0) {
       patchData(data, "sent");
       getCampaignsData();
-      displayPopup(data, true, additionalText);
-      navigate("/campaigns");
+      displayPopup(data, true, additionalText, navigate("/campaigns"));
     } else {
       patchData(data, "draft");
       getCampaignsData();
-      displayPopup(data, false, additionalText);
-      navigate("/campaigns");
+      displayPopup(data, false, additionalText, navigate("/campaigns"));
     }
   };
 
