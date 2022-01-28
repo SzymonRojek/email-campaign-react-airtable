@@ -3,25 +3,30 @@ import React, { createContext, useState, useContext } from "react";
 const PopupContext = createContext();
 
 export const PopupProvider = ({ children }) => {
-  const [isOpenPopup, setIsOpenPopup] = useState(false);
+  const [isOpenConfirmPopup, setIsOpenConfirmPopup] = useState(false);
+  const [isOpenInfoPopup, setIsOpenInfoPopup] = useState(false);
   const [text, setText] = useState({});
-  const [action, setAction] = useState(null);
-  const openPopup = () => setIsOpenPopup(true);
-  const closePopup = () => setIsOpenPopup(false);
+  const [actionPopup, setActionPopup] = useState(null);
+  const openConfirmPopup = () => setIsOpenConfirmPopup(true);
+  const openInfoPopup = () => setIsOpenInfoPopup(true);
+  const closeConfirmPopup = () => setIsOpenConfirmPopup(false);
+  const closeInfoPopup = () => setIsOpenInfoPopup(false);
   const addTextPopup = (text) => setText(text);
-  const handleAction = (param) => setAction(param);
+  const handleActionPopup = (param) => setActionPopup(param);
 
   return (
     <PopupContext.Provider
       value={{
-        isOpenPopup,
-        setIsOpenPopup,
-        openPopup,
-        closePopup,
+        isOpenConfirmPopup,
+        isOpenInfoPopup,
+        openConfirmPopup,
+        openInfoPopup,
+        closeConfirmPopup,
+        closeInfoPopup,
         text,
         addTextPopup,
-        handleAction,
-        action,
+        handleActionPopup,
+        actionPopup,
       }}
     >
       {children}
