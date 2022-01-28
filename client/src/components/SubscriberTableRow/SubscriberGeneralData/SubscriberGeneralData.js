@@ -26,8 +26,6 @@ const style = {
     justifyContent: "center",
   },
   icon: { marginLeft: 10, color: "white" },
-  pending: { color: "orange" },
-  blocked: { color: "#d32f2f" },
 };
 const useStyles = makeStyles((theme) => ({
   status: {
@@ -61,16 +59,22 @@ const SubscriberGeneralData = (props) => {
     usePopup();
 
   const setTextPopupByStatus = (subscriber) => {
+    const styles = {
+      pending: { color: "orange", fontWeight: "bold", letterSpacing: 2 },
+      blocked: { color: "#d32f2f", fontWeight: "bold", letterSpacing: 2 },
+      name: { color: "green", fontWeight: "bold", letterSpacing: 2 },
+    };
     if (subscriber.fields.status === "pending") {
       addTextPopup({
-        title: "Please wait...",
-        paragraph: (
+        title: <span style={styles.pending}>Please wait...</span>,
+        mainText: (
           <>
-            {capitalizeFirstLetter(subscriber.fields.name)}'s status is
-            <span style={style.pending}>
-              <strong> pending </strong>
+            <span style={styles.name}>
+              {capitalizeFirstLetter(subscriber.fields.name)}'s
             </span>
-            at the moment - subscription has to be confirmed by an admin 🙂
+            status is
+            <span style={styles.pending}> pending </span> at the moment because
+            you need to complete all data in the table
           </>
         ),
         colorButton: "error",
@@ -79,14 +83,15 @@ const SubscriberGeneralData = (props) => {
       openInfoPopup();
     } else if (subscriber.fields.status === "blocked") {
       addTextPopup({
-        title: "Unfortunately...",
-        paragraph: (
+        title: <span style={styles.blocked}>Unfortunately...</span>,
+        mainText: (
           <>
-            {capitalizeFirstLetter(subscriber.fields.name)}'s status is
-            <span style={style.blocked}>
-              <strong> blocked </strong>
+            <span style={styles.name}>
+              {capitalizeFirstLetter(subscriber.fields.name)}'s
             </span>
-            - can not get an access to more details 🙁
+            status is
+            <span style={styles.blocked}> blocked </span>can not get an access
+            to more details 🙁
           </>
         ),
         colorButton: "error",
