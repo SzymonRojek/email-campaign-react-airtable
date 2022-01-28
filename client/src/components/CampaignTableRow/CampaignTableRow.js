@@ -15,7 +15,7 @@ import {
 } from "helpers";
 import { usePopup } from "popupContext";
 
-const style = {
+const styles = {
   typography: {
     padding: "9px 20px",
     letterSpacing: 2,
@@ -36,6 +36,7 @@ const style = {
     height: "50px",
     width: "50px",
   },
+  questionText: { color: "crimson", fontWeight: "bold" },
 };
 
 const useStyles = makeStyles(() => ({
@@ -118,7 +119,7 @@ const CampaignTableRow = (props) => {
             className={classes.status}
             style={{
               backgroundColor: getStatusColor(campaign.fields.status),
-              ...style.typography,
+              ...styles.typography,
             }}
           >
             {campaign.fields.status}
@@ -128,7 +129,7 @@ const CampaignTableRow = (props) => {
       <TableCell>
         {campaign.fields.status === "draft" ? (
           <Button
-            style={style.button}
+            style={styles.button}
             aria-label="edit"
             color="success"
             variant="contained"
@@ -146,7 +147,7 @@ const CampaignTableRow = (props) => {
               placement="right-start"
               TransitionComponent={Zoom}
             >
-              <img src={successIcon} alt="success-icon" style={style.toolip} />
+              <img src={successIcon} alt="success-icon" style={styles.toolip} />
             </Tooltip>
           </div>
         )}
@@ -156,14 +157,21 @@ const CampaignTableRow = (props) => {
           aria-label="delete"
           color="error"
           variant="contained"
-          startIcon={<DeleteIcon style={style.icon} />}
+          startIcon={<DeleteIcon style={styles.icon} />}
           onClick={() => {
             handleActionPopup(() => ({
               change: () => removeCampaign(campaign.id, "campaigns"),
             }));
             addTextPopup({
-              titleTwo: `Are you sure you want to remove`,
-              titleItem: `${capitalizeFirstLetter(campaign.fields.title)}`,
+              question: (
+                <>
+                  Are you sure you want to remove{" "}
+                  <span style={styles.questionText}>
+                    {capitalizeFirstLetter(campaign.fields.title)}
+                  </span>
+                  ?
+                </>
+              ),
             });
             openConfirmPopup();
           }}
