@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -30,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
       height: 35,
       color: "white !important",
     },
-
     heading: { fontSize: 25 },
     contentText: { fontSize: 20 },
     paper: {
@@ -55,61 +53,18 @@ const InfoPopup = () => {
             className={classes.button}
             variant="contained"
             color={text.colorButton}
-            onClick={() => {
-              closeInfoPopup();
-              // if (contentPopup.switch) return contentPopup.switch;
-            }}
+            onClick={() => closeInfoPopup()}
           >
             <span className={classes.buttonText}>close</span>
           </Button>
         </div>
       </DialogTitle>
       <DialogContent dividers>
-        <p className={classes.contentText}>{text.paragraph}</p>
-
-        {/* <p style={styles.infoText}>{text.additionalText}</p> */}
+        <p className={classes.contentText}>{text.additionalText}</p>
+        <p className={classes.contentText}>{text.mainText}</p>
       </DialogContent>
     </Dialog>
   );
-};
-
-// const InfoPopup = ({ openInfoPopup, setOpenInfoPopup, contentPopup }) => {
-//   const classes = useStyles();
-//   const { isOpenConfirmPopup, text, closeConfirmPopup, actionPopup } = usePopup();
-
-//   return (
-//     <Dialog classes={{ paper: classes.paper }}>
-//       <DialogTitle>
-//         <div style={styles.titleContainer}>
-//           <p style={styles.title} className={classes.heading}>
-//             {contentPopup.title}
-//           </p>
-//           <Button
-//             aria-label="close"
-//             className={classes.button}
-//             variant="contained"
-//             color={contentPopup.colorButton}
-//             onClick={() => {
-//               setOpenInfoPopup(false);
-//               if (contentPopup.switch) return contentPopup.switch;
-//             }}
-//           >
-//             <span className={classes.buttonText}>close</span>
-//           </Button>
-//         </div>
-//       </DialogTitle>
-//       <DialogContent dividers>
-//         <p className={classes.contentText}>{contentPopup.text}</p>
-//         <p style={styles.infoText}>{contentPopup.additionalText}</p>
-//       </DialogContent>
-//     </Dialog>
-//   );
-// };
-
-InfoPopup.propTypes = {
-  openInfoPopup: PropTypes.bool.isRequired,
-  setOpenInfoPopup: PropTypes.func.isRequired,
-  contentPopup: PropTypes.object.isRequired,
 };
 
 export default InfoPopup;
