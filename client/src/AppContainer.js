@@ -18,19 +18,17 @@ import {
   CampaignsPage,
   CampaignsStatusPage,
 } from "pages/campaigns";
-import { InfoPopup } from "components/DisplayMessage";
 import {
   subscribersLinksNavigation,
   campaignsLinksNavigation,
 } from "data/dataLinksNavigation";
 import { NotFoundPage } from "pages/notFoundPage";
+import { usePopup } from "popupContext";
 
 const AppContainer = ({ setIsLogIn, setStatusLog }) => {
   const navigate = useNavigate();
-  const [openInfoPopup, setOpenInfoPopup] = useState(false);
-  const [contentPopup, setContentPopup] = useState({});
-  const [setOpenConfirmPopup] = useState(false);
   const [tabsValue, setTabsValue] = useState(0);
+  const { openInfoPopup } = usePopup();
 
   const endpointSubscribers = "/subscribers";
   const endpointCampaigns = "/campaigns";
@@ -68,15 +66,15 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
     }
   };
 
-  const handleSubscriberDetails = (subscriber) =>
-    subscriber.fields.status === "active"
-      ? navigate(`/subscribers/item/${subscriber.id}`)
-      : setOpenInfoPopup(true);
+  const handleSubscriberDetails = (subscriber) => {
+    if (subscriber.fields.status === "active")
+      navigate(`/subscribers/item/${subscriber.id}`);
+  };
 
   const handleEditDetailsCampaign = (campaign) => {
     campaign.fields.status === "draft"
       ? navigate(`/campaigns/item/${campaign.id}`)
-      : setOpenInfoPopup(true);
+      : openInfoPopup();
   };
 
   const routes = [
@@ -92,9 +90,6 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
               subscribersData={subscribersData}
               handleSubscriberDetails={handleSubscriberDetails}
               removeSubscriber={handleRemoveItem}
-              setContentPopup={setContentPopup}
-              setOpenInfoPopup={setOpenInfoPopup}
-              setOpenConfirmPopup={setOpenConfirmPopup}
             />
           ),
         },
@@ -103,8 +98,6 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
           element: (
             <AddSubscriberPage
               subscribersData={subscribersData}
-              setContentPopup={setContentPopup}
-              setOpenInfoPopup={setOpenInfoPopup}
               getSubscribersData={getSubscribersData}
             />
           ),
@@ -116,9 +109,6 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
               subscribersData={subscribersData}
               handleSubscriberDetails={handleSubscriberDetails}
               removeSubscriber={handleRemoveItem}
-              setContentPopup={setContentPopup}
-              setOpenInfoPopup={setOpenInfoPopup}
-              setOpenConfirmPopup={setOpenConfirmPopup}
             />
           ),
         },
@@ -140,8 +130,6 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
               campaignsData={campaignsData}
               handleEditDetailsCampaign={handleEditDetailsCampaign}
               removeCampaign={handleRemoveItem}
-              setContentPopup={setContentPopup}
-              setOpenConfirmPopup={setOpenConfirmPopup}
             />
           ),
         },
@@ -152,9 +140,6 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
               campaignsData={campaignsData}
               handleEditDetailsCampaign={handleEditDetailsCampaign}
               removeCampaign={handleRemoveItem}
-              setContentPopup={setContentPopup}
-              setOpenInfoPopup={setOpenInfoPopup}
-              setOpenConfirmPopup={setOpenConfirmPopup}
             />
           ),
         },
@@ -164,8 +149,6 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
             <AddCampaignPage
               subscribersData={subscribersData}
               getCampaignsData={getCampaignsData}
-              setContentPopup={setContentPopup}
-              setOpenInfoPopup={setOpenInfoPopup}
             />
           ),
         },
@@ -175,8 +158,6 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
             <CampaignEditPage
               subscribersData={subscribersData}
               getCampaignsData={getCampaignsData}
-              setOpenInfoPopup={setOpenInfoPopup}
-              setContentPopup={setContentPopup}
             />
           ),
         },
@@ -197,12 +178,6 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
       />
 
       <div className="routing-container">{routing}</div>
-
-      <InfoPopup
-        contentPopup={contentPopup}
-        openInfoPopup={openInfoPopup}
-        setOpenInfoPopup={setOpenInfoPopup}
-      />
     </>
   );
 };
