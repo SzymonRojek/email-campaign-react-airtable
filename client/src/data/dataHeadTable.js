@@ -27,7 +27,7 @@ export const detailsDataHeadTableSecond = [
 export const dataHeadEmailTable = [
   "no",
   "title",
-  "content",
+  "description",
   "created",
   "status",
   "edit",
