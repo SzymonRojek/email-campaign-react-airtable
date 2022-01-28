@@ -93,6 +93,7 @@ const styles = {
       borderBottom: "1px solid #ddd",
     },
   },
+  questionSpan: { color: "crimson", fontWeight: "bold" },
 };
 
 const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
@@ -131,18 +132,21 @@ const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
   }, [formState, reset]);
 
   const setTextConfirmPopup = (data) => ({
-    titleOne: "That's great 🎊",
-    description: (
+    title: (
       <>
         Subscriber
         <span style={styles.subscriberName}>
           <strong> {capitalizeFirstLetter(data.name)} </strong>
         </span>
-        has been added to the Airtable 😁
+        has been added to the list 😁
       </>
     ),
-    titleTwo: "Would you like to come back to",
-    titleItem: "Subscribers",
+    question: (
+      <>
+        Would you like to come back to
+        <span style={styles.questionSpan}> Subscribers List</span> ?
+      </>
+    ),
   });
 
   const onSubmit = (data) => {
