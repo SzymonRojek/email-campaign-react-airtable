@@ -42,6 +42,7 @@ const useStyles = makeStyles({
 });
 
 const styles = {
+  selectContainer: { border: "3px solid orange", borderRadius: 3 },
   select: {
     menuItem: {
       backgroundColor: "#142f43",
@@ -69,7 +70,7 @@ const CampaignsStatusPage = ({
     "title",
     "description",
     "created",
-    <div style={{ border: "2px solid orange", borderRadius: 3 }}>
+    <div style={styles.selectContainer}>
       <SelectInputController
         control={control}
         name="status"
