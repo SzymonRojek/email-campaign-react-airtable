@@ -17,6 +17,7 @@ const SubscriberStatus = (props) => {
     generalDataHeadTable,
     passedData,
     status,
+    editSubscriber,
     handleSubscriberDetails,
     removeSubscriber,
     setSelectStatus,
@@ -53,6 +54,7 @@ const SubscriberStatus = (props) => {
                       index={index}
                       actualPage={actualPage}
                       dataPerPage={parseInt(selectValue)}
+                      editSubscriber={editSubscriber}
                       handleSubscriberDetails={handleSubscriberDetails}
                       removeSubscriber={removeSubscriber}
                     />

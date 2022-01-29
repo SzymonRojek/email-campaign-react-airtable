@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DetailsIcon from "@mui/icons-material/Details";
@@ -15,7 +15,13 @@ import {
 } from "helpers";
 import { usePopup } from "popupContext";
 
-const style = {
+const styles = {
+  button: {
+    fontSize: 12,
+    letterSpacing: 2,
+    fontWeight: "bold",
+    color: "white",
+  },
   paragraph: {
     padding: "8px 20px",
     letterSpacing: 2,
@@ -47,10 +53,12 @@ const SubscriberGeneralData = (props) => {
     index,
     actualPage,
     dataPerPage,
+    editSubscriber,
     handleSubscriberDetails,
     removeSubscriber,
   } = props;
 
+  const navigate = useNavigate();
   const classes = useStyles();
   const location = useLocation();
   const [indexPage] = useState(actualPage);
@@ -144,7 +152,7 @@ const SubscriberGeneralData = (props) => {
             className={classes.status}
             style={{
               backgroundColor: getStatusColor(subscriber.fields.status),
-              ...style.paragraph,
+              ...styles.paragraph,
             }}
           >
             {subscriber.fields.status}
@@ -165,10 +173,24 @@ const SubscriberGeneralData = (props) => {
         <>
           <TableCell>
             <Button
+              style={styles.button}
+              aria-label="edit"
+              color="success"
+              variant="contained"
+              onClick={() => {
+                editSubscriber(subscriber);
+                navigate(`/subscribers/edit/${subscriber.id}`);
+              }}
+            >
+              Edit
+            </Button>
+          </TableCell>
+          <TableCell>
+            <Button
               aria-label="subscriber-details"
               color="success"
               variant="contained"
-              startIcon={<DetailsIcon style={style.icon} />}
+              startIcon={<DetailsIcon style={styles.icon} />}
               onClick={() => {
                 handleSubscriberDetails(subscriber);
                 setTextPopupByStatus(subscriber);
@@ -181,7 +203,7 @@ const SubscriberGeneralData = (props) => {
               aria-label="delete"
               color="error"
               variant="contained"
-              startIcon={<DeleteIcon style={style.icon} />}
+              startIcon={<DeleteIcon style={styles.icon} />}
               onClick={() => {
                 handleActionPopup(() => ({
                   change: () => removeSubscriber(subscriber.id, "subscribers"),

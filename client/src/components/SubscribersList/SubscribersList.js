@@ -10,6 +10,7 @@ const SubscribersList = (props) => {
     subHeading,
     dataHeadTable,
     passedData,
+    editSubscriber,
     handleSubscriberDetails,
     removeSubscriber,
   } = props;
@@ -39,6 +40,7 @@ const SubscribersList = (props) => {
                 index={index}
                 actualPage={actualPage}
                 dataPerPage={parseInt(selectValue)}
+                editSubscriber={editSubscriber}
                 handleSubscriberDetails={handleSubscriberDetails}
                 removeSubscriber={removeSubscriber}
               />
