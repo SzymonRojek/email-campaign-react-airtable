@@ -4,7 +4,7 @@ import { Typography } from "@mui/material";
 
 import CustomTextInput from "./CustomTextInput";
 
-const styleTypography = { color: "crimson", paddingTop: 4 };
+const stylesError = { color: "crimson", paddingTop: 4 };
 
 const TextInputController = ({
   name,
@@ -31,7 +31,7 @@ const TextInputController = ({
       )}
     />
 
-    <Typography variant="inherit" style={styleTypography}>
+    <Typography variant="inherit" style={stylesError}>
       {message}
     </Typography>
   </>
