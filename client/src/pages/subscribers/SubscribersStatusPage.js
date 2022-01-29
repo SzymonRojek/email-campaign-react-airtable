@@ -60,6 +60,7 @@ const selectSubscribersStatus = [
 
 const SubscribersStatusPage = ({
   subscribersData,
+  editSubscriber,
   handleSubscriberDetails,
   removeSubscriber,
 }) => {
@@ -83,6 +84,7 @@ const SubscribersStatusPage = ({
       />
     </div>,
     "created",
+    "edit",
     "details",
     "delete",
   ];
@@ -119,6 +121,7 @@ const SubscribersStatusPage = ({
               passedData={subscribersData.data}
               status={selectStatus}
               setSelectStatus={setSelectStatus}
+              editSubscriber={editSubscriber}
               handleSubscriberDetails={handleSubscriberDetails}
               removeSubscriber={removeSubscriber}
             />
