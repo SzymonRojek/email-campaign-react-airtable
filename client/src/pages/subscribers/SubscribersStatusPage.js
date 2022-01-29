@@ -42,6 +42,7 @@ const useStyles = makeStyles({
 });
 
 const styles = {
+  selectContainer: { border: "3px solid orange", borderRadius: 3 },
   select: {
     menuItem: {
       backgroundColor: "#142f43",
@@ -60,6 +61,7 @@ const selectSubscribersStatus = [
 const SubscribersStatusPage = ({
   subscribersData,
   handleSubscriberDetails,
+  removeSubscriber,
 }) => {
   const { control, watch } = useForm();
   const [selectStatus, setSelectStatus] = useState("active");
@@ -68,16 +70,18 @@ const SubscribersStatusPage = ({
     "no",
     "name",
     "surname",
-    <SelectInputController
-      control={control}
-      name="status"
-      defaultValue={selectStatus}
-      data={selectSubscribersStatus}
-      message=""
-      error={false}
-      styles={styles.select}
-      useStyles={useStyles}
-    />,
+    <div style={styles.selectContainer}>
+      <SelectInputController
+        control={control}
+        name="status"
+        defaultValue={selectStatus}
+        data={selectSubscribersStatus}
+        message=""
+        error={false}
+        styles={styles.select}
+        useStyles={useStyles}
+      />
+    </div>,
     "created",
     "details",
     "delete",
@@ -116,6 +120,7 @@ const SubscribersStatusPage = ({
               status={selectStatus}
               setSelectStatus={setSelectStatus}
               handleSubscriberDetails={handleSubscriberDetails}
+              removeSubscriber={removeSubscriber}
             />
           </StyledContainer>
         )
