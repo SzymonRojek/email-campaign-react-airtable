@@ -4,6 +4,7 @@ export const generalDataHeadTable = [
   "surname",
   "status",
   "created",
+  "edit",
   "details",
   "delete",
 ];
