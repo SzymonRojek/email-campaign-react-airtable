@@ -15,6 +15,7 @@ const styles = {
 
 const SubscribersPage = ({
   subscribersData,
+  editSubscriber,
   handleSubscriberDetails,
   removeSubscriber,
 }) => (
@@ -43,6 +44,7 @@ const SubscribersPage = ({
               subHeading="List"
               dataHeadTable={generalDataHeadTable}
               passedData={sortDataAlphabetically(subscribersData.data)}
+              editSubscriber={editSubscriber}
               handleSubscriberDetails={handleSubscriberDetails}
               removeSubscriber={removeSubscriber}
             />
@@ -53,6 +55,7 @@ const SubscribersPage = ({
               subHeading="Latest added Subscriber"
               dataHeadTable={generalDataHeadTable}
               passedData={getLatestAddedItem(subscribersData.data)}
+              editSubscriber={editSubscriber}
               handleSubscriberDetails={handleSubscriberDetails}
               removeSubscriber={removeSubscriber}
             />
