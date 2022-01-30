@@ -4,7 +4,7 @@ Actually I am working on:
 
 - general layout
 - add react context for all popups, add functional implementation, remove unnecessary props and so on
-- probably add possibility to edit subscribers data
+- probably edit subscribers data
 - edit proptypes
 - remove errors from dev tools console
 
