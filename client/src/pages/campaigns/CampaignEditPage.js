@@ -28,24 +28,22 @@ const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { openInfoPopup, addTextPopup } = usePopup();
+
   const endpoint = "campaigns";
   const { itemData: campaignData } = useFetchDetailsById(endpoint, id);
 
-  const defaultValues = {
-    title: campaignData.data?.fields ? campaignData.data.fields.title : "",
-    description: campaignData.data?.fields
-      ? campaignData.data.fields.description
-      : "",
-  };
+  const { title, description } = campaignData.data
+    ? campaignData.data.fields
+    : "";
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setValue("title", defaultValues.title);
-      setValue("description", defaultValues.description);
+      setValue("title", title);
+      setValue("description", description);
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [setValue, defaultValues.title, defaultValues.description]);
+  }, [setValue, title, description]);
 
   const patchData = (data, status) =>
     api.patch(`${endpoint}/${id}`, {
@@ -56,16 +54,15 @@ const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
       },
     });
 
+  const isCampaignChanged = (data) =>
+    data.title !== title || data.description !== description;
+
   const displayPopup = (data, status, additionalText) => {
     const styles = {
       sent: { color: "green", fontWeight: "bold", letterSpacing: 2 },
       draft: { color: "orange", fontWeight: "bold", letterSpacing: 2 },
       title: { color: "green", fontWeight: "bold", letterSpacing: 2 },
     };
-
-    const isCampaignChanged =
-      data.title !== campaignData.data.fields.title ||
-      data.description !== campaignData.data.fields.description;
 
     const campaignTitle = (
       <span style={styles.title}>{capitalizeFirstLetter(data.title)}</span>
@@ -78,16 +75,16 @@ const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
         <span style={styles.draft}>Still draft... 🙂</span>
       ),
       mainText:
-        isCampaignChanged && status ? (
+        isCampaignChanged(data) && status ? (
           <> Email {campaignTitle} has been changed and finally sent 👋</>
-        ) : !isCampaignChanged && !status ? (
+        ) : !isCampaignChanged(data) && !status ? (
           <>
             Email {campaignTitle} has not been changed and status still is draft
             😕
           </>
-        ) : !isCampaignChanged && status ? (
+        ) : !isCampaignChanged(data) && status ? (
           <>Email {campaignTitle} has not been changed but finally sent 👋</>
-        ) : isCampaignChanged && !status ? (
+        ) : isCampaignChanged(data) && !status ? (
           <>
             Email {campaignTitle} has been changed and status still is draft 😕
           </>
@@ -102,10 +99,7 @@ const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
   };
 
   const handleDraftCampaign = (data) => {
-    if (
-      data.title !== campaignData.data.fields.title ||
-      data.description !== campaignData.data.fields.description
-    ) {
+    if (isCampaignChanged(data)) {
       patchData(data, "draft");
       getCampaignsData();
     }
@@ -173,11 +167,11 @@ const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
             <StyledHeading label="Edit Campaign:" />
 
             <FormCampaign
+              control={control}
+              errors={errors}
               handleSubmit={handleSubmit}
               handleDraftData={handleDraftCampaign}
               handleSendData={handleSendCampaign}
-              control={control}
-              errors={errors}
             />
           </StyledContainer>
         )
