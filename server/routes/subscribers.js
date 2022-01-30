@@ -73,6 +73,31 @@ router.post("/", (request, response) => {
   }
 });
 
+router.patch("/:id", async (request, response) => {
+  const { name, surname, email, status, profession, salary, telephone } =
+    request.body.fields;
+  const id = request.params.id;
+  const config = {
+    method: "patch",
+    url: `${api_url}/${id}`,
+    ...headers,
+    params: {
+      id,
+    },
+    data: {
+      fields: { name, surname, email, status, profession, salary, telephone },
+    },
+  };
+
+  try {
+    const { data } = await axios(config);
+
+    response.status(200).json(data);
+  } catch (error) {
+    response.json({ error });
+  }
+});
+
 router.delete("/:id", async (request, response) => {
   const id = request.params.id;
   const config = {
