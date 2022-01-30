@@ -77,7 +77,9 @@ const Routing = (props) => {
         },
         {
           path: "/edit/:id",
-          element: <EditSubscriberPage />,
+          element: (
+            <EditSubscriberPage getSubscribersData={getSubscribersData} />
+          ),
         },
         { path: "*", element: <NotFoundPage /> },
       ],
