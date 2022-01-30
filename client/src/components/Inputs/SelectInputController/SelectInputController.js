@@ -28,6 +28,7 @@ const SelectInputController = ({ ...props }) => {
     useStyles,
     styles,
   } = props;
+
   const classes = useStyles();
   const customId = `${name}-id`;
 
@@ -37,24 +38,22 @@ const SelectInputController = ({ ...props }) => {
         control={control}
         name={name}
         defaultValue={defaultValue}
-        render={({ field: { ref, value, ...field } }) => {
-          return (
-            <Select
-              {...field}
-              inputRef={ref}
-              id={customId}
-              error={error}
-              selected={value}
-              value={value}
-            >
-              {data.map(({ value, label }) => (
-                <MyMenuItem key={`key-${label}`} value={value}>
-                  {label}
-                </MyMenuItem>
-              ))}
-            </Select>
-          );
-        }}
+        render={({ field: { ref, value, ...field } }) => (
+          <Select
+            {...field}
+            inputRef={ref}
+            id={customId}
+            error={error}
+            selected={value}
+            value={value}
+          >
+            {data.map(({ value, label }) => (
+              <MyMenuItem key={`key-${label}`} value={value}>
+                {label}
+              </MyMenuItem>
+            ))}
+          </Select>
+        )}
       />
 
       <Typography variant="inherit" style={styles.textError}>
