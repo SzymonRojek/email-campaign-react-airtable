@@ -14,11 +14,6 @@ import { Loader, Error } from "components/DisplayMessage";
 import { usePopup } from "popupContext";
 import { FormSubscriber } from "components/FormSubscriber/";
 
-const styles = {
-  subscriberName: { color: "green" },
-  questionSpan: { color: "crimson", fontWeight: "bold" },
-};
-
 const EditSubscriberPage = ({ getSubscribersData }) => {
   const {
     handleSubmit,
@@ -39,48 +34,23 @@ const EditSubscriberPage = ({ getSubscribersData }) => {
 
   const isCheckboxChecked = watch("checkbox", false);
 
-  const defaultValues = {
-    name: subscriberData.data?.fields ? subscriberData.data.fields.name : "",
-    surname: subscriberData.data?.fields
-      ? subscriberData.data.fields.surname
-      : "",
-    email: subscriberData.data?.fields ? subscriberData.data.fields.email : "",
-    status: subscriberData.data?.fields
-      ? subscriberData.data.fields.status
-      : "",
-    profession: subscriberData.data?.fields
-      ? subscriberData.data.fields.profession
-      : "",
-    salary: subscriberData.data?.fields
-      ? subscriberData.data.fields.salary
-      : "",
-    telephone: subscriberData.data?.fields
-      ? subscriberData.data.fields.telephone
-      : "",
-  };
+  const { name, surname, email, status, profession, salary, telephone } =
+    subscriberData.data ? subscriberData.data.fields : "";
 
+  // read about setValue as an object
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setValue("name", defaultValues.name);
-      setValue("surname", defaultValues.surname);
-      setValue("email", defaultValues.email);
-      setValue("status", defaultValues.status);
-      setValue("profession", defaultValues.profession);
-      setValue("salary", defaultValues.salary);
-      setValue("telephone", defaultValues.telephone);
-    }, 1_000);
+      setValue("name", name);
+      setValue("surname", surname);
+      setValue("email", email);
+      setValue("status", status);
+      setValue("profession", profession);
+      setValue("salary", salary);
+      setValue("telephone", telephone);
+    }, 800);
 
     return () => clearTimeout(timeoutId);
-  }, [
-    setValue,
-    defaultValues.name,
-    defaultValues.surname,
-    defaultValues.email,
-    defaultValues.status,
-    defaultValues.profession,
-    defaultValues.salary,
-    defaultValues.telephone,
-  ]);
+  }, [setValue, name, surname, email, status, profession, salary, telephone]);
 
   // const setTextConfirmPopup = (data) => ({
   //   title: (
