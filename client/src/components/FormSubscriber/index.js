@@ -1,1 +1,1 @@
-export { default as FormSubscriber } from "./FormSusbcriber";
+export { default as FormSubscriber } from "./FormSubscriber";
