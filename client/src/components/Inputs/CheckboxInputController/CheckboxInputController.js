@@ -26,7 +26,7 @@ const styles = {
   error: { color: "crimson", paddingTop: 4, letterSpacing: 1 },
 };
 
-const StyledCheckbox = ({
+const CheckboxInputController = ({
   control,
   name,
   defaultValue,
@@ -63,7 +63,7 @@ const StyledCheckbox = ({
   </FormControl>
 );
 
-StyledCheckbox.propTypes = {
+CheckboxInputController.propTypes = {
   control: PropTypes.object,
   name: PropTypes.string,
   defaultValue: PropTypes.bool,
@@ -71,4 +71,4 @@ StyledCheckbox.propTypes = {
   error: PropTypes.bool,
   message: PropTypes.string,
 };
-export default StyledCheckbox;
+export default CheckboxInputController;

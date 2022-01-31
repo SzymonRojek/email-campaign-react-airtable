@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   TextInputController,
   SelectInputController,
-  StyledCheckbox,
+  CheckboxInputController,
 } from "components/Inputs";
 import { StyledButton } from "components/StyledButton";
 
@@ -133,7 +133,7 @@ const FormSubscriber = ({
           </Grid>
           <Grid container item xs={12}>
             <Grid item xs={11}>
-              <StyledCheckbox
+              <CheckboxInputController
                 control={control}
                 name="checkbox"
                 defaultValue={false}
