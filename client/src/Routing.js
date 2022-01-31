@@ -8,6 +8,7 @@ import {
   StatusSubscribersPage,
   AddSubscriberPage,
   DetailsSubscriberPage,
+  EditSubscriberPage,
 } from "pages/subscribers";
 import {
   EditCampaignPage,
@@ -20,7 +21,6 @@ import {
   campaignsLinksNavigation,
 } from "data/dataLinksNavigation";
 import { NotFoundPage } from "pages/notFoundPage";
-import EditSubscriberPage from "./pages/subscribers/EditSubscriberPage";
 
 const Routing = (props) => {
   const {
@@ -72,11 +72,11 @@ const Routing = (props) => {
           ),
         },
         {
-          path: "/details/:id",
+          path: "details/:id",
           element: <DetailsSubscriberPage />,
         },
         {
-          path: "/edit/:id",
+          path: "edit/:id",
           element: (
             <EditSubscriberPage getSubscribersData={getSubscribersData} />
           ),
@@ -118,7 +118,7 @@ const Routing = (props) => {
           ),
         },
         {
-          path: "/edit/:id",
+          path: "edit/:id",
           element: (
             <EditCampaignPage
               subscribersData={subscribersData}
