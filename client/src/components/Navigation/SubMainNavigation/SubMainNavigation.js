@@ -25,7 +25,7 @@ const styles = {
   },
 };
 
-const SubNavigation = ({ dataLinks }) => {
+const SubMainNavigation = ({ dataLinks }) => {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -63,7 +63,7 @@ const SubNavigation = ({ dataLinks }) => {
   );
 };
 
-SubNavigation.propTypes = {
+SubMainNavigation.propTypes = {
   dataLinks: PropTypes.arrayOf(
     PropTypes.shape({
       to: PropTypes.string.isRequired,
@@ -73,4 +73,4 @@ SubNavigation.propTypes = {
   ),
 };
 
-export default SubNavigation;
+export default SubMainNavigation;

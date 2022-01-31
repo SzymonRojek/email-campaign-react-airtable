@@ -1,7 +1,7 @@
 import { useRoutes } from "react-router-dom";
 
 import "App.css";
-import { SubNavigation } from "components/Navigation";
+import { SubMainNavigation } from "components/Navigation";
 import { HomePage } from "pages/homePage";
 import {
   SubscribersPage,
@@ -38,7 +38,7 @@ const Routing = (props) => {
     { path: "/", element: <HomePage /> },
     {
       path: "subscribers",
-      element: <SubNavigation dataLinks={subscribersLinksNavigation} />,
+      element: <SubMainNavigation dataLinks={subscribersLinksNavigation} />,
       children: [
         {
           path: "/",
@@ -86,7 +86,7 @@ const Routing = (props) => {
     },
     {
       path: "campaigns",
-      element: <SubNavigation dataLinks={campaignsLinksNavigation} />,
+      element: <SubMainNavigation dataLinks={campaignsLinksNavigation} />,
       children: [
         {
           path: "/",

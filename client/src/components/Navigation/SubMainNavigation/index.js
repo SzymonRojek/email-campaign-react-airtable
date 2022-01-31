@@ -1,2 +1,2 @@
-export { default } from "./SubNavigation";
+export { default } from "./SubMainNavigation";
 export { default as StyledLink } from "./StyledLink";
