@@ -91,7 +91,7 @@ const EditSubscriberPage = ({ getSubscribersData }) => {
     data.email !== defaultValues.email ||
     data.status !== defaultValues.status ||
     data.profession !== defaultValues.profession ||
-    data.salary !== +defaultValues.salary ||
+    data.salary !== defaultValues.salary ||
     data.telephone !== defaultValues.telephone;
 
   const displayPopup = (data) => {
