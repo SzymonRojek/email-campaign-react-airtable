@@ -27,18 +27,18 @@ const validationSubscriber = Yup.object().shape({
     .matches(/^[aA-zZ\s]+$/, "only letters are required")
     .min(3, "must be at least 3 characters")
     .max(10, "must not exceed 10 characters"),
-  salary: Yup.number()
+  salary: Yup.string()
+    .trim()
     .required("salary is required")
-    .typeError("must specify a number")
+    .matches(/^\d+$/, "only numbers are required")
     .min(3, "must be at least 3 numbers"),
   telephone: Yup.string()
-    .required("telephone is required")
     .trim()
+    .required("telephone is required")
     .matches(
       /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
-      "phone is invalid"
-    )
-    .required("phone is required"),
+      "type only 10 digits"
+    ),
 });
 
 export default validationSubscriber;
