@@ -32,18 +32,21 @@ const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
   const endpoint = "campaigns";
   const { itemData: campaignData } = useFetchDetailsById(endpoint, id);
 
-  const { title, description } = campaignData.data
-    ? campaignData.data.fields
-    : "";
+  const defaultValues = {
+    title: campaignData.data?.fields ? campaignData.data.fields.title : "",
+    description: campaignData.data?.fields
+      ? campaignData.data.fields.description
+      : "",
+  };
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setValue("title", title);
-      setValue("description", description);
-    }, 300);
+      setValue("title", defaultValues.title);
+      setValue("description", defaultValues.description);
+    }, 800);
 
     return () => clearTimeout(timeoutId);
-  }, [setValue, title, description]);
+  }, [setValue, defaultValues.title, defaultValues.description]);
 
   const patchData = (data, status) =>
     api.patch(`${endpoint}/${id}`, {
@@ -55,7 +58,8 @@ const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
     });
 
   const isCampaignChanged = (data) =>
-    data.title !== title || data.description !== description;
+    data.title !== defaultValues.title ||
+    data.description !== defaultValues.description;
 
   const displayPopup = (data, status, additionalText) => {
     const styles = {
@@ -99,6 +103,7 @@ const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
   };
 
   const handleDraftCampaign = (data) => {
+    console.log(isCampaignChanged(data));
     if (isCampaignChanged(data)) {
       patchData(data, "draft");
       getCampaignsData();
