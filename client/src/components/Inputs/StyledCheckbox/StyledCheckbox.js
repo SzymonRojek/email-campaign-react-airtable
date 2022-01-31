@@ -66,7 +66,7 @@ const StyledCheckbox = ({
 StyledCheckbox.propTypes = {
   control: PropTypes.object,
   name: PropTypes.string,
-  defaultValue: PropTypes.string,
+  defaultValue: PropTypes.bool,
   label: PropTypes.string,
   error: PropTypes.bool,
   message: PropTypes.string,

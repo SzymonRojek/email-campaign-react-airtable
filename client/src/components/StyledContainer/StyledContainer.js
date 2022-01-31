@@ -9,7 +9,7 @@ const StyledContainer = ({ children }) => (
 );
 
 StyledContainer.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.object),
+  children: PropTypes.any,
 };
 
 export default StyledContainer;
