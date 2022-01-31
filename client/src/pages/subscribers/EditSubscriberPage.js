@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate, useParams } from "react-router-dom";
@@ -30,72 +30,129 @@ const EditSubscriberPage = ({ getSubscribersData }) => {
   const endpoint = "subscribers";
   const { itemData: subscriberData } = useFetchDetailsById(endpoint, id);
 
-  const { openConfirmPopup, handleActionPopup, addTextPopup } = usePopup();
+  const { openInfoPopup, addTextPopup } = usePopup();
 
-  const isCheckboxChecked = watch("checkbox", false);
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
-  const { name, surname, email, status, profession, salary, telephone } =
-    subscriberData.data ? subscriberData.data.fields : "";
+  useEffect(() => {
+    const watchCheckbox = watch((value) =>
+      setIsCheckboxChecked(value.checkbox)
+    );
 
-  // read about setValue as an object
+    return () => watchCheckbox.unsubscribe();
+  }, [watch]);
+
+  const defaultValues = {
+    name: subscriberData.data?.fields ? subscriberData.data.fields.name : "",
+    surname: subscriberData.data?.fields
+      ? subscriberData.data.fields.surname
+      : "",
+    email: subscriberData.data?.fields ? subscriberData.data.fields.email : "",
+    status: subscriberData.data?.fields
+      ? subscriberData.data.fields.status
+      : "",
+    profession: subscriberData.data?.fields
+      ? subscriberData.data.fields.profession
+      : "",
+    salary: subscriberData.data?.fields
+      ? subscriberData.data.fields.salary
+      : "",
+    telephone: subscriberData.data?.fields
+      ? subscriberData.data.fields.telephone
+      : "",
+  };
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setValue("name", name);
-      setValue("surname", surname);
-      setValue("email", email);
-      setValue("status", status);
-      setValue("profession", profession);
-      setValue("salary", salary);
-      setValue("telephone", telephone);
+      setValue("name", defaultValues.name);
+      setValue("surname", defaultValues.surname);
+      setValue("email", defaultValues.email);
+      setValue("status", defaultValues.status);
+      setValue("profession", defaultValues.profession);
+      setValue("salary", defaultValues.salary);
+      setValue("telephone", defaultValues.telephone);
     }, 800);
 
     return () => clearTimeout(timeoutId);
-  }, [setValue, name, surname, email, status, profession, salary, telephone]);
+  }, [
+    setValue,
+    defaultValues.name,
+    defaultValues.surname,
+    defaultValues.email,
+    defaultValues.status,
+    defaultValues.profession,
+    defaultValues.salary,
+    defaultValues.telephone,
+  ]);
 
-  // const setTextConfirmPopup = (data) => ({
-  //   title: (
-  //     <>
-  //       Subscriber
-  //       <span style={styles.subscriberName}>
-  //         <strong> {capitalizeFirstLetter(data.name)} </strong>
-  //       </span>
-  //       has been added to the list 😁
-  //     </>
-  //   ),
-  //   question: (
-  //     <>
-  //       Would you like to come back to
-  //       <span style={styles.questionSpan}> Subscribers List</span> ?
-  //     </>
-  //   ),
-  // });
+  const isSubscriberDataEdited = (data) =>
+    data.name !== defaultValues.name ||
+    data.surname !== defaultValues.surname ||
+    data.email !== defaultValues.email ||
+    data.status !== defaultValues.status ||
+    data.profession !== defaultValues.profession ||
+    data.salary !== +defaultValues.salary ||
+    data.telephone !== defaultValues.telephone;
 
-  const onSubmit = (data) => {
-    api.patch(`${endpoint}/${id}`, {
-      fields: {
-        name: data.name,
-        surname: data.surname,
-        email: data.email,
-        profession: data.profession,
-        status: data.status,
-        salary: String(data.salary),
-        telephone: data.telephone,
-      },
+  const displayPopup = (data) => {
+    const styles = {
+      noChange: { color: "orange", fontWeight: "bold", letterSpacing: 2 },
+      change: { color: "green", fontWeight: "bold", letterSpacing: 2 },
+      name: { color: "green", fontWeight: "bold", letterSpacing: 2 },
+    };
+
+    addTextPopup({
+      title: isSubscriberDataEdited(data) ? (
+        <span style={styles.change}>That's great 🎊</span>
+      ) : (
+        <span style={styles.noChange}>No changes... 👋</span>
+      ),
+      mainText: isSubscriberDataEdited(data) ? (
+        <>
+          Subscriber <span style={styles.name}>{defaultValues.name}</span> has
+          been edited 👋
+        </>
+      ) : (
+        <>
+          Subscriber <span style={styles.name}>{defaultValues.name}</span> has
+          not been edited 😕
+        </>
+      ),
+
+      colorButton: "success",
     });
 
-    getSubscribersData();
-    navigate("/subscribers");
-
-    //   addTextPopup(setTextConfirmPopup(data));
-    //   handleActionPopup(() => ({
-    //     change: () =>
-    //       location.pathname === "/subscribers/add"
-    //         ? navigate("/subscribers")
-    //         : "",
-    //   }));
-    //   openConfirmPopup();
-    // };
+    openInfoPopup();
   };
+
+  const onSubmit = (data) => {
+    if (isSubscriberDataEdited(data)) {
+      api.patch(`${endpoint}/${id}`, {
+        fields: {
+          name: data.name,
+          surname: data.surname,
+          email: data.email,
+          profession: data.profession,
+          status: data.status,
+          salary: String(data.salary),
+          telephone: data.telephone,
+        },
+      });
+      getSubscribersData();
+    }
+
+    navigate("/subscribers");
+    displayPopup(data);
+  };
+
+  if (subscriberData.data?.error) {
+    return (
+      <Error
+        titleOne={`${subscriberData.data?.error.messageOne}`}
+        titleTwo={`${subscriberData.data?.error.messageTwo}`}
+      />
+    );
+  }
 
   return (
     <>
@@ -116,9 +173,6 @@ const EditSubscriberPage = ({ getSubscribersData }) => {
             errors={errors}
             handleSubmit={handleSubmit(onSubmit)}
             isCheckboxChecked={isCheckboxChecked}
-
-            // openConfirmPopup={openConfirmPopup}
-            // addTextPopup={addTextPopup}
           />
         </StyledContainer>
       )}
