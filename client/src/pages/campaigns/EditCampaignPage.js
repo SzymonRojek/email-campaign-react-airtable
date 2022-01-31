@@ -15,7 +15,7 @@ import { Loader, Error } from "components/DisplayMessage";
 import { sendEmail } from "sendEmail";
 import { usePopup } from "popupContext";
 
-const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
+const EditCampaignPage = ({ subscribersData, getCampaignsData }) => {
   const {
     handleSubmit,
     formState: { errors },
@@ -185,7 +185,7 @@ const CampaignEditPage = ({ subscribersData, getCampaignsData }) => {
   );
 };
 
-CampaignEditPage.propTypes = {
+EditCampaignPage.propTypes = {
   subscribersData: PropTypes.shape({
     status: PropTypes.string,
     data: PropTypes.arrayOf(PropTypes.object),
@@ -193,4 +193,4 @@ CampaignEditPage.propTypes = {
   getCampaignsData: PropTypes.func.isRequired,
 };
 
-export default CampaignEditPage;
+export default EditCampaignPage;

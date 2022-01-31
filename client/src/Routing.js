@@ -5,15 +5,15 @@ import { SubNavigation } from "components/Navigation";
 import { HomePage } from "pages/homePage";
 import {
   SubscribersPage,
-  SubscribersStatusPage,
+  StatusSubscribersPage,
   AddSubscriberPage,
-  SubscriberDetailsPage,
+  DetailsSubscriberPage,
 } from "pages/subscribers";
 import {
-  CampaignEditPage,
+  EditCampaignPage,
   AddCampaignPage,
   CampaignsPage,
-  CampaignsStatusPage,
+  StatusCampaignsPage,
 } from "pages/campaigns";
 import {
   subscribersLinksNavigation,
@@ -54,7 +54,7 @@ const Routing = (props) => {
         {
           path: "status",
           element: (
-            <SubscribersStatusPage
+            <StatusSubscribersPage
               subscribersData={subscribersData}
               editSubscriber={handleEditSubscriber}
               handleSubscriberDetails={handleSubscriberDetails}
@@ -73,7 +73,7 @@ const Routing = (props) => {
         },
         {
           path: "/details/:id",
-          element: <SubscriberDetailsPage />,
+          element: <DetailsSubscriberPage />,
         },
         {
           path: "/edit/:id",
@@ -101,7 +101,7 @@ const Routing = (props) => {
         {
           path: "status",
           element: (
-            <CampaignsStatusPage
+            <StatusCampaignsPage
               campaignsData={campaignsData}
               editCampaign={handleEditCampaign}
               removeCampaign={handleRemoveItem}
@@ -120,7 +120,7 @@ const Routing = (props) => {
         {
           path: "/edit/:id",
           element: (
-            <CampaignEditPage
+            <EditCampaignPage
               subscribersData={subscribersData}
               getCampaignsData={getCampaignsData}
             />

@@ -58,7 +58,7 @@ const selectSubscribersStatus = [
   { value: "blocked", label: "blocked" },
 ];
 
-const SubscribersStatusPage = ({
+const StatusSubscribersPage = ({
   subscribersData,
   editSubscriber,
   handleSubscriberDetails,
@@ -143,4 +143,4 @@ const SubscribersStatusPage = ({
 //   setContentPopup: PropTypes.func,
 // };
 
-export default SubscribersStatusPage;
+export default StatusSubscribersPage;

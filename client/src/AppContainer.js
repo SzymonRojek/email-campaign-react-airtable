@@ -5,13 +5,11 @@ import "App.css";
 import api from "api";
 import { useFetchData } from "useFetchData";
 import { MainNavigation } from "components/Navigation";
-import { usePopup } from "popupContext";
 import Routing from "./Routing";
 
 const AppContainer = ({ setIsLogIn, setStatusLog }) => {
   const navigate = useNavigate();
   const [tabsValue, setTabsValue] = useState(0);
-  const { openInfoPopup } = usePopup();
 
   const endpointSubscribers = "/subscribers";
   const endpointCampaigns = "/campaigns";

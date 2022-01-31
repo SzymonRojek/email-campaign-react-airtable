@@ -18,7 +18,7 @@ const styles = {
   },
 };
 
-const SubscriberDetailsPage = () => {
+const DetailsSubscriberPage = () => {
   const { id } = useParams();
   const endpoint = `/subscribers`;
 
@@ -80,4 +80,4 @@ const SubscriberDetailsPage = () => {
   );
 };
 
-export default SubscriberDetailsPage;
+export default DetailsSubscriberPage;

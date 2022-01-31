@@ -57,7 +57,7 @@ const selectCampaignsStatus = [
   { value: "draft", label: "draft" },
 ];
 
-const CampaignsStatusPage = ({
+const StatusCampaignsPage = ({
   campaignsData,
   editCampaign,
   removeCampaign,
@@ -127,7 +127,7 @@ const CampaignsStatusPage = ({
   );
 };
 
-CampaignsStatusPage.propTypes = {
+StatusCampaignsPage.propTypes = {
   campaignsData: PropTypes.shape({
     status: PropTypes.string,
     data: PropTypes.arrayOf(PropTypes.object),
@@ -136,4 +136,4 @@ CampaignsStatusPage.propTypes = {
   setSelectedData: PropTypes.func.isRequired,
 };
 
-export default CampaignsStatusPage;
+export default StatusCampaignsPage;
