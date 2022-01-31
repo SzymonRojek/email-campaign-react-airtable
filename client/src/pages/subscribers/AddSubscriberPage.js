@@ -18,9 +18,20 @@ const styles = {
   questionSpan: { color: "crimson", fontWeight: "bold" },
 };
 
-const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
-  const endpoint = "/subscribers";
+const postData = (data) =>
+  api.post("/subscribers", {
+    fields: {
+      name: data.name,
+      surname: data.surname,
+      email: data.email,
+      profession: data.profession,
+      status: data.status,
+      salary: data.salary,
+      telephone: data.telephone,
+    },
+  });
 
+const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
   const {
     handleSubmit,
     watch,
@@ -79,21 +90,11 @@ const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
   });
 
   const onSubmit = (data) => {
-    api.post(endpoint, {
-      fields: {
-        name: data.name,
-        surname: data.surname,
-        email: data.email,
-        profession: data.profession,
-        status: data.status,
-        salary: data.salary,
-        telephone: data.telephone,
-      },
-    });
-
-    addTextPopup(setTextConfirmPopup(data));
+    postData(data);
 
     getSubscribersData();
+
+    addTextPopup(setTextConfirmPopup(data));
 
     handleActionPopup(() => ({
       change: () =>
