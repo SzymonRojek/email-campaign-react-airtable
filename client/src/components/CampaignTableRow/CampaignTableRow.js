@@ -189,7 +189,7 @@ CampaignTableRow.propTypes = {
       status: PropTypes.string,
       title: PropTypes.string,
       description: PropTypes.string,
-    }).isRequired,
+    }),
   }),
   index: PropTypes.number,
   actualPage: PropTypes.number,

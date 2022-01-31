@@ -55,15 +55,23 @@ const CampaignsPage = ({ campaignsData, editCampaign, removeCampaign }) => (
   </>
 );
 
-// CampaignsPage.propTypes = {
-//   campaignsData: PropTypes.shape({
-//     status: PropTypes.string,
-//     data: PropTypes.arrayOf(PropTypes.object),
-//   }).isRequired,
-//   setSelectedData: PropTypes.func.isRequired,
-//   editCampaign: PropTypes.func.isRequired,
-//   setOpenConfirmPopup: PropTypes.func.isRequired,
-//   setContentPopup: PropTypes.func.isRequired,
-// };
+CampaignsPage.propTypes = {
+  campaignsData: PropTypes.shape({
+    status: PropTypes.string,
+    data: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string,
+        createdTime: PropTypes.string,
+        fields: PropTypes.shape({
+          status: PropTypes.string,
+          title: PropTypes.string,
+          description: PropTypes.string,
+        }),
+      })
+    ),
+  }),
+  editCampaign: PropTypes.func,
+  removeCampaign: PropTypes.func,
+};
 
 export default CampaignsPage;

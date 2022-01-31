@@ -130,10 +130,20 @@ const StatusCampaignsPage = ({
 StatusCampaignsPage.propTypes = {
   campaignsData: PropTypes.shape({
     status: PropTypes.string,
-    data: PropTypes.arrayOf(PropTypes.object),
+    data: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string,
+        createdTime: PropTypes.string,
+        fields: PropTypes.shape({
+          status: PropTypes.string,
+          title: PropTypes.string,
+          description: PropTypes.string,
+        }),
+      })
+    ),
   }),
-  editCampaign: PropTypes.func.isRequired,
-  setSelectedData: PropTypes.func.isRequired,
+  editCampaign: PropTypes.func,
+  removeCampaign: PropTypes.func,
 };
 
 export default StatusCampaignsPage;

@@ -180,4 +180,8 @@ const EditSubscriberPage = ({ getSubscribersData }) => {
   );
 };
 
+EditSubscriberPage.propTypes = {
+  getSubscribersData: PropTypes.func,
+};
+
 export default EditSubscriberPage;

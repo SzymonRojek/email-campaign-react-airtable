@@ -132,15 +132,28 @@ const StatusSubscribersPage = ({
   );
 };
 
-// SubscribersStatusPage.propTypes = {
-//   subscribersData: PropTypes.shape({
-//     status: PropTypes.string,
-//     data: PropTypes.arrayOf(PropTypes.object),
-//   }),
-//   handleSubscriberDetails: PropTypes.func.isRequired,
-//   setOpenConfirmPopup: PropTypes.func,
-//   setSelectedData: PropTypes.func,
-//   setContentPopup: PropTypes.func,
-// };
+StatusSubscribersPage.propTypes = {
+  subscribersData: PropTypes.shape({
+    status: PropTypes.string,
+    data: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string,
+        createdTime: PropTypes.string,
+        fields: PropTypes.shape({
+          status: PropTypes.string,
+          name: PropTypes.string,
+          surname: PropTypes.string,
+          profession: PropTypes.string,
+          email: PropTypes.string,
+          salary: PropTypes.string,
+          telephone: PropTypes.string,
+        }),
+      })
+    ),
+  }),
+  editSubscriber: PropTypes.func,
+  handleSubscriberDetails: PropTypes.func,
+  removeSubscriber: PropTypes.func,
+};
 
 export default StatusSubscribersPage;

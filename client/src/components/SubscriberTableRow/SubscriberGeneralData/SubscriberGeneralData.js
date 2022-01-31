@@ -243,7 +243,7 @@ SubscriberGeneralData.propTypes = {
       email: PropTypes.string,
       salary: PropTypes.string,
       telephone: PropTypes.string,
-    }).isRequired,
+    }),
   }),
   index: PropTypes.number,
   actualPage: PropTypes.number,

@@ -133,6 +133,24 @@ const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
 };
 
 AddSubscriberPage.propTypes = {
+  subscribersData: PropTypes.shape({
+    status: PropTypes.string,
+    data: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string,
+        createdTime: PropTypes.string,
+        fields: PropTypes.shape({
+          status: PropTypes.string,
+          name: PropTypes.string,
+          surname: PropTypes.string,
+          profession: PropTypes.string,
+          email: PropTypes.string,
+          salary: PropTypes.string,
+          telephone: PropTypes.string,
+        }),
+      })
+    ),
+  }),
   getSubscribersData: PropTypes.func,
 };
 
