@@ -9,6 +9,8 @@ const stylesError = { color: "crimson", paddingTop: 4 };
 const TextInputController = ({
   name,
   control,
+  label,
+  defaultValue,
   error,
   message,
   rows,
@@ -18,12 +20,13 @@ const TextInputController = ({
     <Controller
       name={name}
       control={control}
-      defaultValue=""
+      defaultValue={defaultValue}
       rules={{ required: true }}
       render={({ field: { ref, ...field } }) => (
         <CustomTextInput
           {...field}
           inputRef={ref}
+          label={label}
           error={error}
           rows={rows}
           multiline={multiline}
