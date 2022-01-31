@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { TableCell, TableRow, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { isEven } from "helpers";
+import { isEven, formatMobileNumber } from "helpers";
 
 const useStyles = makeStyles(() => ({
   cellNo: { width: 25 },
@@ -62,7 +62,7 @@ const SubscriberDetailsData = ({ subscriber, index }) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {subscriber.fields.telephone}
+          +44 {formatMobileNumber(subscriber.fields.telephone)}
         </Typography>
       </TableCell>
     </TableRow>
