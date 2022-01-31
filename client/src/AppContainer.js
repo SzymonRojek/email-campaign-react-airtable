@@ -74,13 +74,13 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
 
       <Routing
         subscribersData={subscribersData}
+        getSubscribersData={getSubscribersData}
         handleEditSubscriber={handleEditSubscriber}
         handleSubscriberDetails={handleSubscriberDetails}
-        handleRemoveItem={handleRemoveItem}
-        getSubscribersData={getSubscribersData}
         campaignsData={campaignsData}
-        handleEditCampaign={handleEditCampaign}
         getCampaignsData={getCampaignsData}
+        handleEditCampaign={handleEditCampaign}
+        handleRemoveItem={handleRemoveItem}
       />
     </>
   );
