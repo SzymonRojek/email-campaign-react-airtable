@@ -86,20 +86,22 @@ const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
         email: data.email,
         profession: data.profession,
         status: data.status,
-        salary: String(data.salary),
+        salary: data.salary,
         telephone: data.telephone,
       },
     });
 
+    addTextPopup(setTextConfirmPopup(data));
+
     getSubscribersData();
 
-    addTextPopup(setTextConfirmPopup(data));
     handleActionPopup(() => ({
       change: () =>
         location.pathname === "/subscribers/add"
           ? navigate("/subscribers")
           : "",
     }));
+
     openConfirmPopup();
   };
 
