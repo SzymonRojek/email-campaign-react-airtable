@@ -92,6 +92,8 @@ const FormSubscriber = ({
             <TextInputController
               control={control}
               name="name"
+              label="name"
+              defaultValue=""
               error={!!errors.name}
               message={errors.name?.message ?? ""}
             />
@@ -100,6 +102,8 @@ const FormSubscriber = ({
             <TextInputController
               control={control}
               name="surname"
+              label="surname"
+              defaultValue=""
               error={!!errors.surname}
               message={errors.surname?.message ?? ""}
             />
@@ -108,6 +112,8 @@ const FormSubscriber = ({
             <TextInputController
               control={control}
               name="email"
+              label="email"
+              defaultValue=""
               error={!!errors.email}
               message={errors.email?.message ?? ""}
             />
@@ -116,9 +122,9 @@ const FormSubscriber = ({
             <SelectInputController
               control={control}
               name="status"
+              defaultValue="select status"
               error={!!errors.status}
               message={errors.status?.message ?? ""}
-              defaultValue="select status"
               data={selectStatusData}
               styles={styles.select}
               useStyles={useStyles}
@@ -129,9 +135,9 @@ const FormSubscriber = ({
               <StyledCheckbox
                 control={control}
                 name="checkbox"
+                defaultValue={false}
                 error={!!errors.checkbox}
                 message={errors.checkbox?.message ?? ""}
-                defaultValue={false}
                 label={
                   isCheckboxChecked ? "Close more details" : "Open more details"
                 }
@@ -153,6 +159,8 @@ const FormSubscriber = ({
                   <TextInputController
                     control={control}
                     name="profession"
+                    label="profession"
+                    defaultValue=""
                     error={!!errors.profession}
                     message={errors.profession?.message ?? ""}
                   />
@@ -161,6 +169,8 @@ const FormSubscriber = ({
                   <TextInputController
                     control={control}
                     name="salary"
+                    label="salary"
+                    defaultValue=""
                     error={!!errors.salary}
                     message={errors.salary?.message ?? ""}
                   />
@@ -169,6 +179,8 @@ const FormSubscriber = ({
                   <TextInputController
                     control={control}
                     name="telephone"
+                    label="telephone +44"
+                    defaultValue=""
                     error={!!errors.telephone}
                     message={errors.telephone?.message ?? ""}
                   />
