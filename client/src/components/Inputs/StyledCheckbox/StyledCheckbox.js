@@ -44,7 +44,7 @@ const StyledCheckbox = ({
         render={({ field: { ref, value, ...field } }) => (
           <Checkbox
             {...field}
-            checked={value}
+            checked={!value ? defaultValue : value}
             inputRef={ref}
             sx={styles.checkbox}
           />
