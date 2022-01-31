@@ -74,8 +74,6 @@ const FormSubscriber = ({
   errors,
   handleSubmit,
   isCheckboxChecked,
-  openConfirmPopup,
-  addTextPopup,
 }) => (
   <Paper elevation={14} style={styles.paper}>
     <form onSubmit={handleSubmit}>
@@ -192,10 +190,6 @@ const FormSubscriber = ({
                 label="submit"
                 ariaLabel="add subscriber"
                 type="submit"
-                onClick={() => {
-                  // openConfirmPopup();
-                  // addTextPopup("Would you like to back to Subscribers?");
-                }}
               />
             </Grid>
           </Grid>
