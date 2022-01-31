@@ -27,7 +27,7 @@ import { IoIosPeople } from "react-icons/io";
 import { MdAlternateEmail } from "react-icons/md";
 import { MdOutlineMarkEmailRead } from "react-icons/md";
 
-import { LogFormButton } from "../../../LogFormButton";
+import { LogFormButton } from "components/LogFormButton";
 
 const style = {
   drawer: { zIndex: 10 },
@@ -111,7 +111,7 @@ const StyledListItem = withStyles({
   },
 })(ListItem);
 
-function DrawerMenu({ setTabsValue, setIsLogIn, setStatusLog }) {
+const MobileNavigation = ({ setTabsValue, setIsLogIn, setStatusLog }) => {
   const classes = useStyles();
   const location = useLocation();
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -290,10 +290,10 @@ function DrawerMenu({ setTabsValue, setIsLogIn, setStatusLog }) {
       </IconButton>
     </>
   );
-}
+};
 
-DrawerMenu.propTypes = {
+MobileNavigation.propTypes = {
   setTabsValue: PropTypes.func.isRequired,
 };
 
-export default DrawerMenu;
+export default MobileNavigation;

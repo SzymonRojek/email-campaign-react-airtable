@@ -14,9 +14,9 @@ import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
 
 import { StyledTabs } from "./StyledTabs";
-import { DrawerMenu } from "./DrawerMenu";
+import { MobileNavigation } from "./MobileNavigation";
 import Logo from "../../../img/logo.svg";
-import { LogFormButton } from "../../LogFormButton";
+import { LogFormButton } from "components/LogFormButton";
 
 const mainNavigationLinks = [
   {
@@ -123,7 +123,7 @@ function MainNavigation({ tabsValue, setTabsValue, setIsLogIn, setStatusLog }) {
         </div>
 
         {isSmallDevice ? (
-          <DrawerMenu
+          <MobileNavigation
             setTabsValue={setTabsValue}
             setIsLogIn={setIsLogIn}
             setStatusLog={setStatusLog}
