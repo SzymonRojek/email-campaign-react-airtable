@@ -231,27 +231,26 @@ const SubscriberGeneralData = (props) => {
   );
 };
 
-// SubscriberGeneralData.propTypes = {
-//   subscriber: PropTypes.shape({
-//     id: PropTypes.string.isRequired,
-//     group: PropTypes.string,
-//     createdTime: PropTypes.string.isRequired,
-//     fields: PropTypes.shape({
-//       status: PropTypes.string,
-//       name: PropTypes.string,
-//       surname: PropTypes.string,
-//       profession: PropTypes.string,
-//       email: PropTypes.string,
-//       salary: PropTypes.string,
-//       telephone: PropTypes.string,
-//     }).isRequired,
-//   }),
-//   index: PropTypes.number.isRequired,
-//   // children: PropTypes.any,
-//   setSelectedData: PropTypes.func,
-//   handleSubscriberDetails: PropTypes.func,
-//   setOpenConfirmPopup: PropTypes.func,
-//   setContentPopup: PropTypes.func,
-// };
+SubscriberGeneralData.propTypes = {
+  subscriber: PropTypes.shape({
+    id: PropTypes.string,
+    createdTime: PropTypes.string,
+    fields: PropTypes.shape({
+      status: PropTypes.string,
+      name: PropTypes.string,
+      surname: PropTypes.string,
+      profession: PropTypes.string,
+      email: PropTypes.string,
+      salary: PropTypes.string,
+      telephone: PropTypes.string,
+    }).isRequired,
+  }),
+  index: PropTypes.number,
+  actualPage: PropTypes.number,
+  dataPerPage: PropTypes.number,
+  editSubscriber: PropTypes.func,
+  handleSubscriberDetails: PropTypes.func,
+  removeSubscriber: PropTypes.func,
+};
 
 export default SubscriberGeneralData;

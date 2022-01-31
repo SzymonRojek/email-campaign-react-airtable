@@ -21,9 +21,9 @@ const SelectInputController = ({ ...props }) => {
   const {
     control,
     name,
+    defaultValue,
     error,
     message,
-    defaultValue,
     data,
     useStyles,
     styles,
@@ -43,9 +43,9 @@ const SelectInputController = ({ ...props }) => {
             {...field}
             inputRef={ref}
             id={customId}
-            error={error}
-            selected={value}
             value={value}
+            selected={value}
+            error={error}
           >
             {data.map(({ value, label }) => (
               <MyMenuItem key={`key-${label}`} value={value}>
@@ -64,16 +64,19 @@ const SelectInputController = ({ ...props }) => {
 };
 
 SelectInputController.propTypes = {
-  control: PropTypes.object.isRequired,
-  error: PropTypes.bool.isRequired,
-  name: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired,
-  defaultValue: PropTypes.string.isRequired,
+  control: PropTypes.object,
+  error: PropTypes.bool,
+  name: PropTypes.string,
+  defaultValue: PropTypes.string,
+  message: PropTypes.string,
   data: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
+      value: PropTypes.string,
+      label: PropTypes.string,
     })
   ),
+  useStyles: PropTypes.func,
+  styles: PropTypes.object,
 };
+
 export default SelectInputController;

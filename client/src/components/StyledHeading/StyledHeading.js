@@ -14,7 +14,7 @@ const headingStyles = {
 const StyledHeading = ({ label }) => <h1 style={headingStyles}>{label}</h1>;
 
 StyledHeading.propTypes = {
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
 };
 
 export default StyledHeading;

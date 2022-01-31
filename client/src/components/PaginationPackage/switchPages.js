@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 const paginNumbers = (lastPage, currentPage, setCurrentPage) => {
   const arrayToMap = [...Array(lastPage + 1).keys()];
   return arrayToMap.map((el, i) => {
@@ -187,6 +189,12 @@ const paginNumbers = (lastPage, currentPage, setCurrentPage) => {
 
     return null;
   });
+};
+
+paginNumbers.propTypes = {
+  lastPage: PropTypes.number,
+  current: PropTypes.number,
+  setCurrentPage: PropTypes.func,
 };
 
 export default paginNumbers;

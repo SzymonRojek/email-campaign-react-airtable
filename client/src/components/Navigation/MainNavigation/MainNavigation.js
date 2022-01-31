@@ -161,8 +161,10 @@ function MainNavigation({ tabsValue, setTabsValue, setIsLogIn, setStatusLog }) {
 }
 
 MainNavigation.propTypes = {
-  tabsValue: PropTypes.number.isRequired,
-  setTabsValue: PropTypes.func.isRequired,
+  tabsValue: PropTypes.number,
+  setTabsValue: PropTypes.func,
+  setIsLogIn: PropTypes.func,
+  setStatusLog: PropTypes.func,
 };
 
 export default MainNavigation;

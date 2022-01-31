@@ -41,7 +41,7 @@ const StyledLink = ({ to, exact, ...rest }) => {
 };
 
 StyledLink.propTypes = {
-  to: PropTypes.string.isRequired,
+  to: PropTypes.string,
   exact: PropTypes.bool,
   rest: PropTypes.object,
 };

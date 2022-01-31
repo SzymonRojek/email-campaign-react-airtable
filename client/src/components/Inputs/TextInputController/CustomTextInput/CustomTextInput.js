@@ -40,10 +40,10 @@ const StyledTextField = withStyles({
 
 const CustomTextInput = ({
   name,
-  label,
-  error,
   value,
   onChange,
+  label,
+  error,
   rows,
   multiline,
 }) => (
@@ -67,10 +67,10 @@ const CustomTextInput = ({
 );
 
 CustomTextInput.propTypes = {
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
   errors: PropTypes.object,
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
   rows: PropTypes.number,
   multiline: PropTypes.bool,
 };

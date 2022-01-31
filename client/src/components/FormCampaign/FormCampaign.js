@@ -88,10 +88,11 @@ const FormCampaign = ({
 );
 
 FormCampaign.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  // onSubmit: PropTypes.func.isRequired,
+  control: PropTypes.object,
   errors: PropTypes.object,
-  // setCampaignStatus: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func,
+  handleDraftData: PropTypes.func,
+  handleSendData: PropTypes.func,
 };
 
 export default FormCampaign;

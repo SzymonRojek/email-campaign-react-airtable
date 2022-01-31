@@ -14,9 +14,9 @@ const Error = ({ titleOne, titleTwo, titleThree }) => (
 );
 
 Error.propTypes = {
-  titleOne: PropTypes.string.isRequired,
-  titleTwo: PropTypes.string.isRequired,
-  titleThree: PropTypes.string.isRequired,
+  titleOne: PropTypes.string,
+  titleTwo: PropTypes.string,
+  titleThree: PropTypes.string,
 };
 
 export default Error;

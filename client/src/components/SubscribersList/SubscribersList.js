@@ -53,10 +53,12 @@ const SubscribersList = (props) => {
 };
 
 SubscribersList.propTypes = {
-  subHeading: PropTypes.string.isRequired,
-  dataHeadTable: PropTypes.array.isRequired,
+  subHeading: PropTypes.string,
+  dataHeadTable: PropTypes.array,
+  passedData: PropTypes.arrayOf(PropTypes.object),
   handleSubscriberDetails: PropTypes.func,
-  setSelectedData: PropTypes.func,
+  editSubscriber: PropTypes.func,
+  removeSubscriber: PropTypes.func,
 };
 
 export default SubscribersList;

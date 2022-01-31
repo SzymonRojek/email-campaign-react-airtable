@@ -181,22 +181,21 @@ const CampaignTableRow = (props) => {
   );
 };
 
-// RowCampaign.propTypes = {
-//   campaign: PropTypes.shape({
-//     id: PropTypes.string.isRequired,
-//     group: PropTypes.string.isRequired,
-//     createdTime: PropTypes.string.isRequired,
-//     fields: PropTypes.shape({
-//       status: PropTypes.string,
-//       title: PropTypes.string,
-//       description: PropTypes.string,
-//     }).isRequired,
-//   }),
-//   index: PropTypes.number.isRequired,
-//   setSelectedData: PropTypes.func.isRequired,
-//   editCampaign: PropTypes.func.isRequired,
-//   setOpenConfirmPopup: PropTypes.func.isRequired,
-//   setContentPopup: PropTypes.func.isRequired,
-// };
+CampaignTableRow.propTypes = {
+  campaign: PropTypes.shape({
+    id: PropTypes.string,
+    createdTime: PropTypes.string,
+    fields: PropTypes.shape({
+      status: PropTypes.string,
+      title: PropTypes.string,
+      description: PropTypes.string,
+    }).isRequired,
+  }),
+  index: PropTypes.number,
+  actualPage: PropTypes.number,
+  dataPerPage: PropTypes.number,
+  editCampaign: PropTypes.func,
+  removeCampaign: PropTypes.func,
+};
 
 export default CampaignTableRow;

@@ -66,10 +66,10 @@ const SubMainNavigation = ({ dataLinks }) => {
 SubMainNavigation.propTypes = {
   dataLinks: PropTypes.arrayOf(
     PropTypes.shape({
-      to: PropTypes.string.isRequired,
+      to: PropTypes.string,
       exact: PropTypes.bool,
-      name: PropTypes.string.isRequired,
-    }).isRequired
+      name: PropTypes.string,
+    })
   ),
 };
 

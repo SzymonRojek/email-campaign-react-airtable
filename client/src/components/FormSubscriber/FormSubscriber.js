@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Paper, Box, Collapse } from "@mui/material";
 import { Grid, Typography } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
@@ -210,5 +211,12 @@ const FormSubscriber = ({
     </form>
   </Paper>
 );
+
+FormSubscriber.propTypes = {
+  control: PropTypes.object,
+  errors: PropTypes.object,
+  handleSubmit: PropTypes.func,
+  isCheckboxChecked: PropTypes.func,
+};
 
 export default FormSubscriber;

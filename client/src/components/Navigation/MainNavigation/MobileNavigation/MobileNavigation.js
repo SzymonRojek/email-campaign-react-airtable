@@ -293,7 +293,9 @@ const MobileNavigation = ({ setTabsValue, setIsLogIn, setStatusLog }) => {
 };
 
 MobileNavigation.propTypes = {
-  setTabsValue: PropTypes.func.isRequired,
+  setTabsValue: PropTypes.func,
+  setIsLogIn: PropTypes.func,
+  setStatusLog: PropTypes.func,
 };
 
 export default MobileNavigation;

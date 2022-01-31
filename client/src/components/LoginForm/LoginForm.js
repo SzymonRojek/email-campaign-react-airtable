@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -100,6 +101,10 @@ const LoginForm = ({ setIsLogIn }) => {
       </Paper>
     </StyledContainer>
   );
+};
+
+LoginForm.propTypes = {
+  setIsLogIn: PropTypes.func,
 };
 
 export default LoginForm;

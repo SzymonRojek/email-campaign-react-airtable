@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useState, useEffect, useMemo, useCallback } from "react";
 
 const usePagination = (dataArr, dataPerPage, disableDuration) => {
@@ -109,4 +110,11 @@ const usePagination = (dataArr, dataPerPage, disableDuration) => {
   };
 };
 
+// dataArr, dataPerPage, disableDuration/
+
+usePagination.propTypes = {
+  dataArr: PropTypes.arrayOf(PropTypes.object),
+  dataPerPage: PropTypes.number,
+  disableDuration: PropTypes.number,
+};
 export default usePagination;

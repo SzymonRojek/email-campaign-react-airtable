@@ -46,7 +46,8 @@ router.get("/:id", async (request, response) => {
     response.json({
       error: {
         messageOne: "Subscriber does not exist",
-        messageTwo: "Please you have to write a proper url",
+        messageTwo:
+          "Please you have to write a proper url or check an internet connection",
       },
     });
   }

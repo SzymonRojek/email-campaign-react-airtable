@@ -68,14 +68,13 @@ const CampaignStatus = (props) => {
   );
 };
 
-// CampaignStatus.propTypes = {
-//   subHeading: PropTypes.string.isRequired,
-//   dataHeadEmailTable: PropTypes.array.isRequired,
-//   status: PropTypes.string.isRequired,
-//   editCampaign: PropTypes.func.isRequired,
-//   setSelectedData: PropTypes.func.isRequired,
-//   setContentPopup: PropTypes.func.isRequired,
-//   setOpenConfirmPopup: PropTypes.func.isRequired,
-// };
+CampaignStatus.propTypes = {
+  subHeading: PropTypes.string,
+  dataHeadEmailTable: PropTypes.array,
+  passedData: PropTypes.arrayOf(PropTypes.object),
+  status: PropTypes.string,
+  editCampaign: PropTypes.func,
+  removeCampaign: PropTypes.func,
+};
 
 export default CampaignStatus;

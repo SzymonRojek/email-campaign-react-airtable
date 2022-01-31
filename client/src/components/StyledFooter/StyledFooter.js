@@ -49,7 +49,7 @@ const StyledFooter = ({ label }) => (
 );
 
 StyledFooter.propTypes = {
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
 };
 
 export default StyledFooter;

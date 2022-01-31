@@ -50,12 +50,12 @@ const CampaignsList = (props) => {
   );
 };
 
-// CampaignsList.propTypes = {
-//   subHeading: PropTypes.string.isRequired,
-//   dataHeadEmailTable: PropTypes.array.isRequired,
-//   setSelectedData: PropTypes.func.isRequired,
-//   setContentPopup: PropTypes.func.isRequired,
-//   setOpenConfirmPopup: PropTypes.func.isRequired,
-// };
+CampaignsList.propTypes = {
+  subHeading: PropTypes.string,
+  dataHeadEmailTable: PropTypes.array,
+  passedData: PropTypes.arrayOf(PropTypes.object),
+  editCampaign: PropTypes.func,
+  removeCampaign: PropTypes.func,
+};
 
 export default CampaignsList;

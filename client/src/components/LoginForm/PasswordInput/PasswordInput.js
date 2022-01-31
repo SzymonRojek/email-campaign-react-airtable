@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useState } from "react";
 import { Typography } from "@material-ui/core";
 import {
@@ -93,6 +94,12 @@ const PasswordInput = ({ name, register, message }) => {
       <Typography variant="inherit">{message}</Typography>
     </FormControl>
   );
+};
+
+PasswordInput.propTypes = {
+  name: PropTypes.string,
+  register: PropTypes.func,
+  message: PropTypes.string,
 };
 
 export default PasswordInput;

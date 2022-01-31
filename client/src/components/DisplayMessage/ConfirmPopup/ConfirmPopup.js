@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { Dialog, DialogContent } from "@mui/material";
 import Button from "@mui/material/Button";
 import { makeStyles } from "@material-ui/core/styles";
@@ -77,12 +76,5 @@ const ConfirmPopup = () => {
     </Dialog>
   );
 };
-
-// ConfirmPopup.propTypes = {
-//   openConfirmPopup: PropTypes.bool.isRequired,
-//   setOpenConfirmPopup: PropTypes.func.isRequired,
-//   handleActionPopup: PropTypes.func.isRequired,
-//   contentPopup: PropTypes.object.isRequired,
-// };
 
 export default ConfirmPopup;

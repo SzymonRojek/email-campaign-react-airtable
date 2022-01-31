@@ -102,7 +102,12 @@ const CustomPaginator = ({
 };
 
 CustomPaginator.propTypes = {
-  passedData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  passedData: PropTypes.arrayOf(PropTypes.object),
+  dataPerPage: PropTypes.number,
+  disableDuration: PropTypes.number,
+  disableArrows: PropTypes.bool,
+  disableDigits: PropTypes.bool,
+  renderData: PropTypes.func,
 };
 
 export default CustomPaginator;

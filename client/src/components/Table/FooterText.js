@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 const styles = {
   footerContainer: {
     textAlign: "center",
@@ -27,5 +29,10 @@ const FooterText = ({ status, text }) => (
     </p>
   </footer>
 );
+
+FooterText.propTypes = {
+  status: PropTypes.string,
+  text: PropTypes.string,
+};
 
 export default FooterText;

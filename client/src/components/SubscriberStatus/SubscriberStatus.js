@@ -16,10 +16,10 @@ const SubscriberStatus = (props) => {
     subHeading,
     generalDataHeadTable,
     passedData,
-    status,
     editSubscriber,
     handleSubscriberDetails,
     removeSubscriber,
+    status,
     setSelectStatus,
   } = props;
 
@@ -75,11 +75,13 @@ const SubscriberStatus = (props) => {
 };
 
 SubscriberStatus.propTypes = {
-  subHeading: PropTypes.string.isRequired,
-  generalDataHeadTable: PropTypes.array.isRequired,
-  status: PropTypes.string.isRequired,
-  handleSubscriberDetails: PropTypes.func.isRequired,
-  setSelectedData: PropTypes.func,
+  subHeading: PropTypes.string,
+  generalDataHeadTable: PropTypes.array,
+  passedData: PropTypes.arrayOf(PropTypes.object),
+  handleSubscriberDetails: PropTypes.func,
+  removeSubscriber: PropTypes.func,
+  status: PropTypes.string,
+  setSelectStatus: PropTypes.func,
 };
 
 export default SubscriberStatus;

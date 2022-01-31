@@ -101,8 +101,11 @@ const ContainerTable = ({
 };
 
 ContainerTable.propTypes = {
-  children: PropTypes.array.isRequired,
+  children: PropTypes.array,
   subHeading: PropTypes.string,
+  setSelectValue: PropTypes.func,
+  passedData: PropTypes.arrayOf(PropTypes.object),
+  disableSelect: PropTypes.bool,
 };
 
 ContainerTable.defaultProps = { subHeading: "" };

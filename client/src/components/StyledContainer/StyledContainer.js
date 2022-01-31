@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 import "./styles.css";
 
 const StyledContainer = ({ children }) => (
@@ -5,5 +7,9 @@ const StyledContainer = ({ children }) => (
     <div className="children-container">{children}</div>
   </div>
 );
+
+StyledContainer.propTypes = {
+  children: PropTypes.arrayOf(PropTypes.object),
+};
 
 export default StyledContainer;

@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { FormControl, Checkbox } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { Typography } from "@material-ui/core";
@@ -62,4 +63,12 @@ const StyledCheckbox = ({
   </FormControl>
 );
 
+StyledCheckbox.propTypes = {
+  control: PropTypes.object,
+  name: PropTypes.string,
+  defaultValue: PropTypes.string,
+  label: PropTypes.string,
+  error: PropTypes.bool,
+  message: PropTypes.string,
+};
 export default StyledCheckbox;

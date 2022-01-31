@@ -27,10 +27,12 @@ const StyledButton = ({ bgc, hover, ariaLabel, label, type, onClick }) => (
 );
 
 StyledButton.propTypes = {
-  bgc: PropTypes.string.isRequired,
-  hover: PropTypes.string.isRequired,
-  ariaLabel: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
+  bgc: PropTypes.string,
+  hover: PropTypes.string,
+  ariaLabel: PropTypes.string,
+  label: PropTypes.string,
+  type: PropTypes.string,
+  onClick: PropTypes.func,
 };
 
 export default StyledButton;
