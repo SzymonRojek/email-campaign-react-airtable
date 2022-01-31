@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -36,7 +36,15 @@ const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
 
   const { openConfirmPopup, handleActionPopup, addTextPopup } = usePopup();
 
-  const isCheckboxChecked = watch("checkbox", false);
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+
+  useEffect(() => {
+    const watchCheckbox = watch((value) =>
+      setIsCheckboxChecked(value.checkbox)
+    );
+
+    return () => watchCheckbox.unsubscribe();
+  }, [watch]);
 
   useEffect(() => {
     if (formState.isSubmitSuccessful) {
@@ -114,9 +122,6 @@ const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
             errors={errors}
             handleSubmit={handleSubmit(onSubmit)}
             isCheckboxChecked={isCheckboxChecked}
-
-            // openConfirmPopup={openConfirmPopup}
-            // addTextPopup={addTextPopup}
           />
         </StyledContainer>
       )}
@@ -126,8 +131,6 @@ const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
 
 AddSubscriberPage.propTypes = {
   getSubscribersData: PropTypes.func,
-  // setOpenInfoPopup: PropTypes.func,
-  // setContentPopup: PropTypes.func,
 };
 
 export default AddSubscriberPage;
