@@ -138,9 +138,9 @@ const EditSubscriberPage = ({ getSubscribersData }) => {
           telephone: data.telephone,
         },
       });
-      getSubscribersData();
     }
 
+    getSubscribersData();
     navigate("/subscribers");
     displayPopup(data);
   };
