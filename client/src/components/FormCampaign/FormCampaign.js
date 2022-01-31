@@ -15,11 +15,11 @@ const style = {
 };
 
 const FormCampaign = ({
+  control,
+  errors,
   handleSubmit,
   handleDraftData,
   handleSendData,
-  control,
-  errors,
 }) => (
   <Paper elevation={14} style={style.paper}>
     <form>
@@ -38,6 +38,7 @@ const FormCampaign = ({
             <TextInputController
               control={control}
               name="title"
+              label="title"
               error={!!errors.title}
               message={errors.title?.message ?? ""}
             />
@@ -46,6 +47,7 @@ const FormCampaign = ({
             <TextInputController
               control={control}
               name="description"
+              label="description"
               multiline
               rows={5}
               error={!!errors.description}
