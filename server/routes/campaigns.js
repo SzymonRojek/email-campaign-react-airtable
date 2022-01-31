@@ -46,7 +46,7 @@ router.get("/:id", async (request, response) => {
       error: {
         messageOne: "Campaign does not exist",
         messageTwo:
-          "Please make sure that you have a proper ID of Campaign in the URL",
+          "Please you have to write a proper url or check an internet connection",
       },
     });
   }
