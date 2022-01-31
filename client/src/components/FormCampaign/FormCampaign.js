@@ -39,6 +39,7 @@ const FormCampaign = ({
               control={control}
               name="title"
               label="title"
+              defaultValue=""
               error={!!errors.title}
               message={errors.title?.message ?? ""}
             />
@@ -48,6 +49,7 @@ const FormCampaign = ({
               control={control}
               name="description"
               label="description"
+              defaultValue=""
               multiline
               rows={5}
               error={!!errors.description}
