@@ -67,7 +67,7 @@ const subscriberLinks = [
   },
   {
     icon: <SiStatuspage />,
-    to: "/subscribers/filter",
+    to: "/subscribers/status",
     name: "Status",
     tabsValue: 0,
   },
@@ -88,7 +88,7 @@ const campaignLinks = [
   },
   {
     icon: <SiStatuspage />,
-    to: "/campaigns/filter",
+    to: "/campaigns/status",
     name: "Status",
     tabsValue: 1,
   },
