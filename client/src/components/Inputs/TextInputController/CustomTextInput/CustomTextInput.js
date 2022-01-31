@@ -38,13 +38,21 @@ const StyledTextField = withStyles({
   },
 })(TextField);
 
-const CustomTextInput = ({ name, error, value, onChange, rows, multiline }) => (
+const CustomTextInput = ({
+  name,
+  label,
+  error,
+  value,
+  onChange,
+  rows,
+  multiline,
+}) => (
   <Grid item xs={12}>
     <StyledTextField
       variant="outlined"
       id={name}
       name={name}
-      label={name}
+      label={label}
       value={value}
       error={error}
       onChange={onChange}
