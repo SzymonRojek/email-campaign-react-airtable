@@ -37,11 +37,9 @@ const AddCampaignPage = ({ subscribersData, getCampaignsData }) => {
   } = useForm({
     resolver: yupResolver(validationCampaign),
   });
-
-  const { openConfirmPopup, addTextPopup, handleActionPopup } = usePopup();
   const location = useLocation();
   const navigate = useNavigate();
-
+  const { openConfirmPopup, addTextPopup, handleActionPopup } = usePopup();
   const [isEmailError, setEmailError] = useState(false);
 
   useEffect(() => {
@@ -150,11 +148,11 @@ const AddCampaignPage = ({ subscribersData, getCampaignsData }) => {
           <StyledHeading label="Add Campaign:" />
 
           <FormCampaign
+            control={control}
+            errors={errors}
             handleSubmit={handleSubmit}
             handleDraftData={handleDraftCampaign}
             handleSendData={handleSendCampaign}
-            control={control}
-            errors={errors}
           />
         </StyledContainer>
       )}
