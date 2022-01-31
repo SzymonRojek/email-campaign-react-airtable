@@ -63,16 +63,13 @@ const PasswordInput = ({ name, register, message }) => {
       variant="outlined"
       className={clsx(classes.typography, classes.textField)}
     >
-      <InputLabel
-        htmlFor="outlined-adornment-password"
-        className={classes.label}
-      >
+      <InputLabel htmlFor={`1-${name}`} className={classes.label}>
         {`${name}*`}
       </InputLabel>
       <OutlinedInput
         className={classes.root}
         {...register(name)}
-        id="outlined-adornment-password"
+        id={`1-${name}`}
         type={values.showPassword ? "text" : "password"}
         value={values.password}
         onChange={handleChange("password")}
