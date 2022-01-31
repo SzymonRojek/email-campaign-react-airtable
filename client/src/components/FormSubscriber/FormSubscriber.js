@@ -216,7 +216,7 @@ FormSubscriber.propTypes = {
   control: PropTypes.object,
   errors: PropTypes.object,
   handleSubmit: PropTypes.func,
-  isCheckboxChecked: PropTypes.func,
+  isCheckboxChecked: PropTypes.bool,
 };
 
 export default FormSubscriber;
