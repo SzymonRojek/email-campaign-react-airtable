@@ -19,7 +19,7 @@ const styles = {
 };
 
 const postData = (data, status) =>
-  api.post("/campaigns", {
+  api.post("campaigns", {
     fields: {
       title: capitalizeFirstLetter(data.title),
       description: capitalizeFirstLetter(data.description),
@@ -108,15 +108,15 @@ const AddCampaignPage = ({ subscribersData, getCampaignsData }) => {
 
     if (!isEmailError && activeSubscribers.length > 0) {
       postData(data, "sent");
-      getCampaignsData();
       addTextPopup(setTextConfirmPopup(data, true, additionalText));
       openConfirmPopup();
     } else {
       postData(data, "draft");
-      getCampaignsData();
       addTextPopup(setTextConfirmPopup(data, false, additionalText));
       openConfirmPopup();
     }
+
+    getCampaignsData();
   };
 
   return (
