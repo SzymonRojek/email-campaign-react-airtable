@@ -15,52 +15,45 @@ import { usePopup } from "popupContext";
 import { FormSubscriber } from "components/FormSubscriber/";
 
 const EditSubscriberPage = ({ getSubscribersData }) => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const endpoint = "/subscribers";
+
   const {
     handleSubmit,
     watch,
     control,
+    formState,
     setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSubscriber),
   });
-  const { id } = useParams();
-  const navigate = useNavigate();
 
-  const endpoint = "subscribers";
   const { itemData: subscriberData } = useFetchDetailsById(endpoint, id);
 
   const { openInfoPopup, addTextPopup } = usePopup();
 
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
+  const defaultValues = {
+    name: subscriberData.data ? subscriberData.data.fields.name : "",
+    surname: subscriberData.data ? subscriberData.data.fields.surname : "",
+    email: subscriberData.data ? subscriberData.data.fields.email : "",
+    status: subscriberData.data ? subscriberData.data.fields.status : "",
+    profession: subscriberData.data
+      ? subscriberData.data.fields.profession
+      : "",
+    salary: subscriberData.data ? subscriberData.data.fields.salary : "",
+    telephone: subscriberData.data ? subscriberData.data.fields.telephone : "",
+  };
+
   useEffect(() => {
     const watchCheckbox = watch((value) =>
       setIsCheckboxChecked(value.checkbox)
     );
-
     return () => watchCheckbox.unsubscribe();
   }, [watch]);
-
-  const defaultValues = {
-    name: subscriberData.data?.fields ? subscriberData.data.fields.name : "",
-    surname: subscriberData.data?.fields
-      ? subscriberData.data.fields.surname
-      : "",
-    email: subscriberData.data?.fields ? subscriberData.data.fields.email : "",
-    status: subscriberData.data?.fields
-      ? subscriberData.data.fields.status
-      : "",
-    profession: subscriberData.data?.fields
-      ? subscriberData.data.fields.profession
-      : "",
-    salary: subscriberData.data?.fields
-      ? subscriberData.data.fields.salary
-      : "",
-    telephone: subscriberData.data?.fields
-      ? subscriberData.data.fields.telephone
-      : "",
-  };
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -134,13 +127,12 @@ const EditSubscriberPage = ({ getSubscribersData }) => {
           email: data.email,
           profession: data.profession,
           status: data.status,
-          salary: String(data.salary),
+          salary: data.salary,
           telephone: data.telephone,
         },
       });
+      getSubscribersData();
     }
-
-    getSubscribersData();
     navigate("/subscribers");
     displayPopup(data);
   };
@@ -157,7 +149,7 @@ const EditSubscriberPage = ({ getSubscribersData }) => {
   return (
     <>
       {subscriberData.status === "loading" ? (
-        <Loader title="Edit Data" />
+        <Loader title="Getting data" />
       ) : subscriberData.status === "error" ? (
         <Error
           titleOne="ERROR MESSAGE"
@@ -166,7 +158,7 @@ const EditSubscriberPage = ({ getSubscribersData }) => {
         />
       ) : (
         <StyledContainer>
-          <StyledHeading label="Add Subscriber" />
+          <StyledHeading label="Edit Subscriber" />
 
           <FormSubscriber
             control={control}
@@ -178,10 +170,6 @@ const EditSubscriberPage = ({ getSubscribersData }) => {
       )}
     </>
   );
-};
-
-EditSubscriberPage.propTypes = {
-  getSubscribersData: PropTypes.func,
 };
 
 export default EditSubscriberPage;
