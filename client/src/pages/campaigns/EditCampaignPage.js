@@ -18,6 +18,7 @@ import { usePopup } from "popupContext";
 const EditCampaignPage = ({ subscribersData, getCampaignsData }) => {
   const {
     handleSubmit,
+    formState,
     formState: { errors },
     setValue,
     control,
@@ -103,12 +104,11 @@ const EditCampaignPage = ({ subscribersData, getCampaignsData }) => {
   };
 
   const handleDraftCampaign = (data) => {
-    console.log(isCampaignChanged(data));
     if (isCampaignChanged(data)) {
       patchData(data, "draft");
-      getCampaignsData();
     }
 
+    getCampaignsData();
     displayPopup(data, false, navigate("/campaigns"));
   };
 
