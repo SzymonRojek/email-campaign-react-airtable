@@ -18,20 +18,9 @@ const styles = {
   questionSpan: { color: "crimson", fontWeight: "bold" },
 };
 
-const postData = (data) =>
-  api.post("/subscribers", {
-    fields: {
-      name: data.name,
-      surname: data.surname,
-      email: data.email,
-      profession: data.profession,
-      status: data.status,
-      salary: data.salary,
-      telephone: data.telephone,
-    },
-  });
-
 const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
+  const endpoint = "subscribers";
+
   const {
     handleSubmit,
     watch,
@@ -42,6 +31,7 @@ const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
   } = useForm({
     resolver: yupResolver(validationSubscriber),
   });
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -89,10 +79,20 @@ const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
     ),
   });
 
-  const onSubmit = (data) => {
-    postData(data);
+  if (formState.isSubmitSuccessful) getSubscribersData();
 
-    getSubscribersData();
+  const onSubmit = (data) => {
+    api.post(endpoint, {
+      fields: {
+        name: data.name,
+        surname: data.surname,
+        email: data.email,
+        profession: data.profession,
+        status: data.status,
+        salary: data.salary,
+        telephone: data.telephone,
+      },
+    });
 
     addTextPopup(setTextConfirmPopup(data));
 
@@ -133,24 +133,6 @@ const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
 };
 
 AddSubscriberPage.propTypes = {
-  subscribersData: PropTypes.shape({
-    status: PropTypes.string,
-    data: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string,
-        createdTime: PropTypes.string,
-        fields: PropTypes.shape({
-          status: PropTypes.string,
-          name: PropTypes.string,
-          surname: PropTypes.string,
-          profession: PropTypes.string,
-          email: PropTypes.string,
-          salary: PropTypes.string,
-          telephone: PropTypes.string,
-        }),
-      })
-    ),
-  }),
   getSubscribersData: PropTypes.func,
 };
 
