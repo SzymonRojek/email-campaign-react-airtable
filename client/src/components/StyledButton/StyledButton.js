@@ -10,6 +10,7 @@ const CustomButton = styled(Button)(({ bgc, hover }) => ({
   backgroundColor: bgc,
   minWidth: 120,
   fontSize: 18,
+  fontWeight: "bold",
   letterSpacing: 2,
   margin: "20px 0",
 }));
