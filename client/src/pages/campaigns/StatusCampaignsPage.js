@@ -8,6 +8,7 @@ import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
 import { CampaignStatus } from "components/CampaignStatus";
 import SelectInputController from "components/Inputs/SelectInputController";
+import { useAPI } from "APiContextProvider";
 
 const useStyles = makeStyles({
   root: {
@@ -57,11 +58,8 @@ const selectCampaignsStatus = [
   { value: "draft", label: "draft" },
 ];
 
-const StatusCampaignsPage = ({
-  campaignsData,
-  editCampaign,
-  removeCampaign,
-}) => {
+const StatusCampaignsPage = ({ editCampaign, removeCampaign }) => {
+  const { campaignsData } = useAPI();
   const { control, watch } = useForm();
   const [selectStatus, setSelectStatus] = useState("sent");
 

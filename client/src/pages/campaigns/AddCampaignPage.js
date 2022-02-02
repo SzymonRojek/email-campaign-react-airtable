@@ -12,6 +12,7 @@ import { StyledHeading } from "components/StyledHeading";
 import { FormCampaign } from "components/FormCampaign";
 import { sendEmail } from "sendEmail";
 import { usePopup } from "popupContext";
+import { useAPI } from "APiContextProvider";
 
 const styles = {
   questionSpan: { color: "crimson", fontWeight: "bold" },
@@ -27,7 +28,8 @@ const postData = (data, status) =>
     },
   });
 
-const AddCampaignPage = ({ subscribersData, getCampaignsData }) => {
+const AddCampaignPage = () => {
+  const { subscribersData, fetchCampaignsData } = useAPI();
   const {
     handleSubmit,
     control,
@@ -73,7 +75,7 @@ const AddCampaignPage = ({ subscribersData, getCampaignsData }) => {
 
   const handleDraftCampaign = (data) => {
     postData(data, "draft");
-    getCampaignsData();
+    fetchCampaignsData();
     addTextPopup(setTextConfirmPopup(data, false));
     handleActionPopup(() => ({
       change: () =>
@@ -116,7 +118,7 @@ const AddCampaignPage = ({ subscribersData, getCampaignsData }) => {
       openConfirmPopup();
     }
 
-    getCampaignsData();
+    fetchCampaignsData();
   };
 
   return (

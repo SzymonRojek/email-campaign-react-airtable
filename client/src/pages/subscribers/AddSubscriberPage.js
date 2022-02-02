@@ -12,14 +12,16 @@ import { Loader, Error } from "components/DisplayMessage";
 
 import { usePopup } from "popupContext";
 import { FormSubscriber } from "components/FormSubscriber/";
+import { useAPI } from "APiContextProvider";
 
 const styles = {
   subscriberName: { color: "green" },
   questionSpan: { color: "crimson", fontWeight: "bold" },
 };
 
-const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
-  const endpoint = "subscribers";
+const AddSubscriberPage = () => {
+  const endpoint = "/subscribers";
+  const { subscribersData, fetchSubscribersData } = useAPI();
 
   const {
     handleSubmit,
@@ -79,10 +81,12 @@ const AddSubscriberPage = ({ subscribersData, getSubscribersData }) => {
     ),
   });
 
-  if (formState.isSubmitSuccessful) getSubscribersData();
+  if (formState.isSubmitSuccessful) {
+    fetchSubscribersData();
+  }
 
-  const onSubmit = (data) => {
-    api.post(endpoint, {
+  const onSubmit = async (data) => {
+    await api.post(endpoint, {
       fields: {
         name: data.name,
         surname: data.surname,

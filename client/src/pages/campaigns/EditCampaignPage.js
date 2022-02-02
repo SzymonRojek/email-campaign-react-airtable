@@ -14,8 +14,10 @@ import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
 import { sendEmail } from "sendEmail";
 import { usePopup } from "popupContext";
+import { useAPI } from "APiContextProvider";
 
-const EditCampaignPage = ({ subscribersData, getCampaignsData }) => {
+const EditCampaignPage = () => {
+  const { subscribersData, fetchCampaignsData } = useAPI();
   const {
     handleSubmit,
     formState,
@@ -106,9 +108,9 @@ const EditCampaignPage = ({ subscribersData, getCampaignsData }) => {
   const handleDraftCampaign = (data) => {
     if (isCampaignChanged(data)) {
       patchData(data, "draft");
+      fetchCampaignsData();
     }
 
-    getCampaignsData();
     displayPopup(data, false, navigate("/campaigns"));
   };
 
@@ -138,11 +140,11 @@ const EditCampaignPage = ({ subscribersData, getCampaignsData }) => {
 
     if (!isEmailError && activeSubscribers.length > 0) {
       patchData(data, "sent");
-      getCampaignsData();
+      fetchCampaignsData();
       displayPopup(data, true, additionalText, navigate("/campaigns"));
     } else {
       patchData(data, "draft");
-      getCampaignsData();
+      fetchCampaignsData();
       displayPopup(data, false, additionalText, navigate("/campaigns"));
     }
   };

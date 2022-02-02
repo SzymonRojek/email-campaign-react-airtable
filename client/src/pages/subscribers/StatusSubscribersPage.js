@@ -8,6 +8,7 @@ import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
 import { SubscriberStatus } from "components/SubscriberStatus";
 import SelectInputController from "components/Inputs/SelectInputController";
+import { useAPI } from "APiContextProvider";
 
 const useStyles = makeStyles({
   root: {
@@ -59,11 +60,11 @@ const selectSubscribersStatus = [
 ];
 
 const StatusSubscribersPage = ({
-  subscribersData,
   editSubscriber,
   handleSubscriberDetails,
   removeSubscriber,
 }) => {
+  const { subscribersData } = useAPI();
   const { control, watch } = useForm();
   const [selectStatus, setSelectStatus] = useState("active");
 

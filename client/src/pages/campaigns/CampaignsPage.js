@@ -6,54 +6,59 @@ import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
 import { CampaignsList } from "components/CampaignsList";
 import { Error, Loader } from "components/DisplayMessage";
+import { useAPI } from "APiContextProvider";
 
-const CampaignsPage = ({ campaignsData, editCampaign, removeCampaign }) => (
-  <>
-    {campaignsData.status === "loading" ? (
-      <Loader title="Campaigns" />
-    ) : campaignsData.status === "error" ? (
-      <Error
-        titleOne="ERROR MESSAGE"
-        titleTwo={`${campaignsData.data?.error.message || "Check endpoints"}`}
-        titleThree="Also, please check your internet connection."
-      />
-    ) : !campaignsData.data.length ? (
-      <Error
-        titleOne="MESSAGE"
-        titleTwo="There are no Email Campaigns added yet"
-        titleThree="Please add a New Email Campaign"
-      />
-    ) : (
-      campaignsData.status === "success" && (
-        <StyledContainer>
-          <div style={{ marginBottom: 100 }}>
-            <StyledHeading label="All Campaigns" />
+const CampaignsPage = ({ editCampaign, removeCampaign }) => {
+  const { campaignsData } = useAPI();
 
-            <CampaignsList
-              subHeading="List"
-              dataHeadEmailTable={dataHeadEmailTable}
-              passedData={sortDataAlphabetically(campaignsData.data)}
-              editCampaign={editCampaign}
-              removeCampaign={removeCampaign}
-            />
-          </div>
+  return (
+    <>
+      {campaignsData.status === "loading" ? (
+        <Loader title="Campaigns" />
+      ) : campaignsData.status === "error" ? (
+        <Error
+          titleOne="ERROR MESSAGE"
+          titleTwo={`${campaignsData.data?.error.message || "Check endpoints"}`}
+          titleThree="Also, please check your internet connection."
+        />
+      ) : !campaignsData.data.length ? (
+        <Error
+          titleOne="MESSAGE"
+          titleTwo="There are no Email Campaigns added yet"
+          titleThree="Please add a New Email Campaign"
+        />
+      ) : (
+        campaignsData.status === "success" && (
+          <StyledContainer>
+            <div style={{ marginBottom: 100 }}>
+              <StyledHeading label="All Campaigns" />
 
-          {campaignsData.data.length > 1 ? (
-            <CampaignsList
-              subHeading="Latest added Campaign"
-              dataHeadEmailTable={dataHeadEmailTable}
-              passedData={getLatestAddedItem(campaignsData.data)}
-              editCampaign={editCampaign}
-              removeCampaign={removeCampaign}
-            />
-          ) : (
-            ""
-          )}
-        </StyledContainer>
-      )
-    )}
-  </>
-);
+              <CampaignsList
+                subHeading="List"
+                dataHeadEmailTable={dataHeadEmailTable}
+                passedData={sortDataAlphabetically(campaignsData.data)}
+                editCampaign={editCampaign}
+                removeCampaign={removeCampaign}
+              />
+            </div>
+
+            {campaignsData.data.length > 1 ? (
+              <CampaignsList
+                subHeading="Latest added Campaign"
+                dataHeadEmailTable={dataHeadEmailTable}
+                passedData={getLatestAddedItem(campaignsData.data)}
+                editCampaign={editCampaign}
+                removeCampaign={removeCampaign}
+              />
+            ) : (
+              ""
+            )}
+          </StyledContainer>
+        )
+      )}
+    </>
+  );
+};
 
 CampaignsPage.propTypes = {
   campaignsData: PropTypes.shape({

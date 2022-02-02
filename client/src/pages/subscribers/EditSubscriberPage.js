@@ -13,11 +13,14 @@ import { Loader, Error } from "components/DisplayMessage";
 
 import { usePopup } from "popupContext";
 import { FormSubscriber } from "components/FormSubscriber/";
+import { useAPI } from "APiContextProvider";
 
-const EditSubscriberPage = ({ getSubscribersData }) => {
+const EditSubscriberPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const endpoint = "/subscribers";
+
+  const { fetchSubscribersData } = useAPI();
 
   const {
     handleSubmit,
@@ -131,10 +134,11 @@ const EditSubscriberPage = ({ getSubscribersData }) => {
           telephone: data.telephone,
         },
       });
-      getSubscribersData();
     }
-    navigate("/subscribers");
+
+    fetchSubscribersData();
     displayPopup(data);
+    navigate("/subscribers");
   };
 
   if (subscriberData.data?.error) {
