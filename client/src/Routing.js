@@ -24,14 +24,10 @@ import { NotFoundPage } from "pages/notFoundPage";
 
 const Routing = (props) => {
   const {
-    subscribersData,
     handleEditSubscriber,
     handleSubscriberDetails,
     handleRemoveItem,
-    getSubscribersData,
-    campaignsData,
     handleEditCampaign,
-    getCampaignsData,
   } = props;
 
   const routes = [
@@ -44,7 +40,6 @@ const Routing = (props) => {
           path: "/",
           element: (
             <SubscribersPage
-              subscribersData={subscribersData}
               editSubscriber={handleEditSubscriber}
               handleSubscriberDetails={handleSubscriberDetails}
               removeSubscriber={handleRemoveItem}
@@ -55,7 +50,6 @@ const Routing = (props) => {
           path: "status",
           element: (
             <StatusSubscribersPage
-              subscribersData={subscribersData}
               editSubscriber={handleEditSubscriber}
               handleSubscriberDetails={handleSubscriberDetails}
               removeSubscriber={handleRemoveItem}
@@ -64,12 +58,7 @@ const Routing = (props) => {
         },
         {
           path: "add",
-          element: (
-            <AddSubscriberPage
-              subscribersData={subscribersData}
-              getSubscribersData={getSubscribersData}
-            />
-          ),
+          element: <AddSubscriberPage />,
         },
         {
           path: "details/:id",
@@ -77,9 +66,7 @@ const Routing = (props) => {
         },
         {
           path: "edit/:id",
-          element: (
-            <EditSubscriberPage getSubscribersData={getSubscribersData} />
-          ),
+          element: <EditSubscriberPage />,
         },
         { path: "*", element: <NotFoundPage /> },
       ],
@@ -92,7 +79,6 @@ const Routing = (props) => {
           path: "/",
           element: (
             <CampaignsPage
-              campaignsData={campaignsData}
               editCampaign={handleEditCampaign}
               removeCampaign={handleRemoveItem}
             />
@@ -102,7 +88,6 @@ const Routing = (props) => {
           path: "status",
           element: (
             <StatusCampaignsPage
-              campaignsData={campaignsData}
               editCampaign={handleEditCampaign}
               removeCampaign={handleRemoveItem}
             />
@@ -110,21 +95,11 @@ const Routing = (props) => {
         },
         {
           path: "add",
-          element: (
-            <AddCampaignPage
-              subscribersData={subscribersData}
-              getCampaignsData={getCampaignsData}
-            />
-          ),
+          element: <AddCampaignPage />,
         },
         {
           path: "edit/:id",
-          element: (
-            <EditCampaignPage
-              subscribersData={subscribersData}
-              getCampaignsData={getCampaignsData}
-            />
-          ),
+          element: <EditCampaignPage />,
         },
       ],
     },
