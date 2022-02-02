@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import "App.css";
 import api from "api";
-import { useFetchData } from "useFetchData";
+import { useAPI } from "./APiContextProvider";
 import { MainNavigation } from "components/Navigation";
 import Routing from "./Routing";
 
@@ -11,20 +11,12 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
   const navigate = useNavigate();
   const [tabsValue, setTabsValue] = useState(0);
 
-  const endpointSubscribers = "/subscribers";
-  const endpointCampaigns = "/campaigns";
-
   const {
-    data: subscribersData,
-    setData: setSubscribersData,
-    getData: getSubscribersData,
-  } = useFetchData(endpointSubscribers);
-
-  const {
-    data: campaignsData,
-    setData: setCampaignsData,
-    getData: getCampaignsData,
-  } = useFetchData(endpointCampaigns);
+    subscribersData,
+    setSubscribersData,
+    campaignsData,
+    setCampaignsData,
+  } = useAPI();
 
   const handleRemoveItem = (id, endpoint) => {
     api.delete(`/${endpoint}/${id}`);
@@ -71,12 +63,8 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
       />
 
       <Routing
-        subscribersData={subscribersData}
-        getSubscribersData={getSubscribersData}
         handleEditSubscriber={handleEditSubscriber}
         handleSubscriberDetails={handleSubscriberDetails}
-        campaignsData={campaignsData}
-        getCampaignsData={getCampaignsData}
         handleEditCampaign={handleEditCampaign}
         handleRemoveItem={handleRemoveItem}
       />
