@@ -4,6 +4,7 @@ import { StyledFooter } from "./components/StyledFooter";
 import { useLocalStorageValue } from "./useLocalStorageValue";
 import { PopupProvider } from "./popupContext";
 import { Login } from "./Login";
+import APIContextProvider from "./APiContextProvider";
 
 const App = () => {
   const [statusLog, setStatusLog] = useLocalStorageValue("status", "loadingIn");
@@ -18,7 +19,9 @@ const App = () => {
         setStatusLog={setStatusLog}
       >
         <PopupProvider>
-          <AppContainer setIsLogIn={setIsLogIn} setStatusLog={setStatusLog} />
+          <APIContextProvider>
+            <AppContainer setIsLogIn={setIsLogIn} setStatusLog={setStatusLog} />
+          </APIContextProvider>
           <ConfirmPopup />
           <InfoPopup />
         </PopupProvider>
