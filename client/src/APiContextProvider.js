@@ -1,0 +1,84 @@
+import React, { useState, useEffect, createContext, useContext } from "react";
+
+import api from "./api";
+
+const APIContext = createContext();
+
+function APIContextProvider({ children }) {
+  const [subscribersData, setSubscribersData] = useState({
+    status: "loading",
+    data: null,
+  });
+
+  const [campaignsData, setCampaignsData] = useState({
+    status: "loading",
+    data: null,
+  });
+
+  const fetchSubscribersData = async () => {
+    try {
+      const data = await api.get("/subscribers");
+
+      setSubscribersData({
+        status: data?.error ? "error" : "success",
+        data,
+      });
+    } catch (error) {
+      setSubscribersData({
+        status: "error",
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchSubscribersData();
+  }, []);
+
+  const fetchCampaignsData = async () => {
+    try {
+      const data = await api.get("/campaigns");
+
+      setCampaignsData({
+        status: data?.error ? "error" : "success",
+        data,
+      });
+    } catch (error) {
+      setCampaignsData({
+        status: "error",
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchSubscribersData();
+  }, []);
+
+  useEffect(() => {
+    fetchCampaignsData();
+  }, []);
+
+  return (
+    <APIContext.Provider
+      value={{
+        subscribersData,
+        setSubscribersData,
+        fetchSubscribersData,
+        campaignsData,
+        setCampaignsData,
+        fetchCampaignsData,
+      }}
+    >
+      {children}
+    </APIContext.Provider>
+  );
+}
+
+export default APIContextProvider;
+
+export const useAPI = () => {
+  const context = useContext(APIContext);
+  if (context === undefined) {
+    throw new Error("Context must be used within a Provider");
+  }
+  return context;
+};
