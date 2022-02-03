@@ -95,8 +95,8 @@ const EditCampaignPage = () => {
     openInfoPopup();
   };
 
-  const getActionsOnSubmit = (data, status) => {
-    const response = api.patch(`${endpoint}/${id}`, {
+  const getActionsOnSubmit = async (data, status) => {
+    const response = await api.patch(`${endpoint}/${id}`, {
       fields: {
         title: data.title,
         description: data.description,
@@ -105,14 +105,12 @@ const EditCampaignPage = () => {
     });
 
     if (response) {
-      fetchCampaignsData();
+      await fetchCampaignsData();
     }
   };
 
   const handleDraftCampaign = (data) => {
-    if (isCampaignChanged(data)) {
-      getActionsOnSubmit(data, "draft");
-    }
+    getActionsOnSubmit(data, "draft");
 
     handleActionPopup(() => ({
       change: () => navigate("/campaigns"),
@@ -180,8 +178,8 @@ const EditCampaignPage = () => {
               control={control}
               errors={errors}
               handleSubmit={handleSubmit}
-              handleDraftData={handleDraftCampaign}
-              handleSendData={handleSendCampaign}
+              handleDraftData={handleSubmit(handleDraftCampaign)}
+              handleSendData={handleSubmit(handleSendCampaign)}
             />
           </StyledContainer>
         )
