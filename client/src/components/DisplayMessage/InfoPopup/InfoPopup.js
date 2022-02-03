@@ -39,7 +39,9 @@ const useStyles = makeStyles((theme) => ({
 
 const InfoPopup = () => {
   const classes = useStyles();
-  const { isOpenInfoPopup, closeInfoPopup, text } = usePopup();
+  const { isOpenInfoPopup, closeInfoPopup, text, actionPopup } = usePopup();
+
+  const handleChangeRoute = () => actionPopup?.change && actionPopup.change();
 
   return (
     <Dialog open={isOpenInfoPopup} classes={{ paper: classes.paper }}>
@@ -53,7 +55,10 @@ const InfoPopup = () => {
             className={classes.button}
             variant="contained"
             color={text.colorButton}
-            onClick={() => closeInfoPopup()}
+            onClick={() => {
+              handleChangeRoute();
+              closeInfoPopup();
+            }}
           >
             <span className={classes.buttonText}>close</span>
           </Button>
