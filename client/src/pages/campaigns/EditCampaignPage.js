@@ -20,7 +20,6 @@ const EditCampaignPage = () => {
   const { subscribersData, fetchCampaignsData } = useAPI();
   const {
     handleSubmit,
-    formState,
     formState: { errors },
     setValue,
     control,
@@ -30,7 +29,7 @@ const EditCampaignPage = () => {
   const [isEmailError, setEmailError] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
-  const { openInfoPopup, addTextPopup } = usePopup();
+  const { openInfoPopup, addTextPopup, handleActionPopup } = usePopup();
 
   const endpoint = "campaigns";
   const { itemData: campaignData } = useFetchDetailsById(endpoint, id);
@@ -50,15 +49,6 @@ const EditCampaignPage = () => {
 
     return () => clearTimeout(timeoutId);
   }, [setValue, defaultValues.title, defaultValues.description]);
-
-  const patchData = (data, status) =>
-    api.patch(`${endpoint}/${id}`, {
-      fields: {
-        title: capitalizeFirstLetter(data.title),
-        description: capitalizeFirstLetter(data.description),
-        status: status,
-      },
-    });
 
   const isCampaignChanged = (data) =>
     data.title !== defaultValues.title ||
@@ -105,13 +95,30 @@ const EditCampaignPage = () => {
     openInfoPopup();
   };
 
-  const handleDraftCampaign = (data) => {
-    if (isCampaignChanged(data)) {
-      patchData(data, "draft");
+  const getActionsOnSubmit = (data, status) => {
+    const response = api.patch(`${endpoint}/${id}`, {
+      fields: {
+        title: data.title,
+        description: data.description,
+        status: status,
+      },
+    });
+
+    if (response) {
       fetchCampaignsData();
     }
+  };
 
-    displayPopup(data, false, navigate("/campaigns"));
+  const handleDraftCampaign = (data) => {
+    if (isCampaignChanged(data)) {
+      getActionsOnSubmit(data, "draft");
+    }
+
+    handleActionPopup(() => ({
+      change: () => navigate("/campaigns"),
+    }));
+
+    displayPopup(data, false);
   };
 
   const handleSendCampaign = (data) => {
@@ -136,16 +143,12 @@ const EditCampaignPage = () => {
       ? "No active Subscribers!"
       : "";
 
-    console.log("active subscribers:", activeSubscribers);
-
     if (!isEmailError && activeSubscribers.length > 0) {
-      patchData(data, "sent");
-      fetchCampaignsData();
-      displayPopup(data, true, additionalText, navigate("/campaigns"));
+      getActionsOnSubmit(data, "sent");
+      displayPopup(data, true, additionalText);
     } else {
-      patchData(data, "draft");
-      fetchCampaignsData();
-      displayPopup(data, false, additionalText, navigate("/campaigns"));
+      getActionsOnSubmit(data, "draft");
+      displayPopup(data, false, additionalText);
     }
   };
 
