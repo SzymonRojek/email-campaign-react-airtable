@@ -31,6 +31,15 @@ const AddSubscriberPage = () => {
     formState: { errors },
     reset,
   } = useForm({
+    defaultValues: {
+      name: "Szymon",
+      surname: "Rojek",
+      profession: "web",
+      status: "active",
+      email: "sz.rojek@gmail.com",
+      salary: "234",
+      telephone: "2342342344",
+    },
     resolver: yupResolver(validationSubscriber),
   });
 
@@ -81,12 +90,8 @@ const AddSubscriberPage = () => {
     ),
   });
 
-  if (formState.isSubmitSuccessful) {
-    fetchSubscribersData();
-  }
-
-  const onSubmit = async (data) => {
-    await api.post(endpoint, {
+  const onSubmit = (data) => {
+    api.post(endpoint, {
       fields: {
         name: data.name,
         surname: data.surname,
@@ -109,6 +114,10 @@ const AddSubscriberPage = () => {
 
     openConfirmPopup();
   };
+
+  if (formState.isSubmitSuccessful) {
+    fetchSubscribersData();
+  }
 
   return (
     <>
