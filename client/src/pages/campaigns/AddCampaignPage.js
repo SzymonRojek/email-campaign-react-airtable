@@ -19,15 +19,6 @@ const styles = {
   campaignName: { color: "green", fontWeight: "bold" },
 };
 
-const postData = (data, status) =>
-  api.post("campaigns", {
-    fields: {
-      title: capitalizeFirstLetter(data.title),
-      description: capitalizeFirstLetter(data.description),
-      status: status,
-    },
-  });
-
 const AddCampaignPage = () => {
   const { subscribersData, fetchCampaignsData } = useAPI();
   const {
@@ -73,9 +64,23 @@ const AddCampaignPage = () => {
     ),
   });
 
+  const getActionsOnSubmit = async (data, status) => {
+    const response = await api.post("campaigns", {
+      fields: {
+        title: capitalizeFirstLetter(data.title),
+        description: capitalizeFirstLetter(data.description),
+        status: status,
+      },
+    });
+
+    if (response) {
+      await fetchCampaignsData();
+    }
+  };
+
   const handleDraftCampaign = (data) => {
-    postData(data, "draft");
-    fetchCampaignsData();
+    getActionsOnSubmit(data, "draft");
+
     addTextPopup(setTextConfirmPopup(data, false));
     handleActionPopup(() => ({
       change: () =>
@@ -109,16 +114,14 @@ const AddCampaignPage = () => {
     console.log("active subscribers:", activeSubscribers);
 
     if (!isEmailError && activeSubscribers.length > 0) {
-      postData(data, "sent");
+      getActionsOnSubmit(data, "sent");
       addTextPopup(setTextConfirmPopup(data, true, additionalText));
       openConfirmPopup();
     } else {
-      postData(data, "draft");
+      getActionsOnSubmit(data, "draft");
       addTextPopup(setTextConfirmPopup(data, false, additionalText));
       openConfirmPopup();
     }
-
-    fetchCampaignsData();
   };
 
   return (
