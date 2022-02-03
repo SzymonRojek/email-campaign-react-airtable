@@ -24,10 +24,8 @@ export const useFetchDetailsById = (endpoint, id) => {
   };
 
   useEffect(() => {
-    const delayGetData = setTimeout(fetchData, 2_000);
-
-    return () => clearTimeout(delayGetData);
-  }, [id]);
+    fetchData();
+  }, []);
 
   return { itemData, setItemData };
 };
