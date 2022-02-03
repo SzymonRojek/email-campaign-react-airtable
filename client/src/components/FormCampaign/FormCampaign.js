@@ -14,13 +14,7 @@ const style = {
   typography: { color: "orange", letterSpacing: 2, wordSpacing: 3 },
 };
 
-const FormCampaign = ({
-  control,
-  errors,
-  handleSubmit,
-  handleDraftData,
-  handleSendData,
-}) => (
+const FormCampaign = ({ control, errors, handleDraftData, handleSendData }) => (
   <Paper elevation={14} style={style.paper}>
     <form>
       <Box px={3} py={3}>
@@ -69,7 +63,7 @@ const FormCampaign = ({
                 label="draft"
                 ariaLabel="draft"
                 type="submit"
-                onClick={handleSubmit(handleDraftData)}
+                onClick={handleDraftData}
               />
             </Grid>
             <Grid item>
@@ -79,7 +73,7 @@ const FormCampaign = ({
                 label="send"
                 ariaLabel="send"
                 type="submit"
-                onClick={handleSubmit(handleSendData)}
+                onClick={handleSendData}
               />
             </Grid>
           </Grid>
