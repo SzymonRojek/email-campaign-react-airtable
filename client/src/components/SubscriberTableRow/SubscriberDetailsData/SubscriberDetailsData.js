@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { useState, useEffect } from "react";
 import { TableCell, TableRow, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -11,6 +12,16 @@ const useStyles = makeStyles(() => ({
 
 const SubscriberDetailsData = ({ subscriber, index }) => {
   const classes = useStyles();
+
+  const [modifyData, setModifyData] = useState({
+    mobile: "",
+  });
+
+  useEffect(() => {
+    setModifyData({
+      mobile: subscriber ? formatMobileNumber(subscriber.fields.telephone) : "",
+    });
+  }, [subscriber]);
 
   return (
     <TableRow
@@ -62,7 +73,7 @@ const SubscriberDetailsData = ({ subscriber, index }) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          +44 {formatMobileNumber(subscriber.fields.telephone)}
+          +44 {modifyData.mobile}
         </Typography>
       </TableCell>
     </TableRow>
