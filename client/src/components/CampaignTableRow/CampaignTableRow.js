@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Tooltip, Zoom } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -68,6 +68,24 @@ const CampaignTableRow = (props) => {
   const [indexPage] = useState(actualPage);
   const { openConfirmPopup, addTextPopup, handleActionPopup } = usePopup();
 
+  const [modifyData, setModifyData] = useState({
+    title: "",
+    description: "",
+    statusColor: "",
+    formattedData: "",
+  });
+
+  useEffect(() => {
+    setModifyData({
+      title: campaign ? capitalizeFirstLetter(campaign.fields.title) : "",
+      description: campaign
+        ? capitalizeFirstLetter(campaign.fields.description)
+        : "",
+      statusColor: campaign ? getStatusColor(campaign.fields.status) : "",
+      formattedData: campaign ? getFormattedData(campaign.createdTime) : "",
+    });
+  }, [campaign]);
+
   return (
     <TableRow
       key={`${campaign.id}`}
@@ -91,7 +109,7 @@ const CampaignTableRow = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {capitalizeFirstLetter(campaign.fields.title)}
+          {modifyData.title}
         </Typography>
       </TableCell>
       <TableCell>
@@ -100,7 +118,7 @@ const CampaignTableRow = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {campaign.fields.description}
+          {modifyData.description}
         </Typography>
       </TableCell>
       <TableCell>
@@ -109,7 +127,7 @@ const CampaignTableRow = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {getFormattedData(campaign.createdTime)}
+          {modifyData.formattedData}
         </Typography>
       </TableCell>
       <TableCell>
@@ -118,7 +136,7 @@ const CampaignTableRow = (props) => {
             key={index}
             className={classes.status}
             style={{
-              backgroundColor: getStatusColor(campaign.fields.status),
+              backgroundColor: modifyData.statusColor,
               ...styles.typography,
             }}
           >
@@ -166,10 +184,7 @@ const CampaignTableRow = (props) => {
               question: (
                 <>
                   Are you sure you want to remove{" "}
-                  <span style={styles.questionText}>
-                    {capitalizeFirstLetter(campaign.fields.title)}
-                  </span>
-                  ?
+                  <span style={styles.questionText}>{modifyData.title}</span>?
                 </>
               ),
             });

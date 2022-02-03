@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -58,6 +58,24 @@ const SubscriberGeneralData = (props) => {
     removeSubscriber,
   } = props;
 
+  const [modifyData, setModifyData] = useState({
+    name: "",
+    surname: "",
+    statusColor: "",
+    formattedData: "",
+  });
+
+  useEffect(() => {
+    setModifyData({
+      name: subscriber ? capitalizeFirstLetter(subscriber.fields.name) : "",
+      surname: subscriber
+        ? capitalizeFirstLetter(subscriber.fields.surname)
+        : "",
+      statusColor: subscriber ? getStatusColor(subscriber.fields.status) : "",
+      formattedData: subscriber ? getFormattedData(subscriber.createdTime) : "",
+    });
+  }, [subscriber]);
+
   const navigate = useNavigate();
   const classes = useStyles();
   const location = useLocation();
@@ -77,9 +95,7 @@ const SubscriberGeneralData = (props) => {
         title: <span style={styles.pending}>Please wait...</span>,
         mainText: (
           <>
-            <span style={styles.name}>
-              {capitalizeFirstLetter(subscriber.fields.name)}'s
-            </span>
+            <span style={styles.name}>{modifyData.name}'s</span>
             status is
             <span style={styles.pending}> pending </span> at the moment because
             you need to complete all data in the table
@@ -94,9 +110,7 @@ const SubscriberGeneralData = (props) => {
         title: <span style={styles.blocked}>Unfortunately...</span>,
         mainText: (
           <>
-            <span style={styles.name}>
-              {capitalizeFirstLetter(subscriber.fields.name)}'s
-            </span>
+            <span style={styles.name}>{modifyData.name}'s</span>
             status is
             <span style={styles.blocked}> blocked </span>can not get an access
             to more details 🙁
@@ -133,7 +147,7 @@ const SubscriberGeneralData = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {capitalizeFirstLetter(subscriber.fields.name)}
+          {modifyData.name}
         </Typography>
       </TableCell>
       <TableCell>
@@ -142,7 +156,7 @@ const SubscriberGeneralData = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {capitalizeFirstLetter(subscriber.fields.surname)}
+          {modifyData.surname}
         </Typography>
       </TableCell>
       <TableCell>
@@ -151,7 +165,7 @@ const SubscriberGeneralData = (props) => {
             key={index}
             className={classes.status}
             style={{
-              backgroundColor: getStatusColor(subscriber.fields.status),
+              backgroundColor: modifyData.statusColor,
               ...styles.paragraph,
             }}
           >
@@ -165,7 +179,7 @@ const SubscriberGeneralData = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {getFormattedData(subscriber.createdTime)}
+          {modifyData.formattedData}
         </Typography>
       </TableCell>
       {location.pathname === "/subscribers" ||
@@ -213,7 +227,7 @@ const SubscriberGeneralData = (props) => {
                     <>
                       Are you sure you want to remove{" "}
                       <span style={{ color: "crimson", fontWeight: "bold" }}>
-                        {capitalizeFirstLetter(subscriber.fields.name)}
+                        {modifyData.name}
                       </span>
                       ?
                     </>
