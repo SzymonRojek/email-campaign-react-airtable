@@ -90,6 +90,24 @@ const AddSubscriberPage = () => {
     ),
   });
 
+  // const getActionsOnSubmit = async (data) => {
+  //   const response = await api.post(endpoint, {
+  //     fields: {
+  //       name: data.name,
+  //       surname: data.surname,
+  //       email: data.email,
+  //       profession: data.profession,
+  //       status: data.status,
+  //       salary: data.salary,
+  //       telephone: data.telephone,
+  //     },
+  //   });
+
+  //   if (response) {
+  //     await fetchSubscribersData;
+  //   }
+  // };
+
   const onSubmit = (data) => {
     api.post(endpoint, {
       fields: {
