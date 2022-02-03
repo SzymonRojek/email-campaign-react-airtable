@@ -119,21 +119,26 @@ const EditSubscriberPage = () => {
     openInfoPopup();
   };
 
-  const onSubmit = (data) => {
-    if (isSubscriberDataEdited(data)) {
-      api.patch(`${endpoint}/${id}`, {
-        fields: {
-          name: data.name,
-          surname: data.surname,
-          email: data.email,
-          profession: data.profession,
-          status: data.status,
-          salary: data.salary,
-          telephone: data.telephone,
-        },
-      });
-      fetchSubscribersData();
+  const getActionsOnSubmit = async (data) => {
+    const response = await api.patch(`${endpoint}/${id}`, {
+      fields: {
+        name: data.name,
+        surname: data.surname,
+        email: data.email,
+        profession: data.profession,
+        status: data.status,
+        salary: data.salary,
+        telephone: data.telephone,
+      },
+    });
+
+    if (response) {
+      await fetchSubscribersData();
     }
+  };
+
+  const onSubmit = async (data) => {
+    getActionsOnSubmit(data);
 
     handleActionPopup(() => ({
       change: () => navigate("/subscribers"),
