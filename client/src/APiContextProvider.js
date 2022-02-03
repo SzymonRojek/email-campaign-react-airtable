@@ -50,10 +50,6 @@ function APIContextProvider({ children }) {
   };
 
   useEffect(() => {
-    fetchSubscribersData();
-  }, []);
-
-  useEffect(() => {
     fetchCampaignsData();
   }, []);
 
