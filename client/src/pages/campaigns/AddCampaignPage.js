@@ -52,7 +52,10 @@ const AddCampaignPage = () => {
           {" "}
           {capitalizeFirstLetter(data.title)}{" "}
         </span>
-        has been {status ? "sent" : "drafted and added"} to active subscribers
+        has been{" "}
+        {status
+          ? "sent to choosen subscribers"
+          : "drafted and added to the list"}
         😁
       </>
     ),
@@ -74,7 +77,7 @@ const AddCampaignPage = () => {
     });
 
     if (response) {
-      await fetchCampaignsData();
+      fetchCampaignsData();
     }
   };
 
@@ -82,6 +85,7 @@ const AddCampaignPage = () => {
     getActionsOnSubmit(data, "draft");
 
     addTextPopup(setTextConfirmPopup(data, false));
+
     handleActionPopup(() => ({
       change: () =>
         location.pathname === "/campaigns/add" ? navigate("/campaigns") : "",
@@ -111,15 +115,17 @@ const AddCampaignPage = () => {
       ? "No active Subscribers!"
       : "";
 
-    console.log("active subscribers:", activeSubscribers);
-
     if (!isEmailError && activeSubscribers.length > 0) {
       getActionsOnSubmit(data, "sent");
+
       addTextPopup(setTextConfirmPopup(data, true, additionalText));
+
       openConfirmPopup();
     } else {
       getActionsOnSubmit(data, "draft");
+
       addTextPopup(setTextConfirmPopup(data, false, additionalText));
+
       openConfirmPopup();
     }
   };
@@ -155,9 +161,8 @@ const AddCampaignPage = () => {
           <FormCampaign
             control={control}
             errors={errors}
-            handleSubmit={handleSubmit}
-            handleDraftData={handleDraftCampaign}
-            handleSendData={handleSendCampaign}
+            handleDraftData={handleSubmit(handleDraftCampaign)}
+            handleSendData={handleSubmit(handleSendCampaign)}
           />
         </StyledContainer>
       )}
