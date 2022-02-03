@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -26,7 +25,6 @@ const EditSubscriberPage = () => {
     handleSubmit,
     watch,
     control,
-    formState,
     setValue,
     formState: { errors },
   } = useForm({
@@ -35,7 +33,7 @@ const EditSubscriberPage = () => {
 
   const { itemData: subscriberData } = useFetchDetailsById(endpoint, id);
 
-  const { openInfoPopup, addTextPopup } = usePopup();
+  const { openInfoPopup, addTextPopup, handleActionPopup } = usePopup();
 
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
@@ -134,11 +132,14 @@ const EditSubscriberPage = () => {
           telephone: data.telephone,
         },
       });
+      fetchSubscribersData();
     }
 
-    fetchSubscribersData();
+    handleActionPopup(() => ({
+      change: () => navigate("/subscribers"),
+    }));
+
     displayPopup(data);
-    navigate("/subscribers");
   };
 
   if (subscriberData.data?.error) {
