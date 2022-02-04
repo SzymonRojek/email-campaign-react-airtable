@@ -12,14 +12,13 @@ Check demo on Herokuapp: [demo](https://email-campaign-subscribers.herokuapp.com
 
 # Technologies used:
 
-- React.js: useForm hook, custom hooks, router v6 etc.
-- Material UI
+- React.js: useForm hook, custom hooks, router v6, createContext, useContext.
 - [Airtable data base](https://airtable.com/)
 - REST API
 - Postman
 - Express.js - Proxy (hide api_key, id_base), env variables
 - [Email.js](https://www.emailjs.com/)
-- Heroku
+- Deploying on Heroku
 
 # Main goal
 
