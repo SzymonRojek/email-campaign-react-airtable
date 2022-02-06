@@ -2,11 +2,11 @@
 
 Actually I am working on:
 
-- general layout
+- general layout: change main image in body
 - add react context for all popups, add functional implementation, remove unnecessary props and so on
-- probably edit subscribers data
 - edit proptypes
 - remove errors from dev tools console
+- adding actice susbcriber list popup: display popup onClick in the email campaign form, have possibility to select people form all active subscribers list and send email to them
 
 Check demo on Herokuapp: [demo](https://email-campaign-subscribers.herokuapp.com/)
 
