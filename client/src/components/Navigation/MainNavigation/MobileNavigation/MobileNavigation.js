@@ -53,6 +53,7 @@ const useStyles = makeStyles(() => ({
   },
   menuIcon: {
     color: "orange",
+    justifyContent: "flex-end",
   },
   mainDivider: { backgroundColor: "#7a6032" },
   subDivider: { backgroundColor: "#9c98988c" },
