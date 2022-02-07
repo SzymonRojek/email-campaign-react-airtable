@@ -28,13 +28,19 @@ const Routing = (props) => {
     handleSubscriberDetails,
     handleRemoveItem,
     handleEditCampaign,
+    tabsValue,
   } = props;
 
   const routes = [
     { path: "/", element: <HomePage /> },
     {
       path: "subscribers",
-      element: <SubMainNavigation dataLinks={subscribersLinksNavigation} />,
+      element: (
+        <SubMainNavigation
+          dataLinks={subscribersLinksNavigation}
+          tabsValue={tabsValue}
+        />
+      ),
       children: [
         {
           path: "/",
@@ -73,7 +79,12 @@ const Routing = (props) => {
     },
     {
       path: "campaigns",
-      element: <SubMainNavigation dataLinks={campaignsLinksNavigation} />,
+      element: (
+        <SubMainNavigation
+          dataLinks={campaignsLinksNavigation}
+          tabsValue={tabsValue}
+        />
+      ),
       children: [
         {
           path: "/",
