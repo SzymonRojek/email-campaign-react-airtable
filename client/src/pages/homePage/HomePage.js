@@ -13,15 +13,15 @@ const style = {
     maxWidth: 1224,
     margin: "0 5px",
     color: "#142f43",
-    backgroundColor: "rgba(255, 255, 255, 0.55)",
+    backgroundColor: "rgba(255, 255, 255, 0.30)",
     borderRadius: 6,
-    backdropFilter: "blur(35px)",
-    WebkitBackdropFilter: "blur(35px)",
-    MozBackdropFfilter: "blur(35px)",
+    backdropFilter: "blur(20px)",
+    WebkitBackdropFilter: "blur(20px)",
+    MozBackdropFfilter: "blur(20px)",
   },
   link: {
     padding: "0 10px",
-    color: "#4caf50",
+    color: "#142f43",
     fontWeight: "bold",
   },
   linkReadMe: {
@@ -89,11 +89,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   thirdHeading: {
+    color: "white",
     "@media (min-width:800px)": {
       fontSize: "1.5rem",
     },
   },
   paragraph: {
+    color: "white",
     "@media (min-width:800px)": {
       fontSize: "1.3rem",
     },
