@@ -20,8 +20,8 @@ const TextInputController = ({
     <Controller
       name={name}
       control={control}
-      defaultValue={defaultValue}
       rules={{ required: true }}
+      defaultValue={defaultValue}
       render={({ field: { ref, ...field } }) => (
         <CustomTextInput
           {...field}
@@ -44,6 +44,7 @@ CustomTextInput.propTypes = {
   control: PropTypes.object,
   name: PropTypes.string,
   label: PropTypes.string,
+  defaultValue: PropTypes.string,
   error: PropTypes.bool,
   message: PropTypes.string,
   rows: PropTypes.number,
