@@ -1,9 +1,12 @@
 body {
   background-color: #fff;
-  background: url("./img/heroPlus.svg") center center no-repeat;
+  background: url("./img/abstract.jpg") no-repeat center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
   background-size: cover;
 }
-
+/* 
 .page-container {
   display: flex;
   flex-direction: column;
@@ -21,4 +24,4 @@ body {
   .page-container {
     justify-content: center;
   }
-}
+} */
