@@ -53,6 +53,12 @@ function APIContextProvider({ children }) {
     fetchCampaignsData();
   }, []);
 
+  const filteredActiveSubscribers = subscribersData.data
+    ? subscribersData.data.filter(
+        (subscriber) => subscriber.fields.status === "active"
+      )
+    : [];
+
   return (
     <APIContext.Provider
       value={{
@@ -62,6 +68,7 @@ function APIContextProvider({ children }) {
         campaignsData,
         setCampaignsData,
         fetchCampaignsData,
+        filteredActiveSubscribers,
       }}
     >
       {children}
