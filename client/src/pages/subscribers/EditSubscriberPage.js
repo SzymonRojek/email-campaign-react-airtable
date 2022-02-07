@@ -167,16 +167,17 @@ const EditSubscriberPage = () => {
           titleThree="Contact with your internet provider."
         />
       ) : (
-        <StyledContainer>
+        <>
           <StyledHeading label="Edit Subscriber" />
-
-          <FormSubscriber
-            control={control}
-            errors={errors}
-            handleSubmit={handleSubmit(onSubmit)}
-            isCheckboxChecked={isCheckboxChecked}
-          />
-        </StyledContainer>
+          <StyledContainer>
+            <FormSubscriber
+              control={control}
+              errors={errors}
+              handleSubmit={handleSubmit(onSubmit)}
+              isCheckboxChecked={isCheckboxChecked}
+            />
+          </StyledContainer>
+        </>
       )}
     </>
   );

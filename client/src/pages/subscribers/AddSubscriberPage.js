@@ -81,24 +81,6 @@ const AddSubscriberPage = () => {
     ),
   });
 
-  // const getActionsOnSubmit = async (data) => {
-  //   const response = await api.post(endpoint, {
-  //     fields: {
-  //       name: data.name,
-  //       surname: data.surname,
-  //       email: data.email,
-  //       profession: data.profession,
-  //       status: data.status,
-  //       salary: data.salary,
-  //       telephone: data.telephone,
-  //     },
-  //   });
-
-  //   if (response) {
-  //     await fetchSubscribersData;
-  //   }
-  // };
-
   const onSubmit = (data) => {
     api.post(endpoint, {
       fields: {
@@ -139,16 +121,17 @@ const AddSubscriberPage = () => {
           titleThree="Contact with your internet provider."
         />
       ) : (
-        <StyledContainer>
+        <>
           <StyledHeading label="Add Subscriber" />
-
-          <FormSubscriber
-            control={control}
-            errors={errors}
-            handleSubmit={handleSubmit(onSubmit)}
-            isCheckboxChecked={isCheckboxChecked}
-          />
-        </StyledContainer>
+          <StyledContainer>
+            <FormSubscriber
+              control={control}
+              errors={errors}
+              handleSubmit={handleSubmit(onSubmit)}
+              isCheckboxChecked={isCheckboxChecked}
+            />
+          </StyledContainer>
+        </>
       )}
     </>
   );

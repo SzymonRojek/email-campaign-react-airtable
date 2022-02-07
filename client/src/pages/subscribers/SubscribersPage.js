@@ -41,33 +41,34 @@ const SubscribersPage = ({
         />
       ) : (
         subscribersData.status === "success" && (
-          <StyledContainer>
-            <div style={styles.container}>
-              <StyledHeading label="All Subscribers" />
+          <>
+            <StyledHeading label="All Subscribers" />
+            <StyledContainer>
+              <div style={styles.container}>
+                <SubscribersList
+                  subHeading="List"
+                  dataHeadTable={generalDataHeadTable}
+                  passedData={sortDataAlphabetically(subscribersData.data)}
+                  editSubscriber={editSubscriber}
+                  handleSubscriberDetails={handleSubscriberDetails}
+                  removeSubscriber={removeSubscriber}
+                />
+              </div>
 
-              <SubscribersList
-                subHeading="List"
-                dataHeadTable={generalDataHeadTable}
-                passedData={sortDataAlphabetically(subscribersData.data)}
-                editSubscriber={editSubscriber}
-                handleSubscriberDetails={handleSubscriberDetails}
-                removeSubscriber={removeSubscriber}
-              />
-            </div>
-
-            {subscribersData.data && subscribersData.data.length > 1 ? (
-              <SubscribersList
-                subHeading="Latest added Subscriber"
-                dataHeadTable={generalDataHeadTable}
-                passedData={getLatestAddedItem(subscribersData.data)}
-                editSubscriber={editSubscriber}
-                handleSubscriberDetails={handleSubscriberDetails}
-                removeSubscriber={removeSubscriber}
-              />
-            ) : (
-              ""
-            )}
-          </StyledContainer>
+              {subscribersData.data && subscribersData.data.length > 1 ? (
+                <SubscribersList
+                  subHeading="Latest added Subscriber"
+                  dataHeadTable={generalDataHeadTable}
+                  passedData={getLatestAddedItem(subscribersData.data)}
+                  editSubscriber={editSubscriber}
+                  handleSubscriberDetails={handleSubscriberDetails}
+                  removeSubscriber={removeSubscriber}
+                />
+              ) : (
+                ""
+              )}
+            </StyledContainer>
+          </>
         )
       )}
     </>
