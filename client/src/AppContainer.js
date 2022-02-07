@@ -67,6 +67,7 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
         handleSubscriberDetails={handleSubscriberDetails}
         handleEditCampaign={handleEditCampaign}
         handleRemoveItem={handleRemoveItem}
+        tabsValue={tabsValue}
       />
     </>
   );
