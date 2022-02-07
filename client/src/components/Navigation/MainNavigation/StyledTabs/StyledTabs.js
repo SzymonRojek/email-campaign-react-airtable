@@ -20,6 +20,7 @@ const StyledTabs = styled(({ ...other }) => {
     display: "flex",
     justifyContent: "center",
     backgroundColor: "transparent",
+    height: 4,
     "& > span": {
       maxWidth: 50,
       width: "100%",
