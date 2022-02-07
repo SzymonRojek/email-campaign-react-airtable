@@ -102,23 +102,24 @@ const StatusCampaignsPage = ({ editCampaign, removeCampaign }) => {
       ) : !campaignsData.data.length ? (
         <Error
           titleOne="MESSAGE"
-          titleTwo="There are no Email Campaigns added yet"
-          titleThree="Please add a New Email Campaign"
+          titleTwo="There are no Emails added yet"
+          titleThree="Please add a New Email"
         />
       ) : (
         campaignsData.status === "success" && (
-          <StyledContainer>
-            <StyledHeading label="Campaigns Status" />
-
-            <CampaignStatus
-              subHeading="List"
-              dataHeadEmailTable={statusDataHeadTable}
-              passedData={campaignsData.data}
-              status={selectStatus}
-              editCampaign={editCampaign}
-              removeCampaign={removeCampaign}
-            />
-          </StyledContainer>
+          <>
+            <StyledHeading label="Email Status" />
+            <StyledContainer>
+              <CampaignStatus
+                subHeading="List"
+                dataHeadEmailTable={statusDataHeadTable}
+                passedData={campaignsData.data}
+                status={selectStatus}
+                editCampaign={editCampaign}
+                removeCampaign={removeCampaign}
+              />
+            </StyledContainer>
+          </>
         )
       )}
     </>

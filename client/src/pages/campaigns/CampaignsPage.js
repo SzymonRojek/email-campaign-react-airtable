@@ -14,7 +14,7 @@ const CampaignsPage = ({ editCampaign, removeCampaign }) => {
   return (
     <>
       {campaignsData.status === "loading" ? (
-        <Loader title="Campaigns" />
+        <Loader title="Emails" />
       ) : campaignsData.status === "error" ? (
         <Error
           titleOne="ERROR MESSAGE"
@@ -24,36 +24,37 @@ const CampaignsPage = ({ editCampaign, removeCampaign }) => {
       ) : !campaignsData.data.length ? (
         <Error
           titleOne="MESSAGE"
-          titleTwo="There are no Email Campaigns added yet"
-          titleThree="Please add a New Email Campaign"
+          titleTwo="There are no Emails added yet"
+          titleThree="Please add a New Email"
         />
       ) : (
         campaignsData.status === "success" && (
-          <StyledContainer>
-            <div style={{ marginBottom: 100 }}>
-              <StyledHeading label="All Campaigns" />
+          <>
+            <StyledHeading label="All Emails" />
+            <StyledContainer>
+              <div style={{ marginBottom: 100 }}>
+                <CampaignsList
+                  subHeading="List"
+                  dataHeadEmailTable={dataHeadEmailTable}
+                  passedData={sortDataAlphabetically(campaignsData.data)}
+                  editCampaign={editCampaign}
+                  removeCampaign={removeCampaign}
+                />
+              </div>
 
-              <CampaignsList
-                subHeading="List"
-                dataHeadEmailTable={dataHeadEmailTable}
-                passedData={sortDataAlphabetically(campaignsData.data)}
-                editCampaign={editCampaign}
-                removeCampaign={removeCampaign}
-              />
-            </div>
-
-            {campaignsData.data.length > 1 ? (
-              <CampaignsList
-                subHeading="Latest added Campaign"
-                dataHeadEmailTable={dataHeadEmailTable}
-                passedData={getLatestAddedItem(campaignsData.data)}
-                editCampaign={editCampaign}
-                removeCampaign={removeCampaign}
-              />
-            ) : (
-              ""
-            )}
-          </StyledContainer>
+              {campaignsData.data.length > 1 ? (
+                <CampaignsList
+                  subHeading="Latest added Campaign"
+                  dataHeadEmailTable={dataHeadEmailTable}
+                  passedData={getLatestAddedItem(campaignsData.data)}
+                  editCampaign={editCampaign}
+                  removeCampaign={removeCampaign}
+                />
+              ) : (
+                ""
+              )}
+            </StyledContainer>
+          </>
         )
       )}
     </>

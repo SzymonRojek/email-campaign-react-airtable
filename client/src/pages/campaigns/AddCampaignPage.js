@@ -24,6 +24,7 @@ const AddCampaignPage = () => {
   const {
     handleSubmit,
     control,
+    watch,
     formState,
     formState: { errors },
     reset,
@@ -32,8 +33,10 @@ const AddCampaignPage = () => {
   });
   const location = useLocation();
   const navigate = useNavigate();
-  const { openConfirmPopup, addTextPopup, handleActionPopup } = usePopup();
+  const { openConfirmPopup, addTextPopup, handleActionPopup, actionPopup } =
+    usePopup();
   const [isEmailError, setEmailError] = useState(false);
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
   useEffect(() => {
     if (formState.isSubmitSuccessful)
@@ -94,28 +97,43 @@ const AddCampaignPage = () => {
   };
 
   const handleSendCampaign = (data) => {
-    const activeSubscribers =
+    const allActiveSubscribers =
       subscribersData.data &&
       subscribersData.data.filter(
         (subscriber) => subscriber.fields.status === "active"
       );
 
-    activeSubscribers.forEach((subscriber) => {
-      const paramsScheme = {
-        name: subscriber.fields.name,
-        email: subscriber.fields.email,
-        title: data.title,
-        description: data.description,
-      };
+    if (actionPopup.length) {
+      actionPopup.map(({ fields: { name, email } }) =>
+        sendEmail(
+          {
+            name,
+            email,
+            title: data.title,
+            description: data.description,
+          },
+          setEmailError
+        )
+      );
+    } else {
+      console.log("send to all active");
+      allActiveSubscribers.forEach((subscriber) => {
+        const paramsScheme = {
+          name: subscriber.fields.name,
+          email: subscriber.fields.email,
+          title: data.title,
+          description: data.description,
+        };
 
-      sendEmail(paramsScheme, setEmailError);
-    });
+        sendEmail(paramsScheme, setEmailError);
+      });
+    }
 
-    const additionalText = !activeSubscribers.length
+    const additionalText = !allActiveSubscribers.length
       ? "No active Subscribers!"
       : "";
 
-    if (!isEmailError && activeSubscribers.length > 0) {
+    if (!isEmailError && allActiveSubscribers.length > 0) {
       getActionsOnSubmit(data, "sent");
 
       addTextPopup(setTextConfirmPopup(data, true, additionalText));
@@ -134,9 +152,9 @@ const AddCampaignPage = () => {
     <>
       {isEmailError ? (
         <Error
-          titleOne="Unfortunately, the Campaign has not been sent"
+          titleOne="Unfortunately, Email has not been sent"
           titleTwo="Probably there is a problem with EmailJS application at the moment"
-          titleThree="That's why the Campaign has been drafted now"
+          titleThree="That's why Email has been drafted now"
         />
       ) : subscribersData.status === "loading" ? (
         <Loader title="Add New" />
@@ -147,24 +165,33 @@ const AddCampaignPage = () => {
           titleThree="Contact with your internet provider."
         />
       ) : (
-        <StyledContainer
-          style={{
-            padding: "10px 50px 60px 50px",
-            marginTop: 40,
-            backgroundColor: "rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(5px)",
-            borderRadius: 6,
-          }}
-        >
-          <StyledHeading label="Add Campaign:" />
+        <>
+          <StyledHeading label="Send Email" />
+          <StyledContainer
+            style={{
+              padding: "10px 50px 60px 50px",
+              marginTop: 40,
+              backgroundColor: "rgba(255, 255, 255, 0.1)",
+              backdropFilter: "blur(5px)",
+              borderRadius: 6,
+            }}
+          >
+            <FormCampaign
+              control={control}
+              errors={errors}
+              isCheckboxChecked={isCheckboxChecked}
+              setIsCheckboxChecked={setIsCheckboxChecked}
+              handleDraftData={handleSubmit(handleDraftCampaign)}
+              handleSendData={handleSubmit(handleSendCampaign)}
+            />
 
-          <FormCampaign
-            control={control}
-            errors={errors}
-            handleDraftData={handleSubmit(handleDraftCampaign)}
-            handleSendData={handleSubmit(handleSendCampaign)}
-          />
-        </StyledContainer>
+            {/* <p>
+            {actionPopup.length
+              ? `You have selected ${actionPopup.length} subscribers`
+              : "You will send an email to all active subscribers or select them from the list"}
+          </p> */}
+          </StyledContainer>
+        </>
       )}
     </>
   );

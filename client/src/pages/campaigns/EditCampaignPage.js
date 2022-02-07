@@ -163,25 +163,26 @@ const EditCampaignPage = () => {
     <>
       {isEmailError ? (
         <Error
-          titleOne="Unfortunately, the Campaign has not been sent"
+          titleOne="Unfortunately, Email has not been sent"
           titleTwo="Probably there is a problem with EmailJS application at the moment..."
-          titleThree="That's why the Campaign has been drafted"
+          titleThree="That's why Email has been drafted"
         />
       ) : campaignData.status === "loading" ? (
         <Loader title="Details" />
       ) : (
         campaignData.status === "success" && (
-          <StyledContainer>
-            <StyledHeading label="Edit Campaign:" />
-
-            <FormCampaign
-              control={control}
-              errors={errors}
-              handleSubmit={handleSubmit}
-              handleDraftData={handleSubmit(handleDraftCampaign)}
-              handleSendData={handleSubmit(handleSendCampaign)}
-            />
-          </StyledContainer>
+          <>
+            <StyledHeading label="Edit Email" />
+            <StyledContainer>
+              <FormCampaign
+                control={control}
+                errors={errors}
+                handleSubmit={handleSubmit}
+                handleDraftData={handleSubmit(handleDraftCampaign)}
+                handleSendData={handleSubmit(handleSendCampaign)}
+              />
+            </StyledContainer>
+          </>
         )
       )}
     </>
