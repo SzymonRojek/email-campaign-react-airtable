@@ -6,7 +6,7 @@ body {
   -o-background-size: cover;
   background-size: cover;
 }
-/* 
+
 .page-container {
   display: flex;
   flex-direction: column;
@@ -24,4 +24,4 @@ body {
   .page-container {
     justify-content: center;
   }
-} */
+}
