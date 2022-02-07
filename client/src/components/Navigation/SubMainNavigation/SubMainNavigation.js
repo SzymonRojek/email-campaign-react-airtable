@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
-import { Outlet } from "react-router-dom";
-import { Grid } from "@mui/material";
-import { useTheme } from "@material-ui/core/styles";
+import { useState, useEffect } from "react";
+import { Link, Outlet } from "react-router-dom";
+import { Grid, Tab } from "@mui/material";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useMediaQuery } from "@material-ui/core";
 
-import StyledLink from "./StyledLink";
+import { StyledTabs } from "../MainNavigation/StyledTabs";
 
 const styles = {
   nav: {
@@ -18,17 +19,41 @@ const styles = {
     width: "100%",
   },
   grid: {
-    maxWidth: 480,
-    padding: "20px 20px 20px 15px",
-    backgroundColor: "#142f43",
+    maxWidth: 400,
+    padding: 20,
+    backgroundColor: "white",
     borderRadius: "0 0 5px 5px",
   },
 };
 
-const SubMainNavigation = ({ dataLinks }) => {
-  const theme = useTheme();
-  const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
+const useStyles = makeStyles((theme) => ({
+  link: {
+    textDecoration: "none",
+    color: "#142f43",
+    fontSize: 16,
+    letterSpacing: 2,
+    padding: 0,
+    margin: 0,
+    "&:first-child": {
+      marginLeft: theme.spacing(3),
+      marginRight: theme.spacing(4),
+    },
+  },
+}));
 
+const SubMainNavigation = ({ dataLinks, tabsValue }) => {
+  const theme = useTheme();
+  const classes = useStyles();
+  const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
+  const [tabsSubValue, setTabsSubValue] = useState(0);
+
+  useEffect(() => {
+    if (tabsValue === 0 || tabsValue === 1) {
+      setTabsSubValue(0);
+    }
+  }, [tabsValue]);
+
+  const handleClickTab = (e, newTabsValue) => setTabsSubValue(newTabsValue);
   return (
     <>
       {!isSmallDevice ? (
@@ -38,15 +63,20 @@ const SubMainNavigation = ({ dataLinks }) => {
               container
               style={styles.grid}
               direction="row"
-              justifyContent="space-evenly"
+              justifyContent="space-between"
             >
-              {dataLinks.map(({ to, exact, name }, index) => (
-                <Grid item key={index} md={3}>
-                  <StyledLink to={to} exact={exact}>
-                    {name}
-                  </StyledLink>
-                </Grid>
-              ))}
+              <StyledTabs onChange={handleClickTab} value={tabsSubValue}>
+                {dataLinks.map(({ to, name }) => (
+                  <Tab
+                    key={name}
+                    disableRipple
+                    label={name}
+                    component={Link}
+                    to={to}
+                    className={classes.link}
+                  />
+                ))}
+              </StyledTabs>
             </Grid>
           </nav>
 
