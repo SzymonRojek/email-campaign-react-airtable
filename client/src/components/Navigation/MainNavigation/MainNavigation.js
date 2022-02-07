@@ -37,32 +37,27 @@ const mainNavigationLinks = [
 ];
 
 const useStyles = makeStyles((theme) => ({
+  tabsRoot: {
+    height: 3,
+  },
   container: {
     position: "fixed",
+    display: "grid",
+    gridTemplateColumns: "120px 1fr 120px",
     top: 0,
     minHeight: "5vh",
     width: "100%",
     backgroundColor: "#142f43",
+    padding: "20px 50px",
     boxShadow: "0 4px 2px -2px rgba(0, 0, 0, .2)",
     [theme.breakpoints.down("sm")]: {
-      display: "flex",
-      justifyContent: "space-between",
-      minHeight: "5vh",
-      padding: "10px 0 10px 20px",
+      gridTemplateColumns: "1fr 1fr",
     },
-  },
-  navLinksContainer: {
-    display: "flex",
-    flex: 1,
-    justifyContent: "space-evenly",
-    padding: "10px 0 20px 0",
   },
   logoContainer: {
     [theme.breakpoints.up("md")]: {
-      marginBottom: 10,
       width: 50,
       height: 50,
-      marginRight: 90,
     },
     [theme.breakpoints.down("sm")]: {
       width: 40,
@@ -72,10 +67,13 @@ const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: "none",
     color: "white",
-    fontSize: 15,
+    fontSize: 18,
     letterSpacing: 2,
+    padding: 0,
+    margin: 0,
     "&:first-child": {
-      marginRight: theme.spacing(4),
+      marginLeft: theme.spacing(5),
+      marginRight: theme.spacing(7),
     },
   },
 }));
@@ -85,7 +83,6 @@ function MainNavigation({ tabsValue, setTabsValue, setIsLogIn, setStatusLog }) {
   const classes = useStyles();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
   const location = useLocation();
-
   const handleClickTab = (e, newTabsValue) => setTabsValue(newTabsValue);
 
   useEffect(() => {
@@ -130,7 +127,7 @@ function MainNavigation({ tabsValue, setTabsValue, setIsLogIn, setStatusLog }) {
           />
         ) : (
           <>
-            <div className={classes.navLinksContainer}>
+            <div style={{ display: "flex", justifyContent: "center" }}>
               <StyledTabs onChange={handleClickTab} value={tabsValue}>
                 {mainNavigationLinks.map(({ icon, name, to }) => (
                   <Tab
