@@ -1,3 +1,5 @@
+import { useState, useEffect, useCallback } from "react";
+import { Typography } from "@material-ui/core";
 import {
   Dialog,
   DialogTitle,
@@ -6,12 +8,11 @@ import {
   FormControlLabel,
   Grid,
 } from "@mui/material";
-import Button from "@mui/material/Button";
+import { Button } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { usePopup } from "popupContext.js";
 import { useAPI } from "../../../APiContextProvider";
-import { useCallback, useEffect, useState } from "react";
 
 const styles = {
   dialogContent: {
@@ -139,7 +140,6 @@ const ActiveSubscribersPopup = ({
 
   const getChoosenActiveSubscribers = useCallback(() => {
     if (selectedActiveSubscribers) {
-      console.log("werwerwer");
       handleActionPopup(selectedActiveSubscribers);
     }
   }, [selectedActiveSubscribers, handleActionPopup]);
@@ -163,7 +163,10 @@ const ActiveSubscribersPopup = ({
               className={classes.button}
               variant="contained"
               color="error"
-              onClick={() => closeListActiveSusbcribers(false)}
+              onClick={() => {
+                closeListActiveSusbcribers(false);
+                setSelectedActiveSubscribers([]);
+              }}
             >
               <span className={classes.buttonText}>X</span>
             </Button>
@@ -225,16 +228,34 @@ const ActiveSubscribersPopup = ({
         </Grid>
       </DialogContent>
 
-      <Grid item p={4} xs={12} justifyContent="flex-end" textAlign="right">
-        <Button
-          aria-label="ok"
-          className={classes.button}
-          variant="contained"
-          color="success"
-          onClick={() => closeListActiveSusbcribers(false)}
-        >
-          <span className={classes.buttonText}>ok</span>
-        </Button>
+      <Grid
+        container
+        p={4}
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        spacing={1}
+      >
+        <Grid item>
+          <Typography variant="body1">
+            {selectedActiveSubscribers.length === 0
+              ? "Please select from the list"
+              : selectedActiveSubscribers.length === 1
+              ? `Selected 1 Subscriber`
+              : `Selected ${selectedActiveSubscribers.length} Subscribers`}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Button
+            aria-label="ok"
+            className={classes.button}
+            variant="contained"
+            color="success"
+            onClick={() => closeListActiveSusbcribers(false)}
+          >
+            <span className={classes.buttonText}>ok</span>
+          </Button>
+        </Grid>
       </Grid>
     </Dialog>
   );
