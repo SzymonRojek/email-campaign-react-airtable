@@ -57,6 +57,18 @@ const useStyles = makeStyles(() => ({
   },
   mainDivider: { backgroundColor: "#7a6032" },
   subDivider: { backgroundColor: "#9c98988c" },
+  logInButton: {
+    maxWidth: 120,
+    padding: "12px 20px",
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "#142f43",
+    backgroundColor: "orange",
+    textTransform: "uppercase",
+    border: "none",
+    borderRadius: 3,
+    cursor: "pointer",
+  },
 }));
 
 const subscriberLinks = [
@@ -274,6 +286,7 @@ const MobileNavigation = ({ setTabsValue, setIsLogIn, setStatusLog }) => {
                   setStatusLog("loadingOut");
                   handleChangeStates();
                 }}
+                className={classes.logInButton}
               />
             </div>
           </Grid>
