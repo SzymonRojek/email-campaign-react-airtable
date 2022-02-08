@@ -17,26 +17,26 @@ const styles = {
     alignItems: "center",
     zIndex: 200,
     width: "100%",
+    padding: "0 10px",
   },
   grid: {
-    maxWidth: 400,
+    maxWidth: 440,
     padding: 20,
-    backgroundColor: "white",
+    backgroundColor: "orange",
     borderRadius: "0 0 5px 5px",
   },
+  tabs: { backgroundColor: "#142f43" },
 };
 
 const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: "none",
-    color: "#142f43",
-    fontSize: 16,
+    fontSize: 4,
     letterSpacing: 2,
-    padding: 0,
-    margin: 0,
+    padding: 10,
     "&:first-child": {
-      marginLeft: theme.spacing(3),
-      marginRight: theme.spacing(4),
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(6),
     },
   },
 }));
@@ -65,7 +65,11 @@ const SubMainNavigation = ({ dataLinks, tabsValue }) => {
               direction="row"
               justifyContent="space-between"
             >
-              <StyledTabs onChange={handleClickTab} value={tabsSubValue}>
+              <StyledTabs
+                onChange={handleClickTab}
+                value={tabsSubValue}
+                style={styles.tabs}
+              >
                 {dataLinks.map(({ to, name }) => (
                   <Tab
                     key={name}
