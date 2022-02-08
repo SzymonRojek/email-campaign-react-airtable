@@ -4,10 +4,10 @@ import { useNavigate } from "react-router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Paper, Box, Grid, Typography } from "@material-ui/core";
 
-import { validationLogin } from "../../helpers";
-import { StyledContainer } from "../StyledContainer";
+import { validationLogin } from "helpers";
+import { StyledContainer } from "components/StyledContainer";
+import { LogFormButton } from "components/LogFormButton";
 import { PasswordInput } from "./PasswordInput";
-import { LogFormButton } from "../LogFormButton";
 
 const styles = {
   paper: {
