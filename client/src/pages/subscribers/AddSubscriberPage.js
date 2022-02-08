@@ -7,11 +7,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import api from "api";
 import { capitalizeFirstLetter, validationSubscriber } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
+import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
-import { Loader, Error } from "components/DisplayMessage";
-
-import { usePopup } from "popupContext";
 import { FormSubscriber } from "components/FormSubscriber/";
+import { Loader, Error } from "components/DisplayMessage";
+import { usePopup } from "popupContext";
+
 import { useAPI } from "APiContextProvider";
 
 const styles = {
@@ -121,17 +122,17 @@ const AddSubscriberPage = () => {
           titleThree="Contact with your internet provider."
         />
       ) : (
-        <>
+        <StyledContainer>
           <StyledHeading label="Add Subscriber" />
-          <StyledContainer>
+          <StyledMainContent>
             <FormSubscriber
               control={control}
               errors={errors}
               handleSubmit={handleSubmit(onSubmit)}
               isCheckboxChecked={isCheckboxChecked}
             />
-          </StyledContainer>
-        </>
+          </StyledMainContent>
+        </StyledContainer>
       )}
     </>
   );

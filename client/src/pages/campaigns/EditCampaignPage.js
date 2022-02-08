@@ -9,6 +9,7 @@ import api from "api";
 import { useFetchDetailsById } from "useFetchDetailsById";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
+import { StyledMainContent } from "components/StyledMainContent";
 import { FormCampaign } from "components/FormCampaign";
 import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
@@ -171,9 +172,9 @@ const EditCampaignPage = () => {
         <Loader title="Details" />
       ) : (
         campaignData.status === "success" && (
-          <>
+          <StyledContainer>
             <StyledHeading label="Edit Email" />
-            <StyledContainer>
+            <StyledMainContent>
               <FormCampaign
                 control={control}
                 errors={errors}
@@ -181,8 +182,8 @@ const EditCampaignPage = () => {
                 handleDraftData={handleSubmit(handleDraftCampaign)}
                 handleSendData={handleSubmit(handleSendCampaign)}
               />
-            </StyledContainer>
-          </>
+            </StyledMainContent>
+          </StyledContainer>
         )
       )}
     </>

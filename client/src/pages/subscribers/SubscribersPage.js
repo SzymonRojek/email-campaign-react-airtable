@@ -4,6 +4,7 @@ import { generalDataHeadTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
 import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
+import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { SubscribersList } from "components/SubscribersList";
 import { useAPI } from "APiContextProvider";
@@ -41,9 +42,9 @@ const SubscribersPage = ({
         />
       ) : (
         subscribersData.status === "success" && (
-          <>
+          <StyledContainer>
             <StyledHeading label="All Subscribers" />
-            <StyledContainer>
+            <StyledMainContent>
               <div style={styles.container}>
                 <SubscribersList
                   subHeading="List"
@@ -67,8 +68,8 @@ const SubscribersPage = ({
               ) : (
                 ""
               )}
-            </StyledContainer>
-          </>
+            </StyledMainContent>
+          </StyledContainer>
         )
       )}
     </>

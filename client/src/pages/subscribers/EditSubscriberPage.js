@@ -7,6 +7,7 @@ import api from "api";
 import { useFetchDetailsById } from "useFetchDetailsById";
 import { validationSubscriber } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
+import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
 
@@ -167,17 +168,17 @@ const EditSubscriberPage = () => {
           titleThree="Contact with your internet provider."
         />
       ) : (
-        <>
+        <StyledContainer>
           <StyledHeading label="Edit Subscriber" />
-          <StyledContainer>
+          <StyledMainContent>
             <FormSubscriber
               control={control}
               errors={errors}
               handleSubmit={handleSubmit(onSubmit)}
               isCheckboxChecked={isCheckboxChecked}
             />
-          </StyledContainer>
-        </>
+          </StyledMainContent>
+        </StyledContainer>
       )}
     </>
   );

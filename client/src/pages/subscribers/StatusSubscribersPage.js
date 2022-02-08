@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
+import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { SubscriberStatus } from "components/SubscriberStatus";
 import SelectInputController from "components/Inputs/SelectInputController";
@@ -113,9 +114,9 @@ const StatusSubscribersPage = ({
         />
       ) : (
         subscribersData.status === "success" && (
-          <>
+          <StyledContainer>
             <StyledHeading label="Subscribers status" />
-            <StyledContainer>
+            <StyledMainContent>
               <SubscriberStatus
                 subHeading="List"
                 generalDataHeadTable={statusDataHeadTable}
@@ -126,8 +127,8 @@ const StatusSubscribersPage = ({
                 handleSubscriberDetails={handleSubscriberDetails}
                 removeSubscriber={removeSubscriber}
               />
-            </StyledContainer>
-          </>
+            </StyledMainContent>
+          </StyledContainer>
         )
       )}
     </>

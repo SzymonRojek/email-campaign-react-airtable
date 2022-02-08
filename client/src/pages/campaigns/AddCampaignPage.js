@@ -8,6 +8,7 @@ import api from "api";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
 import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
+import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { FormCampaign } from "components/FormCampaign";
 import { sendEmail } from "sendEmail";
@@ -24,7 +25,6 @@ const AddCampaignPage = () => {
   const {
     handleSubmit,
     control,
-    watch,
     formState,
     formState: { errors },
     reset,
@@ -116,7 +116,6 @@ const AddCampaignPage = () => {
         )
       );
     } else {
-      console.log("send to all active");
       allActiveSubscribers.forEach((subscriber) => {
         const paramsScheme = {
           name: subscriber.fields.name,
@@ -165,9 +164,9 @@ const AddCampaignPage = () => {
           titleThree="Contact with your internet provider."
         />
       ) : (
-        <>
+        <StyledContainer>
           <StyledHeading label="Send Email" />
-          <StyledContainer
+          <StyledMainContent
             style={{
               padding: "10px 50px 60px 50px",
               marginTop: 40,
@@ -190,8 +189,8 @@ const AddCampaignPage = () => {
               ? `You have selected ${actionPopup.length} subscribers`
               : "You will send an email to all active subscribers or select them from the list"}
           </p> */}
-          </StyledContainer>
-        </>
+          </StyledMainContent>
+        </StyledContainer>
       )}
     </>
   );

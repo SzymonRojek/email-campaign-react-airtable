@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useFetchDetailsById } from "useFetchDetailsById";
 import { detailsDataHeadTableFirst } from "data/dataHeadTable";
 import { StyledContainer } from "components/StyledContainer";
+import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { ContainerTable, HeadTable } from "components/Table";
 import { Loader, Error } from "components/DisplayMessage";
@@ -39,9 +40,9 @@ const DetailsSubscriberPage = () => {
         <Loader title="Details" />
       ) : (
         subscriberData.status === "success" && (
-          <>
+          <StyledContainer>
             <StyledHeading label="Subscriber Details" />
-            <StyledContainer>
+            <StyledMainContent>
               <SubscribersList
                 subHeading="General data"
                 dataHeadTable={detailsDataHeadTableFirst}
@@ -51,30 +52,28 @@ const DetailsSubscriberPage = () => {
               <div style={styles.container}>
                 <CustomPaginator
                   passedData={[subscriberData.data]}
-                  renderData={() => {
-                    return (
-                      <ContainerTable
-                        subHeading="Details data"
-                        passedData={[subscriberData.data]}
-                      >
-                        <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
+                  renderData={() => (
+                    <ContainerTable
+                      subHeading="Details data"
+                      passedData={[subscriberData.data]}
+                    >
+                      <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
 
-                        <BodyTable>
-                          {[subscriberData.data].map((subscriber, index) => (
-                            <SubscriberDetailsData
-                              key={`id-${subscriber.id}`}
-                              subscriber={subscriber}
-                              index={index}
-                            />
-                          ))}
-                        </BodyTable>
-                      </ContainerTable>
-                    );
-                  }}
+                      <BodyTable>
+                        {[subscriberData.data].map((subscriber, index) => (
+                          <SubscriberDetailsData
+                            key={`id-${subscriber.id}`}
+                            subscriber={subscriber}
+                            index={index}
+                          />
+                        ))}
+                      </BodyTable>
+                    </ContainerTable>
+                  )}
                 />
               </div>
-            </StyledContainer>
-          </>
+            </StyledMainContent>
+          </StyledContainer>
         )
       )}
     </>

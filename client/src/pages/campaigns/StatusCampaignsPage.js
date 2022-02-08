@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
+import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { CampaignStatus } from "components/CampaignStatus";
 import SelectInputController from "components/Inputs/SelectInputController";
@@ -107,9 +108,9 @@ const StatusCampaignsPage = ({ editCampaign, removeCampaign }) => {
         />
       ) : (
         campaignsData.status === "success" && (
-          <>
+          <StyledContainer>
             <StyledHeading label="Email Status" />
-            <StyledContainer>
+            <StyledMainContent>
               <CampaignStatus
                 subHeading="List"
                 dataHeadEmailTable={statusDataHeadTable}
@@ -118,8 +119,8 @@ const StatusCampaignsPage = ({ editCampaign, removeCampaign }) => {
                 editCampaign={editCampaign}
                 removeCampaign={removeCampaign}
               />
-            </StyledContainer>
-          </>
+            </StyledMainContent>
+          </StyledContainer>
         )
       )}
     </>

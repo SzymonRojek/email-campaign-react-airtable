@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { dataHeadEmailTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
+import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { CampaignsList } from "components/CampaignsList";
 import { Error, Loader } from "components/DisplayMessage";
@@ -29,9 +30,9 @@ const CampaignsPage = ({ editCampaign, removeCampaign }) => {
         />
       ) : (
         campaignsData.status === "success" && (
-          <>
+          <StyledContainer>
             <StyledHeading label="All Emails" />
-            <StyledContainer>
+            <StyledMainContent>
               <div style={{ marginBottom: 100 }}>
                 <CampaignsList
                   subHeading="List"
@@ -53,8 +54,8 @@ const CampaignsPage = ({ editCampaign, removeCampaign }) => {
               ) : (
                 ""
               )}
-            </StyledContainer>
-          </>
+            </StyledMainContent>
+          </StyledContainer>
         )
       )}
     </>
