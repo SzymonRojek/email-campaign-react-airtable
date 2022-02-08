@@ -69,12 +69,22 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     fontSize: 18,
     letterSpacing: 2,
-    padding: 0,
-    margin: 0,
     "&:first-child": {
       marginLeft: theme.spacing(5),
       marginRight: theme.spacing(7),
     },
+  },
+  logOutButton: {
+    maxWidth: 120,
+    padding: "15px 20px",
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#142f43",
+    backgroundColor: "orange",
+    textTransform: "uppercase",
+    border: "none",
+    borderRadius: 3,
+    cursor: "pointer",
   },
 }));
 
@@ -149,6 +159,7 @@ function MainNavigation({ tabsValue, setTabsValue, setIsLogIn, setStatusLog }) {
                 setStatusLog("loadingOut");
                 handleChangeStates();
               }}
+              className={classes.logOutButton}
             />
           </>
         )}
