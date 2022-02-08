@@ -1,15 +1,18 @@
-import PropTypes from "prop-types";
+import { makeStyles } from "@material-ui/core/styles";
 
-import "./styles.css";
+const useStyles = makeStyles((theme) => ({
+  container: {
+    margin: "160px 10px 0 10px",
+    [theme.breakpoints.up("md")]: {
+      marginTop: 280,
+    },
+  },
+}));
 
-const StyledContainer = ({ children }) => (
-  <div className="main-container">
-    <div className="children-container">{children}</div>
-  </div>
-);
+const StyledContainer = ({ children }) => {
+  const classes = useStyles();
 
-StyledContainer.propTypes = {
-  children: PropTypes.any,
+  return <div className={classes.container}>{children}</div>;
 };
 
 export default StyledContainer;
