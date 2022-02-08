@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { Tabs } from "@material-ui/core";
 import styled from "@emotion/styled";
 
-const StyledTabs = styled(({ ...other }) => {
+const StyledTabs = styled(({ style, ...other }) => {
   return (
     <Tabs
       {...other}
@@ -11,7 +11,9 @@ const StyledTabs = styled(({ ...other }) => {
         indicator: "indicator",
       }}
       variant="fullWidth"
-      TabIndicatorProps={{ children: <span /> }}
+      TabIndicatorProps={{
+        children: <span style={style} />,
+      }}
       centered
     />
   );
