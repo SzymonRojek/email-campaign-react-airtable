@@ -75,29 +75,27 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   mainHeading: {
+    fontSize: "2.4rem",
     color: "orange",
     backgroundColor: "#142f43",
-    padding: 30,
+    padding: 10,
+
     "@media (min-width:800px)": {
       maxWidth: "50%",
       fontSize: "3.5rem",
     },
   },
   secondHeading: {
+    fontSize: "1.2rem",
     "@media (min-width:800px)": {
-      fontSize: "2rem",
-    },
-  },
-  thirdHeading: {
-    color: "white",
-    "@media (min-width:800px)": {
-      fontSize: "1.5rem",
+      fontSize: "2.2rem",
     },
   },
   paragraph: {
+    fontSize: "1rem",
     color: "white",
     "@media (min-width:800px)": {
-      fontSize: "1.3rem",
+      fontSize: "2rem",
     },
   },
 }));
@@ -150,7 +148,7 @@ const HomePage = () => {
           <Grid item order={{ md: 4 }}>
             <Grid container spacing={3}>
               <Grid item md={6}>
-                <h3 className={classes.thirdHeading}>
+                <p className={classes.paragraph}>
                   The app is connected to the
                   <span style={{ display: "inline-block" }}>
                     <Link
@@ -164,13 +162,13 @@ const HomePage = () => {
                   </span>
                   base. Easily brings all information together - organize,
                   connect and change them as needed.
-                </h3>
+                </p>
               </Grid>
               <Grid item md={6}>
-                <h3 className={classes.thirdHeading}>
+                <p className={classes.paragraph}>
                   Airtable base will provide its own <strong>rest API </strong>
                   to create, read, update, and delete any records.
-                </h3>
+                </p>
               </Grid>
             </Grid>
           </Grid>
