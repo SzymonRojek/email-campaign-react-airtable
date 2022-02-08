@@ -1,16 +1,16 @@
 import PropTypes from "prop-types";
 
 import "./styles.css";
-import { StyledContainer } from "../../StyledContainer";
+import { StyledMainContent } from "../../StyledMainContent";
 
 const Error = ({ titleOne, titleTwo, titleThree }) => (
-  <StyledContainer>
+  <StyledMainContent>
     <div className="error-content">
       <p className="error-text error-mainText">{titleOne}</p>
       <p className="error-text error-subText">{titleTwo}</p>
       <p className="error-text error-subText">{titleThree}</p>
     </div>
-  </StyledContainer>
+  </StyledMainContent>
 );
 
 Error.propTypes = {
