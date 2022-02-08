@@ -1,9 +1,7 @@
 import PropTypes from "prop-types";
 
-import "./styles.css";
-
-const LogFormButton = ({ label, onClick, style }) => (
-  <button type="submit" className="buttonLog" onClick={onClick} style={style}>
+const LogFormButton = ({ label, onClick, className }) => (
+  <button type="submit" onClick={onClick} className={className}>
     {label}
   </button>
 );
