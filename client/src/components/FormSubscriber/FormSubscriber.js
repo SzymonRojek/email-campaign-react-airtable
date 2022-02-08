@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { Paper, Box, Collapse } from "@mui/material";
+import { Paper, Box, Collapse, Button } from "@mui/material";
 import { Grid, Typography } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
@@ -9,7 +9,6 @@ import {
   SelectInputController,
   CheckboxInputController,
 } from "components/Inputs";
-import { StyledButton } from "components/StyledButton";
 
 const useStyles = makeStyles({
   root: {
@@ -197,13 +196,7 @@ const FormSubscriber = ({
             alignItems="center"
           >
             <Grid item>
-              <StyledButton
-                hover="#286a2b"
-                bgc="#2e7d32"
-                label="submit"
-                ariaLabel="add subscriber"
-                type="submit"
-              />
+              <Button label="submit" ariaLabel="add subscriber" type="submit" />
             </Grid>
           </Grid>
         </Grid>
