@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 18,
     letterSpacing: 2,
     "&:first-child": {
-      marginLeft: theme.spacing(5),
+      marginLeft: theme.spacing(6),
       marginRight: theme.spacing(7),
     },
   },

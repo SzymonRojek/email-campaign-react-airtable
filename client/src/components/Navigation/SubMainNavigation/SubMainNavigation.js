@@ -17,23 +17,27 @@ const styles = {
     alignItems: "center",
     zIndex: 200,
     width: "100%",
-    padding: "0 10px",
   },
   grid: {
-    maxWidth: 440,
+    maxWidth: 490,
     padding: 20,
     backgroundColor: "orange",
     borderRadius: "0 0 5px 5px",
+    boxShadow: " -1px 10px 33px -13px rgba(0,0,0,0.57)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  link: {
+    fontSize: 17,
+
+    padding: "0 24px",
   },
   tabs: { backgroundColor: "#142f43" },
 };
 
 const useStyles = makeStyles((theme) => ({
   link: {
-    textDecoration: "none",
-    fontSize: 4,
-    letterSpacing: 2,
-    padding: 10,
     "&:first-child": {
       marginLeft: theme.spacing(4),
       marginRight: theme.spacing(6),
@@ -59,12 +63,8 @@ const SubMainNavigation = ({ dataLinks, tabsValue }) => {
       {!isSmallDevice ? (
         <div>
           <nav style={styles.nav}>
-            <Grid
-              container
-              style={styles.grid}
-              direction="row"
-              justifyContent="space-between"
-            >
+            {/* <Grid container style={styles.grid}> */}
+            <div style={styles.grid}>
               <StyledTabs
                 onChange={handleClickTab}
                 value={tabsSubValue}
@@ -78,12 +78,13 @@ const SubMainNavigation = ({ dataLinks, tabsValue }) => {
                     component={Link}
                     to={to}
                     className={classes.link}
+                    style={styles.link}
                   />
                 ))}
               </StyledTabs>
-            </Grid>
+            </div>
+            {/* </Grid> */}
           </nav>
-
           <div>
             <Outlet />
           </div>
