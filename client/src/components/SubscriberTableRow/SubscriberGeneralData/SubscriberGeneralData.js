@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "3px 10px",
     display: "inline-block",
   },
+
   cellNo: { width: 25 },
   cell: { wordWrap: "break-word", width: 100 },
 }));
