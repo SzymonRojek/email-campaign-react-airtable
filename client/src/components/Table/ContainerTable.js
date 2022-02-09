@@ -34,7 +34,8 @@ const styles = {
     justifyContent: "space-between",
     padding: "0 20px",
   },
-  heading: { letterSpacing: 2 },
+  title: { letterSpacing: 2, textTransform: "uppercase" },
+  selectText: { letterSpacing: 2 },
   select: {
     wrapper: {
       display: "flex",
@@ -71,11 +72,11 @@ const ContainerTable = ({
   return (
     <>
       <header style={styles.headerWrapper}>
-        <h3 style={styles.heading}>{subHeading}</h3>
+        <p style={styles.title}>{subHeading}</p>
 
         {disableSelect && (
           <div style={styles.select.wrapper}>
-            <h3 style={styles.heading}>Rows</h3>
+            <p style={styles.selectText}>rows</p>
 
             <Paper elevation={8}>
               <SelectInputConroller
