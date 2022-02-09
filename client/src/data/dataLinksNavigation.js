@@ -1,8 +1,8 @@
 import { AiFillMail } from "react-icons/ai";
-import { SiStatuspage } from "react-icons/si";
-import { IoIosPeople } from "react-icons/io";
+import { MdPeopleAlt } from "react-icons/md";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import { MdOutlineMarkEmailRead } from "react-icons/md";
+import { HiFilter } from "react-icons/hi";
 
 export const mainLinksNavigation = [
   { to: "/subscribers", name: "Subscribers" },
@@ -44,13 +44,13 @@ export const campaignsLinksNavigation = [
 
 export const subscribersLinks = [
   {
-    icon: <IoIosPeople />,
+    icon: <MdPeopleAlt />,
     to: "/subscribers",
     name: "Subscribers",
     tabsValue: 0,
   },
   {
-    icon: <SiStatuspage />,
+    icon: <HiFilter />,
     to: "/subscribers/status",
     name: "Status",
     tabsValue: 0,
@@ -71,7 +71,7 @@ export const campaignsLinks = [
     tabsValue: 1,
   },
   {
-    icon: <SiStatuspage />,
+    icon: <HiFilter />,
     to: "/campaigns/status",
     name: "Status",
     tabsValue: 1,

@@ -18,16 +18,16 @@ import MenuIcon from "@material-ui/icons/Menu";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import IconExpandLess from "@material-ui/icons/ExpandLess";
 import IconExpandMore from "@material-ui/icons/ExpandMore";
-import { AiFillHome } from "react-icons/ai";
 import { MdPeopleAlt } from "react-icons/md";
-import { MdAlternateEmail } from "react-icons/md";
+import { AiFillMail } from "react-icons/ai";
+import { AiFillHome } from "react-icons/ai";
 
 import { LogFormButton } from "components/LogFormButton";
 import { campaignsLinks, subscribersLinks } from "data/dataLinksNavigation";
 
-const style = {
+const styles = {
   drawer: { zIndex: 10 },
-  icon: { fontSize: 35 },
+  menuIcom: { fontSize: 35 },
 };
 
 const useStyles = makeStyles(() => ({
@@ -36,7 +36,8 @@ const useStyles = makeStyles(() => ({
     maxWidth: 230,
     backgroundColor: "#142f43",
   },
-  listItemIcon: { color: "orange", fontSize: 17 },
+  listItemIcon: { color: "orange", fontSize: 17, textAlign: "center" },
+  listItemText: { paddingRight: 8 },
   linkCollapse: {
     color: "orange",
     fontSize: 20,
@@ -72,6 +73,12 @@ const useStyles = makeStyles(() => ({
 
 const StyledListItem = withStyles({
   root: {
+    "&.MuiListItem-root": {
+      justifyContent: "space-around",
+    },
+    "&.MuiListItemIcon-root": {
+      justifyContent: "space-around",
+    },
     "&.Mui-selected": {
       backgroundColor: "#102636",
     },
@@ -118,7 +125,7 @@ const MobileNavigation = ({ setTabsValue, setIsLogIn, setStatusLog }) => {
     <>
       <Drawer
         anchor="right"
-        style={style.drawer}
+        style={styles.drawer}
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
       >
@@ -138,13 +145,16 @@ const MobileNavigation = ({ setTabsValue, setIsLogIn, setStatusLog }) => {
                 <ListItemIcon className={classes.listItemIcon}>
                   <MdPeopleAlt />
                 </ListItemIcon>
-                <ListItemText primary="Subscribers" />
+                <ListItemText
+                  primary="Subscribers"
+                  className={classes.listItemText}
+                />
                 {openSubscribersLinks ? <IconExpandLess /> : <IconExpandMore />}
               </ListItem>
               <Divider className={classes.mainDivider} />
 
               <Collapse in={openSubscribersLinks} timeout="auto" unmountOnExit>
-                {subscribersLinks.map(({ icon, to, name, tabsValue }) => (
+                {subscribersLinks.map(({ icon, to, tabsValue }) => (
                   <div key={`key-${uniqueId()}`}>
                     <Link
                       to={to}
@@ -156,12 +166,12 @@ const MobileNavigation = ({ setTabsValue, setIsLogIn, setStatusLog }) => {
                         onClick={() => setOpenDrawer(false)}
                         selected={to === location.pathname}
                       >
-                        <ListItemIcon className={classes.listItemIcon}>
+                        <ListItemIcon
+                          className={classes.listItemIcon}
+                          onClick={() => setTabsValue(tabsValue)}
+                        >
                           {icon}
                         </ListItemIcon>
-                        <ListItemText onClick={() => setTabsValue(tabsValue)}>
-                          {name}
-                        </ListItemText>
                       </StyledListItem>
                     </Link>
                     <Divider className={classes.subDivider} />
@@ -176,7 +186,7 @@ const MobileNavigation = ({ setTabsValue, setIsLogIn, setStatusLog }) => {
                 className={classes.linkCollapse}
               >
                 <ListItemIcon className={classes.listItemIcon}>
-                  <MdAlternateEmail />
+                  <AiFillMail />
                 </ListItemIcon>
                 <ListItemText primary="Campaigns" />
                 {openCampaignsLinks ? <IconExpandLess /> : <IconExpandMore />}
@@ -184,7 +194,7 @@ const MobileNavigation = ({ setTabsValue, setIsLogIn, setStatusLog }) => {
               <Divider className={classes.mainDivider} />
 
               <Collapse in={openCampaignsLinks} timeout="auto" unmountOnExit>
-                {campaignsLinks.map(({ icon, to, name, tabsValue }) => {
+                {campaignsLinks.map(({ icon, to, tabsValue }) => {
                   return (
                     <div key={`key-${uniqueId()}`}>
                       <Link
@@ -197,12 +207,12 @@ const MobileNavigation = ({ setTabsValue, setIsLogIn, setStatusLog }) => {
                           onClick={() => setOpenDrawer(false)}
                           selected={to === location.pathname}
                         >
-                          <ListItemIcon className={classes.listItemIcon}>
+                          <ListItemIcon
+                            className={classes.listItemIcon}
+                            onClick={() => setTabsValue(tabsValue)}
+                          >
                             {icon}
                           </ListItemIcon>
-                          <ListItemText onClick={() => setTabsValue(tabsValue)}>
-                            {name}
-                          </ListItemText>
                         </StyledListItem>
                       </Link>
                       <Divider className={classes.subDivider} />
@@ -250,9 +260,9 @@ const MobileNavigation = ({ setTabsValue, setIsLogIn, setStatusLog }) => {
       <div className={classes.menuIconContainer}>
         <IconButton onClick={() => setOpenDrawer(!openDrawer)} disableRipple>
           {!openDrawer ? (
-            <MenuIcon style={style.icon} />
+            <MenuIcon style={styles.menuIcon} />
           ) : (
-            <MenuOpenIcon style={style.icon} />
+            <MenuOpenIcon style={styles.menuIcon} />
           )}
         </IconButton>
       </div>

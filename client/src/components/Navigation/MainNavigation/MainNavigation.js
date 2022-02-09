@@ -9,7 +9,7 @@ import {
   CssBaseline,
   useMediaQuery,
 } from "@material-ui/core";
-import { BsFillPersonPlusFill } from "react-icons/bs";
+import { MdPeopleAlt } from "react-icons/md";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
 
@@ -20,7 +20,7 @@ import { LogFormButton } from "components/LogFormButton";
 
 const mainNavigationLinks = [
   {
-    icon: <BsFillPersonPlusFill style={{ color: "orange", fontSize: 17 }} />,
+    icon: <MdPeopleAlt style={{ color: "orange", fontSize: 17 }} />,
     name: "Subscribers",
     to: "/subscribers",
   },
