@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Paper, Box, Grid, Typography } from "@material-ui/core";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import { validationLogin } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
@@ -23,11 +24,27 @@ const styles = {
     letterSpacing: 2,
     wordSpacing: 3,
   },
-  logFormButton: { margin: "50px auto" },
 };
+
+const useStyles = makeStyles((theme) => ({
+  logInButton: {
+    margin: "50px auto",
+    maxWidth: 120,
+    padding: "20px 25px",
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#142f43",
+    backgroundColor: "orange",
+    textTransform: "uppercase",
+    border: "none",
+    borderRadius: 3,
+    cursor: "pointer",
+  },
+}));
 
 const LoginForm = ({ setIsLogIn }) => {
   const navigate = useNavigate();
+  const classes = useStyles();
 
   const {
     handleSubmit,
@@ -57,13 +74,20 @@ const LoginForm = ({ setIsLogIn }) => {
                   variant="body2"
                   style={styles.typography}
                 >
-                  *Fields required - type "admin"
+                  *Fields required"
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <h1 color="textSecondary" variant="h1" style={styles.heading}>
-                  Email Campaign
-                </h1>
+                <h1 style={styles.heading}>Email Campaign</h1>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography
+                  color="textSecondary"
+                  variant="body2"
+                  style={styles.typography}
+                >
+                  - type admin
+                </Typography>
               </Grid>
               <Grid item xs={12}>
                 <PasswordInput
@@ -91,7 +115,7 @@ const LoginForm = ({ setIsLogIn }) => {
                 <LogFormButton
                   aria-label="log in button"
                   label="log in"
-                  style={styles.logFormButton}
+                  className={classes.logInButton}
                   onClick={handleHomeRoute}
                 />
               </Grid>
