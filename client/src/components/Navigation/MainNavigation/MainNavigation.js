@@ -62,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       width: 40,
       height: 40,
+      marginBottom: 8,
     },
   },
   link: {
@@ -70,8 +71,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 18,
     letterSpacing: 2,
     "&:first-child": {
-      marginLeft: theme.spacing(6),
+      marginLeft: theme.spacing(7),
       marginRight: theme.spacing(7),
+    },
+    "&:last-child": {
+      padding: "0 40px",
     },
   },
   logOutButton: {
