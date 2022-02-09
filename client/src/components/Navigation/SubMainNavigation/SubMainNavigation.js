@@ -94,7 +94,7 @@ const SubMainNavigation = ({ dataLinks, tabsValue }) => {
                   value={tabsSubValue}
                   style={styles.tabs}
                 >
-                  {handleCheckLocation("subscribers")
+                  {handleCheckLocation("/subscribers")
                     ? subscribersLinks.map(({ to, name, icon }) => (
                         <Tab
                           key={name}
