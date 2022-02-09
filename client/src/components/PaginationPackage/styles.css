@@ -1,8 +1,8 @@
 .mainContainerWrapper {
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  overflow: hidden;
-  border-radius: 15px 15px;
   background-color: white;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .containerPaginatorWrapper {
@@ -11,7 +11,7 @@
   align-items: center;
   padding: 6px;
   background-color: #142f43;
-  border-radius: 0 0 15px 15px;
+  border-radius: 0 0 6px 6px;
 }
 
 .contentWrapper {
@@ -39,7 +39,6 @@
   font-size: 18px;
   color: rgb(221, 220, 220);
   border: 1px solid transparent;
-  border-radius: 100px;
   cursor: pointer;
   transition: all 0.15s ease-in-out;
 }
