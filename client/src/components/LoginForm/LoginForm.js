@@ -74,7 +74,7 @@ const LoginForm = ({ setIsLogIn }) => {
                   variant="body2"
                   style={styles.typography}
                 >
-                  *Fields required"
+                  *Fields required
                 </Typography>
               </Grid>
               <Grid item xs={12}>
