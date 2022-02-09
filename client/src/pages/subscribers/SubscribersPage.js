@@ -43,11 +43,11 @@ const SubscribersPage = ({
       ) : (
         subscribersData.status === "success" && (
           <StyledContainer>
-            <StyledHeading label="All Subscribers" />
+            <StyledHeading label="all subscribers" />
             <StyledMainContent>
               <div style={styles.container}>
                 <SubscribersList
-                  subHeading="List"
+                  subHeading="list"
                   dataHeadTable={generalDataHeadTable}
                   passedData={sortDataAlphabetically(subscribersData.data)}
                   editSubscriber={editSubscriber}
@@ -58,7 +58,7 @@ const SubscribersPage = ({
 
               {subscribersData.data && subscribersData.data.length > 1 ? (
                 <SubscribersList
-                  subHeading="Latest added Subscriber"
+                  subHeading="latest added"
                   dataHeadTable={generalDataHeadTable}
                   passedData={getLatestAddedItem(subscribersData.data)}
                   editSubscriber={editSubscriber}

@@ -109,10 +109,10 @@ const StatusCampaignsPage = ({ editCampaign, removeCampaign }) => {
       ) : (
         campaignsData.status === "success" && (
           <StyledContainer>
-            <StyledHeading label="Email Status" />
+            <StyledHeading label="email status" />
             <StyledMainContent>
               <CampaignStatus
-                subHeading="List"
+                subHeading="list"
                 dataHeadEmailTable={statusDataHeadTable}
                 passedData={campaignsData.data}
                 status={selectStatus}

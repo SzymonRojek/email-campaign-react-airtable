@@ -173,7 +173,7 @@ const EditCampaignPage = () => {
       ) : (
         campaignData.status === "success" && (
           <StyledContainer>
-            <StyledHeading label="Edit Email" />
+            <StyledHeading label="edit email" />
             <StyledMainContent>
               <FormCampaign
                 control={control}

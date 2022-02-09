@@ -31,11 +31,11 @@ const CampaignsPage = ({ editCampaign, removeCampaign }) => {
       ) : (
         campaignsData.status === "success" && (
           <StyledContainer>
-            <StyledHeading label="All Emails" />
+            <StyledHeading label="all emails" />
             <StyledMainContent>
               <div style={{ marginBottom: 100 }}>
                 <CampaignsList
-                  subHeading="List"
+                  subHeading="list"
                   dataHeadEmailTable={dataHeadEmailTable}
                   passedData={sortDataAlphabetically(campaignsData.data)}
                   editCampaign={editCampaign}
@@ -45,7 +45,7 @@ const CampaignsPage = ({ editCampaign, removeCampaign }) => {
 
               {campaignsData.data.length > 1 ? (
                 <CampaignsList
-                  subHeading="Latest added Campaign"
+                  subHeading="latest added"
                   dataHeadEmailTable={dataHeadEmailTable}
                   passedData={getLatestAddedItem(campaignsData.data)}
                   editCampaign={editCampaign}

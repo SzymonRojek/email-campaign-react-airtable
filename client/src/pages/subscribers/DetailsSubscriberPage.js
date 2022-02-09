@@ -44,7 +44,7 @@ const DetailsSubscriberPage = () => {
             <StyledHeading label="Subscriber Details" />
             <StyledMainContent>
               <SubscribersList
-                subHeading="General data"
+                subHeading="general"
                 dataHeadTable={detailsDataHeadTableFirst}
                 passedData={[subscriberData.data]}
               />
@@ -54,7 +54,7 @@ const DetailsSubscriberPage = () => {
                   passedData={[subscriberData.data]}
                   renderData={() => (
                     <ContainerTable
-                      subHeading="Details data"
+                      subHeading="details"
                       passedData={[subscriberData.data]}
                     >
                       <HeadTable dataHeadTable={detailsDataHeadTableSecond} />

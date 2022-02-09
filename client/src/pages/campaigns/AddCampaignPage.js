@@ -165,7 +165,7 @@ const AddCampaignPage = () => {
         />
       ) : (
         <StyledContainer>
-          <StyledHeading label="Send Email" />
+          <StyledHeading label="send email" />
           <StyledMainContent
             style={{
               padding: "10px 50px 60px 50px",

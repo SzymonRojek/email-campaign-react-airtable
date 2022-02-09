@@ -115,10 +115,10 @@ const StatusSubscribersPage = ({
       ) : (
         subscribersData.status === "success" && (
           <StyledContainer>
-            <StyledHeading label="Subscribers status" />
+            <StyledHeading label="subscribers status" />
             <StyledMainContent>
               <SubscriberStatus
-                subHeading="List"
+                subHeading="list"
                 generalDataHeadTable={statusDataHeadTable}
                 passedData={subscribersData.data}
                 status={selectStatus}

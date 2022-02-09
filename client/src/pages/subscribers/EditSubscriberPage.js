@@ -169,7 +169,7 @@ const EditSubscriberPage = () => {
         />
       ) : (
         <StyledContainer>
-          <StyledHeading label="Edit Subscriber" />
+          <StyledHeading label="edit subscriber" />
           <StyledMainContent>
             <FormSubscriber
               control={control}
