@@ -17,11 +17,11 @@ import { usePopup } from "popupContext";
 
 const styles = {
   typography: {
-    padding: "9px 20px",
+    padding: "8px 20px",
     letterSpacing: 2,
     textTransform: "uppercase",
     fontSize: 11,
-    width: 60,
+    width: 80,
     display: "flex",
     justifyContent: "center",
   },
@@ -32,9 +32,10 @@ const styles = {
     color: "white",
   },
   icon: { marginLeft: 10 },
-  toolip: {
-    height: "50px",
-    width: "50px",
+  successIcon: {
+    height: 28,
+    width: 28,
+    textAlign: "center",
   },
   questionText: { color: "crimson", fontWeight: "bold" },
 };
@@ -165,7 +166,11 @@ const CampaignTableRow = (props) => {
               placement="right-start"
               TransitionComponent={Zoom}
             >
-              <img src={successIcon} alt="success-icon" style={styles.toolip} />
+              <img
+                src={successIcon}
+                alt="success-icon"
+                style={styles.successIcon}
+              />
             </Tooltip>
           </div>
         )}
