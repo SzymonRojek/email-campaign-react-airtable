@@ -1,47 +1,60 @@
 import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
-import { Grid, Tab } from "@mui/material";
+import clsx from "clsx";
+import { Collapse, Tab } from "@mui/material";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { useMediaQuery } from "@material-ui/core";
+import { Divider, useMediaQuery } from "@material-ui/core";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import { StyledTabs } from "../MainNavigation/StyledTabs";
+import { IconButton } from "@mui/material";
+import { campaignsLinks, subscribersLinks } from "data/dataLinksNavigation";
 
 const styles = {
   nav: {
+    width: "100%",
     position: "fixed",
-    top: 100,
+    top: 105,
     left: 0,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     zIndex: 200,
-    width: "100%",
   },
-  grid: {
-    maxWidth: 490,
-    padding: 20,
+  navSubContainer: {
+    width: 400,
+    textAlign: "right",
     backgroundColor: "orange",
     borderRadius: "0 0 5px 5px",
     boxShadow: " -1px 10px 33px -13px rgba(0,0,0,0.57)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
   },
   link: {
-    fontSize: 17,
-
-    padding: "0 24px",
+    margin: "0 10px",
+    fontSize: 30,
   },
   tabs: { backgroundColor: "#142f43" },
+  collapse: {
+    padding: 20,
+  },
+  iconButtonCollapse: {
+    marginRight: 15,
+    padding: 10,
+    color: "#142f43",
+    backgroundColor: "transparent",
+  },
 };
 
 const useStyles = makeStyles((theme) => ({
-  link: {
-    "&:first-child": {
-      marginLeft: theme.spacing(4),
-      marginRight: theme.spacing(6),
-    },
+  expand: {
+    transform: "rotate(0deg)",
+    marginLeft: "auto",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+  expandOpen: {
+    transform: "rotate(180deg)",
   },
 }));
 
@@ -49,7 +62,14 @@ const SubMainNavigation = ({ dataLinks, tabsValue }) => {
   const theme = useTheme();
   const classes = useStyles();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [tabsSubValue, setTabsSubValue] = useState(0);
+  const [expanded, setExpanded] = useState(false);
+
+  const handleExpandClick = () => setExpanded(!expanded);
+  const handleClickTab = (e, newTabsValue) => setTabsSubValue(newTabsValue);
+  const handleCheckLocation = (pathname) =>
+    window.location.toString().indexOf(pathname) !== -1;
 
   useEffect(() => {
     if (tabsValue === 0 || tabsValue === 1) {
@@ -57,38 +77,66 @@ const SubMainNavigation = ({ dataLinks, tabsValue }) => {
     }
   }, [tabsValue]);
 
-  const handleClickTab = (e, newTabsValue) => setTabsSubValue(newTabsValue);
   return (
     <>
       {!isSmallDevice ? (
-        <div>
+        <>
           <nav style={styles.nav}>
-            {/* <Grid container style={styles.grid}> */}
-            <div style={styles.grid}>
-              <StyledTabs
-                onChange={handleClickTab}
-                value={tabsSubValue}
-                style={styles.tabs}
+            <div style={styles.navSubContainer}>
+              <Collapse
+                in={expanded}
+                timeout="auto"
+                unmountOnExit
+                style={styles.collapse}
               >
-                {dataLinks.map(({ to, name }) => (
-                  <Tab
-                    key={name}
-                    disableRipple
-                    label={name}
-                    component={Link}
-                    to={to}
-                    className={classes.link}
-                    style={styles.link}
-                  />
-                ))}
-              </StyledTabs>
+                <StyledTabs
+                  onChange={handleClickTab}
+                  value={tabsSubValue}
+                  style={styles.tabs}
+                >
+                  {handleCheckLocation("subscribers")
+                    ? subscribersLinks.map(({ to, name, icon }) => (
+                        <Tab
+                          key={name}
+                          icon={icon}
+                          disableRipple
+                          component={Link}
+                          to={to}
+                          style={styles.link}
+                        />
+                      ))
+                    : campaignsLinks.map(({ to, name, icon }) => (
+                        <Tab
+                          key={name}
+                          icon={icon}
+                          disableRipple
+                          component={Link}
+                          to={to}
+                          style={styles.link}
+                        />
+                      ))}
+                </StyledTabs>
+              </Collapse>
+              <Divider />
+
+              <IconButton
+                className={clsx(classes.expand, {
+                  [classes.expandOpen]: expanded,
+                })}
+                onClick={handleExpandClick}
+                aria-expanded={expanded}
+                aria-label="open sub-navigation"
+                disableRipple
+                style={styles.iconButtonCollapse}
+              >
+                <ExpandMoreIcon />
+              </IconButton>
             </div>
-            {/* </Grid> */}
           </nav>
           <div>
             <Outlet />
           </div>
-        </div>
+        </>
       ) : (
         <div>
           <Outlet />
