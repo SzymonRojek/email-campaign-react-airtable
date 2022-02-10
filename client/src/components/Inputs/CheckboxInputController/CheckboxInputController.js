@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { FormControl, Checkbox } from "@mui/material";
+import { FormControl, Checkbox, checkboxClasses } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { Typography } from "@material-ui/core";
 
@@ -11,9 +11,8 @@ const styles = {
     alignItems: "center",
   },
   checkbox: {
-    transform: "scale(1.1)",
-    color: "orange",
-    "&.Mui-checked": {
+    [`&, &.${checkboxClasses.checked}`]: {
+      transform: "scale(1.1)",
       color: "orange",
     },
   },

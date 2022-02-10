@@ -5,6 +5,7 @@ import {
   DialogTitle,
   DialogContent,
   Checkbox,
+  checkboxClasses,
   FormControlLabel,
   Grid,
 } from "@mui/material";
@@ -21,9 +22,8 @@ const styles = {
     padding: 20,
   },
   checkbox: {
-    transform: "scale(1.1)",
-    color: "orange",
-    "&.Mui-checked": {
+    [`&, &.${checkboxClasses.checked}`]: {
+      transform: "scale(1.1)",
       color: "orange",
     },
   },
