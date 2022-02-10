@@ -2,38 +2,76 @@ import PropTypes from "prop-types";
 import { Controller } from "react-hook-form";
 import { FormControl, Select, MenuItem } from "@mui/material";
 import { Typography } from "@material-ui/core";
-import { withStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
-const MyMenuItem = withStyles({
+const styles = {
+  textError: { color: "crimson", paddingTop: 10 },
+};
+
+const useSelectStyles = makeStyles({
   root: {
-    backgroundColor: "#22445f !important",
-    borderBottom: "1px solid rgb(221, 220, 220) !important",
-    color: "rgb(221, 220, 220) !important",
-
-    "&:hover": {
+    "& .MuiOutlinedInput-input": {
       color: "rgb(221, 220, 220)",
-      backgroundColor: "#142f43 !important",
+    },
+
+    "& .MuiInputLabel-root": {
+      color: "rgb(221, 220, 220)",
+    },
+    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      borderColor: "rgb(221, 220, 220)",
+    },
+    "& .MuiSvgIcon-root": {
+      color: "rgb(221, 220, 220)",
+    },
+    "&:hover .MuiOutlinedInput-input": {
+      color: "rgb(221, 220, 220)",
+    },
+    "&:hover .MuiInputLabel-root": {
+      color: "rgb(221, 220, 220)",
+    },
+    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      borderColor: "rgb(221, 220, 220)",
+    },
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+      color: "rgb(221, 220, 220)",
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "rgb(221, 220, 220)",
+    },
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#ffa500",
     },
   },
-})(MenuItem);
+});
+
+const useMenuItemStyles = makeStyles((theme) => ({
+  root: {
+    "&.MuiMenuItem-root": {
+      padding: 10,
+      backgroundColor: "#22445f !important",
+      borderBottom: "1px solid rgb(221, 220, 220) !important",
+      color: "rgb(221, 220, 220) !important",
+      display: "flex",
+      justifyContent: "center",
+
+      "&:hover": {
+        color: "rgb(221, 220, 220)",
+        backgroundColor: "#142f43 !important",
+      },
+    },
+  },
+}));
 
 const SelectInputController = ({ ...props }) => {
-  const {
-    control,
-    name,
-    defaultValue,
-    error,
-    message,
-    data,
-    useStyles,
-    styles,
-  } = props;
+  const { control, name, defaultValue, error, message, data } = props;
 
-  const classes = useStyles();
+  const classesSelectStyles = useSelectStyles();
+  const classesMenuItem = useMenuItemStyles();
+
   const customId = `${name}-id`;
 
   return (
-    <FormControl fullWidth className={classes.root}>
+    <FormControl fullWidth className={classesSelectStyles.root}>
       <Controller
         control={control}
         name={name}
@@ -48,9 +86,13 @@ const SelectInputController = ({ ...props }) => {
             error={error}
           >
             {data.map(({ value, label }) => (
-              <MyMenuItem key={`key-${label}`} value={value}>
+              <MenuItem
+                key={`key-${label}`}
+                value={value}
+                className={classesMenuItem.root}
+              >
                 {label}
-              </MyMenuItem>
+              </MenuItem>
             ))}
           </Select>
         )}
@@ -75,8 +117,6 @@ SelectInputController.propTypes = {
       label: PropTypes.string,
     })
   ),
-  useStyles: PropTypes.func,
-  styles: PropTypes.object,
 };
 
 export default SelectInputController;
