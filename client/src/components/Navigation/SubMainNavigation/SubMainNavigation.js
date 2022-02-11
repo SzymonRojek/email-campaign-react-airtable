@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { Collapse, Tab } from "@mui/material";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { Divider, useMediaQuery } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { MdArrowDropDown } from "react-icons/md";
 
 import { StyledTabs } from "../MainNavigation/StyledTabs";
 import { IconButton } from "@mui/material";
@@ -31,7 +31,7 @@ const styles = {
   },
   link: {
     margin: "0 10px",
-    fontSize: 30,
+    fontSize: 20,
   },
   tabs: { backgroundColor: "#142f43" },
   collapse: {
@@ -39,10 +39,11 @@ const styles = {
   },
   iconButtonCollapse: {
     marginRight: 15,
-    padding: 10,
+    padding: 8,
     color: "#142f43",
     backgroundColor: "transparent",
   },
+  icon: { color: "#142f43" },
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SubMainNavigation = ({ dataLinks, tabsValue }) => {
+const SubMainNavigation = ({ tabsValue }) => {
   const theme = useTheme();
   const classes = useStyles();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
@@ -98,7 +99,7 @@ const SubMainNavigation = ({ dataLinks, tabsValue }) => {
                     ? subscribersLinks.map(({ to, name, icon }) => (
                         <Tab
                           key={name}
-                          icon={icon}
+                          icon={<span style={styles.icon}>{icon}</span>}
                           disableRipple
                           component={Link}
                           to={to}
@@ -108,7 +109,7 @@ const SubMainNavigation = ({ dataLinks, tabsValue }) => {
                     : campaignsLinks.map(({ to, name, icon }) => (
                         <Tab
                           key={name}
-                          icon={icon}
+                          icon={<span style={styles.icon}>{icon}</span>}
                           disableRipple
                           component={Link}
                           to={to}
@@ -129,7 +130,7 @@ const SubMainNavigation = ({ dataLinks, tabsValue }) => {
                 disableRipple
                 style={styles.iconButtonCollapse}
               >
-                <ExpandMoreIcon />
+                <MdArrowDropDown />
               </IconButton>
             </div>
           </nav>
