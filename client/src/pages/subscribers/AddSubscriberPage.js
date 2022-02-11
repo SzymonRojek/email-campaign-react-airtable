@@ -123,7 +123,7 @@ const AddSubscriberPage = () => {
         />
       ) : (
         <StyledContainer>
-          <StyledHeading label="add subscriber" />
+          <StyledHeading label="new subscriber" />
           <StyledMainContent>
             <FormSubscriber
               control={control}
