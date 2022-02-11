@@ -6,9 +6,9 @@ Actually I am working on:
 - add react context for all popups, add functional implementation, remove unnecessary props and so on
 - edit proptypes
 - remove errors from dev tools console
-- adding actice susbcriber list popup: display popup onClick in the email campaign form, have possibility to select people form all active subscribers list and send email to them
+- styling popups
 
-Check demo on Herokuapp: [demo](https://email-campaign-subscribers.herokuapp.com/)
+Check demo on Herokuapp: [demo](https://create-email-campaign.herokuapp.com/)
 
 # Technologies used:
 
