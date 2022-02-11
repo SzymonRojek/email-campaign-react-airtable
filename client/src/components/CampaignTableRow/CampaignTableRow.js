@@ -2,11 +2,11 @@ import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Tooltip, Zoom } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { TableCell, TableRow, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { FaRegEdit } from "react-icons/fa";
+import { MdEditOff, MdDeleteSweep } from "react-icons/md";
 
-import successIcon from "./success.png";
 import {
   isEven,
   getFormattedData,
@@ -32,11 +32,6 @@ const styles = {
     color: "white",
   },
   icon: { marginLeft: 10 },
-  successIcon: {
-    height: 28,
-    width: 28,
-    textAlign: "center",
-  },
   questionText: { color: "crimson", fontWeight: "bold" },
 };
 
@@ -46,8 +41,8 @@ const useStyles = makeStyles(() => ({
     fontSize: "0.75rem",
     color: "white",
     backgroundColor: "#ddd",
-    borderRadius: 8,
-    padding: "3px 10px",
+    borderRadius: 4,
+    padding: "5px 10px",
     display: "inline-block",
   },
   cellNo: { width: 25 },
@@ -152,27 +147,26 @@ const CampaignTableRow = (props) => {
             aria-label="edit"
             color="success"
             variant="contained"
+            startIcon={<FaRegEdit style={styles.icon} />}
             onClick={() => {
               editCampaign(campaign);
               navigate(`/campaigns/edit/${campaign.id}`);
             }}
-          >
-            Edit
-          </Button>
+          ></Button>
         ) : (
-          <div>
-            <Tooltip
-              title="No edit"
-              placement="right-start"
-              TransitionComponent={Zoom}
-            >
-              <img
-                src={successIcon}
-                alt="success-icon"
-                style={styles.successIcon}
-              />
-            </Tooltip>
-          </div>
+          <Tooltip
+            title="already sent"
+            placement="right-start"
+            TransitionComponent={Zoom}
+          >
+            <Button
+              style={styles.button}
+              aria-label="edit off"
+              color="success"
+              variant="contained"
+              startIcon={<MdEditOff style={styles.icon} />}
+            ></Button>
+          </Tooltip>
         )}
       </TableCell>
       <TableCell>
@@ -180,7 +174,7 @@ const CampaignTableRow = (props) => {
           aria-label="delete"
           color="error"
           variant="contained"
-          startIcon={<DeleteIcon style={styles.icon} />}
+          startIcon={<MdDeleteSweep style={styles.icon} />}
           onClick={() => {
             handleActionPopup(() => ({
               change: () => removeCampaign(campaign.id, "campaigns"),
