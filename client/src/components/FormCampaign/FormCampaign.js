@@ -1,88 +1,12 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { Controller } from "react-hook-form";
-import {
-  Button,
-  FormControlLabel,
-  Checkbox,
-  checkboxClasses,
-} from "@mui/material";
+import { Button, FormControlLabel, Checkbox } from "@mui/material";
 import { Paper, Grid, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 
+import { useStyles, styles } from "./styles";
 import { TextInputController } from "components/Inputs";
 import ActiveSubscribersPopup from "../DisplayMessage/ActiveSubscribersPopup/ActiveSubscribersPopup";
-
-const useStyles = makeStyles((theme) => ({
-  sendButton: {
-    "&.MuiButton-root": {
-      margin: 20,
-      padding: "17px 15px",
-      minWidth: 150,
-      color: "#142f43",
-      fontSize: 16,
-      fontWeight: "bold",
-      letterSpacing: 1,
-
-      "&:hover": {
-        color: "#FFF",
-      },
-
-      [theme.breakpoints.down("sm")]: {
-        minWidth: 120,
-        padding: "12px 10px",
-        fontSize: 12,
-      },
-    },
-  },
-  draftButton: {
-    "&.MuiButton-root": {
-      margin: 10,
-      padding: "17px 15px",
-      maxWidth: 150,
-      color: "#142f43",
-      fontSize: 16,
-      fontWeight: "bold",
-      letterSpacing: 1,
-      backgroundColor: "orange",
-
-      "&:hover": {
-        backgroundColor: "#ca880e",
-        color: "#FFF",
-      },
-
-      [theme.breakpoints.down("sm")]: {
-        minWidth: 120,
-        padding: "12px 10px",
-        fontSize: 12,
-      },
-    },
-  },
-  label: {
-    color: "orange",
-    fontSize: 19,
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 16,
-    },
-  },
-}));
-
-const styles = {
-  paper: {
-    maxWidth: 600,
-    margin: "20px auto",
-    padding: 20,
-    borderRadius: 8,
-    backgroundColor: "#142F43",
-  },
-  typography: { color: "orange", letterSpacing: 2, wordSpacing: 3 },
-  checkbox: {
-    [`&, &.${checkboxClasses.checked}`]: {
-      transform: "scale(1.1)",
-      color: "orange",
-    },
-  },
-};
 
 const FormCampaign = ({ control, errors, handleDraftData, handleSendData }) => {
   const [isChecked, setIsChecked] = useState(false);
