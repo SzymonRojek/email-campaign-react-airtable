@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import SelectInputConroller from "components/Inputs/SelectInputController";
 
-const useStyles = makeStyles({
+const useSelectStyles = makeStyles({
   root: {
     "& .MuiOutlinedInput-input": {
       color: "white",
@@ -43,8 +43,8 @@ const styles = {
       alignItems: "center",
       gap: 10,
     },
-    textError: { paddingTop: 0 },
   },
+  textError: { paddingTop: 0 },
 };
 
 const ContainerTable = ({
@@ -55,6 +55,8 @@ const ContainerTable = ({
   children,
 }) => {
   const { control, watch } = useForm();
+
+  const classesSelectStyles = useSelectStyles();
 
   const selectSubscribersNumber = [
     { value: "4", label: "4" },
@@ -87,7 +89,8 @@ const ContainerTable = ({
                 data={selectSubscribersNumber}
                 message=""
                 error={false}
-                useStyles={useStyles}
+                classesSelectStyles={classesSelectStyles.root}
+                styles={styles.textError}
               />
             </Paper>
           </div>
