@@ -16,10 +16,6 @@ import {
   CampaignsPage,
   StatusCampaignsPage,
 } from "pages/campaigns";
-import {
-  subscribersLinksNavigation,
-  campaignsLinksNavigation,
-} from "data/dataLinksNavigation";
 import { NotFoundPage } from "pages/notFoundPage";
 
 const Routing = (props) => {
@@ -35,12 +31,7 @@ const Routing = (props) => {
     { path: "/", element: <HomePage /> },
     {
       path: "subscribers",
-      element: (
-        <SubMainNavigation
-          dataLinks={subscribersLinksNavigation}
-          tabsValue={tabsValue}
-        />
-      ),
+      element: <SubMainNavigation tabsValue={tabsValue} />,
       children: [
         {
           path: "/",
@@ -79,12 +70,7 @@ const Routing = (props) => {
     },
     {
       path: "campaigns",
-      element: (
-        <SubMainNavigation
-          dataLinks={campaignsLinksNavigation}
-          tabsValue={tabsValue}
-        />
-      ),
+      element: <SubMainNavigation tabsValue={tabsValue} />,
       children: [
         {
           path: "/",
