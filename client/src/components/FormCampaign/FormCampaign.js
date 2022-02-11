@@ -8,9 +8,64 @@ import {
   checkboxClasses,
 } from "@mui/material";
 import { Paper, Grid, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
 import { TextInputController } from "components/Inputs";
 import ActiveSubscribersPopup from "../DisplayMessage/ActiveSubscribersPopup/ActiveSubscribersPopup";
+
+const useStyles = makeStyles((theme) => ({
+  sendButton: {
+    "&.MuiButton-root": {
+      margin: 20,
+      padding: "17px 15px",
+      minWidth: 150,
+      color: "#142f43",
+      fontSize: 16,
+      fontWeight: "bold",
+      letterSpacing: 1,
+
+      "&:hover": {
+        color: "#FFF",
+      },
+
+      [theme.breakpoints.down("sm")]: {
+        minWidth: 120,
+        padding: "12px 10px",
+        fontSize: 12,
+      },
+    },
+  },
+  draftButton: {
+    "&.MuiButton-root": {
+      margin: 10,
+      padding: "17px 15px",
+      maxWidth: 150,
+      color: "#142f43",
+      fontSize: 16,
+      fontWeight: "bold",
+      letterSpacing: 1,
+      backgroundColor: "orange",
+
+      "&:hover": {
+        backgroundColor: "#ca880e",
+        color: "#FFF",
+      },
+
+      [theme.breakpoints.down("sm")]: {
+        minWidth: 120,
+        padding: "12px 10px",
+        fontSize: 12,
+      },
+    },
+  },
+  label: {
+    color: "orange",
+    fontSize: 19,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 16,
+    },
+  },
+}));
 
 const styles = {
   paper: {
@@ -27,13 +82,12 @@ const styles = {
       color: "orange",
     },
   },
-  label: {
-    color: "orange",
-  },
 };
 
 const FormCampaign = ({ control, errors, handleDraftData, handleSendData }) => {
   const [isChecked, setIsChecked] = useState(false);
+
+  const classes = useStyles();
 
   const handleIsChecked = () => setIsChecked(!isChecked);
 
@@ -90,44 +144,41 @@ const FormCampaign = ({ control, errors, handleDraftData, handleSendData }) => {
                     )}
                   />
                 }
-                label="select from active subscribers"
+                label={
+                  <span className={classes.label}>
+                    select from active subscribers
+                  </span>
+                }
               />
             </Grid>
+
             <Grid
               container
               direction="row"
               justifyContent="space-evenly"
               alignItems="center"
+              spacing={2}
             >
               <Grid item>
                 <Button
                   aria-label="draft"
-                  // className={classes.button}
                   variant="contained"
-                  color="error"
-                  // onClick={() => closeActiveSubscribersPopup()}
                   onClick={handleDraftData}
+                  className={classes.draftButton}
                 >
-                  <span>draft</span>
+                  draft email
                 </Button>
-                {/* <StyledButton
-                hover="#cf890a"
-                bgc="#ffa500"
-                label="draft"
-                ariaLabel="draft"
-                type="submit"
-                onClick={handleDraftData}
-              /> */}
               </Grid>
+
               <Grid item>
                 <Button
                   aria-label="send"
-                  // className={classes.button}
                   variant="contained"
                   color="success"
                   onClick={handleSendData}
+                  className={classes.sendButton}
                 >
-                  <span>send</span>
+                  send email
                 </Button>
               </Grid>
             </Grid>
