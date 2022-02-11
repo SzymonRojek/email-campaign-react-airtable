@@ -165,16 +165,8 @@ const AddCampaignPage = () => {
         />
       ) : (
         <StyledContainer>
-          <StyledHeading label="send email" />
-          <StyledMainContent
-            style={{
-              padding: "10px 50px 60px 50px",
-              marginTop: 40,
-              backgroundColor: "rgba(255, 255, 255, 0.1)",
-              backdropFilter: "blur(5px)",
-              borderRadius: 6,
-            }}
-          >
+          <StyledHeading label="new email" />
+          <StyledMainContent>
             <FormCampaign
               control={control}
               errors={errors}
