@@ -2,8 +2,9 @@ import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import DetailsIcon from "@mui/icons-material/Details";
+import { FaUserEdit } from "react-icons/fa";
+import { MdPersonRemoveAlt1 } from "react-icons/md";
+import { CgDetailsMore } from "react-icons/cg";
 import { TableCell, TableRow, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -33,14 +34,15 @@ const styles = {
   },
   icon: { marginLeft: 10, color: "white" },
 };
+
 const useStyles = makeStyles((theme) => ({
   status: {
     fontWeight: "bold",
     fontSize: "0.75rem",
     color: "white",
     backgroundColor: "#ddd",
-    borderRadius: 8,
-    padding: "3px 10px",
+    borderRadius: 4,
+    padding: "5px 10px",
     display: "inline-block",
   },
 
@@ -192,20 +194,19 @@ const SubscriberGeneralData = (props) => {
               aria-label="edit"
               color="success"
               variant="contained"
+              startIcon={<FaUserEdit style={styles.icon} />}
               onClick={() => {
                 editSubscriber(subscriber);
                 navigate(`/subscribers/edit/${subscriber.id}`);
               }}
-            >
-              Edit
-            </Button>
+            ></Button>
           </TableCell>
           <TableCell>
             <Button
               aria-label="subscriber-details"
               color="success"
               variant="contained"
-              startIcon={<DetailsIcon style={styles.icon} />}
+              startIcon={<CgDetailsMore style={styles.icon} />}
               onClick={() => {
                 handleSubscriberDetails(subscriber);
                 setTextPopupByStatus(subscriber);
@@ -218,7 +219,7 @@ const SubscriberGeneralData = (props) => {
               aria-label="delete"
               color="error"
               variant="contained"
-              startIcon={<DeleteIcon style={styles.icon} />}
+              startIcon={<MdPersonRemoveAlt1 style={styles.icon} />}
               onClick={() => {
                 handleActionPopup(() => ({
                   change: () => removeSubscriber(subscriber.id, "subscribers"),
