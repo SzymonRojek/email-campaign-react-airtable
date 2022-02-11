@@ -11,22 +11,23 @@ import { CampaignStatus } from "components/CampaignStatus";
 import SelectInputController from "components/Inputs/SelectInputController";
 import { useAPI } from "APiContextProvider";
 
-const useStyles = makeStyles({
+const useSelectStyles = makeStyles({
   root: {
     "& .MuiOutlinedInput-input": {
       color: "rgb(221, 220, 220)",
       fontWeight: "bold",
-      padding: "5px 12px",
       backgroundColor: "#142f43",
       minWidth: 20,
       fontSize: 14,
+      padding: 10,
+      margin: 0,
       transition: ".3 easy-out",
     },
     "& .MuiInputLabel-root": {
       color: "rgb(221, 220, 220)",
     },
     "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      border: "none",
+      borderColor: "rgb(221, 220, 220)",
     },
     "& .MuiSvgIcon-root": {
       color: "rgb(221, 220, 220)",
@@ -37,21 +38,23 @@ const useStyles = makeStyles({
     "&:hover .MuiInputLabel-root": {
       color: "rgb(221, 220, 220)",
     },
-    "&:hover .MuiMenuItem-root": {
-      backgroundColor: "red",
+    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      borderColor: "rgb(221, 220, 220)",
+    },
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+      color: "rgb(221, 220, 220)",
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "rgb(221, 220, 220)",
+    },
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#ffa500",
     },
   },
 });
 
 const styles = {
-  selectContainer: { border: "3px solid orange", borderRadius: 3 },
-  select: {
-    menuItem: {
-      backgroundColor: "#142f43",
-      color: "rgb(221, 220, 220)",
-      borderBottom: "1px solid #ddd",
-    },
-  },
+  textError: { color: "transparent", padding: 0 },
 };
 
 const selectCampaignsStatus = [
@@ -64,23 +67,23 @@ const StatusCampaignsPage = ({ editCampaign, removeCampaign }) => {
   const { control, watch } = useForm();
   const [selectStatus, setSelectStatus] = useState("sent");
 
+  const classesSelectStyles = useSelectStyles();
+
   const statusDataHeadTable = [
     "no",
     "title",
     "description",
     "created",
-    <div style={styles.selectContainer}>
-      <SelectInputController
-        control={control}
-        name="status"
-        styles={styles.select}
-        defaultValue={selectStatus}
-        data={selectCampaignsStatus}
-        message=""
-        error={false}
-        useStyles={useStyles}
-      />
-    </div>,
+    <SelectInputController
+      control={control}
+      name="status"
+      defaultValue={selectStatus}
+      data={selectCampaignsStatus}
+      message=""
+      error={false}
+      classesSelectStyles={classesSelectStyles.root}
+      styles={styles.textError}
+    />,
     "details",
     "delete",
   ];
