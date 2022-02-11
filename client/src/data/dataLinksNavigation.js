@@ -1,8 +1,7 @@
 import { AiFillMail } from "react-icons/ai";
-import { MdPeopleAlt } from "react-icons/md";
 import { BsFillPersonPlusFill } from "react-icons/bs";
-import { MdOutlineMarkEmailRead } from "react-icons/md";
 import { HiFilter } from "react-icons/hi";
+import { MdPeopleAlt, MdMarkEmailRead } from "react-icons/md";
 
 export const mainLinksNavigation = [
   { to: "/subscribers", name: "Subscribers" },
@@ -77,7 +76,7 @@ export const campaignsLinks = [
     tabsValue: 1,
   },
   {
-    icon: <MdOutlineMarkEmailRead />,
+    icon: <MdMarkEmailRead />,
     to: "/campaigns/add",
     name: "Add New",
     tabsValue: 1,
