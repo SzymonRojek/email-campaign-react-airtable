@@ -2,8 +2,8 @@ import PropTypes from "prop-types";
 import { Paper, Box, Collapse, Button } from "@mui/material";
 import { Grid, Typography } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
-import { makeStyles } from "@material-ui/core/styles";
 
+import { useStyles, styles } from "./styles";
 import {
   TextInputController,
   SelectInputController,
@@ -17,80 +17,13 @@ const selectStatusData = [
   { value: "active", label: "active" },
 ];
 
-const useSelectStyles = makeStyles({
-  root: {
-    "& .MuiOutlinedInput-input": {
-      color: "rgb(221, 220, 220)",
-    },
-
-    "& .MuiInputLabel-root": {
-      color: "rgb(221, 220, 220)",
-    },
-    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "rgb(221, 220, 220)",
-    },
-    "& .MuiSvgIcon-root": {
-      color: "rgb(221, 220, 220)",
-    },
-    "&:hover .MuiOutlinedInput-input": {
-      color: "rgb(221, 220, 220)",
-    },
-    "&:hover .MuiInputLabel-root": {
-      color: "rgb(221, 220, 220)",
-    },
-    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "rgb(221, 220, 220)",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-      color: "rgb(221, 220, 220)",
-    },
-    "& .MuiInputLabel-root.Mui-focused": {
-      color: "rgb(221, 220, 220)",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#ffa500",
-    },
-  },
-});
-
-const useButtonStyles = makeStyles((theme) => ({
-  root: {
-    "&.MuiButton-root.MuiButton-contained": {
-      backgroundColor: "orange",
-      border: 0,
-      color: "#142f43",
-      fontWeight: "bold",
-      letterSpacing: 1,
-      padding: "17px 15px",
-      [theme.breakpoints.down("sm")]: {
-        fontSize: 12,
-        padding: "12px 10px",
-      },
-    },
-  },
-}));
-
-const styles = {
-  paper: {
-    maxWidth: 600,
-    margin: "auto",
-    padding: 20,
-    borderRadius: 8,
-    backgroundColor: "#142F43",
-  },
-  typographyRequiredText: { color: "orange", letterSpacing: 2, wordSpacing: 3 },
-  textError: { color: "crimson", paddingTop: 10 },
-  icon: { color: "orange", fontSize: 30, marginTop: 6 },
-};
-
 const FormSubscriber = ({
   control,
   errors,
   handleSubmit,
   isCheckboxChecked,
 }) => {
-  const classesSelectStyles = useSelectStyles();
-  const classesButtonStyles = useButtonStyles();
+  const classes = useStyles();
 
   return (
     <Paper elevation={14} style={styles.paper}>
@@ -143,7 +76,7 @@ const FormSubscriber = ({
               error={!!errors.status}
               message={errors.status?.message ?? ""}
               data={selectStatusData}
-              classesSelectStyles={classesSelectStyles.root}
+              classesSelectStyles={classes.select}
               styles={styles.textError}
             />
           </Grid>
@@ -156,7 +89,11 @@ const FormSubscriber = ({
                 error={!!errors.checkbox}
                 message={errors.checkbox?.message ?? ""}
                 label={
-                  isCheckboxChecked ? "Close more details" : "Open more details"
+                  <span className={classes.label}>
+                    {isCheckboxChecked
+                      ? "close more details"
+                      : "open more details"}
+                  </span>
                 }
               />
             </Grid>
@@ -217,7 +154,7 @@ const FormSubscriber = ({
                 <Button
                   aria-label="add"
                   variant="contained"
-                  className={classesButtonStyles.root}
+                  className={classes.addButton}
                   onClick={() => handleSubmit()}
                 >
                   add subscriber
