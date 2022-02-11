@@ -9,13 +9,16 @@ const useStyles = makeStyles(() => ({
     backgroundColor: "#142f43",
     color: "rgb(221, 220, 220)",
   },
+  tableHeader: {
+    height: "75.50px",
+  },
 }));
 
 const HeadTable = ({ dataHeadTable }) => {
   const classes = useStyles();
 
   return (
-    <TableHead>
+    <TableHead className={classes.tableHeader}>
       <TableRow>
         {dataHeadTable.map((cell, index) => (
           <TableCell key={`i-${index}`} className={classes.tableHeaderCell}>
