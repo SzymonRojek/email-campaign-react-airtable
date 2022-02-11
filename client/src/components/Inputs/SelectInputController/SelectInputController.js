@@ -4,45 +4,9 @@ import { FormControl, Select, MenuItem } from "@mui/material";
 import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-const styles = {
-  textError: { color: "crimson", paddingTop: 10 },
-};
-
-const useSelectStyles = makeStyles({
-  root: {
-    "& .MuiOutlinedInput-input": {
-      color: "rgb(221, 220, 220)",
-    },
-
-    "& .MuiInputLabel-root": {
-      color: "rgb(221, 220, 220)",
-    },
-    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "rgb(221, 220, 220)",
-    },
-    "& .MuiSvgIcon-root": {
-      color: "rgb(221, 220, 220)",
-    },
-    "&:hover .MuiOutlinedInput-input": {
-      color: "rgb(221, 220, 220)",
-    },
-    "&:hover .MuiInputLabel-root": {
-      color: "rgb(221, 220, 220)",
-    },
-    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "rgb(221, 220, 220)",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-      color: "rgb(221, 220, 220)",
-    },
-    "& .MuiInputLabel-root.Mui-focused": {
-      color: "rgb(221, 220, 220)",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#ffa500",
-    },
-  },
-});
+// const styles = {
+//   textError: { color: "crimson", paddingTop: 10 },
+// };
 
 const useMenuItemStyles = makeStyles((theme) => ({
   root: {
@@ -63,15 +27,23 @@ const useMenuItemStyles = makeStyles((theme) => ({
 }));
 
 const SelectInputController = ({ ...props }) => {
-  const { control, name, defaultValue, error, message, data } = props;
+  const {
+    control,
+    name,
+    defaultValue,
+    error,
+    message,
+    data,
+    classesSelectStyles,
+    styles,
+  } = props;
 
-  const classesSelectStyles = useSelectStyles();
   const classesMenuItem = useMenuItemStyles();
 
   const customId = `${name}-id`;
 
   return (
-    <FormControl fullWidth className={classesSelectStyles.root}>
+    <FormControl fullWidth className={classesSelectStyles}>
       <Controller
         control={control}
         name={name}
@@ -84,6 +56,7 @@ const SelectInputController = ({ ...props }) => {
             value={value}
             selected={value}
             error={error}
+            className={classesSelectStyles}
           >
             {data.map(({ value, label }) => (
               <MenuItem
@@ -98,7 +71,7 @@ const SelectInputController = ({ ...props }) => {
         )}
       />
 
-      <Typography variant="inherit" style={styles.textError}>
+      <Typography variant="inherit" style={styles}>
         {message}
       </Typography>
     </FormControl>
