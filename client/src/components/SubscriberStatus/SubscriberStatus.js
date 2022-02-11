@@ -50,7 +50,7 @@ const SubscriberStatus = (props) => {
                 ? data.map((subscriber, index) => (
                     <SubscriberGeneralData
                       key={`id-${subscriber.id}`}
-                      subscriber={{ ...subscriber, group: "subscribers" }}
+                      subscriber={subscriber}
                       index={index}
                       actualPage={actualPage}
                       dataPerPage={parseInt(selectValue)}
