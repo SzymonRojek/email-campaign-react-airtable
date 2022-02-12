@@ -1,15 +1,16 @@
 import PropTypes from "prop-types";
+import { Button } from "@mui/material";
 
 const LogFormButton = ({ label, onClick, className }) => (
-  <button type="submit" onClick={onClick} className={className}>
+  <Button type="submit" onClick={onClick} className={className}>
     {label}
-  </button>
+  </Button>
 );
 
 LogFormButton.propTypes = {
   label: PropTypes.string,
   onClick: PropTypes.func,
-  style: PropTypes.object,
+  className: PropTypes.object,
 };
 
 export default LogFormButton;
