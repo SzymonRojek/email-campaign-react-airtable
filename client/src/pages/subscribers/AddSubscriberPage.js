@@ -130,6 +130,7 @@ const AddSubscriberPage = () => {
               errors={errors}
               handleSubmit={handleSubmit(onSubmit)}
               isCheckboxChecked={isCheckboxChecked}
+              labelButton="add subscriber"
             />
           </StyledMainContent>
         </StyledContainer>
