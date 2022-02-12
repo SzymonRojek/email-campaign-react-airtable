@@ -35,7 +35,7 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   addButton: {
-    "&.MuiButton-root.MuiButton-contained": {
+    "&.MuiButton-root": {
       backgroundColor: "orange",
       border: 0,
       color: "#142f43",
@@ -45,7 +45,7 @@ export const useStyles = makeStyles((theme) => ({
 
       "&:hover": {
         backgroundColor: "#ca880e",
-        color: "#FFF",
+        color: "rgb(221, 220, 220)",
       },
       [theme.breakpoints.down("sm")]: {
         fontSize: 12,
