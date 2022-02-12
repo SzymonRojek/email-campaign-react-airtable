@@ -10,29 +10,26 @@ const styles = {
 };
 
 const useStyles = makeStyles((theme) => ({
-  [theme.breakpoints.down("xs")]: {
-    button: {
-      maxWidth: "28px",
-      maxHeight: "28px",
-      minWidth: "28px",
-      minHeight: "28px",
+  paper: {
+    maxWidth: 500,
+  },
+  heading: { fontSize: 18 },
+  contentText: { fontSize: 15 },
+  smallButton: {
+    "&.MuiButton-root": {
+      height: 30,
+      fontWeight: "bold",
+      fontSize: 14,
     },
-    buttonText: {
-      fontSize: 12,
-      color: "white !important",
-    },
-    heading: { fontSize: 18 },
-    contentText: { fontSize: 15 },
   },
   [theme.breakpoints.up("sm")]: {
-    button: {
-      height: 35,
-      color: "white !important",
-    },
     heading: { fontSize: 25 },
     contentText: { fontSize: 20 },
-    paper: {
-      maxWidth: 500,
+    smallButton: {
+      "&.MuiButton-root": {
+        height: 40,
+        fontSize: 16,
+      },
     },
   },
 }));
@@ -52,7 +49,7 @@ const InfoPopup = () => {
           </p>
           <Button
             aria-label="close"
-            className={classes.button}
+            className={classes.smallButton}
             variant="contained"
             color={text.colorButton}
             onClick={() => {
@@ -60,7 +57,7 @@ const InfoPopup = () => {
               closeInfoPopup();
             }}
           >
-            <span className={classes.buttonText}>close</span>
+            x
           </Button>
         </div>
       </DialogTitle>
