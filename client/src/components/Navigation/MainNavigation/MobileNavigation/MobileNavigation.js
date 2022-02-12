@@ -58,16 +58,29 @@ const useStyles = makeStyles(() => ({
   mainDivider: { backgroundColor: "#7a6032" },
   subDivider: { backgroundColor: "#9c98988c" },
   logInButton: {
-    maxWidth: 120,
-    padding: "12px 20px",
-    fontSize: 12,
-    fontWeight: "bold",
-    color: "#142f43",
-    backgroundColor: "orange",
-    textTransform: "uppercase",
-    border: "none",
-    borderRadius: 3,
-    cursor: "pointer",
+    "&.MuiButton-root": {
+      maxWidth: 120,
+      padding: "8px 15px",
+      fontSize: 12,
+      fontWeight: "bold",
+      color: "#142f43",
+      backgroundColor: "orange",
+      textTransform: "uppercase",
+      border: "none",
+      borderRadius: 3,
+      cursor: "pointer",
+      transition: "all .3s ease",
+
+      "&:hover": {
+        backgroundColor: "#ca880e",
+        color: "rgb(221, 220, 220)",
+        transform: "translateY(-2px)",
+      },
+
+      "&:active": {
+        transform: "translateY(2px)",
+      },
+    },
   },
 }));
 
@@ -194,31 +207,29 @@ const MobileNavigation = ({ setTabsValue, setIsLogIn, setStatusLog }) => {
               <Divider className={classes.mainDivider} />
 
               <Collapse in={openCampaignsLinks} timeout="auto" unmountOnExit>
-                {campaignsLinks.map(({ icon, to, tabsValue }) => {
-                  return (
-                    <div key={`key-${uniqueId()}`}>
-                      <Link
-                        to={to}
-                        onClick={() => setTabsValue(tabsValue)}
-                        className={classes.link}
+                {campaignsLinks.map(({ icon, to, tabsValue }) => (
+                  <div key={`key-${uniqueId()}`}>
+                    <Link
+                      to={to}
+                      onClick={() => setTabsValue(tabsValue)}
+                      className={classes.link}
+                    >
+                      <StyledListItem
+                        button
+                        onClick={() => setOpenDrawer(false)}
+                        selected={to === location.pathname}
                       >
-                        <StyledListItem
-                          button
-                          onClick={() => setOpenDrawer(false)}
-                          selected={to === location.pathname}
+                        <ListItemIcon
+                          className={classes.listItemIcon}
+                          onClick={() => setTabsValue(tabsValue)}
                         >
-                          <ListItemIcon
-                            className={classes.listItemIcon}
-                            onClick={() => setTabsValue(tabsValue)}
-                          >
-                            {icon}
-                          </ListItemIcon>
-                        </StyledListItem>
-                      </Link>
-                      <Divider className={classes.subDivider} />
-                    </div>
-                  );
-                })}
+                          {icon}
+                        </ListItemIcon>
+                      </StyledListItem>
+                    </Link>
+                    <Divider className={classes.subDivider} />
+                  </div>
+                ))}
               </Collapse>
             </List>
           </Grid>
