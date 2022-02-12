@@ -34,8 +34,13 @@ const styles = {
     justifyContent: "space-between",
     padding: "0 20px",
   },
-  title: { letterSpacing: 2, textTransform: "uppercase" },
-  selectText: { letterSpacing: 2 },
+  title: {
+    fontWeight: 600,
+    fontSize: 18,
+    letterSpacing: 2,
+    textTransform: "uppercase",
+  },
+  selectText: { fontSize: 16, fontWeight: "bold", letterSpacing: 2 },
   select: {
     wrapper: {
       display: "flex",
