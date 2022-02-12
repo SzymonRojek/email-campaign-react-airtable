@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 export const useStyles = makeStyles((theme) => ({
   sendButton: {
     "&.MuiButton-root": {
-      margin: 20,
+      margin: "20px 10px",
       padding: "10px 15px",
       minWidth: 150,
       color: "#142f43",
@@ -12,7 +12,7 @@ export const useStyles = makeStyles((theme) => ({
       letterSpacing: 1,
 
       "&:hover": {
-        color: "#FFF",
+        color: "rgb(221, 220, 220)",
       },
 
       [theme.breakpoints.down("sm")]: {
@@ -24,7 +24,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   draftButton: {
     "&.MuiButton-root": {
-      margin: 10,
+      margin: "20px 10px",
       padding: "10px 15px",
       maxWidth: 150,
       color: "#142f43",
@@ -34,7 +34,7 @@ export const useStyles = makeStyles((theme) => ({
 
       "&:hover": {
         backgroundColor: "#ca880e",
-        color: "#FFF",
+        color: "rgb(221, 220, 220)",
       },
 
       [theme.breakpoints.down("sm")]: {
