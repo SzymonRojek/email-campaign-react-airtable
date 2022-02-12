@@ -30,25 +30,40 @@ const styles = {
 };
 
 const useStyles = makeStyles((theme) => ({
-  [theme.breakpoints.down("xs")]: {
-    button: {
-      maxWidth: "28px",
-      maxHeight: "28px",
-      minWidth: "28px",
-      minHeight: "28px",
+  heading: {
+    fontSize: 20,
+    fontWeight: 600,
+    textTransform: "uppercase",
+    color: "green",
+  },
+  textInformation: {
+    fontSize: 16,
+  },
+  mainButton: {
+    "&.MuiButton-root": {
+      marginBottom: 20,
+      padding: "8px",
+      minWidth: 180,
+      fontSize: 16,
+      fontWeight: "bold",
+      letterSpacing: 1,
     },
-    buttonText: {
-      fontSize: 12,
-      color: "white !important",
-    },
-    heading: { fontSize: 18 },
+  },
+  smallButton: {
+    "&.MuiButton-root": { fontWeight: "bold", fontSize: 16 },
   },
   [theme.breakpoints.up("sm")]: {
-    button: {
-      height: 35,
-      color: "white !important",
+    heading: { fontSize: 30 },
+    textInformation: {
+      fontSize: 20,
     },
-    heading: { fontSize: 25 },
+    mainButton: {
+      "&.MuiButton-root": {
+        marginBottom: 40,
+        padding: 15,
+        fontSize: 18,
+      },
+    },
   },
 }));
 
@@ -160,7 +175,7 @@ const ActiveSubscribersPopup = ({
           <Grid item xs={12} justifyContent="flex-end" textAlign="right">
             <Button
               aria-label="close"
-              className={classes.button}
+              className={classes.smallButton}
               variant="contained"
               color="error"
               onClick={() => {
@@ -183,8 +198,7 @@ const ActiveSubscribersPopup = ({
         {selectedActiveSubscribers.length >= 1 ? (
           <Button
             aria-label="remove"
-            className={classes.button}
-            style={{ minWidth: 180, marginBottom: 20 }}
+            className={classes.mainButton}
             variant="contained"
             color="error"
             onClick={() => handleRemoveChecked()}
@@ -194,8 +208,7 @@ const ActiveSubscribersPopup = ({
         ) : (
           <Button
             aria-label="close"
-            className={classes.button}
-            style={{ minWidth: 180, marginBottom: 20 }}
+            className={classes.mainButton}
             variant="contained"
             color="success"
             onClick={() => handleCheckedAll1()}
@@ -237,18 +250,18 @@ const ActiveSubscribersPopup = ({
         spacing={1}
       >
         <Grid item>
-          <Typography variant="body1">
+          <Typography variant="body1" className={classes.textInformation}>
             {selectedActiveSubscribers.length === 0
               ? "Please select from the list"
               : selectedActiveSubscribers.length === 1
-              ? `Selected 1 Subscriber`
-              : `Selected ${selectedActiveSubscribers.length} Subscribers`}
+              ? `Selected 1 subscriber`
+              : `Selected ${selectedActiveSubscribers.length} subscribers`}
           </Typography>
         </Grid>
         <Grid item>
           <Button
             aria-label="ok"
-            className={classes.button}
+            className={classes.smallButton}
             variant="contained"
             color="success"
             onClick={() => closeListActiveSusbcribers(false)}
