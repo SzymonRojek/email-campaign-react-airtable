@@ -22,6 +22,7 @@ const FormSubscriber = ({
   errors,
   handleSubmit,
   isCheckboxChecked,
+  labelButton,
 }) => {
   const classes = useStyles();
 
@@ -157,7 +158,7 @@ const FormSubscriber = ({
                   className={classes.addButton}
                   onClick={() => handleSubmit()}
                 >
-                  add subscriber
+                  {labelButton}
                 </Button>
               </Box>
             </Grid>

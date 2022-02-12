@@ -176,6 +176,7 @@ const EditSubscriberPage = () => {
               errors={errors}
               handleSubmit={handleSubmit(onSubmit)}
               isCheckboxChecked={isCheckboxChecked}
+              labelButton="update subscriber"
             />
           </StyledMainContent>
         </StyledContainer>
