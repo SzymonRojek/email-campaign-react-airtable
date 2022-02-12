@@ -45,7 +45,7 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
   };
 
   const handleEditSubscriber = (subscriber) =>
-    navigate(`/subscriber/edit/${subscriber.id}`);
+    navigate(`/subscribers/edit/${subscriber.id}`);
 
   const handleEditCampaign = (campaign) => {
     if (campaign.fields.status === "draft") {
