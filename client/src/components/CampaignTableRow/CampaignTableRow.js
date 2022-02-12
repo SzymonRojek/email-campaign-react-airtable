@@ -47,6 +47,13 @@ const useStyles = makeStyles(() => ({
   },
   cellNo: { width: 25 },
   cell: { wordWrap: "break-word", width: 100 },
+  disableButton: {
+    "&.MuiButton-root.MuiButton-contained": { backgroundColor: "#b3b3b3" },
+
+    "&:hover": {
+      backgroundColor: "#b3b3b3",
+    },
+  },
 }));
 
 const CampaignTableRow = (props) => {
@@ -162,7 +169,7 @@ const CampaignTableRow = (props) => {
             <Button
               style={styles.button}
               aria-label="edit off"
-              color="success"
+              className={classes.disableButton}
               variant="contained"
               startIcon={<MdEditOff style={styles.icon} />}
             ></Button>
