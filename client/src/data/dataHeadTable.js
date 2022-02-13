@@ -3,7 +3,8 @@ export const generalDataHeadTable = [
   "name",
   "surname",
   "status",
-  "created",
+  "date",
+  "time",
   "edit",
   "details",
   "delete",
@@ -14,7 +15,8 @@ export const detailsDataHeadTableFirst = [
   "name",
   "surname",
   "status",
-  "created",
+  "date",
+  "time",
 ];
 
 export const detailsDataHeadTableSecond = [
@@ -29,7 +31,8 @@ export const dataHeadEmailTable = [
   "no",
   "title",
   "description",
-  "created",
+  "date",
+  "time",
   "status",
   "edit",
   "remove",
