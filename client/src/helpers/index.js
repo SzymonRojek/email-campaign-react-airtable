@@ -1,5 +1,5 @@
 export { default as getStatusColor } from "./getStatusColor";
-export { default as getFormattedData } from "./getFormattedData";
+export { default as formattedData } from "./formattedData";
 export { default as isEven } from "./isEven";
 export { default as validationSubscriber } from "./validationSubscriber";
 export { default as validationCampaign } from "./validationCampaign";
