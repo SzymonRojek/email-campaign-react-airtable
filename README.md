@@ -2,11 +2,9 @@
 
 Actually I am working on:
 
-- general layout: change main image in body
-- add react context for all popups, add functional implementation, remove unnecessary props and so on
-- edit proptypes
+- definitely work with handling errors: I am thinking about global handler error (I do not want to use error popup in every app page like right now so I want to change it), maybe I will create an error react context, base on message from the json proxy but in this case I have to get to know better an express.js
+- error popup layout
 - remove errors from dev tools console
-- styling popups
 
 Check demo on Herokuapp: [demo](https://create-email-campaign.herokuapp.com/)
 
