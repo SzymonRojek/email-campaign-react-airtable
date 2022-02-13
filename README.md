@@ -20,7 +20,13 @@ Check demo on Herokuapp: [demo](https://create-email-campaign.herokuapp.com/)
 
 # Main goal
 
-Saving subscriebrs and campaigns data - connect the app to the Email.js and send personalized email just by one click to all active subscribers .
+<p align="center" >
+ <img src="./client/src/img/crud.png" width="240" marginRight=20>
+</p>
+
+Create CRUD application, which allows to use five HTTP methods that can and should respond to RESTful APIs so that the client can perform the four basic CRUD operations: Create, Read, Update and Delete.
+
+Connect app to the Email.js and send personalized email just by one click to all choosen active subscribers.
 
 <br>
 
