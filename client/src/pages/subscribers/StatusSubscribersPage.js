@@ -91,7 +91,8 @@ const StatusSubscribersPage = ({
       classesSelectStyles={classesSelectStyles.root}
       styles={styles.textError}
     />,
-    "created",
+    "date",
+    "time",
     "edit",
     "details",
     "delete",

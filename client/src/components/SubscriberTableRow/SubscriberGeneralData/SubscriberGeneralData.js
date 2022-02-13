@@ -10,9 +10,9 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import {
   isEven,
-  getFormattedData,
   getStatusColor,
   capitalizeFirstLetter,
+  formattedData,
 } from "helpers";
 import { usePopup } from "popupContext";
 
@@ -75,7 +75,12 @@ const SubscriberGeneralData = (props) => {
         ? capitalizeFirstLetter(subscriber.fields.surname)
         : "",
       statusColor: subscriber ? getStatusColor(subscriber.fields.status) : "",
-      formattedData: subscriber ? getFormattedData(subscriber.createdTime) : "",
+      formattedDate: subscriber
+        ? formattedData.getFormattedDate(subscriber.createdTime)
+        : "",
+      formattedTime: subscriber
+        ? formattedData.getFormattedTime(subscriber.createdTime)
+        : "",
     });
   }, [subscriber]);
 
@@ -182,7 +187,16 @@ const SubscriberGeneralData = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {modifyData.formattedData}
+          {modifyData.formattedDate}
+        </Typography>
+      </TableCell>
+      <TableCell>
+        <Typography
+          color="textSecondary"
+          variant="subtitle1"
+          className={classes.cell}
+        >
+          {modifyData.formattedTime}
         </Typography>
       </TableCell>
       {location.pathname === "/subscribers" ||
