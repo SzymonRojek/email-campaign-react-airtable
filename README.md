@@ -21,7 +21,7 @@ Check demo on Herokuapp: [demo](https://create-email-campaign.herokuapp.com/)
 # Main goal
 
 <p align="center" >
- <img src="./client/src/img/crud.png" width="240" marginRight=20>
+ <img src="./client/src/img/crud.png" width="240">
 </p>
 
 Create CRUD application, which allows to use five HTTP methods that can and should respond to RESTful APIs so that the client can perform the four basic CRUD operations: Create, Read, Update and Delete.
