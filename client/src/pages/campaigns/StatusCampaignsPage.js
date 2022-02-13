@@ -73,7 +73,8 @@ const StatusCampaignsPage = ({ editCampaign, removeCampaign }) => {
     "no",
     "title",
     "description",
-    "created",
+    "date",
+    "time",
     <SelectInputController
       control={control}
       name="status"

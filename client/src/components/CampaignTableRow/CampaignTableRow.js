@@ -9,7 +9,7 @@ import { MdEditOff, MdDeleteSweep } from "react-icons/md";
 
 import {
   isEven,
-  getFormattedData,
+  formattedData,
   getStatusColor,
   capitalizeFirstLetter,
 } from "helpers";
@@ -85,7 +85,12 @@ const CampaignTableRow = (props) => {
         ? capitalizeFirstLetter(campaign.fields.description)
         : "",
       statusColor: campaign ? getStatusColor(campaign.fields.status) : "",
-      formattedData: campaign ? getFormattedData(campaign.createdTime) : "",
+      formattedDate: campaign
+        ? formattedData.getFormattedDate(campaign.createdTime)
+        : "",
+      formattedTime: campaign
+        ? formattedData.getFormattedTime(campaign.createdTime)
+        : "",
     });
   }, [campaign]);
 
@@ -130,7 +135,16 @@ const CampaignTableRow = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {modifyData.formattedData}
+          {modifyData.formattedDate}
+        </Typography>
+      </TableCell>
+      <TableCell>
+        <Typography
+          color="textSecondary"
+          variant="subtitle1"
+          className={classes.cell}
+        >
+          {modifyData.formattedTime}
         </Typography>
       </TableCell>
       <TableCell>
