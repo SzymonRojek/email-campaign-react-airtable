@@ -13,7 +13,7 @@ Check demo on Herokuapp: [demo](https://create-email-campaign.herokuapp.com/)
 - React.js: useForm hook, custom hooks, router v6, createContext, useContext.
 - [Airtable data base](https://airtable.com/)
 - REST API
-- Postman
+- Postman: testing endpoints
 - Express.js - Proxy (hide api_key, id_base), env variables
 - [Email.js](https://www.emailjs.com/)
 - Deploying on Heroku
