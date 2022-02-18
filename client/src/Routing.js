@@ -24,14 +24,14 @@ const Routing = (props) => {
     handleSubscriberDetails,
     handleRemoveItem,
     handleEditCampaign,
-    tabsValue,
   } = props;
 
   const routes = [
     { path: "/", element: <HomePage /> },
+
     {
       path: "subscribers",
-      element: <SubMainNavigation tabsValue={tabsValue} />,
+      element: <SubMainNavigation />,
       children: [
         {
           path: "/",
@@ -68,9 +68,10 @@ const Routing = (props) => {
         { path: "*", element: <NotFoundPage /> },
       ],
     },
+
     {
       path: "campaigns",
-      element: <SubMainNavigation tabsValue={tabsValue} />,
+      element: <SubMainNavigation />,
       children: [
         {
           path: "/",
