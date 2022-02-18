@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 import { generalDataHeadTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
-import { Loader, Error } from "components/DisplayMessage";
+import { Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
@@ -26,25 +26,13 @@ const SubscribersPage = ({
     <>
       {subscribersData.status === "loading" ? (
         <Loader title="Subscribers" />
-      ) : subscribersData.status === "error" ? (
-        <Error
-          titleOne="ERROR MESSAGE"
-          titleTwo={`${
-            subscribersData.data?.error.message || "Check endpoints"
-          }`}
-          titleThree="Also, please check your internet connection."
-        />
-      ) : !subscribersData.data.length ? (
-        <Error
-          titleOne="MESSAGE"
-          titleTwo="There are no Subscribers added yet"
-          titleThree="Please add a New Subscriber"
-        />
       ) : (
-        subscribersData.status === "success" && (
-          <StyledContainer>
-            <StyledHeading label="all subscribers" />
-            <StyledMainContent>
+        <StyledContainer>
+          <StyledHeading label="all subscribers" />
+          <StyledMainContent>
+            {subscribersData.data && !subscribersData.data.length ? (
+              "List of subscribers is empty - please add a subscriber"
+            ) : (
               <div style={styles.container}>
                 <SubscribersList
                   subHeading="list"
@@ -55,22 +43,22 @@ const SubscribersPage = ({
                   removeSubscriber={removeSubscriber}
                 />
               </div>
+            )}
 
-              {subscribersData.data && subscribersData.data.length > 1 ? (
-                <SubscribersList
-                  subHeading="latest added"
-                  dataHeadTable={generalDataHeadTable}
-                  passedData={getLatestAddedItem(subscribersData.data)}
-                  editSubscriber={editSubscriber}
-                  handleSubscriberDetails={handleSubscriberDetails}
-                  removeSubscriber={removeSubscriber}
-                />
-              ) : (
-                ""
-              )}
-            </StyledMainContent>
-          </StyledContainer>
-        )
+            {subscribersData.data && subscribersData.data.length > 1 ? (
+              <SubscribersList
+                subHeading="latest added"
+                dataHeadTable={generalDataHeadTable}
+                passedData={getLatestAddedItem(subscribersData.data)}
+                editSubscriber={editSubscriber}
+                handleSubscriberDetails={handleSubscriberDetails}
+                removeSubscriber={removeSubscriber}
+              />
+            ) : (
+              ""
+            )}
+          </StyledMainContent>
+        </StyledContainer>
       )}
     </>
   );

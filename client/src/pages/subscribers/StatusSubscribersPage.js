@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { Loader, Error } from "components/DisplayMessage";
+import { Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
@@ -107,23 +107,13 @@ const StatusSubscribersPage = ({
     <>
       {subscribersData.status === "loading" ? (
         <Loader title="Status" />
-      ) : subscribersData.status === "error" ? (
-        <Error
-          titleOne="ERROR MESSAGE"
-          titleTwo="Probably there is no an access to the internet."
-          titleThree="Contact with your internet provider."
-        />
-      ) : !subscribersData.data.length ? (
-        <Error
-          titleOne="MESSAGE"
-          titleTwo="There are no Subscribers added yet"
-          titleThree="Please add a New Subscriber"
-        />
       ) : (
-        subscribersData.status === "success" && (
-          <StyledContainer>
-            <StyledHeading label="subscribers status" />
-            <StyledMainContent>
+        <StyledContainer>
+          <StyledHeading label="subscribers status" />
+          <StyledMainContent>
+            {subscribersData.data && !subscribersData.data.length ? (
+              "List of subscribers is empty - please add a subscriber"
+            ) : (
               <SubscriberStatus
                 subHeading="list"
                 generalDataHeadTable={statusDataHeadTable}
@@ -134,9 +124,9 @@ const StatusSubscribersPage = ({
                 handleSubscriberDetails={handleSubscriberDetails}
                 removeSubscriber={removeSubscriber}
               />
-            </StyledMainContent>
-          </StyledContainer>
-        )
+            )}
+          </StyledMainContent>
+        </StyledContainer>
       )}
     </>
   );

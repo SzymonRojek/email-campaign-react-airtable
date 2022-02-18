@@ -148,25 +148,19 @@ const EditSubscriberPage = () => {
     displayPopup(data);
   };
 
-  if (subscriberData.data?.error) {
-    return (
-      <Error
-        titleOne={`${subscriberData.data?.error.messageOne}`}
-        titleTwo={`${subscriberData.data?.error.messageTwo}`}
-      />
-    );
-  }
+  // if (subscriberData.data?.error) {
+  //   return (
+  //     <Error
+  //       titleOne={`${subscriberData.data?.error.messageOne}`}
+  //       titleTwo={`${subscriberData.data?.error.messageTwo}`}
+  //     />
+  //   );
+  // }
 
   return (
     <>
       {subscriberData.status === "loading" ? (
         <Loader title="Getting data" />
-      ) : subscriberData.status === "error" ? (
-        <Error
-          titleOne="ERROR MESSAGE"
-          titleTwo="Probably there is no an access to the internet."
-          titleThree="Contact with your internet provider."
-        />
       ) : (
         <StyledContainer>
           <StyledHeading label="edit subscriber" />
