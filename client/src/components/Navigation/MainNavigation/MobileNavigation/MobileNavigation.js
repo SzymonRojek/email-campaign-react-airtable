@@ -24,6 +24,7 @@ import { AiFillHome } from "react-icons/ai";
 
 import { LogFormButton } from "components/LogFormButton";
 import { campaignsLinks, subscribersLinks } from "data/dataLinksNavigation";
+import { usePopup } from "popupContext";
 
 const styles = {
   drawer: { zIndex: 10 },
@@ -101,12 +102,13 @@ const StyledListItem = withStyles({
   },
 })(ListItem);
 
-const MobileNavigation = ({ setTabsValue, setIsLogIn, setStatusLog }) => {
+const MobileNavigation = () => {
   const classes = useStyles();
   const location = useLocation();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openSubscribersLinks, setOpenSubscribersLinks] = useState(false);
   const [openCampaignsLinks, setOpenCampaignsLinks] = useState(false);
+  const { setIsLogIn, setStatusLog, setTabsValue } = usePopup();
 
   useEffect(() => {
     if (!openDrawer) {
