@@ -82,8 +82,8 @@ const AddSubscriberPage = () => {
     ),
   });
 
-  const onSubmit = (data) => {
-    api.post(endpoint, {
+  const getActionsOnSubmit = async (data) => {
+    const response = await api.post("subscribers", {
       fields: {
         name: data.name,
         surname: data.surname,
@@ -94,6 +94,14 @@ const AddSubscriberPage = () => {
         telephone: data.telephone,
       },
     });
+
+    if (response) {
+      fetchSubscribersData();
+    }
+  };
+
+  const onSubmit = (data) => {
+    getActionsOnSubmit(data);
 
     addTextPopup(setTextConfirmPopup(data));
 
@@ -106,10 +114,6 @@ const AddSubscriberPage = () => {
 
     openConfirmPopup();
   };
-
-  if (formState.isSubmitSuccessful) {
-    fetchSubscribersData();
-  }
 
   return (
     <>
