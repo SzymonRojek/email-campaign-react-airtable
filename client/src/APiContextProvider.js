@@ -1,10 +1,11 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 
 import api from "./api";
+import { useErrorHandler } from "react-error-boundary";
 
 const APIContext = createContext();
 
-function APIContextProvider({ children }) {
+const APIContextProvider = ({ children }) => {
   const [subscribersData, setSubscribersData] = useState({
     status: "loading",
     data: null,
@@ -15,23 +16,27 @@ function APIContextProvider({ children }) {
     data: null,
   });
 
+  const handleError = useErrorHandler();
+
   const fetchSubscribersData = async () => {
     try {
       const data = await api.get("/subscribers");
 
       setSubscribersData({
-        status: data?.error ? "error" : "success",
+        status: "success",
         data,
       });
     } catch (error) {
-      setSubscribersData({
-        status: "error",
-      });
+      handleError(error);
     }
   };
 
   useEffect(() => {
     fetchSubscribersData();
+
+    return () => {
+      setSubscribersData({});
+    };
   }, []);
 
   const fetchCampaignsData = async () => {
@@ -51,10 +56,14 @@ function APIContextProvider({ children }) {
 
   useEffect(() => {
     fetchCampaignsData();
+
+    return () => {
+      setCampaignsData({});
+    };
   }, []);
 
-  const filteredActiveSubscribers = subscribersData.data
-    ? subscribersData.data.filter(
+  const filteredActiveSubscribers = subscribersData?.subscribers
+    ? subscribersData.subscribers.filter(
         (subscriber) => subscriber.fields.status === "active"
       )
     : [];
@@ -74,7 +83,7 @@ function APIContextProvider({ children }) {
       {children}
     </APIContext.Provider>
   );
-}
+};
 
 export default APIContextProvider;
 
