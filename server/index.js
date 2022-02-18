@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
 const subscribersRouter = require("./routes/subscribersRoutes");
 const campaignsRouter = require("./routes/campaignsRoutes");
