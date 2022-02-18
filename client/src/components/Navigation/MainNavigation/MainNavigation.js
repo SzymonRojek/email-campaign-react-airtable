@@ -17,6 +17,7 @@ import { StyledTabs } from "./StyledTabs";
 import { MobileNavigation } from "./MobileNavigation";
 import Logo from "../../../img/logo.svg";
 import { LogFormButton } from "components/LogFormButton";
+import { usePopup } from "popupContext";
 
 const mainNavigationLinks = [
   {
@@ -105,11 +106,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function MainNavigation({ tabsValue, setTabsValue, setIsLogIn, setStatusLog }) {
+function MainNavigation() {
   const theme = useTheme();
   const classes = useStyles();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
   const location = useLocation();
+  const { isLogIn, setIsLogIn, setStatusLog, tabsValue, setTabsValue } =
+    usePopup();
+
   const handleClickTab = (e, newTabsValue) => setTabsValue(newTabsValue);
 
   useEffect(() => {
@@ -147,11 +151,7 @@ function MainNavigation({ tabsValue, setTabsValue, setIsLogIn, setStatusLog }) {
         </div>
 
         {isSmallDevice ? (
-          <MobileNavigation
-            setTabsValue={setTabsValue}
-            setIsLogIn={setIsLogIn}
-            setStatusLog={setStatusLog}
-          />
+          <MobileNavigation />
         ) : (
           <>
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -165,6 +165,7 @@ function MainNavigation({ tabsValue, setTabsValue, setIsLogIn, setStatusLog }) {
                     component={Link}
                     to={to}
                     className={classes.link}
+                    disabled={!isLogIn ? true : false}
                   />
                 ))}
               </StyledTabs>
