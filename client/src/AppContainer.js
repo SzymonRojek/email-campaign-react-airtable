@@ -1,15 +1,12 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "App.css";
 import api from "api";
 import { useAPI } from "./APiContextProvider";
-import { MainNavigation } from "components/Navigation";
 import Routing from "./Routing";
 
-const AppContainer = ({ setIsLogIn, setStatusLog }) => {
+const AppContainer = () => {
   const navigate = useNavigate();
-  const [tabsValue, setTabsValue] = useState(0);
 
   const {
     subscribersData,
@@ -54,22 +51,12 @@ const AppContainer = ({ setIsLogIn, setStatusLog }) => {
   };
 
   return (
-    <>
-      <MainNavigation
-        tabsValue={tabsValue}
-        setTabsValue={setTabsValue}
-        setIsLogIn={setIsLogIn}
-        setStatusLog={setStatusLog}
-      />
-
-      <Routing
-        handleEditSubscriber={handleEditSubscriber}
-        handleSubscriberDetails={handleSubscriberDetails}
-        handleEditCampaign={handleEditCampaign}
-        handleRemoveItem={handleRemoveItem}
-        tabsValue={tabsValue}
-      />
-    </>
+    <Routing
+      handleEditSubscriber={handleEditSubscriber}
+      handleSubscriberDetails={handleSubscriberDetails}
+      handleEditCampaign={handleEditCampaign}
+      handleRemoveItem={handleRemoveItem}
+    />
   );
 };
 
