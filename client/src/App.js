@@ -1,31 +1,35 @@
+import { ErrorBoundary } from "react-error-boundary";
+
+import APIContextProvider from "./APiContextProvider";
+import { Fallback } from "./components/Fallback";
 import AppContainer from "./AppContainer";
 import { ConfirmPopup, InfoPopup } from "./components/DisplayMessage";
 import { StyledFooter } from "./components/StyledFooter";
-import { useLocalStorageValue } from "./useLocalStorageValue";
 import { PopupProvider } from "./popupContext";
 import { Login } from "./Login";
-import APIContextProvider from "./APiContextProvider";
+import { MainNavigation } from "components/Navigation";
 
 const App = () => {
-  const [statusLog, setStatusLog] = useLocalStorageValue("status", "loadingIn");
-  const [isLogIn, setIsLogIn] = useLocalStorageValue("login", false);
+  const handleError = (error, errorInfo) => {
+    console.log("LoggingError", error, errorInfo);
+  };
 
   return (
     <div className="page-container">
-      <Login
-        isLogIn={isLogIn}
-        setIsLogIn={setIsLogIn}
-        statusLog={statusLog}
-        setStatusLog={setStatusLog}
-      >
-        <PopupProvider>
+      <PopupProvider>
+        <ErrorBoundary FallbackComponent={Fallback} onError={handleError}>
+          <MainNavigation />
+
           <APIContextProvider>
-            <AppContainer setIsLogIn={setIsLogIn} setStatusLog={setStatusLog} />
+            <Login>
+              <AppContainer />
+            </Login>
           </APIContextProvider>
-          <ConfirmPopup />
-          <InfoPopup />
-        </PopupProvider>
-      </Login>
+        </ErrorBoundary>
+
+        <ConfirmPopup />
+        <InfoPopup />
+      </PopupProvider>
 
       <StyledFooter label="Coded By Szymon Rojek © 2022" />
     </div>
