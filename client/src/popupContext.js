@@ -1,8 +1,10 @@
 import React, { createContext, useState, useContext } from "react";
+import { useLocalStorageValue } from "./useLocalStorageValue";
 
 const PopupContext = createContext();
 
 export const PopupProvider = ({ children }) => {
+  // popups
   const [isOpenConfirmPopup, setIsOpenConfirmPopup] = useState(false);
   const [isOpenInfoPopup, setIsOpenInfoPopup] = useState(false);
   const [text, setText] = useState({});
@@ -14,24 +16,46 @@ export const PopupProvider = ({ children }) => {
   const addTextPopup = (text) => setText(text);
   const handleActionPopup = (param) => setActionPopup(param);
 
+  // login form
+  const [statusLog, setStatusLog] = useLocalStorageValue("status", "loadingIn");
+  const [isLogIn, setIsLogIn] = useLocalStorageValue("login", false);
+
+  // navigation tabs
+  const [tabsValue, setTabsValue] = useState(0);
+  const [tabsSubValue, setTabsSubValue] = useState(0);
+
+  const contextValues = {
+    isOpenConfirmPopup,
+    isOpenInfoPopup,
+    openConfirmPopup,
+    openInfoPopup,
+    closeConfirmPopup,
+    closeInfoPopup,
+    text,
+    addTextPopup,
+    handleActionPopup,
+    actionPopup,
+    statusLog,
+    setStatusLog,
+    isLogIn,
+    setIsLogIn,
+    tabsValue,
+    setTabsValue,
+    tabsSubValue,
+    setTabsSubValue,
+  };
+
   return (
-    <PopupContext.Provider
-      value={{
-        isOpenConfirmPopup,
-        isOpenInfoPopup,
-        openConfirmPopup,
-        openInfoPopup,
-        closeConfirmPopup,
-        closeInfoPopup,
-        text,
-        addTextPopup,
-        handleActionPopup,
-        actionPopup,
-      }}
-    >
+    <PopupContext.Provider value={contextValues}>
       {children}
     </PopupContext.Provider>
   );
 };
 
-export const usePopup = () => useContext(PopupContext);
+export const usePopup = () => {
+  const context = useContext(PopupContext);
+  if (context === undefined) {
+    throw new Error("PopupContext must be used within a Provider");
+  }
+  return context;
+};
