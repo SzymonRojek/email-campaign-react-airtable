@@ -19,6 +19,7 @@ exports.getAllSubscribers = async (req, res) => {
 
     res.status(200).json(data.records);
   } catch (error) {
+    console.log(error);
     res.status(404).json({ status: "fail", error });
   }
 };
@@ -34,9 +35,7 @@ exports.getSubscriber = async (req, res) => {
     res.status(404).json({
       status: "fail",
       error: {
-        messageOne: "Subscriber does not exist",
-        messageTwo:
-          "Please you have to write a proper url or check an internet connection",
+        message: `${"Subscriber does not exist"}\n${"Please write a proper url or check an internet connection"}`,
       },
     });
   }
@@ -59,7 +58,10 @@ exports.createSubscriber = async (req, res) => {
 
     res.status(200).json(data);
   } catch (error) {
-    res.status(400).json({ status: "fail", error });
+    res.status(400).json({
+      status: "fail",
+      error,
+    });
   }
 };
 
@@ -87,9 +89,7 @@ exports.updateSubscriber = async (req, res) => {
     res.status(404).json({
       status: "fail",
       error: {
-        messageOne: "Subscriber does not exist",
-        messageTwo:
-          "Please you have to write a proper url or check an internet connection",
+        message: `${"Subscriber does not exist"}\n${"Please write a proper url or check an internet connection"}`,
       },
     });
   }
@@ -109,9 +109,9 @@ exports.deleteSubscriber = async (req, res) => {
   try {
     const { data } = await axios(config);
 
-    req.status(204).json(data);
+    req.json(data);
   } catch (error) {
-    res.status(404).json({
+    res.json({
       status: "fail",
       error: {
         messageOne: "Subscriber does not exist",
