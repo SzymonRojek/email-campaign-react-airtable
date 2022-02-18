@@ -108,9 +108,9 @@ exports.deleteCampaign = async (req, res) => {
   try {
     const { data } = await axios(config);
 
-    req.status(204).json(data);
+    req.json(data);
   } catch (error) {
-    res.status(404).json({
+    res.json({
       status: "fail",
       error: {
         messageOne: "Campaign does not exist",
