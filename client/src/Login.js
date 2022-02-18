@@ -2,9 +2,10 @@ import { useEffect } from "react";
 
 import { LoginForm } from "./components/LoginForm";
 import { Loader } from "./components/DisplayMessage";
+import { usePopup } from "./popupContext";
 
-export const Login = (props) => {
-  const { isLogIn, setIsLogIn, statusLog, setStatusLog, children } = props;
+export const Login = ({ children }) => {
+  const { isLogIn, statusLog, setStatusLog } = usePopup();
 
   useEffect(() => {
     const timeID = setTimeout(() => {
@@ -23,7 +24,7 @@ export const Login = (props) => {
       ) : statusLog === "loadingOut" ? (
         <Loader title="Log Out" />
       ) : (
-        <LoginForm setIsLogIn={setIsLogIn} />
+        <LoginForm />
       )}
     </>
   );
