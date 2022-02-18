@@ -1,14 +1,14 @@
-import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Paper, Box, Grid, Typography } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import { validationLogin } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { LogFormButton } from "components/LogFormButton";
 import { PasswordInput } from "./PasswordInput";
+import { usePopup } from "../../popupContext";
 
 const styles = {
   paper: {
@@ -55,9 +55,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LoginForm = ({ setIsLogIn }) => {
+const LoginForm = () => {
   const navigate = useNavigate();
   const classes = useStyles();
+  const { setIsLogIn } = usePopup();
 
   const {
     handleSubmit,
@@ -128,6 +129,7 @@ const LoginForm = ({ setIsLogIn }) => {
                 <LogFormButton
                   aria-label="log in button"
                   label="log in"
+                  type="button"
                   className={classes.logInButton}
                   onClick={handleHomeRoute}
                 />
@@ -138,10 +140,6 @@ const LoginForm = ({ setIsLogIn }) => {
       </Paper>
     </StyledContainer>
   );
-};
-
-LoginForm.propTypes = {
-  setIsLogIn: PropTypes.func,
 };
 
 export default LoginForm;
