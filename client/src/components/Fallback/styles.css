@@ -1,0 +1,59 @@
+.error-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 250px auto;
+  max-width: 400px;
+  padding: 40px 20px;
+  text-align: center;
+  background-color: #142f43;
+  border-radius: 4px;
+  box-shadow: 5px 3px 19px 2px rgba(0, 0, 0, 0.72);
+}
+
+.error-text {
+  font-size: 2em;
+  letter-spacing: 2px;
+  word-spacing: 4px;
+  font-weight: 600;
+  color: #ffffff8c;
+  opacity: 0;
+  animation: fadeIn ease-in 1;
+  animation-fill-mode: forwards;
+  animation-duration: 1s;
+  animation-delay: 0.5s;
+}
+
+.error-mainText {
+  color: orange;
+}
+
+@media (max-width: 768px) {
+  .error-mainText,
+  .error-subText {
+    font-size: 19px;
+  }
+}
+
+@media (min-width: 769px) {
+  .error-container {
+    max-width: 420px;
+  }
+}
+
+.error-subText {
+  animation: fadeIn ease-in 1;
+  animation-fill-mode: forwards;
+  animation-duration: 1s;
+  animation-delay: 1.2s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
