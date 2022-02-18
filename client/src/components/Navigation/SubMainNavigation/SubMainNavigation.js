@@ -10,6 +10,7 @@ import { MdArrowDropDown } from "react-icons/md";
 import { StyledTabs } from "../MainNavigation/StyledTabs";
 import { IconButton } from "@mui/material";
 import { campaignsLinks, subscribersLinks } from "data/dataLinksNavigation";
+import { usePopup } from "popupContext";
 
 const styles = {
   nav: {
@@ -59,12 +60,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SubMainNavigation = ({ tabsValue }) => {
+const SubMainNavigation = () => {
   const theme = useTheme();
   const classes = useStyles();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [tabsSubValue, setTabsSubValue] = useState(0);
+  const { tabsValue, tabsSubValue, setTabsSubValue } = usePopup();
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => setExpanded(!expanded);
