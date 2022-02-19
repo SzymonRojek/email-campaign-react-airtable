@@ -20,7 +20,7 @@ const selectStatusData = [
 const FormSubscriber = ({
   control,
   errors,
-  handleSubmit,
+  addSubscriber,
   isCheckboxChecked,
   labelButton,
 }) => {
@@ -28,7 +28,7 @@ const FormSubscriber = ({
 
   return (
     <Paper elevation={14} style={styles.paper}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={addSubscriber}>
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <Typography
@@ -156,7 +156,7 @@ const FormSubscriber = ({
                   aria-label="add"
                   variant="contained"
                   className={classes.addButton}
-                  onClick={() => handleSubmit()}
+                  onClick={() => addSubscriber()}
                 >
                   {labelButton}
                 </Button>
@@ -172,7 +172,7 @@ const FormSubscriber = ({
 FormSubscriber.propTypes = {
   control: PropTypes.object,
   errors: PropTypes.object,
-  handleSubmit: PropTypes.func,
+  addSubscriber: PropTypes.func,
   isCheckboxChecked: PropTypes.bool,
 };
 
