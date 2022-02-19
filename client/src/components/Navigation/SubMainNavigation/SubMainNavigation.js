@@ -90,7 +90,7 @@ const SubMainNavigation = () => {
     } else if (pathname === "/subscribers/add") {
       setTabsValue(0);
       setTabsSubValue(2);
-    } else if (pathname === "campaigns/add") {
+    } else if (pathname === "/campaigns/add") {
       setTabsValue(1);
       setTabsSubValue(2);
     }
