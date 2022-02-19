@@ -25,7 +25,7 @@ export const PopupProvider = ({ children }) => {
   const [tabsSubValue, setTabsSubValue] = useState(0);
 
   // selectedActiveSubscribers in the popup
-  const [selectedActiveSubscribers, setSelectedActiveSubscribers] =
+  const [finalSelectedActiveSubscribers, setFinalSelectedActiveSubscribers] =
     useState(null);
 
   const contextValues = {
@@ -47,8 +47,8 @@ export const PopupProvider = ({ children }) => {
     setTabsValue,
     tabsSubValue,
     setTabsSubValue,
-    selectedActiveSubscribers,
-    setSelectedActiveSubscribers,
+    finalSelectedActiveSubscribers,
+    setFinalSelectedActiveSubscribers,
   };
 
   return (
