@@ -62,7 +62,7 @@ const FormCampaign = ({ control, errors, handleDraftData, handleSendData }) => {
                       <Checkbox
                         defaultValue={false}
                         checked={isChecked}
-                        onChange={() => handleIsChecked()}
+                        onChange={handleIsChecked}
                         sx={styles.checkbox}
                       />
                     )}
