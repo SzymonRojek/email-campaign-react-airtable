@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Typography } from "@material-ui/core";
 import {
   Dialog,
@@ -13,7 +13,7 @@ import { Button } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { usePopup } from "popupContext.js";
-import { useAPI } from "../../../APiContextProvider";
+import { useAPI } from "APiContextProvider";
 
 const styles = {
   dialogContent: {
@@ -72,9 +72,19 @@ const ActiveSubscribersPopup = ({
   closeListActiveSusbcribers,
 }) => {
   const classes = useStyles();
-  const { filteredActiveSubscribers } = useAPI();
+  const { subscribersData } = useAPI();
 
-  const { handleActionPopup } = usePopup();
+  const filteredActiveSubscribers = useMemo(
+    () =>
+      subscribersData
+        ? subscribersData.data.filter(
+            (subscriber) => subscriber.fields.status === "active"
+          )
+        : [],
+    [subscribersData]
+  );
+
+  const { setFinalSelectedActiveSubscribers } = usePopup();
 
   const [checked, setChecked] = useState([false]);
 
@@ -155,9 +165,9 @@ const ActiveSubscribersPopup = ({
 
   const getChoosenActiveSubscribers = useCallback(() => {
     if (selectedActiveSubscribers) {
-      handleActionPopup(selectedActiveSubscribers);
+      setFinalSelectedActiveSubscribers(selectedActiveSubscribers);
     }
-  }, [selectedActiveSubscribers, handleActionPopup]);
+  }, [selectedActiveSubscribers, setFinalSelectedActiveSubscribers]);
 
   useEffect(() => {
     getChoosenActiveSubscribers();
