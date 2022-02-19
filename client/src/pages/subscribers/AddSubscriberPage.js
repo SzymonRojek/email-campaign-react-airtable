@@ -21,7 +21,6 @@ const styles = {
 };
 
 const AddSubscriberPage = () => {
-  const endpoint = "/subscribers";
   const { subscribersData, fetchSubscribersData } = useAPI();
 
   const {
@@ -35,7 +34,7 @@ const AddSubscriberPage = () => {
     resolver: yupResolver(validationSubscriber),
   });
 
-  const location = useLocation();
+  const { pathname } = useLocation();
   const navigate = useNavigate();
 
   const { openConfirmPopup, handleActionPopup, addTextPopup } = usePopup();
@@ -107,9 +106,7 @@ const AddSubscriberPage = () => {
 
     handleActionPopup(() => ({
       change: () =>
-        location.pathname === "/subscribers/add"
-          ? navigate("/subscribers")
-          : "",
+        pathname === "/subscribers/add" ? navigate("/subscribers") : "",
     }));
 
     openConfirmPopup();
@@ -132,7 +129,7 @@ const AddSubscriberPage = () => {
             <FormSubscriber
               control={control}
               errors={errors}
-              handleSubmit={handleSubmit(onSubmit)}
+              addSubscriber={handleSubmit(onSubmit)}
               isCheckboxChecked={isCheckboxChecked}
               labelButton="add subscriber"
             />
