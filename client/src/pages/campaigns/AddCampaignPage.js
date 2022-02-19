@@ -31,10 +31,15 @@ const AddCampaignPage = () => {
   } = useForm({
     resolver: yupResolver(validationCampaign),
   });
-  const location = useLocation();
+  const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { openConfirmPopup, addTextPopup, handleActionPopup, actionPopup } =
-    usePopup();
+  const {
+    openConfirmPopup,
+    addTextPopup,
+    handleActionPopup,
+    finalSelectedActiveSubscribers,
+  } = usePopup();
+
   const [isEmailError, setEmailError] = useState(false);
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
@@ -87,12 +92,13 @@ const AddCampaignPage = () => {
   const handleDraftCampaign = (data) => {
     getActionsOnSubmit(data, "draft");
 
-    addTextPopup(setTextConfirmPopup(data, false));
-
     handleActionPopup(() => ({
       change: () =>
-        location.pathname === "/campaigns/add" ? navigate("/campaigns") : "",
+        pathname === "/campaigns/add" ? navigate("/campaigns") : "",
     }));
+
+    addTextPopup(setTextConfirmPopup(data, false));
+
     openConfirmPopup();
   };
 
@@ -103,8 +109,8 @@ const AddCampaignPage = () => {
         (subscriber) => subscriber.fields.status === "active"
       );
 
-    if (actionPopup.length) {
-      actionPopup.map(({ fields: { name, email } }) =>
+    if (finalSelectedActiveSubscribers.length) {
+      finalSelectedActiveSubscribers.map(({ fields: { name, email } }) =>
         sendEmail(
           {
             name,
@@ -166,6 +172,7 @@ const AddCampaignPage = () => {
       ) : (
         <StyledContainer>
           <StyledHeading label="new email" />
+
           <StyledMainContent>
             <FormCampaign
               control={control}
