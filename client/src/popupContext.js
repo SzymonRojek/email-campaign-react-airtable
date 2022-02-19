@@ -24,6 +24,10 @@ export const PopupProvider = ({ children }) => {
   const [tabsValue, setTabsValue] = useState(0);
   const [tabsSubValue, setTabsSubValue] = useState(0);
 
+  // selectedActiveSubscribers in the popup
+  const [selectedActiveSubscribers, setSelectedActiveSubscribers] =
+    useState(null);
+
   const contextValues = {
     isOpenConfirmPopup,
     isOpenInfoPopup,
@@ -43,6 +47,8 @@ export const PopupProvider = ({ children }) => {
     setTabsValue,
     tabsSubValue,
     setTabsSubValue,
+    selectedActiveSubscribers,
+    setSelectedActiveSubscribers,
   };
 
   return (
