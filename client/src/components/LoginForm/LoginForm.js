@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 const LoginForm = () => {
   const navigate = useNavigate();
   const classes = useStyles();
-  const { setIsLogIn } = usePopup();
+  const { setIsLogIn, setTabsValue } = usePopup();
 
   const {
     handleSubmit,
@@ -74,7 +74,10 @@ const LoginForm = () => {
     }
   };
 
-  const handleHomeRoute = () => navigate("/");
+  const handleHomeRoute = () => {
+    setTabsValue(2);
+    navigate("/");
+  };
 
   return (
     <StyledContainer>
