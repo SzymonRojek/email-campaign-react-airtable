@@ -1,11 +1,11 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 
-import api from "./api";
+import api from "../api";
 import { useErrorHandler } from "react-error-boundary";
 
-const APIContext = createContext();
+const APIcontext = createContext();
 
-const APIContextProvider = ({ children }) => {
+export const APIcontextProvider = ({ children }) => {
   const [subscribersData, setSubscribersData] = useState({
     status: "loading",
     data: null,
@@ -62,26 +62,22 @@ const APIContextProvider = ({ children }) => {
     };
   }, []);
 
+  const contextValues = {
+    subscribersData,
+    setSubscribersData,
+    fetchSubscribersData,
+    campaignsData,
+    setCampaignsData,
+    fetchCampaignsData,
+  };
+
   return (
-    <APIContext.Provider
-      value={{
-        subscribersData,
-        setSubscribersData,
-        fetchSubscribersData,
-        campaignsData,
-        setCampaignsData,
-        fetchCampaignsData,
-      }}
-    >
-      {children}
-    </APIContext.Provider>
+    <APIcontext.Provider value={contextValues}>{children}</APIcontext.Provider>
   );
 };
 
-export default APIContextProvider;
-
-export const useAPI = () => {
-  const context = useContext(APIContext);
+export const useAPIcontext = () => {
+  const context = useContext(APIcontext);
   if (context === undefined) {
     throw new Error("Context must be used within a Provider");
   }

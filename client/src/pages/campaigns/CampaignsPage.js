@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 
+import { useAPIcontext } from "contexts/APIcontextProvider";
 import { dataHeadEmailTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
@@ -7,10 +8,9 @@ import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { CampaignsList } from "components/CampaignsList";
 import { Error, Loader } from "components/DisplayMessage";
-import { useAPI } from "APiContextProvider";
 
 const CampaignsPage = ({ editCampaign, removeCampaign }) => {
-  const { campaignsData } = useAPI();
+  const { campaignsData } = useAPIcontext();
 
   return (
     <>

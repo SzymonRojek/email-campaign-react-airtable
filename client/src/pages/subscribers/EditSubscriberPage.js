@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate, useParams } from "react-router-dom";
 
 import api from "api";
+import { useAPIcontext } from "contexts/APIcontextProvider";
 import { useFetchDetailsById } from "useFetchDetailsById";
 import { validationSubscriber } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
@@ -13,14 +14,13 @@ import { Loader, Error } from "components/DisplayMessage";
 
 import { usePopup } from "popupContext";
 import { FormSubscriber } from "components/FormSubscriber/";
-import { useAPI } from "APiContextProvider";
 
 const EditSubscriberPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const endpoint = "/subscribers";
 
-  const { fetchSubscribersData } = useAPI();
+  const { fetchSubscribersData } = useAPIcontext();
 
   const {
     handleSubmit,

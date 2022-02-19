@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { makeStyles } from "@material-ui/core/styles";
 
+import { useAPIcontext } from "contexts/APIcontextProvider";
 import { Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { SubscriberStatus } from "components/SubscriberStatus";
 import SelectInputController from "components/Inputs/SelectInputController";
-import { useAPI } from "APiContextProvider";
 
 const useSelectStyles = makeStyles({
   root: {
@@ -71,7 +71,7 @@ const StatusSubscribersPage = ({
   handleSubscriberDetails,
   removeSubscriber,
 }) => {
-  const { subscribersData } = useAPI();
+  const { subscribersData } = useAPIcontext();
   const { control, watch } = useForm();
   const [selectStatus, setSelectStatus] = useState("active");
 

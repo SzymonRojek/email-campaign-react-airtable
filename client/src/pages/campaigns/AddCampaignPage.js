@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import api from "api";
+import { useAPIcontext } from "contexts/APIcontextProvider";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
 import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
@@ -13,7 +14,7 @@ import { StyledHeading } from "components/StyledHeading";
 import { FormCampaign } from "components/FormCampaign";
 import { sendEmail } from "sendEmail";
 import { usePopup } from "popupContext";
-import { useAPI } from "APiContextProvider";
+
 
 const styles = {
   questionSpan: { color: "crimson", fontWeight: "bold" },
@@ -21,7 +22,7 @@ const styles = {
 };
 
 const AddCampaignPage = () => {
-  const { subscribersData, fetchCampaignsData } = useAPI();
+  const { subscribersData, fetchCampaignsData } = useAPIcontext();
   const {
     handleSubmit,
     control,

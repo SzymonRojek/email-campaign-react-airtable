@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 
+import { useAPIcontext } from "contexts/APIcontextProvider";
 import { generalDataHeadTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
 import { Loader } from "components/DisplayMessage";
@@ -7,7 +8,6 @@ import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { SubscribersList } from "components/SubscribersList";
-import { useAPI } from "APiContextProvider";
 
 const styles = {
   container: {
@@ -20,7 +20,7 @@ const SubscribersPage = ({
   handleSubscriberDetails,
   removeSubscriber,
 }) => {
-  const { subscribersData } = useAPI();
+  const { subscribersData } = useAPIcontext();
 
   return (
     <>

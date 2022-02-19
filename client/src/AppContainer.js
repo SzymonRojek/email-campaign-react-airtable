@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 import "App.css";
 import api from "api";
-import { useAPI } from "./APiContextProvider";
+import { useAPIcontext } from "contexts/APIcontextProvider";
 import Routing from "./Routing";
 
 const AppContainer = () => {
@@ -13,7 +13,7 @@ const AppContainer = () => {
     setSubscribersData,
     campaignsData,
     setCampaignsData,
-  } = useAPI();
+  } = useAPIcontext;
 
   const handleRemoveItem = (id, endpoint) => {
     api.delete(`/${endpoint}/${id}`);

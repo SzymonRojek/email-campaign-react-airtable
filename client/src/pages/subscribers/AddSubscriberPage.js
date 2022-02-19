@@ -13,7 +13,7 @@ import { FormSubscriber } from "components/FormSubscriber/";
 import { Loader, Error } from "components/DisplayMessage";
 import { usePopup } from "popupContext";
 
-import { useAPI } from "APiContextProvider";
+import { useAPIcontext } from "contexts/APIcontextProvider";
 
 const styles = {
   subscriberName: { color: "green" },
@@ -21,7 +21,7 @@ const styles = {
 };
 
 const AddSubscriberPage = () => {
-  const { subscribersData, fetchSubscribersData } = useAPI();
+  const { subscribersData, fetchSubscribersData } = useAPIcontext();
 
   const {
     handleSubmit,

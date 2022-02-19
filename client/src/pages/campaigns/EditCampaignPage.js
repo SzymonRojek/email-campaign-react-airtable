@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
 
 import api from "api";
+import { useAPIcontext } from "contexts/APIcontextProvider";
 import { useFetchDetailsById } from "useFetchDetailsById";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
@@ -15,10 +16,9 @@ import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
 import { sendEmail } from "sendEmail";
 import { usePopup } from "popupContext";
-import { useAPI } from "APiContextProvider";
 
 const EditCampaignPage = () => {
-  const { subscribersData, fetchCampaignsData } = useAPI();
+  const { subscribersData, fetchCampaignsData } = useAPIcontext();
   const {
     handleSubmit,
     formState: { errors },

@@ -1,6 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
 
-import APIContextProvider from "./APiContextProvider";
 import { Fallback } from "./components/Fallback";
 import AppContainer from "./AppContainer";
 import { ConfirmPopup, InfoPopup } from "./components/DisplayMessage";
@@ -8,6 +7,7 @@ import { StyledFooter } from "./components/StyledFooter";
 import { PopupProvider } from "./popupContext";
 import { Login } from "./Login";
 import { MainNavigation } from "components/Navigation";
+import { APIcontextProvider } from "./contexts/APIcontextProvider";
 
 const App = () => {
   const handleError = (error, errorInfo) => {
@@ -20,11 +20,11 @@ const App = () => {
         <ErrorBoundary FallbackComponent={Fallback} onError={handleError}>
           <MainNavigation />
 
-          <APIContextProvider>
+          <APIcontextProvider>
             <Login>
               <AppContainer />
             </Login>
-          </APIContextProvider>
+          </APIcontextProvider>
         </ErrorBoundary>
 
         <ConfirmPopup />
