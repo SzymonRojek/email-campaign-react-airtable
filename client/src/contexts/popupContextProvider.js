@@ -1,9 +1,9 @@
 import React, { createContext, useState, useContext } from "react";
-import { useLocalStorageValue } from "./useLocalStorageValue";
+import { useLocalStorageValue } from "../useLocalStorageValue";
 
 const PopupContext = createContext();
 
-export const PopupProvider = ({ children }) => {
+export const PopupContextProvider = ({ children }) => {
   // popups
   const [isOpenConfirmPopup, setIsOpenConfirmPopup] = useState(false);
   const [isOpenInfoPopup, setIsOpenInfoPopup] = useState(false);
@@ -58,7 +58,7 @@ export const PopupProvider = ({ children }) => {
   );
 };
 
-export const usePopup = () => {
+export const usePopupContext = () => {
   const context = useContext(PopupContext);
   if (context === undefined) {
     throw new Error("PopupContext must be used within a Provider");

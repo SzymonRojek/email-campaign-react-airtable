@@ -12,8 +12,8 @@ import {
 import { Button } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { usePopup } from "popupContext.js";
-import { useAPI } from "APiContextProvider";
+import { useAPIcontext } from "contexts/APIcontextProvider";
+import { usePopupContext } from "contexts/popupContextProvider";
 
 const styles = {
   dialogContent: {
@@ -72,7 +72,8 @@ const ActiveSubscribersPopup = ({
   closeListActiveSusbcribers,
 }) => {
   const classes = useStyles();
-  const { subscribersData } = useAPI();
+  const { subscribersData } = useAPIcontext();
+  const { setFinalSelectedActiveSubscribers } = usePopupContext();
 
   const filteredActiveSubscribers = useMemo(
     () =>
@@ -83,8 +84,6 @@ const ActiveSubscribersPopup = ({
         : [],
     [subscribersData]
   );
-
-  const { setFinalSelectedActiveSubscribers } = usePopup();
 
   const [checked, setChecked] = useState([false]);
 

@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { usePopup } from "popupContext";
+import { usePopupContext } from "contexts/popupContextProvider";
 
 const styles = {
   titleContainer: { display: "flex" },
@@ -36,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
 
 const InfoPopup = () => {
   const classes = useStyles();
-  const { isOpenInfoPopup, closeInfoPopup, text, actionPopup } = usePopup();
+  const { isOpenInfoPopup, closeInfoPopup, text, actionPopup } =
+    usePopupContext();
 
   const handleChangeRoute = () => actionPopup?.change && actionPopup.change();
 

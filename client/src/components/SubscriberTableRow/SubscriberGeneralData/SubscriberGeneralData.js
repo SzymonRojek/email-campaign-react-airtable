@@ -14,7 +14,7 @@ import {
   capitalizeFirstLetter,
   formattedData,
 } from "helpers";
-import { usePopup } from "popupContext";
+import { usePopupContext } from "contexts/popupContextProvider";
 
 const styles = {
   button: {
@@ -61,6 +61,9 @@ const SubscriberGeneralData = (props) => {
     removeSubscriber,
   } = props;
 
+  const { openInfoPopup, openConfirmPopup, addTextPopup, handleActionPopup } =
+    usePopupContext();
+
   const [modifyData, setModifyData] = useState({
     name: "",
     surname: "",
@@ -88,9 +91,6 @@ const SubscriberGeneralData = (props) => {
   const classes = useStyles();
   const location = useLocation();
   const [indexPage] = useState(actualPage);
-
-  const { openInfoPopup, openConfirmPopup, addTextPopup, handleActionPopup } =
-    usePopup();
 
   const setTextPopupByStatus = (subscriber) => {
     const styles = {

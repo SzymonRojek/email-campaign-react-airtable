@@ -5,15 +5,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import api from "api";
+import { useAPIcontext } from "contexts/APIcontextProvider";
+import { usePopupContext } from "contexts/popupContextProvider";
 import { capitalizeFirstLetter, validationSubscriber } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { FormSubscriber } from "components/FormSubscriber/";
 import { Loader, Error } from "components/DisplayMessage";
-import { usePopup } from "popupContext";
-
-import { useAPIcontext } from "contexts/APIcontextProvider";
 
 const styles = {
   subscriberName: { color: "green" },
@@ -37,7 +36,8 @@ const AddSubscriberPage = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const { openConfirmPopup, handleActionPopup, addTextPopup } = usePopup();
+  const { openConfirmPopup, handleActionPopup, addTextPopup } =
+    usePopupContext();
 
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 

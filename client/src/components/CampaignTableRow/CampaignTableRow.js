@@ -13,7 +13,7 @@ import {
   getStatusColor,
   capitalizeFirstLetter,
 } from "helpers";
-import { usePopup } from "popupContext";
+import { usePopupContext } from "contexts/popupContextProvider";
 
 const styles = {
   typography: {
@@ -66,10 +66,12 @@ const CampaignTableRow = (props) => {
     removeCampaign,
   } = props;
 
+  const { openConfirmPopup, addTextPopup, handleActionPopup } =
+    usePopupContext();
+
   const navigate = useNavigate();
   const classes = useStyles();
   const [indexPage] = useState(actualPage);
-  const { openConfirmPopup, addTextPopup, handleActionPopup } = usePopup();
 
   const [modifyData, setModifyData] = useState({
     title: "",

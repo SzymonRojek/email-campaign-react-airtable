@@ -4,11 +4,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Paper, Box, Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
+import { usePopupContext } from "contexts/popupContextProvider";
 import { validationLogin } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { LogFormButton } from "components/LogFormButton";
 import { PasswordInput } from "./PasswordInput";
-import { usePopup } from "../../popupContext";
 
 const styles = {
   paper: {
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 const LoginForm = () => {
   const navigate = useNavigate();
   const classes = useStyles();
-  const { setIsLogIn, setTabsValue } = usePopup();
+  const { setIsLogIn, setTabsValue } = usePopupContext();
 
   const {
     handleSubmit,

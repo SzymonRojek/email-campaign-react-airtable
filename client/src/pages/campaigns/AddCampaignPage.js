@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import api from "api";
 import { useAPIcontext } from "contexts/APIcontextProvider";
+import { usePopupContext } from "contexts/popupContextProvider";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
 import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
@@ -13,8 +14,6 @@ import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { FormCampaign } from "components/FormCampaign";
 import { sendEmail } from "sendEmail";
-import { usePopup } from "popupContext";
-
 
 const styles = {
   questionSpan: { color: "crimson", fontWeight: "bold" },
@@ -23,6 +22,13 @@ const styles = {
 
 const AddCampaignPage = () => {
   const { subscribersData, fetchCampaignsData } = useAPIcontext();
+  const {
+    openConfirmPopup,
+    addTextPopup,
+    handleActionPopup,
+    finalSelectedActiveSubscribers,
+  } = usePopupContext();
+
   const {
     handleSubmit,
     control,
@@ -34,12 +40,6 @@ const AddCampaignPage = () => {
   });
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const {
-    openConfirmPopup,
-    addTextPopup,
-    handleActionPopup,
-    finalSelectedActiveSubscribers,
-  } = usePopup();
 
   const [isEmailError, setEmailError] = useState(false);
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);

@@ -2,7 +2,7 @@ import { Dialog, DialogContent } from "@mui/material";
 import Button from "@mui/material/Button";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { usePopup } from "popupContext.js";
+import { usePopupContext } from "contexts/popupContextProvider";
 
 const styles = {
   containerText: { padding: "35px 25px" },
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 const ConfirmPopup = () => {
   const classes = useStyles();
   const { isOpenConfirmPopup, text, closeConfirmPopup, actionPopup } =
-    usePopup();
+    usePopupContext();
 
   return (
     <Dialog open={isOpenConfirmPopup} classes={{ paper: classes.paper }}>

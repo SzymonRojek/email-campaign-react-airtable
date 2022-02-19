@@ -13,11 +13,11 @@ import { MdPeopleAlt } from "react-icons/md";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
 
+import { usePopupContext } from "contexts/popupContextProvider";
 import { StyledTabs } from "./StyledTabs";
 import { MobileNavigation } from "./MobileNavigation";
 import Logo from "../../../img/logo.svg";
 import { LogFormButton } from "components/LogFormButton";
-import { usePopup } from "popupContext";
 
 const mainNavigationLinks = [
   {
@@ -113,7 +113,7 @@ function MainNavigation() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isLogIn, setIsLogIn, setStatusLog, tabsValue, setTabsValue } =
-    usePopup();
+    usePopupContext();
 
   const handleClickTab = (e, newTabsValue) => setTabsValue(newTabsValue);
 

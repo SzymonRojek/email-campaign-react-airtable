@@ -5,22 +5,19 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import api from "api";
 import { useAPIcontext } from "contexts/APIcontextProvider";
+import { usePopupContext } from "contexts/popupContextProvider";
 import { useFetchDetailsById } from "useFetchDetailsById";
 import { validationSubscriber } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
-
-import { usePopup } from "popupContext";
 import { FormSubscriber } from "components/FormSubscriber/";
 
 const EditSubscriberPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const endpoint = "/subscribers";
-
-  const { fetchSubscribersData } = useAPIcontext();
 
   const {
     handleSubmit,
@@ -32,9 +29,10 @@ const EditSubscriberPage = () => {
     resolver: yupResolver(validationSubscriber),
   });
 
-  const { itemData: subscriberData } = useFetchDetailsById(endpoint, id);
+  const { fetchSubscribersData } = useAPIcontext();
+  const { openInfoPopup, addTextPopup, handleActionPopup } = usePopupContext();
 
-  const { openInfoPopup, addTextPopup, handleActionPopup } = usePopup();
+  const { itemData: subscriberData } = useFetchDetailsById(endpoint, id);
 
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 

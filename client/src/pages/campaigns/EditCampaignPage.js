@@ -7,6 +7,7 @@ import { useNavigate } from "react-router";
 
 import api from "api";
 import { useAPIcontext } from "contexts/APIcontextProvider";
+import { usePopupContext } from "contexts/popupContextProvider";
 import { useFetchDetailsById } from "useFetchDetailsById";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
@@ -15,10 +16,11 @@ import { FormCampaign } from "components/FormCampaign";
 import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
 import { sendEmail } from "sendEmail";
-import { usePopup } from "popupContext";
 
 const EditCampaignPage = () => {
   const { subscribersData, fetchCampaignsData } = useAPIcontext();
+  const { openInfoPopup, addTextPopup, handleActionPopup } = usePopupContext();
+
   const {
     handleSubmit,
     formState: { errors },
@@ -27,10 +29,10 @@ const EditCampaignPage = () => {
   } = useForm({
     resolver: yupResolver(validationCampaign),
   });
+
   const [isEmailError, setEmailError] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
-  const { openInfoPopup, addTextPopup, handleActionPopup } = usePopup();
 
   const endpoint = "campaigns";
   const { itemData: campaignData } = useFetchDetailsById(endpoint, id);

@@ -1,13 +1,13 @@
 import { ErrorBoundary } from "react-error-boundary";
 
-import { Fallback } from "./components/Fallback";
-import AppContainer from "./AppContainer";
-import { ConfirmPopup, InfoPopup } from "./components/DisplayMessage";
-import { StyledFooter } from "./components/StyledFooter";
-import { PopupProvider } from "./popupContext";
-import { Login } from "./Login";
+import { Fallback } from "components/Fallback";
+import AppContainer from "AppContainer";
+import { ConfirmPopup, InfoPopup } from "components/DisplayMessage";
+import { StyledFooter } from "components/StyledFooter";
+import { Login } from "Login";
 import { MainNavigation } from "components/Navigation";
-import { APIcontextProvider } from "./contexts/APIcontextProvider";
+import { APIcontextProvider } from "contexts/APIcontextProvider";
+import { PopupContextProvider } from "contexts/popupContextProvider";
 
 const App = () => {
   const handleError = (error, errorInfo) => {
@@ -16,7 +16,7 @@ const App = () => {
 
   return (
     <div className="page-container">
-      <PopupProvider>
+      <PopupContextProvider>
         <ErrorBoundary FallbackComponent={Fallback} onError={handleError}>
           <MainNavigation />
 
@@ -29,7 +29,7 @@ const App = () => {
 
         <ConfirmPopup />
         <InfoPopup />
-      </PopupProvider>
+      </PopupContextProvider>
 
       <StyledFooter label="Coded By Szymon Rojek © 2022" />
     </div>
