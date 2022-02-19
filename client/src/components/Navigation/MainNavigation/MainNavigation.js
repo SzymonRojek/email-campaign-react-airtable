@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import {
   AppBar,
@@ -111,6 +111,7 @@ function MainNavigation() {
   const classes = useStyles();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
   const location = useLocation();
+  const navigate = useNavigate();
   const { isLogIn, setIsLogIn, setStatusLog, tabsValue, setTabsValue } =
     usePopup();
 
@@ -132,6 +133,8 @@ function MainNavigation() {
 
   const handleChangeStates = () => {
     const timeID = setTimeout(() => {
+      setTabsValue(2);
+      navigate("/");
       setIsLogIn(false);
       setStatusLog("loadingIn");
     }, 2_000);
@@ -178,6 +181,7 @@ function MainNavigation() {
                 handleChangeStates();
               }}
               className={classes.logOutButton}
+              disabled={!isLogIn ? true : false}
             />
           </>
         )}
