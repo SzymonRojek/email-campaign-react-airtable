@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import clsx from "clsx";
 import { Collapse, Tab } from "@mui/material";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -64,8 +64,9 @@ const SubMainNavigation = () => {
   const theme = useTheme();
   const classes = useStyles();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
+  const { pathname } = useLocation();
 
-  const { tabsValue, tabsSubValue, setTabsSubValue } = usePopup();
+  const { setTabsValue, tabsSubValue, setTabsSubValue } = usePopup();
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => setExpanded(!expanded);
@@ -73,11 +74,31 @@ const SubMainNavigation = () => {
   const handleCheckLocation = (pathname) =>
     window.location.toString().indexOf(pathname) !== -1;
 
-  useEffect(() => {
-    if (tabsValue === 0 || tabsValue === 1) {
+  const handleChangeTabsOnReload = useCallback(() => {
+    if (pathname === "/subscribers") {
+      setTabsValue(0);
       setTabsSubValue(0);
+    } else if (pathname === "/campaigns") {
+      setTabsValue(1);
+      setTabsSubValue(0);
+    } else if (pathname === "/subscribers/status") {
+      setTabsValue(0);
+      setTabsSubValue(1);
+    } else if (pathname === "/campaigns/status") {
+      setTabsValue(1);
+      setTabsSubValue(1);
+    } else if (pathname === "/subscribers/add") {
+      setTabsValue(0);
+      setTabsSubValue(2);
+    } else if (pathname === "campaigns/add") {
+      setTabsValue(1);
+      setTabsSubValue(2);
     }
-  }, [tabsValue]);
+  }, [pathname, setTabsSubValue, setTabsValue]);
+
+  useEffect(() => {
+    handleChangeTabsOnReload();
+  }, [handleChangeTabsOnReload]);
 
   return (
     <>
