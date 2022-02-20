@@ -44,6 +44,12 @@ const AddCampaignPage = () => {
   const [isEmailError, setEmailError] = useState(false);
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
+  const allActiveSubscribers =
+    subscribersData.data &&
+    subscribersData.data.filter(
+      (subscriber) => subscriber.fields.status === "active"
+    );
+
   useEffect(() => {
     if (formState.isSubmitSuccessful)
       reset({
@@ -52,8 +58,10 @@ const AddCampaignPage = () => {
       });
   }, [formState, reset]);
 
-  const setTextConfirmPopup = (data, status, addText = "") => ({
-    additionalText: addText,
+  const setTextConfirmPopup = (data, status) => ({
+    additionalText: !allActiveSubscribers.length
+      ? "No active Subscribers!"
+      : "",
     title: (
       <>
         Email{" "}
@@ -68,7 +76,12 @@ const AddCampaignPage = () => {
         😁
       </>
     ),
-    question: (
+    question: !allActiveSubscribers.length ? (
+      <>
+        Would you like to create a
+        <span style={styles.questionSpan}> new subscriber </span>?
+      </>
+    ) : (
       <>
         Would you like to come back to
         <span style={styles.questionSpan}> the Campaigns List</span> ?
@@ -90,8 +103,13 @@ const AddCampaignPage = () => {
     }
 
     handleActionPopup(() => ({
-      change: () =>
-        pathname === "/campaigns/add" ? navigate("/campaigns") : "",
+      change: () => {
+        if (!allActiveSubscribers.length && pathname === "/campaigns/add") {
+          navigate("/subscribers/add");
+        } else {
+          navigate("/campaigns");
+        }
+      },
     }));
   };
 
@@ -104,12 +122,6 @@ const AddCampaignPage = () => {
   };
 
   const handleSendCampaign = (data) => {
-    const allActiveSubscribers =
-      subscribersData.data &&
-      subscribersData.data.filter(
-        (subscriber) => subscriber.fields.status === "active"
-      );
-
     if (finalSelectedActiveSubscribers.length) {
       finalSelectedActiveSubscribers.map(({ fields: { name, email } }) =>
         sendEmail(
@@ -135,20 +147,16 @@ const AddCampaignPage = () => {
       });
     }
 
-    const additionalText = !allActiveSubscribers.length
-      ? "No active Subscribers!"
-      : "";
-
     if (!isEmailError && allActiveSubscribers.length > 0) {
       getActionsOnSubmit(data, "sent");
 
-      addTextPopup(setTextConfirmPopup(data, true, additionalText));
+      addTextPopup(setTextConfirmPopup(data, true));
 
       openConfirmPopup();
     } else {
       getActionsOnSubmit(data, "draft");
 
-      addTextPopup(setTextConfirmPopup(data, false, additionalText));
+      addTextPopup(setTextConfirmPopup(data, false));
 
       openConfirmPopup();
     }
@@ -182,13 +190,13 @@ const AddCampaignPage = () => {
               setIsCheckboxChecked={setIsCheckboxChecked}
               handleDraftData={handleSubmit(handleDraftCampaign)}
               handleSendData={handleSubmit(handleSendCampaign)}
+              disabledCheckbox={!allActiveSubscribers.length ? true : false}
+              labelCheckbox={
+                !allActiveSubscribers.length
+                  ? "no active subscribers"
+                  : `select from active subscribers (${allActiveSubscribers.length})`
+              }
             />
-
-            {/* <p>
-            {actionPopup.length
-              ? `You have selected ${actionPopup.length} subscribers`
-              : "You will send an email to all active subscribers or select them from the list"}
-          </p> */}
           </StyledMainContent>
         </StyledContainer>
       )}

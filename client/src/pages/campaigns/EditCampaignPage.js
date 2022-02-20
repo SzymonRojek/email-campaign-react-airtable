@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 import api from "api";
 import { useAPIcontext } from "contexts/APIcontextProvider";
@@ -17,10 +17,15 @@ import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
 import { sendEmail } from "sendEmail";
 
+const styles = {
+  questionSpan: { color: "crimson", fontWeight: "bold" },
+  campaignName: { color: "green", fontWeight: "bold" },
+};
+
 const EditCampaignPage = () => {
   const { subscribersData, fetchCampaignsData } = useAPIcontext();
   const {
-    openInfoPopup,
+    openConfirmPopup,
     addTextPopup,
     handleActionPopup,
     finalSelectedActiveSubscribers,
@@ -37,6 +42,7 @@ const EditCampaignPage = () => {
 
   const [isEmailError, setEmailError] = useState(false);
   const { id } = useParams();
+  const { pathname } = useLocation();
   const navigate = useNavigate();
 
   const endpoint = "campaigns";
@@ -62,46 +68,59 @@ const EditCampaignPage = () => {
     data.title !== defaultValues.title ||
     data.description !== defaultValues.description;
 
-  const displayPopup = (data, status, additionalText) => {
-    const styles = {
-      sent: { color: "green", fontWeight: "bold", letterSpacing: 2 },
-      draft: { color: "orange", fontWeight: "bold", letterSpacing: 2 },
-      title: { color: "green", fontWeight: "bold", letterSpacing: 2 },
-    };
-
-    const campaignTitle = (
-      <span style={styles.title}>{capitalizeFirstLetter(data.title)}</span>
+  const allActiveSubscribers =
+    subscribersData.data &&
+    subscribersData.data.filter(
+      (subscriber) => subscriber.fields.status === "active"
     );
 
-    addTextPopup({
-      title: status ? (
-        <span style={styles.sent}>That's great 🎊</span>
-      ) : (
-        <span style={styles.draft}>Still draft... 🙂</span>
-      ),
-      mainText:
-        isCampaignChanged(data) && status ? (
-          <> Email {campaignTitle} has been changed and finally sent 👋</>
-        ) : !isCampaignChanged(data) && !status ? (
-          <>
-            Email {campaignTitle} has not been changed and status still is draft
-            😕
-          </>
-        ) : !isCampaignChanged(data) && status ? (
-          <>Email {campaignTitle} has not been changed but finally sent 👋</>
-        ) : isCampaignChanged(data) && !status ? (
-          <>
-            Email {campaignTitle} has been changed and status still is draft 😕
-          </>
-        ) : (
-          <>Email {campaignTitle} has not been changed but finally sent 👋</>
-        ),
-      additionalText,
-      colorButton: "success",
-    });
+  const styledCampaignTitle = (data) => (
+    <span style={styles.title}>{capitalizeFirstLetter(data.title)}</span>
+  );
 
-    openInfoPopup();
-  };
+  const setTextConfirmPopup = (data, status) => ({
+    additionalText: !allActiveSubscribers.length
+      ? "No active Subscribers!"
+      : "",
+    title:
+      isCampaignChanged(data) && status ? (
+        <>
+          {" "}
+          Email {styledCampaignTitle(data)} has been changed and finally sent 👋
+        </>
+      ) : !isCampaignChanged(data) && !status ? (
+        <>
+          Email {styledCampaignTitle(data)} has not been changed and status
+          still is draft 😕
+        </>
+      ) : !isCampaignChanged(data) && status ? (
+        <>
+          Email {styledCampaignTitle(data)} has not been changed but finally
+          sent 👋
+        </>
+      ) : isCampaignChanged(data) && !status ? (
+        <>
+          Email {styledCampaignTitle(data)} has been changed and status still is
+          draft 😕
+        </>
+      ) : (
+        <>
+          Email {styledCampaignTitle(data)} has not been changed but finally
+          sent 👋
+        </>
+      ),
+    question: !allActiveSubscribers.length ? (
+      <>
+        Would you like to create a
+        <span style={styles.questionSpan}> new subscriber </span>?
+      </>
+    ) : (
+      <>
+        Would you like to come back to
+        <span style={styles.questionSpan}> the Campaigns List</span> ?
+      </>
+    ),
+  });
 
   const getActionsOnSubmit = async (data, status) => {
     const response = await api.patch(`${endpoint}/${id}`, {
@@ -115,46 +134,67 @@ const EditCampaignPage = () => {
     if (response) {
       await fetchCampaignsData();
     }
+
+    handleActionPopup(() => ({
+      change: () => {
+        if (
+          !allActiveSubscribers.length &&
+          pathname === `/campaigns/edit/${id}`
+        ) {
+          navigate("/subscribers/add");
+        } else {
+          navigate("/campaigns");
+        }
+      },
+    }));
   };
 
   const handleDraftCampaign = (data) => {
     getActionsOnSubmit(data, "draft");
 
-    handleActionPopup(() => ({
-      change: () => navigate("/campaigns"),
-    }));
+    addTextPopup(setTextConfirmPopup(data, false));
 
-    displayPopup(data, false);
+    openConfirmPopup();
   };
 
   const handleSendCampaign = (data) => {
-    const allActiveSubscribers =
-      subscribersData.data &&
-      subscribersData.data.filter(
-        (subscriber) => subscriber.fields.status === "active"
+    if (finalSelectedActiveSubscribers.length) {
+      finalSelectedActiveSubscribers.map(({ fields: { name, email } }) =>
+        sendEmail(
+          {
+            name,
+            email,
+            title: data.title,
+            description: data.description,
+          },
+          setEmailError
+        )
       );
+    } else {
+      allActiveSubscribers.forEach((subscriber) => {
+        const paramsScheme = {
+          name: subscriber.fields.name,
+          email: subscriber.fields.email,
+          title: data.title,
+          description: data.description,
+        };
 
-    finalSelectedActiveSubscribers.forEach((subscriber) => {
-      const paramsScheme = {
-        name: subscriber.fields.name,
-        email: subscriber.fields.email,
-        title: data.title,
-        description: data.description,
-      };
-
-      sendEmail(paramsScheme, setEmailError);
-    });
-
-    const additionalText = !allActiveSubscribers.length
-      ? "No active Subscribers!"
-      : "";
+        sendEmail(paramsScheme, setEmailError);
+      });
+    }
 
     if (!isEmailError && allActiveSubscribers.length > 0) {
       getActionsOnSubmit(data, "sent");
-      displayPopup(data, true, additionalText);
+
+      addTextPopup(setTextConfirmPopup(data, true));
+
+      openConfirmPopup();
     } else {
       getActionsOnSubmit(data, "draft");
-      displayPopup(data, false, additionalText);
+
+      addTextPopup(setTextConfirmPopup(data, false));
+
+      openConfirmPopup();
     }
   };
 
@@ -188,6 +228,12 @@ const EditCampaignPage = () => {
                 handleSubmit={handleSubmit}
                 handleDraftData={handleSubmit(handleDraftCampaign)}
                 handleSendData={handleSubmit(handleSendCampaign)}
+                disabledCheckbox={!allActiveSubscribers.length ? true : false}
+                labelCheckbox={
+                  !allActiveSubscribers.length
+                    ? "no active subscribers"
+                    : `select from active subscribers (${allActiveSubscribers.length})`
+                }
               />
             </StyledMainContent>
           </StyledContainer>
