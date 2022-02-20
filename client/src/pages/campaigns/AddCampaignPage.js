@@ -88,15 +88,15 @@ const AddCampaignPage = () => {
     if (response) {
       fetchCampaignsData();
     }
-  };
-
-  const handleDraftCampaign = (data) => {
-    getActionsOnSubmit(data, "draft");
 
     handleActionPopup(() => ({
       change: () =>
         pathname === "/campaigns/add" ? navigate("/campaigns") : "",
     }));
+  };
+
+  const handleDraftCampaign = (data) => {
+    getActionsOnSubmit(data, "draft");
 
     addTextPopup(setTextConfirmPopup(data, false));
 
