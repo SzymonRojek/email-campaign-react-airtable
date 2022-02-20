@@ -66,7 +66,7 @@ CheckboxInputController.propTypes = {
   control: PropTypes.object,
   name: PropTypes.string,
   defaultValue: PropTypes.bool,
-  label: PropTypes.string,
+  label: PropTypes.any,
   error: PropTypes.bool,
   message: PropTypes.string,
 };
