@@ -15,7 +15,8 @@ const LogFormButton = ({ label, onClick, className, disabled }) => (
 LogFormButton.propTypes = {
   label: PropTypes.string,
   onClick: PropTypes.func,
-  className: PropTypes.object,
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 export default LogFormButton;
