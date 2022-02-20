@@ -71,28 +71,35 @@ const SubMainNavigation = () => {
 
   const handleExpandClick = () => setExpanded(!expanded);
   const handleClickTab = (e, newTabsValue) => setTabsSubValue(newTabsValue);
-  const handleCheckLocation = (pathname) =>
-    window.location.toString().indexOf(pathname) !== -1;
 
   const handleChangeTabsOnReload = useCallback(() => {
-    if (pathname === "/subscribers") {
-      setTabsValue(0);
-      setTabsSubValue(0);
-    } else if (pathname === "/campaigns") {
-      setTabsValue(1);
-      setTabsSubValue(0);
-    } else if (pathname === "/subscribers/status") {
-      setTabsValue(0);
-      setTabsSubValue(1);
-    } else if (pathname === "/campaigns/status") {
-      setTabsValue(1);
-      setTabsSubValue(1);
-    } else if (pathname === "/subscribers/add") {
-      setTabsValue(0);
-      setTabsSubValue(2);
-    } else if (pathname === "/campaigns/add") {
-      setTabsValue(1);
-      setTabsSubValue(2);
+    switch (pathname) {
+      case "/subscribers":
+        setTabsValue(0);
+        setTabsSubValue(0);
+        break;
+      case "/campaigns":
+        setTabsValue(1);
+        setTabsSubValue(0);
+        break;
+      case "/subscribers/status":
+        setTabsValue(0);
+        setTabsSubValue(1);
+        break;
+      case "/campaigns/status":
+        setTabsValue(1);
+        setTabsSubValue(1);
+        break;
+      case "/subscribers/add":
+        setTabsValue(0);
+        setTabsSubValue(2);
+        break;
+      case "/campaigns/add":
+        setTabsValue(1);
+        setTabsSubValue(2);
+        break;
+      default:
+        console.log(`This is a ${pathname}`);
     }
   }, [pathname, setTabsSubValue, setTabsValue]);
 
@@ -117,7 +124,7 @@ const SubMainNavigation = () => {
                   value={tabsSubValue}
                   style={styles.tabs}
                 >
-                  {handleCheckLocation("/subscribers")
+                  {pathname === "/subscribers"
                     ? subscribersLinks.map(({ to, name, icon }) => (
                         <Tab
                           key={name}
