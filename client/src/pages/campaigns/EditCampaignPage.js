@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from "react-router";
 import api from "api";
 import { useAPIcontext } from "contexts/APIcontextProvider";
 import { usePopupContext } from "contexts/popupContextProvider";
-import { useFetchDetailsById } from "useFetchDetailsById";
+import { useFetchDetailsById } from "customHooks/useFetchDetailsById";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";

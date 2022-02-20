@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "api";
 import { useAPIcontext } from "contexts/APIcontextProvider";
 import { usePopupContext } from "contexts/popupContextProvider";
-import { useFetchDetailsById } from "useFetchDetailsById";
+import { useFetchDetailsById } from "customHooks/useFetchDetailsById";
 import { validationSubscriber } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";

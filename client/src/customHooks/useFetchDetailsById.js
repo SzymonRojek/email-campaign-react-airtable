@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useErrorHandler } from "react-error-boundary";
 
-import api from "./api";
+import api from "../api";
 
 export const useFetchDetailsById = (endpoint, id) => {
   const [itemData, setItemData] = useState({

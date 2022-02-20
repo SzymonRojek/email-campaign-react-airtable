@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 
-import { useFetchDetailsById } from "useFetchDetailsById";
+import { useFetchDetailsById } from "customHooks/useFetchDetailsById";
 import { detailsDataHeadTableFirst } from "data/dataHeadTable";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
