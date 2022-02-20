@@ -13,25 +13,24 @@ const AppContainer = () => {
     setSubscribersData,
     campaignsData,
     setCampaignsData,
-  } = useAPIcontext;
+  } = useAPIcontext();
 
   const handleRemoveItem = (id, endpoint) => {
     api.delete(`/${endpoint}/${id}`);
 
-    const filteredGroup = (group) =>
-      group.data.filter((item) => item.id !== id);
+    const filteredGroup = (group) => group.filter((item) => item.id !== id);
 
     if (endpoint === "subscribers") {
       setSubscribersData({
         status: "success",
-        data: filteredGroup(subscribersData),
+        data: filteredGroup(subscribersData.data),
       });
     }
 
     if (endpoint === "campaigns") {
       setCampaignsData({
         status: "success",
-        data: filteredGroup(campaignsData),
+        data: filteredGroup(campaignsData.data),
       });
     }
   };
