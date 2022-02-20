@@ -8,7 +8,16 @@ import { useStyles, styles } from "./styles";
 import { TextInputController } from "components/Inputs";
 import ActiveSubscribersPopup from "../DisplayMessage/ActiveSubscribersPopup/ActiveSubscribersPopup";
 
-const FormCampaign = ({ control, errors, handleDraftData, handleSendData }) => {
+const FormCampaign = ({ ...props }) => {
+  const {
+    control,
+    errors,
+    handleDraftData,
+    handleSendData,
+    disabledCheckbox,
+    labelCheckbox,
+  } = props;
+
   const [isChecked, setIsChecked] = useState(false);
 
   const classes = useStyles();
@@ -64,15 +73,12 @@ const FormCampaign = ({ control, errors, handleDraftData, handleSendData }) => {
                         checked={isChecked}
                         onChange={handleIsChecked}
                         sx={styles.checkbox}
+                        disabled={disabledCheckbox}
                       />
                     )}
                   />
                 }
-                label={
-                  <span className={classes.label}>
-                    select from active subscribers
-                  </span>
-                }
+                label={<span className={classes.label}>{labelCheckbox}</span>}
               />
             </Grid>
 
