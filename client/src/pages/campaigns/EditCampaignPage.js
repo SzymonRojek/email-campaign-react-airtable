@@ -19,7 +19,12 @@ import { sendEmail } from "sendEmail";
 
 const EditCampaignPage = () => {
   const { subscribersData, fetchCampaignsData } = useAPIcontext();
-  const { openInfoPopup, addTextPopup, handleActionPopup } = usePopupContext();
+  const {
+    openInfoPopup,
+    addTextPopup,
+    handleActionPopup,
+    finalSelectedActiveSubscribers,
+  } = usePopupContext();
 
   const {
     handleSubmit,
@@ -123,13 +128,13 @@ const EditCampaignPage = () => {
   };
 
   const handleSendCampaign = (data) => {
-    const activeSubscribers =
+    const allActiveSubscribers =
       subscribersData.data &&
       subscribersData.data.filter(
         (subscriber) => subscriber.fields.status === "active"
       );
 
-    activeSubscribers.forEach((subscriber) => {
+    finalSelectedActiveSubscribers.forEach((subscriber) => {
       const paramsScheme = {
         name: subscriber.fields.name,
         email: subscriber.fields.email,
@@ -140,11 +145,11 @@ const EditCampaignPage = () => {
       sendEmail(paramsScheme, setEmailError);
     });
 
-    const additionalText = !activeSubscribers.length
+    const additionalText = !allActiveSubscribers.length
       ? "No active Subscribers!"
       : "";
 
-    if (!isEmailError && activeSubscribers.length > 0) {
+    if (!isEmailError && allActiveSubscribers.length > 0) {
       getActionsOnSubmit(data, "sent");
       displayPopup(data, true, additionalText);
     } else {
