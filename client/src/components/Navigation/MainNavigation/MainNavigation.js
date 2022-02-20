@@ -110,7 +110,7 @@ function MainNavigation() {
   const theme = useTheme();
   const classes = useStyles();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
-  const location = useLocation();
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const { isLogIn, setIsLogIn, setStatusLog, tabsValue, setTabsValue } =
     usePopupContext();
@@ -118,18 +118,14 @@ function MainNavigation() {
   const handleClickTab = (e, newTabsValue) => setTabsValue(newTabsValue);
 
   useEffect(() => {
-    const path = location.pathname;
-    if (window.location.href.indexOf("subscribers") > -1 && tabsValue !== 0) {
+    if (pathname === "/subscribers") {
       setTabsValue(0);
-    } else if (
-      window.location.href.indexOf("campaigns") > -1 &&
-      tabsValue !== 1
-    ) {
+    } else if (pathname === "/campaigns") {
       setTabsValue(1);
-    } else if (path === "/" && tabsValue !== 2) {
+    } else {
       setTabsValue(2);
     }
-  }, []);
+  }, [pathname]);
 
   const handleChangeStates = () => {
     const timeID = setTimeout(() => {
