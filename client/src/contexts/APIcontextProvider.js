@@ -8,12 +8,12 @@ const APIcontext = createContext();
 export const APIcontextProvider = ({ children }) => {
   const [subscribersData, setSubscribersData] = useState({
     status: "loading",
-    data: null,
+    data: [],
   });
 
   const [campaignsData, setCampaignsData] = useState({
     status: "loading",
-    data: null,
+    data: [],
   });
 
   const handleError = useErrorHandler();
