@@ -6,15 +6,15 @@ import { HomePage } from "pages/homePage";
 import {
   SubscribersPage,
   StatusSubscribersPage,
-  AddSubscriberPage,
+  CreateSubscriberPage,
   DetailsSubscriberPage,
-  EditSubscriberPage,
+  UpdateSubscriberPage,
 } from "pages/subscribers";
 import {
-  EditCampaignPage,
-  AddCampaignPage,
-  CampaignsPage,
-  StatusCampaignsPage,
+  UpdateEmailsPage,
+  CreateEmailPage,
+  EmailsPage,
+  StatusEmailsPage,
 } from "pages/campaigns";
 import { NotFoundPage } from "pages/notFoundPage";
 
@@ -55,7 +55,7 @@ const Routing = (props) => {
         },
         {
           path: "add",
-          element: <AddSubscriberPage />,
+          element: <CreateSubscriberPage />,
         },
         {
           path: "details/:id",
@@ -63,7 +63,7 @@ const Routing = (props) => {
         },
         {
           path: "edit/:id",
-          element: <EditSubscriberPage />,
+          element: <UpdateSubscriberPage />,
         },
         { path: "*", element: <NotFoundPage /> },
       ],
@@ -76,7 +76,7 @@ const Routing = (props) => {
         {
           path: "/",
           element: (
-            <CampaignsPage
+            <EmailsPage
               editCampaign={handleEditCampaign}
               removeCampaign={handleRemoveItem}
             />
@@ -85,7 +85,7 @@ const Routing = (props) => {
         {
           path: "status",
           element: (
-            <StatusCampaignsPage
+            <StatusEmailsPage
               editCampaign={handleEditCampaign}
               removeCampaign={handleRemoveItem}
             />
@@ -93,11 +93,11 @@ const Routing = (props) => {
         },
         {
           path: "add",
-          element: <AddCampaignPage />,
+          element: <CreateEmailPage />,
         },
         {
           path: "edit/:id",
-          element: <EditCampaignPage />,
+          element: <UpdateEmailsPage />,
         },
       ],
     },
