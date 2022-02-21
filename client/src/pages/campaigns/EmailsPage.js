@@ -9,7 +9,7 @@ import { StyledHeading } from "components/StyledHeading";
 import { CampaignsList } from "components/CampaignsList";
 import { Error, Loader } from "components/DisplayMessage";
 
-const CampaignsPage = ({ editCampaign, removeCampaign }) => {
+const EmailsPage = ({ editCampaign, removeCampaign }) => {
   const { campaignsData } = useAPIcontext();
 
   return (
@@ -62,7 +62,7 @@ const CampaignsPage = ({ editCampaign, removeCampaign }) => {
   );
 };
 
-CampaignsPage.propTypes = {
+EmailsPage.propTypes = {
   campaignsData: PropTypes.shape({
     status: PropTypes.string,
     data: PropTypes.arrayOf(
@@ -81,4 +81,4 @@ CampaignsPage.propTypes = {
   removeCampaign: PropTypes.func,
 };
 
-export default CampaignsPage;
+export default EmailsPage;

@@ -1,4 +1,4 @@
-export { default as CampaignsPage } from "./CampaignsPage";
-export { default as StatusCampaignsPage } from "./StatusCampaignsPage";
-export { default as EditCampaignPage } from "./EditCampaignPage";
-export { default as AddCampaignPage } from "./AddCampaignPage";
+export { default as EmailsPage } from "./EmailsPage";
+export { default as StatusEmailsPage } from "./StatusEmailsPage";
+export { default as UpdateEmailsPage } from "./UpdateEmailsPage";
+export { default as CreateEmailPage } from "./CreateEmailPage";

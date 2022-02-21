@@ -11,7 +11,6 @@ import { StyledHeading } from "components/StyledHeading";
 import { CampaignStatus } from "components/CampaignStatus";
 import SelectInputController from "components/Inputs/SelectInputController";
 
-
 const useSelectStyles = makeStyles({
   root: {
     "& .MuiOutlinedInput-input": {
@@ -63,7 +62,7 @@ const selectCampaignsStatus = [
   { value: "draft", label: "draft" },
 ];
 
-const StatusCampaignsPage = ({ editCampaign, removeCampaign }) => {
+const StatusEmailsPage = ({ editCampaign, removeCampaign }) => {
   const { campaignsData } = useAPIcontext();
   const { control, watch } = useForm();
   const [selectStatus, setSelectStatus] = useState("sent");
@@ -132,7 +131,7 @@ const StatusCampaignsPage = ({ editCampaign, removeCampaign }) => {
   );
 };
 
-StatusCampaignsPage.propTypes = {
+StatusEmailsPage.propTypes = {
   campaignsData: PropTypes.shape({
     status: PropTypes.string,
     data: PropTypes.arrayOf(
@@ -151,4 +150,4 @@ StatusCampaignsPage.propTypes = {
   removeCampaign: PropTypes.func,
 };
 
-export default StatusCampaignsPage;
+export default StatusEmailsPage;

@@ -14,7 +14,7 @@ import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
 import { FormSubscriber } from "components/FormSubscriber/";
 
-const EditSubscriberPage = () => {
+const UpdateSubscriberPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const endpoint = "/subscribers";
@@ -177,4 +177,4 @@ const EditSubscriberPage = () => {
   );
 };
 
-export default EditSubscriberPage;
+export default UpdateSubscriberPage;

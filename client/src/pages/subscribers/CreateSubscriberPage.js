@@ -19,7 +19,7 @@ const styles = {
   questionSpan: { color: "crimson", fontWeight: "bold" },
 };
 
-const AddSubscriberPage = () => {
+const CreateSubscriberPage = () => {
   const { subscribersData, fetchSubscribersData } = useAPIcontext();
 
   const {
@@ -140,8 +140,8 @@ const AddSubscriberPage = () => {
   );
 };
 
-AddSubscriberPage.propTypes = {
+CreateSubscriberPage.propTypes = {
   getSubscribersData: PropTypes.func,
 };
 
-export default AddSubscriberPage;
+export default CreateSubscriberPage;

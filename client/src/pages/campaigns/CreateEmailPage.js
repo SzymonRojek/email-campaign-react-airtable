@@ -2,19 +2,17 @@ import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useParams } from "react-router-dom";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import api from "api";
 import { useAPIcontext } from "contexts/APIcontextProvider";
 import { usePopupContext } from "contexts/popupContextProvider";
-import { useFetchDetailsById } from "customHooks/useFetchDetailsById";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
+import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
-import { FormCampaign } from "components/FormCampaign";
 import { StyledHeading } from "components/StyledHeading";
-import { Loader, Error } from "components/DisplayMessage";
+import { FormCampaign } from "components/FormCampaign";
 import { sendEmail } from "sendEmail";
 
 const styles = {
@@ -22,7 +20,7 @@ const styles = {
   campaignName: { color: "green", fontWeight: "bold" },
 };
 
-const EditCampaignPage = () => {
+const CreateEmailPage = () => {
   const { subscribersData, fetchCampaignsData } = useAPIcontext();
   const {
     openConfirmPopup,
@@ -33,40 +31,18 @@ const EditCampaignPage = () => {
 
   const {
     handleSubmit,
-    formState: { errors },
-    setValue,
     control,
+    formState,
+    formState: { errors },
+    reset,
   } = useForm({
     resolver: yupResolver(validationCampaign),
   });
-
-  const [isEmailError, setEmailError] = useState(false);
-  const { id } = useParams();
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const endpoint = "campaigns";
-  const { itemData: campaignData } = useFetchDetailsById(endpoint, id);
-
-  const defaultValues = {
-    title: campaignData.data?.fields ? campaignData.data.fields.title : "",
-    description: campaignData.data?.fields
-      ? campaignData.data.fields.description
-      : "",
-  };
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setValue("title", defaultValues.title);
-      setValue("description", defaultValues.description);
-    }, 800);
-
-    return () => clearTimeout(timeoutId);
-  }, [setValue, defaultValues.title, defaultValues.description]);
-
-  const isCampaignChanged = (data) =>
-    data.title !== defaultValues.title ||
-    data.description !== defaultValues.description;
+  const [isEmailError, setEmailError] = useState(false);
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
   const allActiveSubscribers =
     subscribersData.data &&
@@ -74,41 +50,32 @@ const EditCampaignPage = () => {
       (subscriber) => subscriber.fields.status === "active"
     );
 
-  const styledCampaignTitle = (data) => (
-    <span style={styles.title}>{capitalizeFirstLetter(data.title)}</span>
-  );
+  useEffect(() => {
+    if (formState.isSubmitSuccessful)
+      reset({
+        title: "",
+        description: "",
+      });
+  }, [formState, reset]);
 
   const setTextConfirmPopup = (data, status) => ({
     additionalText: !allActiveSubscribers.length
       ? "No active Subscribers!"
       : "",
-    title:
-      isCampaignChanged(data) && status ? (
-        <>
+    title: (
+      <>
+        Email{" "}
+        <span style={styles.campaignName}>
           {" "}
-          Email {styledCampaignTitle(data)} has been changed and finally sent 👋
-        </>
-      ) : !isCampaignChanged(data) && !status ? (
-        <>
-          Email {styledCampaignTitle(data)} has not been changed and status
-          still is draft 😕
-        </>
-      ) : !isCampaignChanged(data) && status ? (
-        <>
-          Email {styledCampaignTitle(data)} has not been changed but finally
-          sent 👋
-        </>
-      ) : isCampaignChanged(data) && !status ? (
-        <>
-          Email {styledCampaignTitle(data)} has been changed and status still is
-          draft 😕
-        </>
-      ) : (
-        <>
-          Email {styledCampaignTitle(data)} has not been changed but finally
-          sent 👋
-        </>
-      ),
+          {capitalizeFirstLetter(data.title)}{" "}
+        </span>
+        has been{" "}
+        {status
+          ? "sent to choosen subscribers"
+          : "drafted and added to the list"}
+        😁
+      </>
+    ),
     question: !allActiveSubscribers.length ? (
       <>
         Would you like to create a
@@ -123,24 +90,21 @@ const EditCampaignPage = () => {
   });
 
   const getActionsOnSubmit = async (data, status) => {
-    const response = await api.patch(`${endpoint}/${id}`, {
+    const response = await api.post("campaigns", {
       fields: {
-        title: data.title,
-        description: data.description,
+        title: capitalizeFirstLetter(data.title),
+        description: capitalizeFirstLetter(data.description),
         status: status,
       },
     });
 
     if (response) {
-      await fetchCampaignsData();
+      fetchCampaignsData();
     }
 
     handleActionPopup(() => ({
       change: () => {
-        if (
-          !allActiveSubscribers.length &&
-          pathname === `/campaigns/edit/${id}`
-        ) {
+        if (!allActiveSubscribers.length && pathname === "/campaigns/add") {
           navigate("/subscribers/add");
         } else {
           navigate("/campaigns");
@@ -198,52 +162,49 @@ const EditCampaignPage = () => {
     }
   };
 
-  if (campaignData.data?.error) {
-    return (
-      <Error
-        titleOne={`${campaignData.data?.error.messageOne}`}
-        titleTwo={`${campaignData.data?.error.messageTwo}`}
-      />
-    );
-  }
-
   return (
     <>
       {isEmailError ? (
         <Error
           titleOne="Unfortunately, Email has not been sent"
-          titleTwo="Probably there is a problem with EmailJS application at the moment..."
-          titleThree="That's why Email has been drafted"
+          titleTwo="Probably there is a problem with EmailJS application at the moment"
+          titleThree="That's why Email has been drafted now"
         />
-      ) : campaignData.status === "loading" ? (
-        <Loader title="Details" />
+      ) : subscribersData.status === "loading" ? (
+        <Loader title="Add New" />
+      ) : subscribersData.status === "error" ? (
+        <Error
+          titleOne="ERROR MESSAGE"
+          titleTwo="Probably there is no an access to the internet."
+          titleThree="Contact with your internet provider."
+        />
       ) : (
-        campaignData.status === "success" && (
-          <StyledContainer>
-            <StyledHeading label="edit email" />
-            <StyledMainContent>
-              <FormCampaign
-                control={control}
-                errors={errors}
-                handleSubmit={handleSubmit}
-                handleDraftData={handleSubmit(handleDraftCampaign)}
-                handleSendData={handleSubmit(handleSendCampaign)}
-                disabledCheckbox={!allActiveSubscribers.length ? true : false}
-                labelCheckbox={
-                  !allActiveSubscribers.length
-                    ? "no active subscribers"
-                    : `select from active subscribers (${allActiveSubscribers.length})`
-                }
-              />
-            </StyledMainContent>
-          </StyledContainer>
-        )
+        <StyledContainer>
+          <StyledHeading label="new email" />
+
+          <StyledMainContent>
+            <FormCampaign
+              control={control}
+              errors={errors}
+              isCheckboxChecked={isCheckboxChecked}
+              setIsCheckboxChecked={setIsCheckboxChecked}
+              handleDraftData={handleSubmit(handleDraftCampaign)}
+              handleSendData={handleSubmit(handleSendCampaign)}
+              disabledCheckbox={!allActiveSubscribers.length ? true : false}
+              labelCheckbox={
+                !allActiveSubscribers.length
+                  ? "no active subscribers"
+                  : `select from active subscribers (${allActiveSubscribers.length})`
+              }
+            />
+          </StyledMainContent>
+        </StyledContainer>
       )}
     </>
   );
 };
 
-EditCampaignPage.propTypes = {
+CreateEmailPage.propTypes = {
   subscribersData: PropTypes.shape({
     status: PropTypes.string,
     data: PropTypes.arrayOf(
@@ -265,4 +226,4 @@ EditCampaignPage.propTypes = {
   getCampaignsData: PropTypes.func,
 };
 
-export default EditCampaignPage;
+export default CreateEmailPage;
