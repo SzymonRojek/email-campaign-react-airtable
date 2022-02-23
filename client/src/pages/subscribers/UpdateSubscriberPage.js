@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import api from "api";
 import { useAPIcontext } from "contexts/APIcontextProvider";
+import { useInformationModalState } from "contexts/InformationModalContext";
 import { useFetchDetailsById } from "customHooks/useFetchDetailsById";
 import { validationSubscriber } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
@@ -12,7 +13,6 @@ import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { Loader } from "components/DisplayMessage";
 import { FormSubscriber } from "components/FormSubscriber/";
-import { useInformationModalState } from "../../contexts/InformationModalContext";
 
 const UpdateSubscriberPage = () => {
   const { id } = useParams();
