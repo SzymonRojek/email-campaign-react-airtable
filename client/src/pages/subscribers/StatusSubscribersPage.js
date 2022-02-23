@@ -100,6 +100,7 @@ const StatusSubscribersPage = ({
 
   useEffect(() => {
     const watchStatus = watch((value) => setSelectStatus(value.status));
+
     return () => watchStatus.unsubscribe();
   }, [watch]);
 

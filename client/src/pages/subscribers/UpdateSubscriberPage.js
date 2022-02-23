@@ -5,14 +5,14 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import api from "api";
 import { useAPIcontext } from "contexts/APIcontextProvider";
-import { usePopupContext } from "contexts/popupContextProvider";
 import { useFetchDetailsById } from "customHooks/useFetchDetailsById";
 import { validationSubscriber } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
-import { Loader, Error } from "components/DisplayMessage";
+import { Loader } from "components/DisplayMessage";
 import { FormSubscriber } from "components/FormSubscriber/";
+import { useInformationModalState } from "../../contexts/InformationModalContext";
 
 const UpdateSubscriberPage = () => {
   const { id } = useParams();
@@ -30,7 +30,9 @@ const UpdateSubscriberPage = () => {
   });
 
   const { fetchSubscribersData } = useAPIcontext();
-  const { openInfoPopup, addTextPopup, handleActionPopup } = usePopupContext();
+
+  const { setInformationModalState, setInformationModalText } =
+    useInformationModalState();
 
   const { itemData: subscriberData } = useFetchDetailsById(endpoint, id);
 
@@ -87,20 +89,28 @@ const UpdateSubscriberPage = () => {
     data.salary !== defaultValues.salary ||
     data.telephone !== defaultValues.telephone;
 
-  const displayPopup = (data) => {
+  const informationModalProps = {
+    colorButton: "success",
+    onClose: () => {
+      setInformationModalState({ isOpenInformationModal: false });
+      navigate("/subscribers");
+    },
+  };
+
+  const handleInformationModal = (data) => {
     const styles = {
       noChange: { color: "orange", fontWeight: "bold", letterSpacing: 2 },
       change: { color: "green", fontWeight: "bold", letterSpacing: 2 },
       name: { color: "green", fontWeight: "bold", letterSpacing: 2 },
     };
 
-    addTextPopup({
+    setInformationModalText({
       title: isSubscriberDataEdited(data) ? (
         <span style={styles.change}>That's great 🎊</span>
       ) : (
         <span style={styles.noChange}>No changes... 👋</span>
       ),
-      mainText: isSubscriberDataEdited(data) ? (
+      message: isSubscriberDataEdited(data) ? (
         <>
           Subscriber <span style={styles.name}>{defaultValues.name}</span> has
           been edited 👋
@@ -111,11 +121,11 @@ const UpdateSubscriberPage = () => {
           not been edited 😕
         </>
       ),
-
-      colorButton: "success",
     });
-
-    openInfoPopup();
+    setInformationModalState({
+      informationModalProps,
+      isOpenInformationModal: true,
+    });
   };
 
   const getActionsOnSubmit = async (data) => {
@@ -138,12 +148,7 @@ const UpdateSubscriberPage = () => {
 
   const onSubmit = async (data) => {
     getActionsOnSubmit(data);
-
-    handleActionPopup(() => ({
-      change: () => navigate("/subscribers"),
-    }));
-
-    displayPopup(data);
+    handleInformationModal(data);
   };
 
   // if (subscriberData.data?.error) {

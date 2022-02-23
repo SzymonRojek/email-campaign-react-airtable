@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import api from "api";
 import { useAPIcontext } from "contexts/APIcontextProvider";
-import { usePopupContext } from "contexts/popupContextProvider";
+import { useConfirmModalState } from "contexts/ConfirmModalContext";
 import { capitalizeFirstLetter, validationSubscriber } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
@@ -36,8 +36,7 @@ const CreateSubscriberPage = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const { openConfirmPopup, handleActionPopup, addTextPopup } =
-    usePopupContext();
+  const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
 
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
@@ -63,23 +62,35 @@ const CreateSubscriberPage = () => {
     }
   }, [formState, reset]);
 
-  const setTextConfirmPopup = (data) => ({
-    title: (
-      <>
-        Subscriber
-        <span style={styles.subscriberName}>
-          <strong> {capitalizeFirstLetter(data.name)} </strong>
-        </span>
-        has been added to the list 😁
-      </>
-    ),
-    question: (
-      <>
-        Would you like to come back to
-        <span style={styles.questionSpan}> Subscribers List</span> ?
-      </>
-    ),
-  });
+  const confirmModalProps = {
+    onConfirm: () =>
+      pathname === "/subscribers/add" ? navigate("/subscribers") : "",
+    onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
+  };
+
+  const setDataConfirmModal = (data) => {
+    setConfirmModalState({
+      confirmModalProps,
+      isOpenConfirmModal: true,
+    });
+    setConfirmModalText({
+      message: (
+        <>
+          Subscriber
+          <span style={styles.subscriberName}>
+            <strong> {capitalizeFirstLetter(data.name)} </strong>
+          </span>
+          has been added to the list 😁
+        </>
+      ),
+      question: (
+        <>
+          Would you like to come back to
+          <span style={styles.questionSpan}> Subscribers List</span> ?
+        </>
+      ),
+    });
+  };
 
   const getActionsOnSubmit = async (data) => {
     const response = await api.post("subscribers", {
@@ -101,15 +112,7 @@ const CreateSubscriberPage = () => {
 
   const onSubmit = (data) => {
     getActionsOnSubmit(data);
-
-    addTextPopup(setTextConfirmPopup(data));
-
-    handleActionPopup(() => ({
-      change: () =>
-        pathname === "/subscribers/add" ? navigate("/subscribers") : "",
-    }));
-
-    openConfirmPopup();
+    setDataConfirmModal(data);
   };
 
   return (

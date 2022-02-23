@@ -7,8 +7,9 @@ import { useLocation, useNavigate } from "react-router";
 
 import api from "api";
 import { useAPIcontext } from "contexts/APIcontextProvider";
-import { usePopupContext } from "contexts/popupContextProvider";
 import { useFetchDetailsById } from "customHooks/useFetchDetailsById";
+import { useConfirmModalState } from "contexts/ConfirmModalContext";
+import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
@@ -24,12 +25,8 @@ const styles = {
 
 const UpdateEmailsPage = () => {
   const { subscribersData, fetchCampaignsData } = useAPIcontext();
-  const {
-    openConfirmPopup,
-    addTextPopup,
-    handleActionPopup,
-    finalSelectedActiveSubscribers,
-  } = usePopupContext();
+  const { finalSelectedActiveSubscribers } = useGlobalStoreContext();
+  const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
 
   const {
     handleSubmit,
@@ -78,49 +75,70 @@ const UpdateEmailsPage = () => {
     <span style={styles.title}>{capitalizeFirstLetter(data.title)}</span>
   );
 
-  const setTextConfirmPopup = (data, status) => ({
-    additionalText: !allActiveSubscribers.length
-      ? "No active Subscribers!"
-      : "",
-    title:
-      isCampaignChanged(data) && status ? (
+  const confirmModalProps = {
+    onConfirm: () => {
+      if (
+        !allActiveSubscribers.length &&
+        pathname === `/campaigns/edit/${id}`
+      ) {
+        navigate("/subscribers/add");
+      } else {
+        navigate("/campaigns");
+      }
+    },
+    onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
+  };
+
+  const setDataConfirmModal = (data, status) => {
+    setConfirmModalState({
+      confirmModalProps,
+      isOpenConfirmModal: true,
+    });
+    setConfirmModalText({
+      additionalText: !allActiveSubscribers.length
+        ? "No active Subscribers!"
+        : "",
+      message:
+        isCampaignChanged(data) && status ? (
+          <>
+            {" "}
+            Email {styledCampaignTitle(data)} has been changed and finally sent
+            👋
+          </>
+        ) : !isCampaignChanged(data) && !status ? (
+          <>
+            Email {styledCampaignTitle(data)} has not been changed and status
+            still is draft 😕
+          </>
+        ) : !isCampaignChanged(data) && status ? (
+          <>
+            Email {styledCampaignTitle(data)} has not been changed but finally
+            sent 👋
+          </>
+        ) : isCampaignChanged(data) && !status ? (
+          <>
+            Email {styledCampaignTitle(data)} has been changed and status still
+            is draft 😕
+          </>
+        ) : (
+          <>
+            Email {styledCampaignTitle(data)} has not been changed but finally
+            sent 👋
+          </>
+        ),
+      question: !allActiveSubscribers.length ? (
         <>
-          {" "}
-          Email {styledCampaignTitle(data)} has been changed and finally sent 👋
-        </>
-      ) : !isCampaignChanged(data) && !status ? (
-        <>
-          Email {styledCampaignTitle(data)} has not been changed and status
-          still is draft 😕
-        </>
-      ) : !isCampaignChanged(data) && status ? (
-        <>
-          Email {styledCampaignTitle(data)} has not been changed but finally
-          sent 👋
-        </>
-      ) : isCampaignChanged(data) && !status ? (
-        <>
-          Email {styledCampaignTitle(data)} has been changed and status still is
-          draft 😕
+          Would you like to add a
+          <span style={styles.questionSpan}> new subscriber </span>?
         </>
       ) : (
         <>
-          Email {styledCampaignTitle(data)} has not been changed but finally
-          sent 👋
+          Would you like to come back to
+          <span style={styles.questionSpan}> the Campaigns List</span> ?
         </>
       ),
-    question: !allActiveSubscribers.length ? (
-      <>
-        Would you like to create a
-        <span style={styles.questionSpan}> new subscriber </span>?
-      </>
-    ) : (
-      <>
-        Would you like to come back to
-        <span style={styles.questionSpan}> the Campaigns List</span> ?
-      </>
-    ),
-  });
+    });
+  };
 
   const getActionsOnSubmit = async (data, status) => {
     const response = await api.patch(`${endpoint}/${id}`, {
@@ -134,27 +152,11 @@ const UpdateEmailsPage = () => {
     if (response) {
       await fetchCampaignsData();
     }
-
-    handleActionPopup(() => ({
-      change: () => {
-        if (
-          !allActiveSubscribers.length &&
-          pathname === `/campaigns/edit/${id}`
-        ) {
-          navigate("/subscribers/add");
-        } else {
-          navigate("/campaigns");
-        }
-      },
-    }));
   };
 
   const handleDraftCampaign = (data) => {
     getActionsOnSubmit(data, "draft");
-
-    addTextPopup(setTextConfirmPopup(data, false));
-
-    openConfirmPopup();
+    setDataConfirmModal(data, false);
   };
 
   const handleSendCampaign = (data) => {
@@ -185,27 +187,21 @@ const UpdateEmailsPage = () => {
 
     if (!isEmailError && allActiveSubscribers.length > 0) {
       getActionsOnSubmit(data, "sent");
-
-      addTextPopup(setTextConfirmPopup(data, true));
-
-      openConfirmPopup();
+      setDataConfirmModal(data, true);
     } else {
       getActionsOnSubmit(data, "draft");
-
-      addTextPopup(setTextConfirmPopup(data, false));
-
-      openConfirmPopup();
+      setDataConfirmModal(data, false);
     }
   };
 
-  if (campaignData.data?.error) {
-    return (
-      <Error
-        titleOne={`${campaignData.data?.error.messageOne}`}
-        titleTwo={`${campaignData.data?.error.messageTwo}`}
-      />
-    );
-  }
+  // if (campaignData.data?.error) {
+  //   return (
+  //     <Error
+  //       titleOne={`${campaignData.data?.error.messageOne}`}
+  //       titleTwo={`${campaignData.data?.error.messageTwo}`}
+  //     />
+  //   );
+  // }
 
   return (
     <>

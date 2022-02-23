@@ -6,7 +6,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import api from "api";
 import { useAPIcontext } from "contexts/APIcontextProvider";
-import { usePopupContext } from "contexts/popupContextProvider";
+import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
+import { useConfirmModalState } from "contexts/ConfirmModalContext";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
 import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
@@ -22,12 +23,8 @@ const styles = {
 
 const CreateEmailPage = () => {
   const { subscribersData, fetchCampaignsData } = useAPIcontext();
-  const {
-    openConfirmPopup,
-    addTextPopup,
-    handleActionPopup,
-    finalSelectedActiveSubscribers,
-  } = usePopupContext();
+  const { finalSelectedActiveSubscribers } = useGlobalStoreContext();
+  const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
 
   const {
     handleSubmit,
@@ -58,36 +55,55 @@ const CreateEmailPage = () => {
       });
   }, [formState, reset]);
 
-  const setTextConfirmPopup = (data, status) => ({
-    additionalText: !allActiveSubscribers.length
-      ? "No active Subscribers!"
-      : "",
-    title: (
-      <>
-        Email{" "}
-        <span style={styles.campaignName}>
-          {" "}
-          {capitalizeFirstLetter(data.title)}{" "}
-        </span>
-        has been{" "}
-        {status
-          ? "sent to choosen subscribers"
-          : "drafted and added to the list"}
-        😁
-      </>
-    ),
-    question: !allActiveSubscribers.length ? (
-      <>
-        Would you like to create a
-        <span style={styles.questionSpan}> new subscriber </span>?
-      </>
-    ) : (
-      <>
-        Would you like to come back to
-        <span style={styles.questionSpan}> the Campaigns List</span> ?
-      </>
-    ),
-  });
+  const confirmModalProps = {
+    onConfirm: () => {
+      if (!allActiveSubscribers.length && pathname === "/campaigns/add") {
+        navigate("/subscribers/add");
+      } else {
+        navigate("/campaigns");
+      }
+    },
+
+    onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
+  };
+
+  const setDataConfirmModal = (data, status) => {
+    setConfirmModalState({
+      confirmModalProps,
+      isOpenConfirmModal: true,
+    });
+    setConfirmModalText({
+      additionalText: !allActiveSubscribers.length
+        ? "No active Subscribers!"
+        : "",
+
+      message: (
+        <>
+          Email{" "}
+          <span style={styles.campaignName}>
+            {" "}
+            {capitalizeFirstLetter(data.title)}{" "}
+          </span>
+          has been{" "}
+          {status
+            ? "sent to choosen subscribers"
+            : "drafted and added to the list"}
+          😁
+        </>
+      ),
+      question: !allActiveSubscribers.length ? (
+        <>
+          Would you like to create a
+          <span style={styles.questionSpan}> new subscriber </span>?
+        </>
+      ) : (
+        <>
+          Would you like to come back to
+          <span style={styles.questionSpan}> the Campaigns List</span> ?
+        </>
+      ),
+    });
+  };
 
   const getActionsOnSubmit = async (data, status) => {
     const response = await api.post("campaigns", {
@@ -101,24 +117,11 @@ const CreateEmailPage = () => {
     if (response) {
       fetchCampaignsData();
     }
-
-    handleActionPopup(() => ({
-      change: () => {
-        if (!allActiveSubscribers.length && pathname === "/campaigns/add") {
-          navigate("/subscribers/add");
-        } else {
-          navigate("/campaigns");
-        }
-      },
-    }));
   };
 
   const handleDraftCampaign = (data) => {
     getActionsOnSubmit(data, "draft");
-
-    addTextPopup(setTextConfirmPopup(data, false));
-
-    openConfirmPopup();
+    setDataConfirmModal(data, false);
   };
 
   const handleSendCampaign = (data) => {
@@ -149,16 +152,10 @@ const CreateEmailPage = () => {
 
     if (!isEmailError && allActiveSubscribers.length > 0) {
       getActionsOnSubmit(data, "sent");
-
-      addTextPopup(setTextConfirmPopup(data, true));
-
-      openConfirmPopup();
+      setDataConfirmModal(data, true);
     } else {
       getActionsOnSubmit(data, "draft");
-
-      addTextPopup(setTextConfirmPopup(data, false));
-
-      openConfirmPopup();
+      setDataConfirmModal(data, false);
     }
   };
 
