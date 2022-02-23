@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import { FaUserEdit } from "react-icons/fa";
@@ -14,7 +14,8 @@ import {
   capitalizeFirstLetter,
   formattedData,
 } from "helpers";
-import { usePopupContext } from "contexts/popupContextProvider";
+import { useInformationModalState } from "contexts/InformationModalContext";
+import { useConfirmModalState } from "contexts/ConfirmModalContext";
 
 const styles = {
   button: {
@@ -61,74 +62,87 @@ const SubscriberGeneralData = (props) => {
     removeSubscriber,
   } = props;
 
-  const { openInfoPopup, openConfirmPopup, addTextPopup, handleActionPopup } =
-    usePopupContext();
+  const { setInformationModalState, setInformationModalText } =
+    useInformationModalState();
 
-  const [modifyData, setModifyData] = useState({
-    name: "",
-    surname: "",
-    statusColor: "",
-    formattedData: "",
-  });
-
-  useEffect(() => {
-    setModifyData({
-      name: subscriber ? capitalizeFirstLetter(subscriber.fields.name) : "",
-      surname: subscriber
-        ? capitalizeFirstLetter(subscriber.fields.surname)
-        : "",
-      statusColor: subscriber ? getStatusColor(subscriber.fields.status) : "",
-      formattedDate: subscriber
-        ? formattedData.getFormattedDate(subscriber.createdTime)
-        : "",
-      formattedTime: subscriber
-        ? formattedData.getFormattedTime(subscriber.createdTime)
-        : "",
-    });
-  }, [subscriber]);
+  const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
 
   const navigate = useNavigate();
   const classes = useStyles();
-  const location = useLocation();
+  const { pathname, key } = useLocation();
   const [indexPage] = useState(actualPage);
 
-  const setTextPopupByStatus = (subscriber) => {
+  const informationModalProps = {
+    colorButton: "error",
+    onClose: () => setInformationModalState({ isOpenInformationModal: false }),
+  };
+
+  const setConfirmModalDataByStatus = (subscriber) => {
     const styles = {
       pending: { color: "orange", fontWeight: "bold", letterSpacing: 2 },
       blocked: { color: "#d32f2f", fontWeight: "bold", letterSpacing: 2 },
       name: { color: "green", fontWeight: "bold", letterSpacing: 2 },
     };
     if (subscriber.fields.status === "pending") {
-      addTextPopup({
+      setInformationModalText({
         title: <span style={styles.pending}>Please wait...</span>,
-        mainText: (
+        message: (
           <>
-            <span style={styles.name}>{modifyData.name}'s</span>
+            <span style={styles.name}>
+              {capitalizeFirstLetter(subscriber.fields.name)}'s
+            </span>
             status is
             <span style={styles.pending}> pending </span> at the moment because
             you need to complete all data in the table
           </>
         ),
-        colorButton: "error",
       });
-
-      openInfoPopup();
+      setInformationModalState({
+        informationModalProps,
+        isOpenInformationModal: true,
+      });
     } else if (subscriber.fields.status === "blocked") {
-      addTextPopup({
+      setInformationModalText({
         title: <span style={styles.blocked}>Unfortunately...</span>,
-        mainText: (
+        message: (
           <>
-            <span style={styles.name}>{modifyData.name}'s</span>
+            <span style={styles.name}>
+              {capitalizeFirstLetter(subscriber.fields.name)}'s
+            </span>
             status is
             <span style={styles.blocked}> blocked </span>can not get an access
             to more details 🙁
           </>
         ),
-        colorButton: "error",
       });
-
-      openInfoPopup();
+      setInformationModalState({
+        informationModalProps,
+        isOpenInformationModal: true,
+      });
     }
+  };
+
+  const confirmModalProps = {
+    onConfirm: () => removeSubscriber(subscriber.id, "subscribers"),
+    onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
+  };
+
+  const handleConfirmModalData = () => {
+    setConfirmModalState({
+      confirmModalProps,
+      isOpenConfirmModal: true,
+    });
+    setConfirmModalText({
+      question: (
+        <>
+          Are you sure you want to remove{" "}
+          <span style={{ color: "crimson", fontWeight: "bold" }}>
+            {capitalizeFirstLetter(subscriber.fields.name)}
+          </span>
+          ?
+        </>
+      ),
+    });
   };
 
   return (
@@ -155,7 +169,7 @@ const SubscriberGeneralData = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {modifyData.name}
+          {capitalizeFirstLetter(subscriber.fields.name)}
         </Typography>
       </TableCell>
       <TableCell>
@@ -164,7 +178,7 @@ const SubscriberGeneralData = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {modifyData.surname}
+          {capitalizeFirstLetter(subscriber.fields.surname)}
         </Typography>
       </TableCell>
       <TableCell>
@@ -173,7 +187,7 @@ const SubscriberGeneralData = (props) => {
             key={index}
             className={classes.status}
             style={{
-              backgroundColor: modifyData.statusColor,
+              backgroundColor: getStatusColor(subscriber.fields.status),
               ...styles.paragraph,
             }}
           >
@@ -187,7 +201,7 @@ const SubscriberGeneralData = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {modifyData.formattedDate}
+          {formattedData.getFormattedDate(subscriber.createdTime)}
         </Typography>
       </TableCell>
       <TableCell>
@@ -196,11 +210,10 @@ const SubscriberGeneralData = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {modifyData.formattedTime}
+          {formattedData.getFormattedTime(subscriber.createdTime)}
         </Typography>
       </TableCell>
-      {location.pathname === "/subscribers" ||
-      location.pathname === "/subscribers/status" ? (
+      {pathname === "/subscribers" || pathname === "/subscribers/status" ? (
         <>
           <TableCell>
             <Button
@@ -223,34 +236,18 @@ const SubscriberGeneralData = (props) => {
               startIcon={<CgDetailsMore style={styles.icon} />}
               onClick={() => {
                 handleSubscriberDetails(subscriber);
-                setTextPopupByStatus(subscriber);
+                setConfirmModalDataByStatus(subscriber);
               }}
             />
           </TableCell>
           <TableCell>
             <Button
-              key={location.key}
+              key={key}
               aria-label="delete"
               color="error"
               variant="contained"
               startIcon={<MdPersonRemoveAlt1 style={styles.icon} />}
-              onClick={() => {
-                handleActionPopup(() => ({
-                  change: () => removeSubscriber(subscriber.id, "subscribers"),
-                }));
-                addTextPopup({
-                  question: (
-                    <>
-                      Are you sure you want to remove{" "}
-                      <span style={{ color: "crimson", fontWeight: "bold" }}>
-                        {modifyData.name}
-                      </span>
-                      ?
-                    </>
-                  ),
-                });
-                openConfirmPopup();
-              }}
+              onClick={() => handleConfirmModalData()}
             />
           </TableCell>
         </>
