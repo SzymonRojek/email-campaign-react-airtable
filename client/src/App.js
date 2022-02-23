@@ -18,15 +18,15 @@ const App = () => {
     <div className="page-container">
       <Modals>
         <GlobalStoreContextProvider>
-          <ErrorBoundary FallbackComponent={Fallback} onError={handleError}>
-            <MainNavigation />
+          {/* <ErrorBoundary FallbackComponent={Fallback} onError={handleError}> */}
+          <MainNavigation />
 
+          <Login>
             <APIcontextProvider>
-              <Login>
-                <AppContainer />
-              </Login>
+              <AppContainer />
             </APIcontextProvider>
-          </ErrorBoundary>
+          </Login>
+          {/* </ErrorBoundary> */}
         </GlobalStoreContextProvider>
       </Modals>
       <StyledFooter label="Coded By Szymon Rojek © 2022" />

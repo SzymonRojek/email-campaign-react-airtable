@@ -9,7 +9,7 @@ export const useFetchDetailsById = (endpoint, id) => {
     data: null,
   });
 
-  const handleError = useErrorHandler();
+  // const handleError = useErrorHandler();
   const fetchData = async () => {
     try {
       const data = await api.get(`${endpoint}/${id}`);
@@ -20,7 +20,7 @@ export const useFetchDetailsById = (endpoint, id) => {
       });
     } catch (error) {
       console.log("idError", error);
-      handleError(error);
+      // handleError(error);
     }
   };
 

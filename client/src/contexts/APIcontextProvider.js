@@ -16,18 +16,19 @@ export const APIcontextProvider = ({ children }) => {
     data: [],
   });
 
-  const handleError = useErrorHandler();
+  // const handleError = useErrorHandler();
 
   const fetchSubscribersData = async () => {
     try {
-      const data = await api.get("/subscribers");
+      const data = await api.get("/subscriber");
 
       setSubscribersData({
         status: "success",
         data,
       });
     } catch (error) {
-      handleError(error);
+      console.log(error);
+      // handleError(error);
     }
   };
 
