@@ -2,12 +2,12 @@ import { ErrorBoundary } from "react-error-boundary";
 
 import { Fallback } from "components/Fallback";
 import AppContainer from "AppContainer";
-import { ConfirmPopup, InfoPopup } from "components/DisplayMessage";
 import { StyledFooter } from "components/StyledFooter";
 import { Login } from "Login";
 import { MainNavigation } from "components/Navigation";
 import { APIcontextProvider } from "contexts/APIcontextProvider";
-import { PopupContextProvider } from "contexts/popupContextProvider";
+import { GlobalStoreContextProvider } from "contexts/GlobalStoreContextProvider";
+import Modals from "./Modals";
 
 const App = () => {
   const handleError = (error, errorInfo) => {
@@ -16,21 +16,19 @@ const App = () => {
 
   return (
     <div className="page-container">
-      <PopupContextProvider>
-        <ErrorBoundary FallbackComponent={Fallback} onError={handleError}>
-          <MainNavigation />
+      <Modals>
+        <GlobalStoreContextProvider>
+          <ErrorBoundary FallbackComponent={Fallback} onError={handleError}>
+            <MainNavigation />
 
-          <APIcontextProvider>
-            <Login>
-              <AppContainer />
-            </Login>
-          </APIcontextProvider>
-        </ErrorBoundary>
-
-        <ConfirmPopup />
-        <InfoPopup />
-      </PopupContextProvider>
-
+            <APIcontextProvider>
+              <Login>
+                <AppContainer />
+              </Login>
+            </APIcontextProvider>
+          </ErrorBoundary>
+        </GlobalStoreContextProvider>
+      </Modals>
       <StyledFooter label="Coded By Szymon Rojek © 2022" />
     </div>
   );
