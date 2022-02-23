@@ -22,7 +22,7 @@ import { MdPeopleAlt } from "react-icons/md";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
 
-import { usePopupContext } from "contexts/popupContextProvider";
+import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 import { LogFormButton } from "components/LogFormButton";
 import { campaignsLinks, subscribersLinks } from "data/dataLinksNavigation";
 
@@ -108,7 +108,7 @@ const MobileNavigation = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openSubscribersLinks, setOpenSubscribersLinks] = useState(false);
   const [openCampaignsLinks, setOpenCampaignsLinks] = useState(false);
-  const { setIsLogIn, setStatusLog, setTabsValue } = usePopupContext();
+  const { setIsLogIn, setStatusLog, setTabsValue } = useGlobalStoreContext();
 
   useEffect(() => {
     if (!openDrawer) {

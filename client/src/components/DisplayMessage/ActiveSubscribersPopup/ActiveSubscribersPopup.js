@@ -13,7 +13,7 @@ import { Button } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { useAPIcontext } from "contexts/APIcontextProvider";
-import { usePopupContext } from "contexts/popupContextProvider";
+import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 
 const styles = {
   dialogContent: {
@@ -73,7 +73,7 @@ const ActiveSubscribersPopup = ({
 }) => {
   const classes = useStyles();
   const { subscribersData } = useAPIcontext();
-  const { setFinalSelectedActiveSubscribers } = usePopupContext();
+  const { setFinalSelectedActiveSubscribers } = useGlobalStoreContext();
 
   const filteredActiveSubscribers = useMemo(
     () =>

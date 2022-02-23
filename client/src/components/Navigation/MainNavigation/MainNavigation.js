@@ -13,7 +13,7 @@ import { MdPeopleAlt } from "react-icons/md";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
 
-import { usePopupContext } from "contexts/popupContextProvider";
+import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 import { StyledTabs } from "./StyledTabs";
 import { MobileNavigation } from "./MobileNavigation";
 import Logo from "../../../img/logo.svg";
@@ -113,7 +113,7 @@ function MainNavigation() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { isLogIn, setIsLogIn, setStatusLog, tabsValue, setTabsValue } =
-    usePopupContext();
+    useGlobalStoreContext();
 
   const handleClickTab = (e, newTabsValue) => setTabsValue(newTabsValue);
 

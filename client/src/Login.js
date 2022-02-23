@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 
-import { usePopupContext } from "contexts/popupContextProvider";
+import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 import { LoginForm } from "components/LoginForm";
 import { Loader } from "components/DisplayMessage";
 
 export const Login = ({ children }) => {
-  const { isLogIn, statusLog, setStatusLog } = usePopupContext();
+  const { isLogIn, statusLog, setStatusLog } = useGlobalStoreContext();
 
   useEffect(() => {
     const timeID = setTimeout(() => {
