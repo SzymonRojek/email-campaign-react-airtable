@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Tooltip, Zoom } from "@mui/material";
 import { TableCell, TableRow, Typography } from "@material-ui/core";
@@ -7,13 +7,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import { FaRegEdit } from "react-icons/fa";
 import { MdEditOff, MdDeleteSweep } from "react-icons/md";
 
+import { useConfirmModalState } from "contexts/ConfirmModalContext";
 import {
   isEven,
   formattedData,
   getStatusColor,
   capitalizeFirstLetter,
 } from "helpers";
-import { usePopupContext } from "contexts/popupContextProvider";
 
 const styles = {
   typography: {
@@ -66,35 +66,33 @@ const CampaignTableRow = (props) => {
     removeCampaign,
   } = props;
 
-  const { openConfirmPopup, addTextPopup, handleActionPopup } =
-    usePopupContext();
-
+  const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
   const navigate = useNavigate();
   const classes = useStyles();
   const [indexPage] = useState(actualPage);
 
-  const [modifyData, setModifyData] = useState({
-    title: "",
-    description: "",
-    statusColor: "",
-    formattedData: "",
-  });
+  const confirmModalProps = {
+    onConfirm: () => removeCampaign(campaign.id, "campaigns"),
+    onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
+  };
 
-  useEffect(() => {
-    setModifyData({
-      title: campaign ? capitalizeFirstLetter(campaign.fields.title) : "",
-      description: campaign
-        ? capitalizeFirstLetter(campaign.fields.description)
-        : "",
-      statusColor: campaign ? getStatusColor(campaign.fields.status) : "",
-      formattedDate: campaign
-        ? formattedData.getFormattedDate(campaign.createdTime)
-        : "",
-      formattedTime: campaign
-        ? formattedData.getFormattedTime(campaign.createdTime)
-        : "",
+  const handleConfirmModalData = () => {
+    setConfirmModalState({
+      confirmModalProps,
+      isOpenConfirmModal: true,
     });
-  }, [campaign]);
+    setConfirmModalText({
+      question: (
+        <>
+          Are you sure you want to remove{" "}
+          <span style={styles.questionText}>
+            {capitalizeFirstLetter(campaign.fields.title)}
+          </span>
+          ?
+        </>
+      ),
+    });
+  };
 
   return (
     <TableRow
@@ -119,7 +117,7 @@ const CampaignTableRow = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {modifyData.title}
+          {capitalizeFirstLetter(campaign.fields.title)}
         </Typography>
       </TableCell>
       <TableCell>
@@ -128,7 +126,7 @@ const CampaignTableRow = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {modifyData.description}
+          {capitalizeFirstLetter(campaign.fields.description)}
         </Typography>
       </TableCell>
       <TableCell>
@@ -137,7 +135,7 @@ const CampaignTableRow = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {modifyData.formattedDate}
+          {formattedData.getFormattedDate(campaign.createdTime)}
         </Typography>
       </TableCell>
       <TableCell>
@@ -146,7 +144,7 @@ const CampaignTableRow = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {modifyData.formattedTime}
+          {formattedData.getFormattedTime(campaign.createdTime)}
         </Typography>
       </TableCell>
       <TableCell>
@@ -155,7 +153,7 @@ const CampaignTableRow = (props) => {
             key={index}
             className={classes.status}
             style={{
-              backgroundColor: modifyData.statusColor,
+              backgroundColor: getStatusColor(campaign.fields.status),
               ...styles.typography,
             }}
           >
@@ -198,20 +196,7 @@ const CampaignTableRow = (props) => {
           color="error"
           variant="contained"
           startIcon={<MdDeleteSweep style={styles.icon} />}
-          onClick={() => {
-            handleActionPopup(() => ({
-              change: () => removeCampaign(campaign.id, "campaigns"),
-            }));
-            addTextPopup({
-              question: (
-                <>
-                  Are you sure you want to remove{" "}
-                  <span style={styles.questionText}>{modifyData.title}</span>?
-                </>
-              ),
-            });
-            openConfirmPopup();
-          }}
+          onClick={() => handleConfirmModalData()}
         />
       </TableCell>
     </TableRow>
