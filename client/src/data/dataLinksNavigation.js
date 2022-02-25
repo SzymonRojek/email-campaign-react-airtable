@@ -52,13 +52,13 @@ export const subscribersLinks = [
     icon: <HiFilter />,
     to: "/subscribers/status",
     name: "Status",
-    tabsValue: 1,
+    tabsValue: 0,
   },
   {
     icon: <BsFillPersonPlusFill />,
     to: "/subscribers/add",
     name: "Add New",
-    tabsValue: 2,
+    tabsValue: 0,
   },
 ];
 
@@ -73,12 +73,12 @@ export const campaignsLinks = [
     icon: <HiFilter />,
     to: "/campaigns/status",
     name: "Status",
-    tabsValue: 1,
+    tabsValue: 0,
   },
   {
     icon: <MdMarkEmailRead />,
     to: "/campaigns/add",
     name: "Add New",
-    tabsValue: 2,
+    tabsValue: 0,
   },
 ];
