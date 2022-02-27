@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { useAPIcontext } from "contexts/APIcontextProvider";
+import useGetItems from "customHooks/useGetItems";
 import { Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
@@ -71,7 +71,7 @@ const StatusSubscribersPage = ({
   handleSubscriberDetails,
   removeSubscriber,
 }) => {
-  const { subscribersData } = useAPIcontext();
+  const { data: subscribers, isLoading } = useGetItems("/subscribers");
   const { control, watch } = useForm();
   const [selectStatus, setSelectStatus] = useState("active");
 
@@ -104,32 +104,30 @@ const StatusSubscribersPage = ({
     return () => watchStatus.unsubscribe();
   }, [watch]);
 
+  if (isLoading) {
+    <Loader title="Status" />;
+  }
+
   return (
-    <>
-      {subscribersData.status === "loading" ? (
-        <Loader title="Status" />
-      ) : (
-        <StyledContainer>
-          <StyledHeading label="subscribers status" />
-          <StyledMainContent>
-            {subscribersData.data && !subscribersData.data.length ? (
-              "List of subscribers is empty - please add a subscriber"
-            ) : (
-              <SubscriberStatus
-                subHeading="list"
-                generalDataHeadTable={statusDataHeadTable}
-                passedData={subscribersData.data}
-                status={selectStatus}
-                setSelectStatus={setSelectStatus}
-                editSubscriber={editSubscriber}
-                handleSubscriberDetails={handleSubscriberDetails}
-                removeSubscriber={removeSubscriber}
-              />
-            )}
-          </StyledMainContent>
-        </StyledContainer>
-      )}
-    </>
+    <StyledContainer>
+      <StyledHeading label="subscribers status" />
+      <StyledMainContent>
+        {subscribers && !subscribers.length ? (
+          "List of subscribers is empty - please add a subscriber"
+        ) : (
+          <SubscriberStatus
+            subHeading="list"
+            generalDataHeadTable={statusDataHeadTable}
+            passedData={subscribers}
+            status={selectStatus}
+            setSelectStatus={setSelectStatus}
+            editSubscriber={editSubscriber}
+            handleSubscriberDetails={handleSubscriberDetails}
+            removeSubscriber={removeSubscriber}
+          />
+        )}
+      </StyledMainContent>
+    </StyledContainer>
   );
 };
 

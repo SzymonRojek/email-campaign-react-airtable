@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 
-import { useAPIcontext } from "contexts/APIcontextProvider";
 import { generalDataHeadTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
 import { Loader } from "components/DisplayMessage";
@@ -9,10 +8,22 @@ import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { SubscribersList } from "components/SubscribersList";
 
+import useGetItems from "customHooks/useGetItems";
+import api from "api";
+import { useQuery, useQueryClient } from "react-query";
+
 const styles = {
   container: {
     marginBottom: 100,
   },
+};
+
+const getItems = async () => {
+  const response = await api.get("/subscribers");
+
+  // if (response.statusText !== "OK")
+  //   throw new Error("There is no internet connection");
+  return response;
 };
 
 const SubscribersPage = ({
@@ -20,46 +31,63 @@ const SubscribersPage = ({
   handleSubscriberDetails,
   removeSubscriber,
 }) => {
-  const { subscribersData } = useAPIcontext();
+  // const { data: subscribers, isLoading, isError } = useGetItems("/subscribers");
+  // const queryClient = useQueryClient();
+  const {
+    data: subscribers,
+    isLoading,
+    isFetching,
+    isPaused,
+    refetch,
+    error,
+  } = useQuery("subscribers", getItems);
+
+  // {
+  //   refetchOnWindowFocus: false,
+  //   refetchOnReconnect: false,
+  //   // retry: 1,
+  //   // retryDelay: 3000,
+  // }
+  if (isLoading) {
+    return <Loader title="Subscribers" />;
+  }
 
   return (
     <>
-      {subscribersData.status === "loading" ? (
-        <Loader title="Subscribers" />
-      ) : (
-        <StyledContainer>
-          <StyledHeading label="all subscribers" />
-          <StyledMainContent>
-            {subscribersData.data && !subscribersData.data.length ? (
-              "List of subscribers is empty - please add a subscriber"
-            ) : (
-              <div style={styles.container}>
-                <SubscribersList
-                  subHeading="list"
-                  dataHeadTable={generalDataHeadTable}
-                  passedData={sortDataAlphabetically(subscribersData.data)}
-                  editSubscriber={editSubscriber}
-                  handleSubscriberDetails={handleSubscriberDetails}
-                  removeSubscriber={removeSubscriber}
-                />
-              </div>
-            )}
-
-            {subscribersData.data && subscribersData.data.length > 1 ? (
+      <StyledContainer>
+        <StyledHeading label="all subscribers" />
+        <StyledMainContent>
+          {subscribers && !subscribers.length ? (
+            "List of subscribers is empty - please add a subscriber"
+          ) : (
+            <div style={styles.container}>
               <SubscribersList
-                subHeading="latest added"
+                subHeading="list"
                 dataHeadTable={generalDataHeadTable}
-                passedData={getLatestAddedItem(subscribersData.data)}
+                passedData={sortDataAlphabetically(
+                  subscribers ? subscribers : []
+                )}
                 editSubscriber={editSubscriber}
                 handleSubscriberDetails={handleSubscriberDetails}
                 removeSubscriber={removeSubscriber}
               />
-            ) : (
-              ""
-            )}
-          </StyledMainContent>
-        </StyledContainer>
-      )}
+            </div>
+          )}
+
+          {subscribers && subscribers.length ? (
+            <SubscribersList
+              subHeading="latest added"
+              dataHeadTable={generalDataHeadTable}
+              passedData={getLatestAddedItem(subscribers)}
+              editSubscriber={editSubscriber}
+              handleSubscriberDetails={handleSubscriberDetails}
+              removeSubscriber={removeSubscriber}
+            />
+          ) : (
+            ""
+          )}
+        </StyledMainContent>
+      </StyledContainer>
     </>
   );
 };
