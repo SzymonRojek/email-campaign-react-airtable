@@ -1,5 +1,5 @@
 const getFilteredDataByStatus = (data, status) => {
-  if (!data) return;
+  if (!data) return [];
 
   return data.filter((item) => item.fields.status === status);
 };
