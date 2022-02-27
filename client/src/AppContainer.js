@@ -4,8 +4,12 @@ import "App.css";
 import api from "api";
 import { useAPIcontext } from "contexts/APIcontextProvider";
 import Routing from "./Routing";
+import { MainNavigation } from "components/Navigation";
+import { Login } from "./Login";
+import { StyledFooter } from "components/StyledFooter";
+import { GlobalStoreContextProvider } from "contexts/GlobalStoreContextProvider";
 
-const AppContainer = () => {
+export const AppContainer = () => {
   const navigate = useNavigate();
 
   const {
@@ -50,13 +54,19 @@ const AppContainer = () => {
   };
 
   return (
-    <Routing
-      handleEditSubscriber={handleEditSubscriber}
-      handleSubscriberDetails={handleSubscriberDetails}
-      handleEditCampaign={handleEditCampaign}
-      handleRemoveItem={handleRemoveItem}
-    />
+    <GlobalStoreContextProvider>
+      <MainNavigation />
+
+      <Login>
+        <Routing
+          handleEditSubscriber={handleEditSubscriber}
+          handleSubscriberDetails={handleSubscriberDetails}
+          handleEditCampaign={handleEditCampaign}
+          handleRemoveItem={handleRemoveItem}
+        />
+      </Login>
+
+      <StyledFooter label="Coded By Szymon Rojek © 2022" />
+    </GlobalStoreContextProvider>
   );
 };
-
-export default AppContainer;
