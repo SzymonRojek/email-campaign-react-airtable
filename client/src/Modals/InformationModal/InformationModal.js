@@ -1,6 +1,7 @@
 import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
-import { useInformationModalState } from "../../contexts/InformationModalContext";
+
+import { useInformationModalState } from "contexts/InformationModalContext";
 
 const styles = {
   titleContainer: { display: "flex" },
