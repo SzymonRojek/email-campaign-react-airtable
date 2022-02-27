@@ -117,28 +117,18 @@ const CreateSubscriberPage = () => {
 
   return (
     <>
-      {subscribersData.status === "loading" ? (
-        <Loader title="Add New" />
-      ) : subscribersData.status === "error" ? (
-        <Error
-          titleOne="ERROR MESSAGE"
-          titleTwo="Probably there is no an access to the internet."
-          titleThree="Contact with your internet provider."
-        />
-      ) : (
-        <StyledContainer>
-          <StyledHeading label="new subscriber" />
-          <StyledMainContent>
-            <FormSubscriber
-              control={control}
-              errors={errors}
-              addSubscriber={handleSubmit(onSubmit)}
-              isCheckboxChecked={isCheckboxChecked}
-              labelButton="add subscriber"
-            />
-          </StyledMainContent>
-        </StyledContainer>
-      )}
+      <StyledContainer>
+        <StyledHeading label="new subscriber" />
+        <StyledMainContent>
+          <FormSubscriber
+            control={control}
+            errors={errors}
+            addSubscriber={handleSubmit(onSubmit)}
+            isCheckboxChecked={isCheckboxChecked}
+            labelButton="add subscriber"
+          />
+        </StyledMainContent>
+      </StyledContainer>
     </>
   );
 };
