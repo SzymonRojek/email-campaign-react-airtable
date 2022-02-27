@@ -4,14 +4,17 @@ const request = async (endpoint, method = "GET", data = null) => {
   const requestConfig = {
     method,
     url: endpoint,
+    headers: {
+      "Content-type": "application/json",
+    },
     data: method === "POST" || method === "PATCH" ? data : null,
   };
 
   const response = await axios(requestConfig);
 
-  if (!response) {
-    throw new Error("Something happened - no data");
-  }
+  // if (response.statusText !== "OK") {
+  //   throw new Error("Something happened - no data");
+  // }
 
   return response.data;
 };
