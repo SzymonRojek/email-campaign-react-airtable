@@ -1,35 +1,61 @@
-import { ErrorBoundary } from "react-error-boundary";
-
-import { Fallback } from "components/Fallback";
-import AppContainer from "AppContainer";
-import { StyledFooter } from "components/StyledFooter";
-import { Login } from "Login";
-import { MainNavigation } from "components/Navigation";
+import { AppContainer } from "./AppContainer";
 import { APIcontextProvider } from "contexts/APIcontextProvider";
-import { GlobalStoreContextProvider } from "contexts/GlobalStoreContextProvider";
 import Modals from "./Modals";
+import {
+  QueryClient,
+  QueryCache,
+  QueryClientProvider,
+  ReactQueryDevtools,
+} from "react-query";
+
+import { useInformationModalState } from "contexts/InformationModalContext";
 
 const App = () => {
-  const handleError = (error, errorInfo) => {
-    console.log("LoggingError", error, errorInfo);
-  };
+  const queryClient = new QueryClient();
+
+  // const { setInformationModalState, setInformationModalText } =
+  //   useInformationModalState();
+
+  // const informationModalProps = {
+  //   colorButton: "error",
+  //   onClose: () => {
+  //     setInformationModalState({ isOpenInformationModal: false });
+  //   },
+  // };
+
+  // const setErrorModal = (error) => {
+  //   setInformationModalText({
+  //     title: "ERROR",
+  //     additionalText: "Check your internet connection",
+  //     message: `${error.message}`,
+  //   });
+  //   setInformationModalState({
+  //     informationModalProps,
+  //     isOpenInformationModal: true,
+  //   });
+  // };
+
+  // {
+  //   queryCache: new QueryCache({
+  //     onError: (error, query) => {
+  //       // if (query.state.data === undefined) {
+  //       setErrorModal(error);
+  //       // console.log(query);
+  //       // }
+  //     },
+  //   }
+  // }
 
   return (
     <div className="page-container">
       <Modals>
-        <GlobalStoreContextProvider>
-          {/* <ErrorBoundary FallbackComponent={Fallback} onError={handleError}> */}
-          <MainNavigation />
-
-          <Login>
-            <APIcontextProvider>
-              <AppContainer />
-            </APIcontextProvider>
-          </Login>
-          {/* </ErrorBoundary> */}
-        </GlobalStoreContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <APIcontextProvider>
+            <AppContainer />
+          </APIcontextProvider>
+          <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+        </QueryClientProvider>
       </Modals>
-      <StyledFooter label="Coded By Szymon Rojek © 2022" />
     </div>
   );
 };
