@@ -125,7 +125,7 @@ const SubMainNavigation = () => {
                   value={tabsSubValue}
                   style={styles.tabs}
                 >
-                  {pathname === "/subscribers"
+                  {window.location.href.indexOf("/subscribers") > -1
                     ? subscribersLinks.map(({ to, name, icon }) => (
                         <Tab
                           key={name}
