@@ -2,5 +2,5 @@
   "compilerOptions": {
     "baseUrl": "./src"
   },
-  "include": ["client/src", "server/index.js", "routes"]
+  "include": ["client/src"]
 }
