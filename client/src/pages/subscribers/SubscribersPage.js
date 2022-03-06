@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
+import { useQuery } from "react-query";
 
+import api from "api";
 import { generalDataHeadTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
 import { Loader } from "components/DisplayMessage";
@@ -8,46 +10,23 @@ import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { SubscribersList } from "components/SubscribersList";
 
-import useGetItems from "customHooks/useGetItems";
-import api from "api";
-import { useQuery, useQueryClient } from "react-query";
-
 const styles = {
   container: {
     marginBottom: 100,
   },
 };
 
-const getItems = async () => {
-  const response = await api.get("/subscribers");
+const SubscribersPage = ({ editSubscriber, handleSubscriberDetails }) => {
+  const { data: subscribers, isLoading } = useQuery(
+    "subscribers",
+    api.fetchItems,
+    {
+      meta: {
+        myMessage: "Cannot get subscribers list:",
+      },
+    }
+  );
 
-  // if (response.statusText !== "OK")
-  //   throw new Error("There is no internet connection");
-  return response;
-};
-
-const SubscribersPage = ({
-  editSubscriber,
-  handleSubscriberDetails,
-  removeSubscriber,
-}) => {
-  // const { data: subscribers, isLoading, isError } = useGetItems("/subscribers");
-  // const queryClient = useQueryClient();
-  const {
-    data: subscribers,
-    isLoading,
-    isFetching,
-    isPaused,
-    refetch,
-    error,
-  } = useQuery("subscribers", getItems);
-
-  // {
-  //   refetchOnWindowFocus: false,
-  //   refetchOnReconnect: false,
-  //   // retry: 1,
-  //   // retryDelay: 3000,
-  // }
   if (isLoading) {
     return <Loader title="Subscribers" />;
   }
@@ -69,7 +48,6 @@ const SubscribersPage = ({
                 )}
                 editSubscriber={editSubscriber}
                 handleSubscriberDetails={handleSubscriberDetails}
-                removeSubscriber={removeSubscriber}
               />
             </div>
           )}
@@ -81,7 +59,6 @@ const SubscribersPage = ({
               passedData={getLatestAddedItem(subscribers)}
               editSubscriber={editSubscriber}
               handleSubscriberDetails={handleSubscriberDetails}
-              removeSubscriber={removeSubscriber}
             />
           ) : (
             ""
