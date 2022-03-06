@@ -2,17 +2,16 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useMutation } from "react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import api from "api";
-import { useAPIcontext } from "contexts/APIcontextProvider";
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
 import { capitalizeFirstLetter, validationSubscriber } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { FormSubscriber } from "components/FormSubscriber/";
-import { Loader, Error } from "components/DisplayMessage";
 
 const styles = {
   subscriberName: { color: "green" },
@@ -20,8 +19,6 @@ const styles = {
 };
 
 const CreateSubscriberPage = () => {
-  const { subscribersData, fetchSubscribersData } = useAPIcontext();
-
   const {
     handleSubmit,
     watch,
@@ -92,8 +89,8 @@ const CreateSubscriberPage = () => {
     });
   };
 
-  const getActionsOnSubmit = async (data) => {
-    const response = await api.post("subscribers", {
+  const createAPISubscriber = async (data) => {
+    await api.post("subscribers", {
       fields: {
         name: data.name,
         surname: data.surname,
@@ -104,15 +101,13 @@ const CreateSubscriberPage = () => {
         telephone: data.telephone,
       },
     });
-
-    if (response) {
-      fetchSubscribersData();
-    }
   };
 
-  const onSubmit = (data) => {
-    getActionsOnSubmit(data);
+  const { mutateAsync } = useMutation(createAPISubscriber);
+
+  const onFormSubmit = async (data) => {
     setDataConfirmModal(data);
+    await mutateAsync(data);
   };
 
   return (
@@ -123,7 +118,7 @@ const CreateSubscriberPage = () => {
           <FormSubscriber
             control={control}
             errors={errors}
-            addSubscriber={handleSubmit(onSubmit)}
+            addSubscriber={handleSubmit(onFormSubmit)}
             isCheckboxChecked={isCheckboxChecked}
             labelButton="add subscriber"
           />
