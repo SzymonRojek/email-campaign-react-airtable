@@ -20,7 +20,6 @@ export const detailsDataHeadTableFirst = [
 ];
 
 export const detailsDataHeadTableSecond = [
-  "no",
   "e-mail",
   "profession",
   "salary",
