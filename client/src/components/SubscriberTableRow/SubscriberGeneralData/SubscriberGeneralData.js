@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "react-query";
 import { Button } from "@mui/material";
 import { FaUserEdit } from "react-icons/fa";
 import { MdPersonRemoveAlt1 } from "react-icons/md";
@@ -8,6 +9,7 @@ import { CgDetailsMore } from "react-icons/cg";
 import { TableCell, TableRow, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
+import api from "api";
 import {
   isEven,
   getStatusColor,
@@ -59,7 +61,6 @@ const SubscriberGeneralData = (props) => {
     dataPerPage,
     editSubscriber,
     handleSubscriberDetails,
-    removeSubscriber,
   } = props;
 
   const { setInformationModalState, setInformationModalText } =
@@ -71,6 +72,29 @@ const SubscriberGeneralData = (props) => {
   const classes = useStyles();
   const { pathname, key } = useLocation();
   const [indexPage] = useState(actualPage);
+
+  const queryCache = useQueryClient();
+
+  const { mutateAsync } = useMutation(
+    (id) => {
+      api.delete(`subscribers/${id}`);
+    },
+    {
+      onMutate: (id) => {
+        const previousSubscribers = queryCache.getQueryData("subscribers");
+
+        const filteredSubscribers = previousSubscribers.filter(
+          (item) => item.id !== id
+        );
+
+        queryCache.setQueryData("subscribers", filteredSubscribers);
+      },
+
+      // onError: (error, editedValue, rollback) => {
+      //   rollback();
+      // },
+    }
+  );
 
   const informationModalProps = {
     colorButton: "error",
@@ -123,7 +147,7 @@ const SubscriberGeneralData = (props) => {
   };
 
   const confirmModalProps = {
-    onConfirm: () => removeSubscriber(subscriber.id, "subscribers"),
+    onConfirm: () => mutateAsync(subscriber.id),
     onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
   };
 
@@ -247,7 +271,7 @@ const SubscriberGeneralData = (props) => {
               color="error"
               variant="contained"
               startIcon={<MdPersonRemoveAlt1 style={styles.icon} />}
-              onClick={() => handleConfirmModalData()}
+              onClick={handleConfirmModalData}
             />
           </TableCell>
         </>
