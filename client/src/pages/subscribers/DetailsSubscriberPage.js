@@ -1,7 +1,11 @@
 import { useParams } from "react-router-dom";
+import { useQuery } from "react-query";
 
-import useGetItem from "customHooks/useGetItem";
-import { detailsDataHeadTableFirst } from "data/dataHeadTable";
+import api from "api";
+import {
+  detailsDataHeadTableFirst,
+  detailsDataHeadTableSecond,
+} from "data/dataHeadTable";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
@@ -11,10 +15,6 @@ import SubscribersList from "components/SubscribersList/SubscribersList";
 import { SubscriberDetailsData } from "components/SubscriberTableRow/SubscriberDetailsData";
 import { BodyTable } from "components/Table";
 import CustomPaginator from "components/PaginationPackage/CustomPaginator";
-import { detailsDataHeadTableSecond } from "data/dataHeadTable";
-import api from "api";
-
-import { useInformationModalState } from "contexts/InformationModalContext";
 
 const styles = {
   container: {
@@ -24,50 +24,38 @@ const styles = {
 
 const DetailsSubscriberPage = () => {
   const { id } = useParams();
-
-  // const getItemById = async (key, id) => {
-  //   const data = await api.get(`/subscriber/${id}`);
-
-  //   return data;
-  // };
-
   const {
     data: subscriber,
     isLoading,
+    isFetching,
     isError,
-  } = useGetItem("/subscribers", id);
-
-  const { setInformationModalState, setInformationModalText } =
-    useInformationModalState();
-
-  const informationModalProps = {
-    colorButton: "error",
-    onClose: () => {
-      setInformationModalState({ isOpenInformationModal: false });
+    error,
+  } = useQuery(["subscribers", { id }], api.fetchDetailsItemById, {
+    meta: {
+      myMessage: "Subscriber does not exist! ",
     },
-  };
+  });
 
-  const setErrorModal = () => {
-    setInformationModalText({
-      title: "ERROR",
-      additionalText: "Check your internet connection",
-      message: "Subscriber does not exist",
-    });
-    setInformationModalState({
-      informationModalProps,
-      isOpenInformationModal: true,
-    });
-  };
-
-  if (isLoading) {
-    <Loader title="Details" />;
+  if (isLoading || isFetching) {
+    return <Loader title="Details" />;
   }
 
-  // const {
-  //   data: subscriber,
-  //   isLoading,
-  //   isError,
-  // } = useQuery(["subscribers", id], () => getItemById("subscribers", id));
+  if (isError) {
+    return (
+      <div
+        style={{
+          marginTop: 200,
+          color: "white",
+          fontSize: 25,
+          width: "100%",
+          textAlign: "center",
+        }}
+      >
+        <p>Subscriber does not exist!</p>
+        <p>{error.message}</p>
+      </div>
+    );
+  }
 
   return (
     <StyledContainer>
@@ -78,7 +66,6 @@ const DetailsSubscriberPage = () => {
           dataHeadTable={detailsDataHeadTableFirst}
           passedData={[subscriber]}
         />
-
         <div style={styles.container}>
           <CustomPaginator
             passedData={[subscriber]}
@@ -87,13 +74,7 @@ const DetailsSubscriberPage = () => {
                 <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
 
                 <BodyTable>
-                  {[subscriber].map((subscriber, index) => (
-                    <SubscriberDetailsData
-                      key={`id-${subscriber.id}`}
-                      subscriber={subscriber}
-                      index={index}
-                    />
-                  ))}
+                  <SubscriberDetailsData subscriber={subscriber} />
                 </BodyTable>
               </ContainerTable>
             )}
