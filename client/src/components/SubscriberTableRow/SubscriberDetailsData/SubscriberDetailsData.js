@@ -2,33 +2,18 @@ import PropTypes from "prop-types";
 import { TableCell, TableRow, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { isEven, formatMobileNumber } from "helpers";
+import { formatMobileNumber } from "helpers";
 
 const useStyles = makeStyles(() => ({
   cellNo: { width: 25 },
   cell: { wordWrap: "break-word", width: 200 },
 }));
 
-const SubscriberDetailsData = ({ subscriber, index }) => {
+const SubscriberDetailsData = ({ subscriber }) => {
   const classes = useStyles();
 
   return (
-    <TableRow
-      key={`key-${subscriber.id}`}
-      style={{
-        backgroundColor: isEven(index, "#F5F5F5"),
-        animation: `fadeIn 0.3s ease-in-out  forwards`,
-      }}
-    >
-      <TableCell>
-        <Typography
-          color="textSecondary"
-          variant="subtitle1"
-          className={classes.cellNo}
-        >
-          {index + 1}
-        </Typography>
-      </TableCell>
+    <TableRow key={`key-${subscriber.id}`}>
       <TableCell>
         <Typography
           color="textSecondary"
