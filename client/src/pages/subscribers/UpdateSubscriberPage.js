@@ -2,11 +2,10 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate, useParams } from "react-router-dom";
+import { useMutation, useQuery } from "react-query";
 
 import api from "api";
-import { useAPIcontext } from "contexts/APIcontextProvider";
 import { useInformationModalState } from "contexts/InformationModalContext";
-import { useFetchDetailsById } from "customHooks/useFetchDetailsById";
 import { validationSubscriber } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
@@ -17,7 +16,16 @@ import { FormSubscriber } from "components/FormSubscriber/";
 const UpdateSubscriberPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const endpoint = "/subscribers";
+
+  const {
+    data: subscriber,
+    isLoading,
+    isFetching,
+  } = useQuery(["subscribers", { id }], api.fetchDetailsItemById, {
+    meta: {
+      myMessage: "Subscriber does not exist! ",
+    },
+  });
 
   const {
     handleSubmit,
@@ -29,25 +37,19 @@ const UpdateSubscriberPage = () => {
     resolver: yupResolver(validationSubscriber),
   });
 
-  const { fetchSubscribersData } = useAPIcontext();
-
   const { setInformationModalState, setInformationModalText } =
     useInformationModalState();
-
-  const { itemData: subscriberData } = useFetchDetailsById(endpoint, id);
 
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
   const defaultValues = {
-    name: subscriberData.data ? subscriberData.data.fields.name : "",
-    surname: subscriberData.data ? subscriberData.data.fields.surname : "",
-    email: subscriberData.data ? subscriberData.data.fields.email : "",
-    status: subscriberData.data ? subscriberData.data.fields.status : "",
-    profession: subscriberData.data
-      ? subscriberData.data.fields.profession
-      : "",
-    salary: subscriberData.data ? subscriberData.data.fields.salary : "",
-    telephone: subscriberData.data ? subscriberData.data.fields.telephone : "",
+    name: subscriber ? subscriber.fields.name : "",
+    surname: subscriber ? subscriber.fields.surname : "",
+    email: subscriber ? subscriber.fields.email : "",
+    status: subscriber ? subscriber.fields.status : "",
+    profession: subscriber ? subscriber.fields.profession : "",
+    salary: subscriber ? subscriber.fields.salary : "",
+    telephone: subscriber ? subscriber.fields.telephone : "",
   };
 
   useEffect(() => {
@@ -128,8 +130,8 @@ const UpdateSubscriberPage = () => {
     });
   };
 
-  const getActionsOnSubmit = async (data) => {
-    const response = await api.patch(`${endpoint}/${id}`, {
+  const updateAPISubscriber = async (data) =>
+    await api.patch(`/subscribers/${id}`, {
       fields: {
         name: data.name,
         surname: data.surname,
@@ -141,15 +143,16 @@ const UpdateSubscriberPage = () => {
       },
     });
 
-    if (response) {
-      await fetchSubscribersData();
-    }
+  const { mutateAsync } = useMutation(updateAPISubscriber);
+
+  const onFormSubmit = async (data) => {
+    handleInformationModal(data);
+    await mutateAsync(data);
   };
 
-  const onSubmit = async (data) => {
-    getActionsOnSubmit(data);
-    handleInformationModal(data);
-  };
+  if (isLoading || isFetching) {
+    return <Loader title="Getting data" />;
+  }
 
   // if (subscriberData.data?.error) {
   //   return (
@@ -161,24 +164,18 @@ const UpdateSubscriberPage = () => {
   // }
 
   return (
-    <>
-      {subscriberData.status === "loading" ? (
-        <Loader title="Getting data" />
-      ) : (
-        <StyledContainer>
-          <StyledHeading label="edit subscriber" />
-          <StyledMainContent>
-            <FormSubscriber
-              control={control}
-              errors={errors}
-              addSubscriber={handleSubmit(onSubmit)}
-              isCheckboxChecked={isCheckboxChecked}
-              labelButton="update subscriber"
-            />
-          </StyledMainContent>
-        </StyledContainer>
-      )}
-    </>
+    <StyledContainer>
+      <StyledHeading label="edit subscriber" />
+      <StyledMainContent>
+        <FormSubscriber
+          control={control}
+          errors={errors}
+          addSubscriber={handleSubmit(onFormSubmit)}
+          isCheckboxChecked={isCheckboxChecked}
+          labelButton="update subscriber"
+        />
+      </StyledMainContent>
+    </StyledContainer>
   );
 };
 
