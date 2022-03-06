@@ -2,8 +2,9 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { makeStyles } from "@material-ui/core/styles";
+import { useQuery } from "react-query";
 
-import useGetItems from "customHooks/useGetItems";
+import api from "api";
 import { Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
@@ -71,7 +72,16 @@ const StatusSubscribersPage = ({
   handleSubscriberDetails,
   removeSubscriber,
 }) => {
-  const { data: subscribers, isLoading } = useGetItems("/subscribers");
+  const { data: subscribers, isLoading } = useQuery(
+    "subscribers",
+    api.fetchItems,
+    {
+      meta: {
+        myMessage: "Cannot get subscribers list:",
+      },
+    }
+  );
+
   const { control, watch } = useForm();
   const [selectStatus, setSelectStatus] = useState("active");
 
