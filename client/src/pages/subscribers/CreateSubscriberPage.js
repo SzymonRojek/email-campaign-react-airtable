@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -19,6 +18,8 @@ const styles = {
 };
 
 const CreateSubscriberPage = () => {
+  const endpoint = "/subscribers";
+
   const {
     handleSubmit,
     watch,
@@ -61,7 +62,7 @@ const CreateSubscriberPage = () => {
 
   const confirmModalProps = {
     onConfirm: () =>
-      pathname === "/subscribers/add" ? navigate("/subscribers") : "",
+      pathname === "/subscribers/add" ? navigate(`${endpoint}`) : "",
     onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
   };
 
@@ -89,26 +90,24 @@ const CreateSubscriberPage = () => {
     });
   };
 
-  const createAPISubscriber = async (data) => {
-    await api.post("subscribers", {
-      fields: {
-        name: data.name,
-        surname: data.surname,
-        email: data.email,
-        profession: data.profession,
-        status: data.status,
-        salary: data.salary,
-        telephone: data.telephone,
-      },
-    });
-  };
+  const createAPISubscriber = async (data) =>
+    await api
+      .post(`${endpoint}`, {
+        fields: {
+          name: capitalizeFirstLetter(data.name),
+          surname: capitalizeFirstLetter(data.surname),
+          email: data.email,
+          profession: data.profession,
+          status: data.status,
+          salary: data.salary,
+          telephone: data.telephone,
+        },
+      })
+      .then((response) => {
+        setDataConfirmModal(response.fields);
+      });
 
-  const { mutateAsync } = useMutation(createAPISubscriber);
-
-  const onFormSubmit = async (data) => {
-    setDataConfirmModal(data);
-    await mutateAsync(data);
-  };
+  const { mutateAsync: createSubscriber } = useMutation(createAPISubscriber);
 
   return (
     <>
@@ -118,7 +117,7 @@ const CreateSubscriberPage = () => {
           <FormSubscriber
             control={control}
             errors={errors}
-            addSubscriber={handleSubmit(onFormSubmit)}
+            addSubscriber={handleSubmit(createSubscriber)}
             isCheckboxChecked={isCheckboxChecked}
             labelButton="add subscriber"
           />
@@ -126,10 +125,6 @@ const CreateSubscriberPage = () => {
       </StyledContainer>
     </>
   );
-};
-
-CreateSubscriberPage.propTypes = {
-  getSubscribersData: PropTypes.func,
 };
 
 export default CreateSubscriberPage;
