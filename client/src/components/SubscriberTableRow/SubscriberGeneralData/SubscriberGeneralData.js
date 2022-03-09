@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "react-query";
 import { Button } from "@mui/material";
 import { FaUserEdit } from "react-icons/fa";
 import { MdPersonRemoveAlt1 } from "react-icons/md";
@@ -9,7 +8,6 @@ import { CgDetailsMore } from "react-icons/cg";
 import { TableCell, TableRow, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import api from "api";
 import {
   isEven,
   getStatusColor,
@@ -17,7 +15,7 @@ import {
   formattedData,
 } from "helpers";
 import { useInformationModalState } from "contexts/InformationModalContext";
-import { useConfirmModalState } from "contexts/ConfirmModalContext";
+import { useRemoveItem } from "customHooks/useRemoveItem";
 
 const styles = {
   button: {
@@ -63,38 +61,19 @@ const SubscriberGeneralData = (props) => {
     handleSubscriberDetails,
   } = props;
 
+  const { handleConfirmModalData } = useRemoveItem(
+    "subscribers",
+    subscriber.fields.name,
+    subscriber.id
+  );
+
   const { setInformationModalState, setInformationModalText } =
     useInformationModalState();
-
-  const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
 
   const navigate = useNavigate();
   const classes = useStyles();
   const { pathname, key } = useLocation();
   const [indexPage] = useState(actualPage);
-
-  const queryCache = useQueryClient();
-
-  const { mutateAsync } = useMutation(
-    (id) => {
-      api.delete(`subscribers/${id}`);
-    },
-    {
-      onMutate: (id) => {
-        const previousSubscribers = queryCache.getQueryData("subscribers");
-
-        const filteredSubscribers = previousSubscribers.filter(
-          (item) => item.id !== id
-        );
-
-        queryCache.setQueryData("subscribers", filteredSubscribers);
-      },
-
-      // onError: (error, editedValue, rollback) => {
-      //   rollback();
-      // },
-    }
-  );
 
   const informationModalProps = {
     colorButton: "error",
@@ -144,29 +123,6 @@ const SubscriberGeneralData = (props) => {
         isOpenInformationModal: true,
       });
     }
-  };
-
-  const confirmModalProps = {
-    onConfirm: () => mutateAsync(subscriber.id),
-    onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
-  };
-
-  const handleConfirmModalData = () => {
-    setConfirmModalState({
-      confirmModalProps,
-      isOpenConfirmModal: true,
-    });
-    setConfirmModalText({
-      question: (
-        <>
-          Are you sure you want to remove{" "}
-          <span style={{ color: "crimson", fontWeight: "bold" }}>
-            {capitalizeFirstLetter(subscriber.fields.name)}
-          </span>
-          ?
-        </>
-      ),
-    });
   };
 
   return (
@@ -271,7 +227,7 @@ const SubscriberGeneralData = (props) => {
               color="error"
               variant="contained"
               startIcon={<MdPersonRemoveAlt1 style={styles.icon} />}
-              onClick={handleConfirmModalData}
+              onClick={() => handleConfirmModalData()}
             />
           </TableCell>
         </>
@@ -301,7 +257,6 @@ SubscriberGeneralData.propTypes = {
   dataPerPage: PropTypes.number,
   editSubscriber: PropTypes.func,
   handleSubscriberDetails: PropTypes.func,
-  removeSubscriber: PropTypes.func,
 };
 
 export default SubscriberGeneralData;
