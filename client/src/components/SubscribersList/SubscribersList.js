@@ -12,7 +12,6 @@ const SubscribersList = (props) => {
     passedData,
     editSubscriber,
     handleSubscriberDetails,
-    removeSubscriber,
   } = props;
   const [selectValue, setSelectValue] = useState(4);
 
@@ -42,7 +41,6 @@ const SubscribersList = (props) => {
                 dataPerPage={parseInt(selectValue)}
                 editSubscriber={editSubscriber}
                 handleSubscriberDetails={handleSubscriberDetails}
-                removeSubscriber={removeSubscriber}
               />
             ))}
           </BodyTable>
@@ -58,7 +56,6 @@ SubscribersList.propTypes = {
   passedData: PropTypes.arrayOf(PropTypes.object),
   handleSubscriberDetails: PropTypes.func,
   editSubscriber: PropTypes.func,
-  removeSubscriber: PropTypes.func,
 };
 
 export default SubscribersList;
