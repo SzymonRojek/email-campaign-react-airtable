@@ -7,13 +7,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import { FaRegEdit } from "react-icons/fa";
 import { MdEditOff, MdDeleteSweep } from "react-icons/md";
 
-import { useConfirmModalState } from "contexts/ConfirmModalContext";
 import {
   isEven,
   formattedData,
   getStatusColor,
   capitalizeFirstLetter,
 } from "helpers";
+import { useRemoveItem } from "customHooks/useRemoveItem";
 
 const styles = {
   typography: {
@@ -57,42 +57,16 @@ const useStyles = makeStyles(() => ({
 }));
 
 const CampaignTableRow = (props) => {
-  const {
-    campaign,
-    index,
-    actualPage,
-    dataPerPage,
-    editCampaign,
-    removeCampaign,
-  } = props;
-
-  const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
+  const { campaign, index, actualPage, dataPerPage, editCampaign } = props;
   const navigate = useNavigate();
   const classes = useStyles();
   const [indexPage] = useState(actualPage);
 
-  const confirmModalProps = {
-    onConfirm: () => removeCampaign(campaign.id, "campaigns"),
-    onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
-  };
-
-  const handleConfirmModalData = () => {
-    setConfirmModalState({
-      confirmModalProps,
-      isOpenConfirmModal: true,
-    });
-    setConfirmModalText({
-      question: (
-        <>
-          Are you sure you want to remove{" "}
-          <span style={styles.questionText}>
-            {capitalizeFirstLetter(campaign.fields.title)}
-          </span>
-          ?
-        </>
-      ),
-    });
-  };
+  const { handleConfirmModalData } = useRemoveItem(
+    "campaigns",
+    campaign.fields.title,
+    campaign.id
+  );
 
   return (
     <TableRow
@@ -217,7 +191,6 @@ CampaignTableRow.propTypes = {
   actualPage: PropTypes.number,
   dataPerPage: PropTypes.number,
   editCampaign: PropTypes.func,
-  removeCampaign: PropTypes.func,
 };
 
 export default CampaignTableRow;
