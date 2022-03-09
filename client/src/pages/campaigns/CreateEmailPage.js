@@ -46,35 +46,6 @@ const CreateEmailPage = () => {
   const [isEmailError, setEmailError] = useState(false);
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
-  const createAPIcampaign = async (data, status) =>
-    await api
-      .post("campaigns", {
-        fields: {
-          title: capitalizeFirstLetter(data.title),
-          description: capitalizeFirstLetter(data.description),
-          status,
-        },
-      })
-      .then((response) => {
-        setDataConfirmModal(response.fields, status);
-
-        if (status === "sent")
-          sendEmailJSonSuccess(
-            response.fields,
-            finalSelectedActiveSubscribers,
-            allActiveSubscribers,
-            setEmailError
-          );
-      });
-
-  const { mutateAsync: draftCampaign } = useMutation((data) =>
-    createAPIcampaign(data, "draft")
-  );
-
-  const { mutateAsync: sendCampaign } = useMutation((data) =>
-    createAPIcampaign(data, "sent")
-  );
-
   const confirmModalProps = {
     onConfirm: () => {
       if (!allActiveSubscribers.length && pathname === "/campaigns/add") {
@@ -105,8 +76,8 @@ const CreateEmailPage = () => {
             {capitalizeFirstLetter(data.title)}{" "}
           </span>
           has been{" "}
-          {status
-            ? "sent to choosen subscribers"
+          {status === "sent"
+            ? "sent and added to the list"
             : "drafted and added to the list"}
           😁
         </>
@@ -124,6 +95,35 @@ const CreateEmailPage = () => {
       ),
     });
   };
+
+  const createAPIcampaign = async (data, status) =>
+    await api
+      .post("campaigns", {
+        fields: {
+          title: capitalizeFirstLetter(data.title),
+          description: capitalizeFirstLetter(data.description),
+          status,
+        },
+      })
+      .then((response) => {
+        setDataConfirmModal(response.fields, status);
+
+        if (status === "sent")
+          sendEmailJSonSuccess(
+            response.fields,
+            finalSelectedActiveSubscribers,
+            allActiveSubscribers,
+            setEmailError
+          );
+      });
+
+  const { mutateAsync: draftCampaign } = useMutation((data) =>
+    createAPIcampaign(data, "draft")
+  );
+
+  const { mutateAsync: sendCampaign } = useMutation((data) =>
+    createAPIcampaign(data, "sent")
+  );
 
   useEffect(() => {
     if (formState.isSubmitSuccessful)
