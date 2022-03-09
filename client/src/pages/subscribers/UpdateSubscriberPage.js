@@ -14,6 +14,18 @@ import { Loader } from "components/DisplayMessage";
 import { FormSubscriber } from "components/FormSubscriber/";
 
 const UpdateSubscriberPage = () => {
+  const endpoint = "/subscribers";
+
+  const {
+    handleSubmit,
+    watch,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSubscriber),
+  });
+
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -25,16 +37,6 @@ const UpdateSubscriberPage = () => {
     meta: {
       myMessage: "Subscriber does not exist! ",
     },
-  });
-
-  const {
-    handleSubmit,
-    watch,
-    control,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(validationSubscriber),
   });
 
   const { setInformationModalState, setInformationModalText } =
@@ -95,7 +97,7 @@ const UpdateSubscriberPage = () => {
     colorButton: "success",
     onClose: () => {
       setInformationModalState({ isOpenInformationModal: false });
-      navigate("/subscribers");
+      navigate(`${endpoint}`);
     },
   };
 
@@ -130,47 +132,41 @@ const UpdateSubscriberPage = () => {
     });
   };
 
-  const updateAPISubscriber = async (data) =>
-    await api.patch(`/subscribers/${id}`, {
-      fields: {
-        name: data.name,
-        surname: data.surname,
-        email: data.email,
-        profession: data.profession,
-        status: data.status,
-        salary: data.salary,
-        telephone: data.telephone,
-      },
-    });
+  const updateAPIsubscriber = async (data) => {
+    const { name, surname, email, profession, status, salary, telephone } =
+      data;
 
-  const { mutateAsync } = useMutation(updateAPISubscriber);
-
-  const onFormSubmit = async (data) => {
-    handleInformationModal(data);
-    await mutateAsync(data);
+    await api
+      .put(`${endpoint}/${id}`, {
+        fields: {
+          name,
+          surname,
+          email,
+          profession,
+          status,
+          salary,
+          telephone,
+        },
+      })
+      .then((response) => {
+        handleInformationModal(response.fields);
+      });
   };
+
+  const { mutateAsync: updateSubscriber } = useMutation(updateAPIsubscriber);
 
   if (isLoading || isFetching) {
     return <Loader title="Getting data" />;
   }
 
-  // if (subscriberData.data?.error) {
-  //   return (
-  //     <Error
-  //       titleOne={`${subscriberData.data?.error.messageOne}`}
-  //       titleTwo={`${subscriberData.data?.error.messageTwo}`}
-  //     />
-  //   );
-  // }
-
   return (
     <StyledContainer>
-      <StyledHeading label="edit subscriber" />
+      <StyledHeading label="update subscriber" />
       <StyledMainContent>
         <FormSubscriber
           control={control}
           errors={errors}
-          addSubscriber={handleSubmit(onFormSubmit)}
+          addSubscriber={handleSubmit(updateSubscriber)}
           isCheckboxChecked={isCheckboxChecked}
           labelButton="update subscriber"
         />
