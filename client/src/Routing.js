@@ -18,13 +18,9 @@ import {
 } from "pages/campaigns";
 import { NotFoundPage } from "pages/notFoundPage";
 
-const Routing = (props) => {
-  const {
-    handleEditSubscriber,
-    handleSubscriberDetails,
-    handleRemoveItem,
-    handleEditCampaign,
-  } = props;
+const Routing = ({ ...props }) => {
+  const { handleEditSubscriber, handleSubscriberDetails, handleEditCampaign } =
+    props;
 
   const routes = [
     { path: "/", element: <HomePage /> },
@@ -39,7 +35,6 @@ const Routing = (props) => {
             <SubscribersPage
               editSubscriber={handleEditSubscriber}
               handleSubscriberDetails={handleSubscriberDetails}
-              removeSubscriber={handleRemoveItem}
             />
           ),
         },
@@ -49,7 +44,6 @@ const Routing = (props) => {
             <StatusSubscribersPage
               editSubscriber={handleEditSubscriber}
               handleSubscriberDetails={handleSubscriberDetails}
-              removeSubscriber={handleRemoveItem}
             />
           ),
         },
@@ -75,21 +69,11 @@ const Routing = (props) => {
       children: [
         {
           path: "/",
-          element: (
-            <EmailsPage
-              editCampaign={handleEditCampaign}
-              removeCampaign={handleRemoveItem}
-            />
-          ),
+          element: <EmailsPage editCampaign={handleEditCampaign} />,
         },
         {
           path: "status",
-          element: (
-            <StatusEmailsPage
-              editCampaign={handleEditCampaign}
-              removeCampaign={handleRemoveItem}
-            />
-          ),
+          element: <StatusEmailsPage editCampaign={handleEditCampaign} />,
         },
         {
           path: "add",
