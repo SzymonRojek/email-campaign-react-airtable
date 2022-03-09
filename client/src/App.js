@@ -1,18 +1,11 @@
-import { AppContainer } from "./AppContainer";
-import { APIcontextProvider } from "contexts/APIcontextProvider";
-import Modals from "./Modals";
-import {
-  QueryClient,
-  QueryCache,
-  QueryClientProvider,
-  ReactQueryDevtools,
-} from "react-query";
+import { QueryClient, QueryCache, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+import toast, { Toaster } from "react-hot-toast";
 
-import { useInformationModalState } from "contexts/InformationModalContext";
+import { AppContainer } from "./AppContainer";
+import { useInformationModalState } from "./contexts/InformationModalContext";
 
 const App = () => {
-  const queryClient = new QueryClient();
-
   // const { setInformationModalState, setInformationModalText } =
   //   useInformationModalState();
 
@@ -27,7 +20,7 @@ const App = () => {
   //   setInformationModalText({
   //     title: "ERROR",
   //     additionalText: "Check your internet connection",
-  //     message: `${error.message}`,
+  //     message: `${error}`,
   //   });
   //   setInformationModalState({
   //     informationModalProps,
@@ -35,27 +28,25 @@ const App = () => {
   //   });
   // };
 
-  // {
-  //   queryCache: new QueryCache({
-  //     onError: (error, query) => {
-  //       // if (query.state.data === undefined) {
-  //       setErrorModal(error);
-  //       // console.log(query);
-  //       // }
-  //     },
-  //   }
-  // }
+  const queryClient = new QueryClient({
+    queryCache: new QueryCache({
+      onError: (error, query) => {
+        if (query.state.data === undefined) {
+          // setErrorModal(error.message);
+          toast.error(`${query.meta?.myMessage} ${error.message}`);
+        }
+      },
+    }),
+  });
 
   return (
     <div className="page-container">
-      <Modals>
-        <QueryClientProvider client={queryClient}>
-          <APIcontextProvider>
-            <AppContainer />
-          </APIcontextProvider>
-          <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
-        </QueryClientProvider>
-      </Modals>
+      <QueryClientProvider client={queryClient}>
+        <AppContainer />
+
+        <Toaster position="top-center" />
+        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+      </QueryClientProvider>
     </div>
   );
 };
