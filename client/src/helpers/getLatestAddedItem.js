@@ -1,5 +1,5 @@
 const getLatestAddedItem = (data) => {
-  if (!data) return;
+  if (!data) return [];
 
   return [...data]
     .sort((a, b) => (a.createdTime > b.createdTime ? 1 : -1))

@@ -1,17 +1,20 @@
 import { useParams } from "react-router-dom";
+import { useQuery } from "react-query";
 
-import { useFetchDetailsById } from "customHooks/useFetchDetailsById";
-import { detailsDataHeadTableFirst } from "data/dataHeadTable";
+import api from "api";
+import {
+  detailsDataHeadTableFirst,
+  detailsDataHeadTableSecond,
+} from "data/dataHeadTable";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { ContainerTable, HeadTable } from "components/Table";
-import { Loader, Error } from "components/DisplayMessage";
+import { Loader } from "components/DisplayMessage";
 import SubscribersList from "components/SubscribersList/SubscribersList";
 import { SubscriberDetailsData } from "components/SubscriberTableRow/SubscriberDetailsData";
 import { BodyTable } from "components/Table";
 import CustomPaginator from "components/PaginationPackage/CustomPaginator";
-import { detailsDataHeadTableSecond } from "data/dataHeadTable";
 
 const styles = {
   container: {
@@ -21,62 +24,64 @@ const styles = {
 
 const DetailsSubscriberPage = () => {
   const { id } = useParams();
-  const endpoint = `/subscribers`;
+  const {
+    data: subscriber,
+    isLoading,
+    isFetching,
+    isError,
+    error,
+  } = useQuery(["subscribers", { id }], api.fetchDetailsItemById, {
+    meta: {
+      myMessage: "Subscriber does not exist! ",
+    },
+  });
 
-  const { itemData: subscriberData } = useFetchDetailsById(endpoint, id);
+  if (isLoading || isFetching) {
+    return <Loader title="Details" />;
+  }
 
-  if (subscriberData.data?.error) {
+  if (isError) {
     return (
-      <Error
-        titleOne={`${subscriberData.data?.error.messageOne}`}
-        titleTwo={`${subscriberData.data?.error.messageTwo}`}
-      />
+      <div
+        style={{
+          marginTop: 200,
+          color: "white",
+          fontSize: 25,
+          width: "100%",
+          textAlign: "center",
+        }}
+      >
+        <p>Subscriber does not exist!</p>
+        <p>{error.message}</p>
+      </div>
     );
   }
 
   return (
-    <>
-      {subscriberData && subscriberData.status === "loading" ? (
-        <Loader title="Details" />
-      ) : (
-        subscriberData.status === "success" && (
-          <StyledContainer>
-            <StyledHeading label="Subscriber Details" />
-            <StyledMainContent>
-              <SubscribersList
-                subHeading="general"
-                dataHeadTable={detailsDataHeadTableFirst}
-                passedData={[subscriberData.data]}
-              />
+    <StyledContainer>
+      <StyledHeading label="Subscriber Details" />
+      <StyledMainContent>
+        <SubscribersList
+          subHeading="general"
+          dataHeadTable={detailsDataHeadTableFirst}
+          passedData={[subscriber]}
+        />
+        <div style={styles.container}>
+          <CustomPaginator
+            passedData={[subscriber]}
+            renderData={() => (
+              <ContainerTable subHeading="details" passedData={[subscriber]}>
+                <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
 
-              <div style={styles.container}>
-                <CustomPaginator
-                  passedData={[subscriberData.data]}
-                  renderData={() => (
-                    <ContainerTable
-                      subHeading="details"
-                      passedData={[subscriberData.data]}
-                    >
-                      <HeadTable dataHeadTable={detailsDataHeadTableSecond} />
-
-                      <BodyTable>
-                        {[subscriberData.data].map((subscriber, index) => (
-                          <SubscriberDetailsData
-                            key={`id-${subscriber.id}`}
-                            subscriber={subscriber}
-                            index={index}
-                          />
-                        ))}
-                      </BodyTable>
-                    </ContainerTable>
-                  )}
-                />
-              </div>
-            </StyledMainContent>
-          </StyledContainer>
-        )
-      )}
-    </>
+                <BodyTable>
+                  <SubscriberDetailsData subscriber={subscriber} />
+                </BodyTable>
+              </ContainerTable>
+            )}
+          />
+        </div>
+      </StyledMainContent>
+    </StyledContainer>
   );
 };
 

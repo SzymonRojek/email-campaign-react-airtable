@@ -1,13 +1,11 @@
-import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useParams } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router";
+import { useMutation, useQuery } from "react-query";
 
 import api from "api";
-import { useAPIcontext } from "contexts/APIcontextProvider";
-import { useFetchDetailsById } from "customHooks/useFetchDetailsById";
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 import { capitalizeFirstLetter, validationCampaign } from "helpers";
@@ -15,19 +13,16 @@ import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { FormCampaign } from "components/FormCampaign";
 import { StyledHeading } from "components/StyledHeading";
-import { Loader, Error } from "components/DisplayMessage";
-import { sendEmail } from "sendEmail";
+import { Loader } from "components/DisplayMessage";
+import { sendEmailJSonSuccess } from "sendEmail";
 
 const styles = {
+  title: { color: "green", fontWeight: "bold" },
   questionSpan: { color: "crimson", fontWeight: "bold" },
   campaignName: { color: "green", fontWeight: "bold" },
 };
 
 const UpdateEmailsPage = () => {
-  const { subscribersData, fetchCampaignsData } = useAPIcontext();
-  const { finalSelectedActiveSubscribers } = useGlobalStoreContext();
-  const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
-
   const {
     handleSubmit,
     formState: { errors },
@@ -37,19 +32,30 @@ const UpdateEmailsPage = () => {
     resolver: yupResolver(validationCampaign),
   });
 
-  const [isEmailError, setEmailError] = useState(false);
   const { id } = useParams();
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const endpoint = "campaigns";
-  const { itemData: campaignData } = useFetchDetailsById(endpoint, id);
+  const [isEmailError, setEmailError] = useState(false);
+
+  const { data: subscribers } = useQuery("subscribers", api.fetchItems);
+
+  const {
+    data: campaign,
+    isLoading,
+    isFetching,
+  } = useQuery(["campaigns", { id }], api.fetchDetailsItemById, {
+    meta: {
+      myMessage: "Campaign does not exist! ",
+    },
+  });
+
+  const { finalSelectedActiveSubscribers } = useGlobalStoreContext();
+  const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
 
   const defaultValues = {
-    title: campaignData.data?.fields ? campaignData.data.fields.title : "",
-    description: campaignData.data?.fields
-      ? campaignData.data.fields.description
-      : "",
+    title: campaign ? campaign.fields.title : "",
+    description: campaign ? campaign.fields.description : "",
   };
 
   useEffect(() => {
@@ -66,14 +72,8 @@ const UpdateEmailsPage = () => {
     data.description !== defaultValues.description;
 
   const allActiveSubscribers =
-    subscribersData.data &&
-    subscribersData.data.filter(
-      (subscriber) => subscriber.fields.status === "active"
-    );
-
-  const styledCampaignTitle = (data) => (
-    <span style={styles.title}>{capitalizeFirstLetter(data.title)}</span>
-  );
+    subscribers &&
+    subscribers.filter(({ fields: { status } }) => status === "active");
 
   const confirmModalProps = {
     onConfirm: () => {
@@ -90,6 +90,10 @@ const UpdateEmailsPage = () => {
   };
 
   const setDataConfirmModal = (data, status) => {
+    const styledTitle = (
+      <span style={styles.title}>{capitalizeFirstLetter(data.title)}</span>
+    );
+
     setConfirmModalState({
       confirmModalProps,
       isOpenConfirmModal: true,
@@ -99,32 +103,19 @@ const UpdateEmailsPage = () => {
         ? "No active Subscribers!"
         : "",
       message:
-        isCampaignChanged(data) && status ? (
+        isCampaignChanged(data) && status === "sent" ? (
+          <> Email {styledTitle} has been changed and finally sent 👋</>
+        ) : !isCampaignChanged(data) && status === "draft" ? (
           <>
-            {" "}
-            Email {styledCampaignTitle(data)} has been changed and finally sent
-            👋
+            Email {styledTitle} has not been changed and status still is draft
+            😕
           </>
-        ) : !isCampaignChanged(data) && !status ? (
-          <>
-            Email {styledCampaignTitle(data)} has not been changed and status
-            still is draft 😕
-          </>
-        ) : !isCampaignChanged(data) && status ? (
-          <>
-            Email {styledCampaignTitle(data)} has not been changed but finally
-            sent 👋
-          </>
-        ) : isCampaignChanged(data) && !status ? (
-          <>
-            Email {styledCampaignTitle(data)} has been changed and status still
-            is draft 😕
-          </>
+        ) : !isCampaignChanged(data) && status === "sent" ? (
+          <>Email {styledTitle} has not been changed but finally sent 👋</>
+        ) : isCampaignChanged(data) && status === "draft" ? (
+          <>Email {styledTitle} has been changed and status still is draft 😕</>
         ) : (
-          <>
-            Email {styledCampaignTitle(data)} has not been changed but finally
-            sent 👋
-          </>
+          <>Email {styledTitle} has not been changed but finally sent 👋</>
         ),
       question: !allActiveSubscribers.length ? (
         <>
@@ -140,125 +131,63 @@ const UpdateEmailsPage = () => {
     });
   };
 
-  const getActionsOnSubmit = async (data, status) => {
-    const response = await api.patch(`${endpoint}/${id}`, {
-      fields: {
-        title: data.title,
-        description: data.description,
-        status: status,
-      },
-    });
+  const updateAPIcampaign = async (data, status) => {
+    const { title, description } = data;
 
-    if (response) {
-      await fetchCampaignsData();
-    }
-  };
+    await api
+      .put(`/campaigns/${id}`, {
+        fields: {
+          title,
+          description,
+          status,
+        },
+      })
+      .then((response) => {
+        setDataConfirmModal(response.fields, status);
 
-  const handleDraftCampaign = (data) => {
-    getActionsOnSubmit(data, "draft");
-    setDataConfirmModal(data, false);
-  };
-
-  const handleSendCampaign = (data) => {
-    if (finalSelectedActiveSubscribers.length) {
-      finalSelectedActiveSubscribers.map(({ fields: { name, email } }) =>
-        sendEmail(
-          {
-            name,
-            email,
-            title: data.title,
-            description: data.description,
-          },
-          setEmailError
-        )
-      );
-    } else {
-      allActiveSubscribers.forEach((subscriber) => {
-        const paramsScheme = {
-          name: subscriber.fields.name,
-          email: subscriber.fields.email,
-          title: data.title,
-          description: data.description,
-        };
-
-        sendEmail(paramsScheme, setEmailError);
+        if (status === "sent")
+          sendEmailJSonSuccess(
+            response.fields,
+            finalSelectedActiveSubscribers,
+            allActiveSubscribers,
+            setEmailError
+          );
       });
-    }
-
-    if (!isEmailError && allActiveSubscribers.length > 0) {
-      getActionsOnSubmit(data, "sent");
-      setDataConfirmModal(data, true);
-    } else {
-      getActionsOnSubmit(data, "draft");
-      setDataConfirmModal(data, false);
-    }
   };
 
-  // if (campaignData.data?.error) {
-  //   return (
-  //     <Error
-  //       titleOne={`${campaignData.data?.error.messageOne}`}
-  //       titleTwo={`${campaignData.data?.error.messageTwo}`}
-  //     />
-  //   );
-  // }
+  const { mutateAsync: draftCampaign } = useMutation((data) =>
+    updateAPIcampaign(data, "draft")
+  );
+
+  const { mutateAsync: sendCampaign } = useMutation((data) =>
+    updateAPIcampaign(data, "sent")
+  );
+
+  if (isLoading || isFetching) {
+    return <Loader title="Get details" />;
+  }
 
   return (
-    <>
-      {isEmailError ? (
-        <Error
-          titleOne="Unfortunately, Email has not been sent"
-          titleTwo="Probably there is a problem with EmailJS application at the moment..."
-          titleThree="That's why Email has been drafted"
+    <StyledContainer>
+      <StyledHeading label="update email" />
+      <StyledMainContent>
+        <FormCampaign
+          control={control}
+          errors={errors}
+          handleDraftData={handleSubmit(draftCampaign)}
+          handleSendData={handleSubmit(sendCampaign)}
+          disabledCheckbox={
+            subscribers && !allActiveSubscribers.length ? true : false
+          }
+          labelCheckbox={
+            subscribers
+              ? `select from active subscribers (${allActiveSubscribers.length})`
+              : "no active subscribers"
+          }
         />
-      ) : campaignData.status === "loading" ? (
-        <Loader title="Details" />
-      ) : (
-        campaignData.status === "success" && (
-          <StyledContainer>
-            <StyledHeading label="edit email" />
-            <StyledMainContent>
-              <FormCampaign
-                control={control}
-                errors={errors}
-                handleSubmit={handleSubmit}
-                handleDraftData={handleSubmit(handleDraftCampaign)}
-                handleSendData={handleSubmit(handleSendCampaign)}
-                disabledCheckbox={!allActiveSubscribers.length ? true : false}
-                labelCheckbox={
-                  !allActiveSubscribers.length
-                    ? "no active subscribers"
-                    : `select from active subscribers (${allActiveSubscribers.length})`
-                }
-              />
-            </StyledMainContent>
-          </StyledContainer>
-        )
-      )}
-    </>
+      </StyledMainContent>
+    </StyledContainer>
   );
-};
-
-UpdateEmailsPage.propTypes = {
-  subscribersData: PropTypes.shape({
-    status: PropTypes.string,
-    data: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string,
-        createdTime: PropTypes.string,
-        fields: PropTypes.shape({
-          status: PropTypes.string,
-          name: PropTypes.string,
-          surname: PropTypes.string,
-          profession: PropTypes.string,
-          email: PropTypes.string,
-          salary: PropTypes.string,
-          telephone: PropTypes.string,
-        }),
-      })
-    ),
-  }),
-  getCampaignsData: PropTypes.func,
 };
 
 export default UpdateEmailsPage;

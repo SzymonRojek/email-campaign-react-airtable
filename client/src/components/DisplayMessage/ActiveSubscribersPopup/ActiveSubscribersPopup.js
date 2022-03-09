@@ -12,8 +12,9 @@ import {
 import { Button } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { useAPIcontext } from "contexts/APIcontextProvider";
+import api from "api";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
+import { useQuery } from "react-query";
 
 const styles = {
   dialogContent: {
@@ -72,17 +73,22 @@ const ActiveSubscribersPopup = ({
   closeListActiveSusbcribers,
 }) => {
   const classes = useStyles();
-  const { subscribersData } = useAPIcontext();
+
+  const { data: subscribers } = useQuery("subscribers", api.fetchItems, {
+    meta: {
+      myMessage: "Cannot get subscribers list:",
+    },
+  });
   const { setFinalSelectedActiveSubscribers } = useGlobalStoreContext();
 
   const filteredActiveSubscribers = useMemo(
     () =>
-      subscribersData
-        ? subscribersData.data.filter(
+      subscribers
+        ? subscribers.filter(
             (subscriber) => subscriber.fields.status === "active"
           )
         : [],
-    [subscribersData]
+    [subscribers]
   );
 
   const [checked, setChecked] = useState([false]);

@@ -15,7 +15,7 @@ import {
   formattedData,
 } from "helpers";
 import { useInformationModalState } from "contexts/InformationModalContext";
-import { useConfirmModalState } from "contexts/ConfirmModalContext";
+import { useRemoveItem } from "customHooks/useRemoveItem";
 
 const styles = {
   button: {
@@ -59,13 +59,16 @@ const SubscriberGeneralData = (props) => {
     dataPerPage,
     editSubscriber,
     handleSubscriberDetails,
-    removeSubscriber,
   } = props;
+
+  const { handleConfirmModalData } = useRemoveItem(
+    "subscribers",
+    subscriber.fields.name,
+    subscriber.id
+  );
 
   const { setInformationModalState, setInformationModalText } =
     useInformationModalState();
-
-  const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
 
   const navigate = useNavigate();
   const classes = useStyles();
@@ -120,29 +123,6 @@ const SubscriberGeneralData = (props) => {
         isOpenInformationModal: true,
       });
     }
-  };
-
-  const confirmModalProps = {
-    onConfirm: () => removeSubscriber(subscriber.id, "subscribers"),
-    onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
-  };
-
-  const handleConfirmModalData = () => {
-    setConfirmModalState({
-      confirmModalProps,
-      isOpenConfirmModal: true,
-    });
-    setConfirmModalText({
-      question: (
-        <>
-          Are you sure you want to remove{" "}
-          <span style={{ color: "crimson", fontWeight: "bold" }}>
-            {capitalizeFirstLetter(subscriber.fields.name)}
-          </span>
-          ?
-        </>
-      ),
-    });
   };
 
   return (
@@ -277,7 +257,6 @@ SubscriberGeneralData.propTypes = {
   dataPerPage: PropTypes.number,
   editSubscriber: PropTypes.func,
   handleSubscriberDetails: PropTypes.func,
-  removeSubscriber: PropTypes.func,
 };
 
 export default SubscriberGeneralData;

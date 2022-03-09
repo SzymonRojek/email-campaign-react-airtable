@@ -1,39 +1,15 @@
 import { useNavigate } from "react-router-dom";
 
 import "App.css";
-import api from "api";
-import { useAPIcontext } from "contexts/APIcontextProvider";
 import Routing from "./Routing";
+import { MainNavigation } from "components/Navigation";
+import { Login } from "./Login";
+import { StyledFooter } from "components/StyledFooter";
+import { GlobalStoreContextProvider } from "contexts/GlobalStoreContextProvider";
+import Modals from "./Modals";
 
-const AppContainer = () => {
+export const AppContainer = () => {
   const navigate = useNavigate();
-
-  const {
-    subscribersData,
-    setSubscribersData,
-    campaignsData,
-    setCampaignsData,
-  } = useAPIcontext();
-
-  const handleRemoveItem = (id, endpoint) => {
-    api.delete(`/${endpoint}/${id}`);
-
-    const filteredGroup = (group) => group.filter((item) => item.id !== id);
-
-    if (endpoint === "subscribers") {
-      setSubscribersData({
-        status: "success",
-        data: filteredGroup(subscribersData.data),
-      });
-    }
-
-    if (endpoint === "campaigns") {
-      setCampaignsData({
-        status: "success",
-        data: filteredGroup(campaignsData.data),
-      });
-    }
-  };
 
   const handleSubscriberDetails = (subscriber) => {
     if (subscriber.fields.status === "active")
@@ -50,13 +26,20 @@ const AppContainer = () => {
   };
 
   return (
-    <Routing
-      handleEditSubscriber={handleEditSubscriber}
-      handleSubscriberDetails={handleSubscriberDetails}
-      handleEditCampaign={handleEditCampaign}
-      handleRemoveItem={handleRemoveItem}
-    />
+    <Modals>
+      <GlobalStoreContextProvider>
+        <MainNavigation />
+
+        <Login>
+          <Routing
+            handleEditSubscriber={handleEditSubscriber}
+            handleSubscriberDetails={handleSubscriberDetails}
+            handleEditCampaign={handleEditCampaign}
+          />
+        </Login>
+
+        <StyledFooter label="Coded By Szymon Rojek © 2022" />
+      </GlobalStoreContextProvider>
+    </Modals>
   );
 };
-
-export default AppContainer;

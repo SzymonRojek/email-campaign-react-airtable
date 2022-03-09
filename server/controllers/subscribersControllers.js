@@ -1,8 +1,8 @@
 const { axiosInstance } = require("./axiosInstance");
 
-const endpoint = "/campaigns";
+const endpoint = "/subscribers";
 
-exports.getAllCampaigns = async (req, res) => {
+exports.getAllSubscribers = async (req, res) => {
   try {
     const { data } = await axiosInstance.get(`${endpoint}`);
 
@@ -12,7 +12,7 @@ exports.getAllCampaigns = async (req, res) => {
   }
 };
 
-exports.getCampaign = async (req, res) => {
+exports.getSubscriber = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -23,19 +23,19 @@ exports.getCampaign = async (req, res) => {
     res.status(404).json({
       status: "fail",
       error: {
-        messageOne: "Campaign does not exist",
-        messageTwo:
-          "Please you have to write a proper url or check an internet connection",
+        message:
+          "Subscriber does not exist. Please write a proper url or check an internet connection",
       },
     });
   }
 };
 
-exports.createCampaign = async (req, res) => {
-  const { title, description, status } = req.body.fields;
+exports.createSubscriber = async (req, res) => {
+  const { name, surname, email, status, profession, salary, telephone } =
+    req.body.fields;
 
   const createdData = {
-    fields: { title, description, status },
+    fields: { name, surname, email, status, profession, salary, telephone },
   };
 
   try {
@@ -43,16 +43,22 @@ exports.createCampaign = async (req, res) => {
 
     res.status(200).json(data);
   } catch (error) {
-    res.status(400).json({ status: "fail", error });
+    res.status(400).json({
+      status: "fail",
+      error,
+    });
   }
 };
 
-exports.updateCampaign = async (req, res) => {
-  const { title, description, status } = req.body.fields;
+exports.updateSubscriber = async (req, res) => {
+  const { name, surname, email, status, profession, salary, telephone } =
+    req.body.fields;
 
   const { id } = req.params;
 
-  const updatedData = { fields: { title, description, status } };
+  const updatedData = {
+    fields: { name, surname, email, status, profession, salary, telephone },
+  };
 
   try {
     const { data } = await axiosInstance.put(`${endpoint}/${id}`, updatedData);
@@ -62,15 +68,14 @@ exports.updateCampaign = async (req, res) => {
     res.status(404).json({
       status: "fail",
       error: {
-        messageOne: "Campaign does not exist",
-        messageTwo:
-          "Please you have to write a proper url or check an internet connection",
+        message:
+          "Subscriber does not exist. Please write a proper url or check an internet connection",
       },
     });
   }
 };
 
-exports.deleteCampaign = async (req, res) => {
+exports.deleteSubscriber = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -81,9 +86,8 @@ exports.deleteCampaign = async (req, res) => {
     res.json({
       status: "fail",
       error: {
-        messageOne: "Campaign does not exist",
-        messageTwo:
-          "Please you have to write a proper url or check an internet connection",
+        message:
+          "Subscriber does not exist. Please write a proper url or check an internet connection",
       },
     });
   }

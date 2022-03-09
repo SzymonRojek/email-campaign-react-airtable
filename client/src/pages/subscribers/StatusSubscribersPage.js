@@ -2,8 +2,9 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { makeStyles } from "@material-ui/core/styles";
+import { useQuery } from "react-query";
 
-import { useAPIcontext } from "contexts/APIcontextProvider";
+import api from "api";
 import { Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
@@ -66,12 +67,17 @@ const selectSubscribersStatus = [
   { value: "blocked", label: "blocked" },
 ];
 
-const StatusSubscribersPage = ({
-  editSubscriber,
-  handleSubscriberDetails,
-  removeSubscriber,
-}) => {
-  const { subscribersData } = useAPIcontext();
+const StatusSubscribersPage = ({ editSubscriber, handleSubscriberDetails }) => {
+  const { data: subscribers, isLoading } = useQuery(
+    "subscribers",
+    api.fetchItems,
+    {
+      meta: {
+        myMessage: "Cannot get subscribers list:",
+      },
+    }
+  );
+
   const { control, watch } = useForm();
   const [selectStatus, setSelectStatus] = useState("active");
 
@@ -104,57 +110,35 @@ const StatusSubscribersPage = ({
     return () => watchStatus.unsubscribe();
   }, [watch]);
 
+  if (isLoading) {
+    <Loader title="Status" />;
+  }
+
   return (
-    <>
-      {subscribersData.status === "loading" ? (
-        <Loader title="Status" />
-      ) : (
-        <StyledContainer>
-          <StyledHeading label="subscribers status" />
-          <StyledMainContent>
-            {subscribersData.data && !subscribersData.data.length ? (
-              "List of subscribers is empty - please add a subscriber"
-            ) : (
-              <SubscriberStatus
-                subHeading="list"
-                generalDataHeadTable={statusDataHeadTable}
-                passedData={subscribersData.data}
-                status={selectStatus}
-                setSelectStatus={setSelectStatus}
-                editSubscriber={editSubscriber}
-                handleSubscriberDetails={handleSubscriberDetails}
-                removeSubscriber={removeSubscriber}
-              />
-            )}
-          </StyledMainContent>
-        </StyledContainer>
-      )}
-    </>
+    <StyledContainer>
+      <StyledHeading label="subscribers status" />
+      <StyledMainContent>
+        {subscribers && !subscribers.length ? (
+          "List of subscribers is empty - please add a subscriber"
+        ) : (
+          <SubscriberStatus
+            subHeading="list"
+            generalDataHeadTable={statusDataHeadTable}
+            passedData={subscribers}
+            status={selectStatus}
+            setSelectStatus={setSelectStatus}
+            editSubscriber={editSubscriber}
+            handleSubscriberDetails={handleSubscriberDetails}
+          />
+        )}
+      </StyledMainContent>
+    </StyledContainer>
   );
 };
 
 StatusSubscribersPage.propTypes = {
-  subscribersData: PropTypes.shape({
-    status: PropTypes.string,
-    data: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string,
-        createdTime: PropTypes.string,
-        fields: PropTypes.shape({
-          status: PropTypes.string,
-          name: PropTypes.string,
-          surname: PropTypes.string,
-          profession: PropTypes.string,
-          email: PropTypes.string,
-          salary: PropTypes.string,
-          telephone: PropTypes.string,
-        }),
-      })
-    ),
-  }),
   editSubscriber: PropTypes.func,
   handleSubscriberDetails: PropTypes.func,
-  removeSubscriber: PropTypes.func,
 };
 
 export default StatusSubscribersPage;

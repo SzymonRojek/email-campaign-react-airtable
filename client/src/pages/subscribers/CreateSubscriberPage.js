@@ -1,18 +1,16 @@
-import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useMutation } from "react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import api from "api";
-import { useAPIcontext } from "contexts/APIcontextProvider";
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
 import { capitalizeFirstLetter, validationSubscriber } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { FormSubscriber } from "components/FormSubscriber/";
-import { Loader, Error } from "components/DisplayMessage";
 
 const styles = {
   subscriberName: { color: "green" },
@@ -20,7 +18,7 @@ const styles = {
 };
 
 const CreateSubscriberPage = () => {
-  const { subscribersData, fetchSubscribersData } = useAPIcontext();
+  const endpoint = "/subscribers";
 
   const {
     handleSubmit,
@@ -64,7 +62,7 @@ const CreateSubscriberPage = () => {
 
   const confirmModalProps = {
     onConfirm: () =>
-      pathname === "/subscribers/add" ? navigate("/subscribers") : "",
+      pathname === "/subscribers/add" ? navigate(`${endpoint}`) : "",
     onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
   };
 
@@ -92,59 +90,41 @@ const CreateSubscriberPage = () => {
     });
   };
 
-  const getActionsOnSubmit = async (data) => {
-    const response = await api.post("subscribers", {
-      fields: {
-        name: data.name,
-        surname: data.surname,
-        email: data.email,
-        profession: data.profession,
-        status: data.status,
-        salary: data.salary,
-        telephone: data.telephone,
-      },
-    });
+  const createAPISubscriber = async (data) =>
+    await api
+      .post(`${endpoint}`, {
+        fields: {
+          name: capitalizeFirstLetter(data.name),
+          surname: capitalizeFirstLetter(data.surname),
+          email: data.email,
+          profession: data.profession,
+          status: data.status,
+          salary: data.salary,
+          telephone: data.telephone,
+        },
+      })
+      .then((response) => {
+        setDataConfirmModal(response.fields);
+      });
 
-    if (response) {
-      fetchSubscribersData();
-    }
-  };
-
-  const onSubmit = (data) => {
-    getActionsOnSubmit(data);
-    setDataConfirmModal(data);
-  };
+  const { mutateAsync: createSubscriber } = useMutation(createAPISubscriber);
 
   return (
     <>
-      {subscribersData.status === "loading" ? (
-        <Loader title="Add New" />
-      ) : subscribersData.status === "error" ? (
-        <Error
-          titleOne="ERROR MESSAGE"
-          titleTwo="Probably there is no an access to the internet."
-          titleThree="Contact with your internet provider."
-        />
-      ) : (
-        <StyledContainer>
-          <StyledHeading label="new subscriber" />
-          <StyledMainContent>
-            <FormSubscriber
-              control={control}
-              errors={errors}
-              addSubscriber={handleSubmit(onSubmit)}
-              isCheckboxChecked={isCheckboxChecked}
-              labelButton="add subscriber"
-            />
-          </StyledMainContent>
-        </StyledContainer>
-      )}
+      <StyledContainer>
+        <StyledHeading label="new subscriber" />
+        <StyledMainContent>
+          <FormSubscriber
+            control={control}
+            errors={errors}
+            addSubscriber={handleSubmit(createSubscriber)}
+            isCheckboxChecked={isCheckboxChecked}
+            labelButton="add subscriber"
+          />
+        </StyledMainContent>
+      </StyledContainer>
     </>
   );
-};
-
-CreateSubscriberPage.propTypes = {
-  getSubscribersData: PropTypes.func,
 };
 
 export default CreateSubscriberPage;
