@@ -2,17 +2,15 @@
 
 Actually I am working on:
 
-- definitely work with handling errors: I am thinking about global handler error (I do not want to use error popup in every app page like right now so I want to change it), maybe I will create an error react context, base on message from the json proxy but in this case I have to get to know better an express.js
-- error popup layout
-- remove errors from dev tools console
+- handling errors
 
 Check demo on Herokuapp: [demo](https://create-email-campaign.herokuapp.com/)
 
 # Technologies used:
 
-- React.js: useForm hook, custom hooks, router v6, createContext, useContext.
-- [Airtable data base](https://airtable.com/)
-- REST API
+- React.js: useForm hook, custom hooks, router v6, createContext, useContext
+- [Airtable data base](https://airtable.com/) - REST API
+- React Query
 - Postman: testing endpoints
 - Express.js - Proxy (hide api_key, id_base), env variables
 - [Email.js](https://www.emailjs.com/)
