@@ -6,7 +6,8 @@ import { Paper, Grid, Typography } from "@material-ui/core";
 
 import { useStyles, styles } from "./styles";
 import { TextInputController } from "components/Inputs";
-import ActiveSubscribersPopup from "../DisplayMessage/ActiveSubscribersPopup/ActiveSubscribersPopup";
+import { ActiveSubscribersPopup } from "../DisplayMessage";
+import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 
 const FormCampaign = ({ ...props }) => {
   const {
@@ -18,11 +19,12 @@ const FormCampaign = ({ ...props }) => {
     labelCheckbox,
   } = props;
 
-  const [isChecked, setIsChecked] = useState(false);
-
   const classes = useStyles();
 
-  const handleIsChecked = () => setIsChecked(!isChecked);
+  const [isListChecked, setIsListChecked] = useState(false);
+  const { finalSelectedActiveSubscribers } = useGlobalStoreContext();
+
+  const handleActiveSubscribersList = () => setIsListChecked(!isListChecked);
 
   return (
     <>
@@ -60,6 +62,15 @@ const FormCampaign = ({ ...props }) => {
                 message={errors.description?.message ?? ""}
               />
             </Grid>
+            <Grid item xs={12}>
+              <Typography
+                color="textSecondary"
+                variant="body2"
+                className={classes.label}
+              >
+                All active subscribers checked by default
+              </Typography>
+            </Grid>
             <Grid item>
               <FormControlLabel
                 sx={styles.label}
@@ -70,8 +81,8 @@ const FormCampaign = ({ ...props }) => {
                     render={() => (
                       <Checkbox
                         defaultValue={false}
-                        checked={isChecked}
-                        onChange={handleIsChecked}
+                        checked={isListChecked}
+                        onChange={handleActiveSubscribersList}
                         sx={styles.checkbox}
                         disabled={disabledCheckbox}
                       />
@@ -107,6 +118,9 @@ const FormCampaign = ({ ...props }) => {
                   color="success"
                   onClick={handleSendData}
                   className={classes.sendButton}
+                  disabled={
+                    !finalSelectedActiveSubscribers.length ? true : false
+                  }
                 >
                   send email
                 </Button>
@@ -116,8 +130,8 @@ const FormCampaign = ({ ...props }) => {
         </form>
       </Paper>
       <ActiveSubscribersPopup
-        openListActiveSubscribers={isChecked}
-        closeListActiveSusbcribers={setIsChecked}
+        openListActiveSubscribers={isListChecked}
+        closeListActiveSusbcribers={setIsListChecked}
       />
     </>
   );
