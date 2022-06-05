@@ -1,72 +1,20 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Typography } from "@material-ui/core";
+import { useQuery } from "react-query";
 import {
   Dialog,
   DialogTitle,
   DialogContent,
+  Typography,
   Checkbox,
-  checkboxClasses,
   FormControlLabel,
   Grid,
 } from "@mui/material";
 import { Button } from "@mui/material";
-import { makeStyles } from "@material-ui/core/styles";
+
+import { useStyles, styles } from "./styles";
 
 import api from "api";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
-import { useQuery } from "react-query";
-
-const styles = {
-  dialogContent: {
-    display: "flex",
-    justifyContent: "space-around",
-    padding: 20,
-  },
-  checkbox: {
-    [`&, &.${checkboxClasses.checked}`]: {
-      transform: "scale(1.1)",
-      color: "orange",
-    },
-  },
-};
-
-const useStyles = makeStyles((theme) => ({
-  heading: {
-    fontSize: 20,
-    fontWeight: 600,
-    textTransform: "uppercase",
-    color: "green",
-  },
-  textInformation: {
-    fontSize: 16,
-  },
-  mainButton: {
-    "&.MuiButton-root": {
-      marginBottom: 20,
-      padding: "8px",
-      minWidth: 180,
-      fontSize: 16,
-      fontWeight: "bold",
-      letterSpacing: 1,
-    },
-  },
-  smallButton: {
-    "&.MuiButton-root": { fontWeight: "bold", fontSize: 16 },
-  },
-  [theme.breakpoints.up("sm")]: {
-    heading: { fontSize: 30 },
-    textInformation: {
-      fontSize: 20,
-    },
-    mainButton: {
-      "&.MuiButton-root": {
-        marginBottom: 40,
-        padding: 15,
-        fontSize: 18,
-      },
-    },
-  },
-}));
 
 const ActiveSubscribersPopup = ({
   openListActiveSubscribers,
@@ -79,6 +27,8 @@ const ActiveSubscribersPopup = ({
       myMessage: "Cannot get subscribers list:",
     },
   });
+
+  const [checkedState, setCheckedState] = useState([]);
   const { setFinalSelectedActiveSubscribers } = useGlobalStoreContext();
 
   const filteredActiveSubscribers = useMemo(
@@ -91,92 +41,47 @@ const ActiveSubscribersPopup = ({
     [subscribers]
   );
 
-  const [checked, setChecked] = useState([false]);
-
-  const [allChecked1, setAllChecked1] = useState(false);
-  const [allChecked2, setAllChecked2] = useState(false);
-
-  const handleCheckedAll1 = () => setAllChecked1((prev) => !prev);
-
-  const lengthActiveSubscribers = filteredActiveSubscribers.length;
-
   const stateForCheckboxes = useCallback(
     (el) =>
-      filteredActiveSubscribers
-        ? new Array(lengthActiveSubscribers).fill(el)
-        : [false],
-    [filteredActiveSubscribers, lengthActiveSubscribers]
-  );
+      filteredActiveSubscribers &&
+      new Array(filteredActiveSubscribers.length).fill(el),
 
-  useEffect(() => {
-    setChecked(stateForCheckboxes(false));
-  }, [stateForCheckboxes]);
-
-  const [selectedActiveSubscribers, setSelectedActiveSubscribers] = useState(
-    []
+    [filteredActiveSubscribers]
   );
 
   const handleOnChange = (position) => {
-    const updatedChecked = checked.map((item, index) =>
+    const updatedCheckedState = checkedState.map((item, index) =>
       index === position ? !item : item
     );
 
-    setChecked(updatedChecked);
+    setCheckedState(updatedCheckedState);
 
-    const updatedActiveSubscribers = updatedChecked.map(
+    const updatedActiveSubscribers = updatedCheckedState.map(
       (stateCheckbox, index) =>
         stateCheckbox ? filteredActiveSubscribers[index] : null
     );
 
-    setSelectedActiveSubscribers(updatedActiveSubscribers.filter(Boolean));
-  };
-
-  const handleRemoveChecked = () => {
-    setAllChecked2((prev) => !prev);
-    setAllChecked1(false);
+    setFinalSelectedActiveSubscribers(updatedActiveSubscribers.filter(Boolean));
   };
 
   useEffect(() => {
-    if (allChecked2) {
-      setChecked(stateForCheckboxes(false));
-      setSelectedActiveSubscribers([]);
-      setAllChecked2(false);
-    }
+    setCheckedState(stateForCheckboxes(true));
+    setFinalSelectedActiveSubscribers(filteredActiveSubscribers);
+  }, [stateForCheckboxes]);
 
-    if (!selectedActiveSubscribers.length) {
-      setAllChecked1(false);
-    }
-  }, [
-    allChecked2,
-    checked.length,
-    selectedActiveSubscribers.length,
-    stateForCheckboxes,
-  ]);
+  // helpers
 
-  useEffect(() => {
-    if (allChecked1) {
-      setChecked(stateForCheckboxes(true));
-      setSelectedActiveSubscribers(filteredActiveSubscribers);
-    } else {
-      setChecked(stateForCheckboxes(false));
-      setSelectedActiveSubscribers([]);
-    }
-  }, [
-    allChecked1,
-    checked.length,
-    filteredActiveSubscribers,
-    stateForCheckboxes,
-  ]);
+  function handleUncheckedAll() {
+    setCheckedState(checkedState.map((v) => false));
+  }
 
-  const getChoosenActiveSubscribers = useCallback(() => {
-    if (selectedActiveSubscribers) {
-      setFinalSelectedActiveSubscribers(selectedActiveSubscribers);
-    }
-  }, [selectedActiveSubscribers, setFinalSelectedActiveSubscribers]);
+  function handleCheckedAll() {
+    setCheckedState(checkedState.map((v) => true));
+  }
 
-  useEffect(() => {
-    getChoosenActiveSubscribers();
-  }, [getChoosenActiveSubscribers]);
+  function areSomeTruthy(arr) {
+    return arr.includes(true);
+  }
 
   return (
     <Dialog open={openListActiveSubscribers} classes={{ paper: classes.paper }}>
@@ -195,7 +100,7 @@ const ActiveSubscribersPopup = ({
               color="error"
               onClick={() => {
                 closeListActiveSusbcribers(false);
-                setSelectedActiveSubscribers([]);
+                setFinalSelectedActiveSubscribers(filteredActiveSubscribers);
               }}
             >
               <span className={classes.buttonText}>X</span>
@@ -210,23 +115,23 @@ const ActiveSubscribersPopup = ({
       </DialogTitle>
 
       <Grid container justifyContent="center" alignItems="center">
-        {selectedActiveSubscribers.length >= 1 ? (
+        {areSomeTruthy(checkedState) ? (
           <Button
-            aria-label="remove"
+            aria-label="unchecked"
             className={classes.mainButton}
             variant="contained"
             color="error"
-            onClick={() => handleRemoveChecked()}
+            onClick={() => handleUncheckedAll()}
           >
             <span className={classes.buttonText}>uncheck all</span>
           </Button>
         ) : (
           <Button
-            aria-label="close"
+            aria-label="checked"
             className={classes.mainButton}
             variant="contained"
             color="success"
-            onClick={() => handleCheckedAll1()}
+            onClick={() => handleCheckedAll()}
           >
             <span className={classes.buttonText}>
               check all <span></span>
@@ -242,7 +147,7 @@ const ActiveSubscribersPopup = ({
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={checked[index] ? checked[index] : false}
+                    checked={checkedState[index] ? checkedState[index] : false}
                     onChange={() => handleOnChange(index)}
                     name="subscriber"
                     defaultValue={false}
@@ -266,11 +171,7 @@ const ActiveSubscribersPopup = ({
       >
         <Grid item>
           <Typography variant="body1" className={classes.textInformation}>
-            {selectedActiveSubscribers.length === 0
-              ? "Please select from the list"
-              : selectedActiveSubscribers.length === 1
-              ? `Selected 1 subscriber`
-              : `Selected ${selectedActiveSubscribers.length} subscribers`}
+            Please uncheck from the list
           </Typography>
         </Grid>
         <Grid item>
