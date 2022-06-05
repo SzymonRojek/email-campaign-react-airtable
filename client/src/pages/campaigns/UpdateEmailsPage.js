@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useParams } from "react-router-dom";
@@ -6,15 +6,19 @@ import { useLocation, useNavigate } from "react-router";
 import { useMutation, useQuery } from "react-query";
 
 import api from "api";
+import { sendEmailTo } from "sendEmail";
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
-import { capitalizeFirstLetter, validationCampaign } from "helpers";
+import {
+  capitalizeFirstLetter,
+  validationCampaign,
+  toastMessage,
+} from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { FormCampaign } from "components/FormCampaign";
 import { StyledHeading } from "components/StyledHeading";
 import { Loader } from "components/DisplayMessage";
-import { sendEmailJSonSuccess } from "sendEmail";
 
 const styles = {
   title: { color: "green", fontWeight: "bold" },
@@ -35,8 +39,6 @@ const UpdateEmailsPage = () => {
   const { id } = useParams();
   const { pathname } = useLocation();
   const navigate = useNavigate();
-
-  const [isEmailError, setEmailError] = useState(false);
 
   const { data: subscribers } = useQuery("subscribers", api.fetchItems);
 
@@ -131,36 +133,40 @@ const UpdateEmailsPage = () => {
     });
   };
 
-  const updateAPIcampaign = async (data, status) => {
+  const updateEmailToAirtable = async (data, status) => {
     const { title, description } = data;
 
-    await api
-      .put(`/campaigns/${id}`, {
+    try {
+      const response = await api.put(`/campaigns/${id}`, {
         fields: {
           title,
           description,
           status,
         },
-      })
-      .then((response) => {
-        setDataConfirmModal(response.fields, status);
-
-        if (status === "sent")
-          sendEmailJSonSuccess(
-            response.fields,
-            finalSelectedActiveSubscribers,
-            allActiveSubscribers,
-            setEmailError
-          );
       });
+
+      if (response) {
+        setDataConfirmModal(response.fields, status);
+      }
+    } catch (error) {
+      toastMessage(
+        `Data were not been updated into Airtable:: ${error.message}`
+      );
+    }
   };
 
   const { mutateAsync: draftCampaign } = useMutation((data) =>
-    updateAPIcampaign(data, "draft")
+    updateEmailToAirtable(data, "draft")
   );
 
   const { mutateAsync: sendCampaign } = useMutation((data) =>
-    updateAPIcampaign(data, "sent")
+    sendEmailTo(
+      data,
+      finalSelectedActiveSubscribers.length
+        ? finalSelectedActiveSubscribers
+        : allActiveSubscribers,
+      updateEmailToAirtable
+    )
   );
 
   if (isLoading || isFetching) {
