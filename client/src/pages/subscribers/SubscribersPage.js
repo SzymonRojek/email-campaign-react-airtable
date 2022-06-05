@@ -1,7 +1,5 @@
 import PropTypes from "prop-types";
-import { useQuery } from "react-query";
 
-import api from "api";
 import { generalDataHeadTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
 import { Loader } from "components/DisplayMessage";
@@ -9,6 +7,8 @@ import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { SubscribersList } from "components/SubscribersList";
+import { useQuery } from "react-query";
+import api from "api";
 
 const styles = {
   container: {
@@ -17,17 +17,17 @@ const styles = {
 };
 
 const SubscribersPage = ({ editSubscriber, handleSubscriberDetails }) => {
-  const { data: subscribers, isLoading } = useQuery(
-    "subscribers",
-    api.fetchItems,
-    {
-      meta: {
-        myMessage: "Cannot get subscribers list:",
-      },
-    }
-  );
+  const {
+    data: subscribers,
+    isLoading,
+    isFetching,
+  } = useQuery("subscribers", api.fetchItems, {
+    meta: {
+      myMessage: "Cannot get subscribers list:",
+    },
+  });
 
-  if (isLoading) {
+  if (isLoading | isFetching) {
     return <Loader title="Subscribers" />;
   }
 
