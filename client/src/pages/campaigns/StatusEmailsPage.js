@@ -64,9 +64,13 @@ const selectCampaignsStatus = [
 ];
 
 const StatusEmailsPage = ({ editCampaign }) => {
-  const { data: campaigns, isLoading } = useQuery("campaigns", api.fetchItems, {
+  const {
+    data: campaigns,
+    isLoading,
+    isFetching,
+  } = useQuery("campaigns", api.fetchItems, {
     meta: {
-      myMessage: "Can not get campaigns list:",
+      myMessage: "Can not get campaigns status list:",
     },
   });
 
@@ -100,7 +104,7 @@ const StatusEmailsPage = ({ editCampaign }) => {
     return () => watchStatus.unsubscribe();
   }, [watch]);
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return <Loader title="Status" />;
   }
 
