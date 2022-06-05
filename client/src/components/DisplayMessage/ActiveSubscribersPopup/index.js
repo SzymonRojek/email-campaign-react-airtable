@@ -1,1 +1,1 @@
-export { default as ActiveSubscribersPopup } from "./ActiveSubscribersPopup";
+export { default } from "./ActiveSubscribersPopup";
