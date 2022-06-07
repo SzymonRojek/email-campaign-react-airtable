@@ -5,12 +5,12 @@ import { useQuery } from "react-query";
 import { makeStyles } from "@material-ui/core/styles";
 
 import api from "api";
-import { Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { CampaignStatus } from "components/CampaignStatus";
-import SelectInputController from "components/Inputs/SelectInputController";
+import { SelectInputController } from "components/Inputs";
+import { Loader, Error } from "components/DisplayMessage";
 
 const useSelectStyles = makeStyles({
   root: {
@@ -64,11 +64,12 @@ const selectCampaignsStatus = [
 ];
 
 const StatusEmailsPage = ({ editCampaign }) => {
+  const endpoint = "/campaigns";
   const {
     data: campaigns,
     isLoading,
     isFetching,
-  } = useQuery("campaigns", api.fetchItems, {
+  } = useQuery(endpoint, api.fetchItems, {
     meta: {
       myMessage: "Can not get campaigns status list:",
     },
@@ -112,8 +113,8 @@ const StatusEmailsPage = ({ editCampaign }) => {
     <StyledContainer>
       <StyledHeading label="email status" />
       <StyledMainContent>
-        {campaigns && !campaigns.length ? (
-          "List of campaigns is empty - please add email"
+        {!campaigns.length ? (
+          <Error error="List of emails is empty - please add new campaign" />
         ) : (
           <CampaignStatus
             subHeading="list"
