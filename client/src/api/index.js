@@ -29,7 +29,7 @@ const _delete = (endpoint) => request(endpoint, "delete");
 
 const fetchDetailsItemById = async ({ queryKey }) => {
   const [key, { id }] = queryKey;
-  const response = await get(`/${key}/${id}`);
+  const response = await get(`${key}/${id}`);
 
   return response;
 };
