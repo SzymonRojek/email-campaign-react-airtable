@@ -10,8 +10,8 @@ import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { ContainerTable, HeadTable } from "components/Table";
-import { Loader } from "components/DisplayMessage";
-import SubscribersList from "components/SubscribersList/SubscribersList";
+import { Loader, Error } from "components/DisplayMessage";
+import { SubscribersList } from "components/SubscribersList";
 import { SubscriberDetailsData } from "components/SubscriberTableRow/SubscriberDetailsData";
 import { BodyTable } from "components/Table";
 import CustomPaginator from "components/PaginationPackage/CustomPaginator";
@@ -23,14 +23,15 @@ const styles = {
 };
 
 const DetailsSubscriberPage = () => {
+  const endpoint = "/subscribers";
   const { id } = useParams();
+
   const {
     data: subscriber,
     isLoading,
     isFetching,
     isError,
-    error,
-  } = useQuery(["subscribers", { id }], api.fetchDetailsItemById, {
+  } = useQuery([endpoint, { id }], api.fetchDetailsItemById, {
     meta: {
       myMessage: "Subscriber does not exist! ",
     },
@@ -41,20 +42,7 @@ const DetailsSubscriberPage = () => {
   }
 
   if (isError) {
-    return (
-      <div
-        style={{
-          marginTop: 200,
-          color: "white",
-          fontSize: 25,
-          width: "100%",
-          textAlign: "center",
-        }}
-      >
-        <p>Subscriber does not exist!</p>
-        <p>{error.message}</p>
-      </div>
-    );
+    return <Error error="Subscriber does not exist!" />;
   }
 
   return (
