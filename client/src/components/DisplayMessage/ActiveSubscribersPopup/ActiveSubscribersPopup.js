@@ -15,6 +15,12 @@ import { useStyles, styles } from "./styles";
 
 import api from "api";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
+import {
+  handleUncheckedAll,
+  handleCheckedAll,
+  areSomeTruthy,
+  countStateTruthy,
+} from "./utilities";
 
 const ActiveSubscribersPopup = ({
   openListActiveSubscribers,
@@ -66,22 +72,7 @@ const ActiveSubscribersPopup = ({
 
   useEffect(() => {
     setCheckedState(stateForCheckboxes(true));
-    setFinalSelectedActiveSubscribers(filteredActiveSubscribers);
   }, [stateForCheckboxes]);
-
-  // helpers
-
-  function handleUncheckedAll() {
-    setCheckedState(checkedState.map((v) => false));
-  }
-
-  function handleCheckedAll() {
-    setCheckedState(checkedState.map((v) => true));
-  }
-
-  function areSomeTruthy(arr) {
-    return arr.includes(true);
-  }
 
   return (
     <Dialog open={openListActiveSubscribers} classes={{ paper: classes.paper }}>
@@ -100,7 +91,8 @@ const ActiveSubscribersPopup = ({
               color="error"
               onClick={() => {
                 closeListActiveSusbcribers(false);
-                setFinalSelectedActiveSubscribers(filteredActiveSubscribers);
+                setFinalSelectedActiveSubscribers([]);
+                handleCheckedAll(setCheckedState, checkedState);
               }}
             >
               <span className={classes.buttonText}>X</span>
@@ -121,7 +113,7 @@ const ActiveSubscribersPopup = ({
             className={classes.mainButton}
             variant="contained"
             color="error"
-            onClick={() => handleUncheckedAll()}
+            onClick={() => handleUncheckedAll(setCheckedState, checkedState)}
           >
             <span className={classes.buttonText}>uncheck all</span>
           </Button>
@@ -131,7 +123,7 @@ const ActiveSubscribersPopup = ({
             className={classes.mainButton}
             variant="contained"
             color="success"
-            onClick={() => handleCheckedAll()}
+            onClick={() => handleCheckedAll(setCheckedState, checkedState)}
           >
             <span className={classes.buttonText}>
               check all <span></span>
@@ -147,7 +139,7 @@ const ActiveSubscribersPopup = ({
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={checkedState[index] ? checkedState[index] : false}
+                    checked={checkedState[index]}
                     onChange={() => handleOnChange(index)}
                     name="subscriber"
                     defaultValue={false}
@@ -171,7 +163,9 @@ const ActiveSubscribersPopup = ({
       >
         <Grid item>
           <Typography variant="body1" className={classes.textInformation}>
-            Please uncheck from the list
+            {countStateTruthy(checkedState) === 0
+              ? "Please choose subscribers"
+              : `Checked subscribers: ${countStateTruthy(checkedState)}`}
           </Typography>
         </Grid>
         <Grid item>
