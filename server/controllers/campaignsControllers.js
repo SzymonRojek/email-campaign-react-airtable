@@ -34,12 +34,10 @@ exports.getCampaign = async (req, res) => {
 exports.createCampaign = async (req, res) => {
   const { title, description, status } = req.body.fields;
 
-  const createdData = {
-    fields: { title, description, status },
-  };
-
   try {
-    const { data } = await axiosInstance.post(`${endpoint}`, createdData);
+    const { data } = await axiosInstance.post(`${endpoint}`, {
+      fields: { title, description, status },
+    });
 
     res.status(200).json(data);
   } catch (error) {
@@ -48,14 +46,10 @@ exports.createCampaign = async (req, res) => {
 };
 
 exports.updateCampaign = async (req, res) => {
-  const { title, description, status } = req.body.fields;
-
   const { id } = req.params;
 
-  const updatedData = { fields: { title, description, status } };
-
   try {
-    const { data } = await axiosInstance.put(`${endpoint}/${id}`, updatedData);
+    const { data } = await axiosInstance.patch(`${endpoint}/${id}`, req.body);
 
     res.status(200).json(data);
   } catch (error) {
