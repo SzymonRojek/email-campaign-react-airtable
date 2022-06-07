@@ -8,14 +8,15 @@ import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { CampaignsList } from "components/CampaignsList";
-import { Loader } from "components/DisplayMessage";
+import { Loader, Error } from "components/DisplayMessage";
 
 const EmailsPage = ({ editCampaign }) => {
+  const endpoint = "/campaigns";
   const {
     data: campaigns,
     isLoading,
     isFetching,
-  } = useQuery("campaigns", api.fetchItems, {
+  } = useQuery(endpoint, api.fetchItems, {
     meta: {
       myMessage: "Can not get campaigns list",
     },
@@ -30,8 +31,8 @@ const EmailsPage = ({ editCampaign }) => {
       <StyledHeading label="all emails" />
       <StyledMainContent>
         <div style={{ marginBottom: 100 }}>
-          {campaigns && !campaigns.length ? (
-            "List of emails is empty - please add new email"
+          {!campaigns.length ? (
+            <Error error="List of emails is empty - please add new campaign" />
           ) : (
             <CampaignsList
               subHeading="list"
