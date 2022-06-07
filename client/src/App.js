@@ -1,50 +1,43 @@
 import { QueryClient, QueryCache, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import toast, { Toaster } from "react-hot-toast";
+import "react-toastify/dist/ReactToastify.min.css";
+
+import { ToastContainer } from "react-toastify";
 
 import { AppContainer } from "./AppContainer";
-import { useInformationModalState } from "./contexts/InformationModalContext";
+import { toastMessage } from "./helpers";
 
 const App = () => {
-  // const { setInformationModalState, setInformationModalText } =
-  //   useInformationModalState();
-
-  // const informationModalProps = {
-  //   colorButton: "error",
-  //   onClose: () => {
-  //     setInformationModalState({ isOpenInformationModal: false });
-  //   },
-  // };
-
-  // const setErrorModal = (error) => {
-  //   setInformationModalText({
-  //     title: "ERROR",
-  //     additionalText: "Check your internet connection",
-  //     message: `${error}`,
-  //   });
-  //   setInformationModalState({
-  //     informationModalProps,
-  //     isOpenInformationModal: true,
-  //   });
-  // };
-
   const queryClient = new QueryClient({
     queryCache: new QueryCache({
-      onError: (error, query) => {
-        if (query.state.data === undefined) {
-          // setErrorModal(error.message);
-          toast.error(`${query.meta?.myMessage} ${error.message}`);
-        }
-      },
+      onError: (error, query) =>
+        toastMessage(`${query.meta?.myMessage} ${error.message}`),
     }),
   });
 
+  /*
+  onError: (error, query) => {
+    if (query.state.data === undefined) {
+      toastMessage(`${query.meta?.myMessage} ${error.message}`),
+    }
+  },
+  */
   return (
     <div className="page-container">
       <QueryClientProvider client={queryClient}>
         <AppContainer />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
 
-        <Toaster position="top-center" />
         <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
       </QueryClientProvider>
     </div>
