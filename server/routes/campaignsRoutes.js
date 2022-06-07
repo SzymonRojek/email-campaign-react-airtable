@@ -13,7 +13,7 @@ router.route("/").get(getAllCampaigns).post(createCampaign);
 router
   .route("/:id")
   .get(getCampaign)
-  .put(updateCampaign)
+  .patch(updateCampaign)
   .delete(deleteCampaign);
 
 module.exports = router;
