@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useParams } from "react-router-dom";
@@ -18,7 +18,7 @@ import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { FormCampaign } from "components/FormCampaign";
 import { StyledHeading } from "components/StyledHeading";
-import { Loader } from "components/DisplayMessage";
+import { Loader, Error } from "components/DisplayMessage";
 
 const styles = {
   title: { color: "green", fontWeight: "bold" },
@@ -27,6 +27,8 @@ const styles = {
 };
 
 const UpdateEmailsPage = () => {
+  const subscribersEndpoint = "/subscribers";
+  const campaignsEndpoint = "/campaigns";
   const {
     handleSubmit,
     formState: { errors },
@@ -40,13 +42,14 @@ const UpdateEmailsPage = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const { data: subscribers } = useQuery("subscribers", api.fetchItems);
+  const { data: subscribers } = useQuery(subscribersEndpoint, api.fetchItems);
 
   const {
     data: campaign,
     isLoading,
     isFetching,
-  } = useQuery(["campaigns", { id }], api.fetchDetailsItemById, {
+    isError,
+  } = useQuery([campaignsEndpoint, { id }], api.fetchDetailsItemById, {
     meta: {
       myMessage: "Campaign does not exist! ",
     },
@@ -56,8 +59,8 @@ const UpdateEmailsPage = () => {
   const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
 
   const defaultValues = {
-    title: campaign ? campaign.fields.title : "",
-    description: campaign ? campaign.fields.description : "",
+    title: campaign?.fields.title || "",
+    description: campaign?.fields.description || "",
   };
 
   useEffect(() => {
@@ -81,11 +84,11 @@ const UpdateEmailsPage = () => {
     onConfirm: () => {
       if (
         !allActiveSubscribers.length &&
-        pathname === `/campaigns/edit/${id}`
+        pathname === `${campaignsEndpoint}/edit/${id}`
       ) {
-        navigate("/subscribers/add");
+        navigate(`${subscribersEndpoint}/add`);
       } else {
-        navigate("/campaigns");
+        navigate(campaignsEndpoint);
       }
     },
     onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
@@ -135,22 +138,21 @@ const UpdateEmailsPage = () => {
 
   const updateEmailToAirtable = async (data, status) => {
     const { title, description } = data;
+    const patchData = {
+      fields: {
+        title,
+        description,
+        status,
+      },
+    };
 
     try {
-      const response = await api.put(`/campaigns/${id}`, {
-        fields: {
-          title,
-          description,
-          status,
-        },
-      });
+      const response = await api.patch(`${campaignsEndpoint}/${id}`, patchData);
 
-      if (response) {
-        setDataConfirmModal(response.fields, status);
-      }
+      setDataConfirmModal(response.fields, status);
     } catch (error) {
       toastMessage(
-        `Data were not been updated into Airtable:: ${error.message}`
+        `Data were not been updated into Airtable: ${error.message}`
       );
     }
   };
@@ -173,6 +175,10 @@ const UpdateEmailsPage = () => {
     return <Loader title="Get details" />;
   }
 
+  if (isError) {
+    return <Error error="Email Campaign does not exist!" />;
+  }
+
   return (
     <StyledContainer>
       <StyledHeading label="update email" />
@@ -182,13 +188,13 @@ const UpdateEmailsPage = () => {
           errors={errors}
           handleDraftData={handleSubmit(draftCampaign)}
           handleSendData={handleSubmit(sendCampaign)}
-          disabledCheckbox={
-            subscribers && !allActiveSubscribers.length ? true : false
-          }
+          disabledCheckbox={!!!allActiveSubscribers.length}
           labelCheckbox={
-            subscribers
-              ? `select from active subscribers (${allActiveSubscribers.length})`
-              : "no active subscribers"
+            !allActiveSubscribers.length
+              ? "no active subscribers"
+              : finalSelectedActiveSubscribers.length
+              ? `selected subscribers: ${finalSelectedActiveSubscribers.length} from ${allActiveSubscribers.length}`
+              : `active subscribers - ${allActiveSubscribers.length}`
           }
         />
       </StyledMainContent>
