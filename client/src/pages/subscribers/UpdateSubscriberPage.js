@@ -6,16 +6,15 @@ import { useMutation, useQuery } from "react-query";
 
 import api from "api";
 import { useInformationModalState } from "contexts/InformationModalContext";
-import { validationSubscriber } from "helpers";
+import { validationSubscriber, toastMessage } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
-import { Loader } from "components/DisplayMessage";
+import { Loader, Error } from "components/DisplayMessage";
 import { FormSubscriber } from "components/FormSubscriber/";
 
 const UpdateSubscriberPage = () => {
   const endpoint = "/subscribers";
-
   const {
     handleSubmit,
     watch,
@@ -33,7 +32,8 @@ const UpdateSubscriberPage = () => {
     data: subscriber,
     isLoading,
     isFetching,
-  } = useQuery(["subscribers", { id }], api.fetchDetailsItemById, {
+    isError,
+  } = useQuery([endpoint, { id }], api.fetchDetailsItemById, {
     meta: {
       myMessage: "Subscriber does not exist! ",
     },
@@ -45,13 +45,13 @@ const UpdateSubscriberPage = () => {
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
   const defaultValues = {
-    name: subscriber ? subscriber.fields.name : "",
-    surname: subscriber ? subscriber.fields.surname : "",
-    email: subscriber ? subscriber.fields.email : "",
-    status: subscriber ? subscriber.fields.status : "",
-    profession: subscriber ? subscriber.fields.profession : "",
-    salary: subscriber ? subscriber.fields.salary : "",
-    telephone: subscriber ? subscriber.fields.telephone : "",
+    name: subscriber?.fields.name || "",
+    email: subscriber?.fields.email || "",
+    surname: subscriber?.fields.surname || "",
+    status: subscriber?.fields.status || "",
+    salary: subscriber?.fields.salary || "",
+    telephone: subscriber?.fields.telephone || "",
+    profession: subscriber?.fields.profession || "",
   };
 
   useEffect(() => {
@@ -64,12 +64,12 @@ const UpdateSubscriberPage = () => {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setValue("name", defaultValues.name);
-      setValue("surname", defaultValues.surname);
       setValue("email", defaultValues.email);
+      setValue("surname", defaultValues.surname);
       setValue("status", defaultValues.status);
-      setValue("profession", defaultValues.profession);
       setValue("salary", defaultValues.salary);
       setValue("telephone", defaultValues.telephone);
+      setValue("profession", defaultValues.profession);
     }, 800);
 
     return () => clearTimeout(timeoutId);
@@ -84,14 +84,8 @@ const UpdateSubscriberPage = () => {
     defaultValues.telephone,
   ]);
 
-  const isSubscriberDataEdited = (data) =>
-    data.name !== defaultValues.name ||
-    data.surname !== defaultValues.surname ||
-    data.email !== defaultValues.email ||
-    data.status !== defaultValues.status ||
-    data.profession !== defaultValues.profession ||
-    data.salary !== defaultValues.salary ||
-    data.telephone !== defaultValues.telephone;
+  const isSubscriberDataEdited = (data, defaultValues) =>
+    JSON.stringify(data) === JSON.stringify(defaultValues);
 
   const informationModalProps = {
     colorButton: "success",
@@ -109,12 +103,12 @@ const UpdateSubscriberPage = () => {
     };
 
     setInformationModalText({
-      title: isSubscriberDataEdited(data) ? (
+      title: !isSubscriberDataEdited(data, defaultValues) ? (
         <span style={styles.change}>That's great 🎊</span>
       ) : (
         <span style={styles.noChange}>No changes... 👋</span>
       ),
-      message: isSubscriberDataEdited(data) ? (
+      message: !isSubscriberDataEdited(data, defaultValues) ? (
         <>
           Subscriber <span style={styles.name}>{defaultValues.name}</span> has
           been edited 👋
@@ -136,27 +130,37 @@ const UpdateSubscriberPage = () => {
     const { name, surname, email, profession, status, salary, telephone } =
       data;
 
-    await api
-      .put(`${endpoint}/${id}`, {
-        fields: {
-          name,
-          surname,
-          email,
-          profession,
-          status,
-          salary,
-          telephone,
-        },
-      })
-      .then((response) => {
-        handleInformationModal(response.fields);
-      });
+    const patchData = {
+      fields: {
+        name,
+        email,
+        surname,
+        status,
+        salary,
+        telephone,
+        profession,
+      },
+    };
+
+    try {
+      const response = await api.patch(`${endpoint}/${id}`, patchData);
+
+      handleInformationModal(response.fields);
+    } catch (error) {
+      toastMessage(
+        `Data were not been updated into Airtable: ${error.message}`
+      );
+    }
   };
 
   const { mutateAsync: updateSubscriber } = useMutation(updateAPIsubscriber);
 
   if (isLoading || isFetching) {
     return <Loader title="Getting data" />;
+  }
+
+  if (isError) {
+    return <Error error="Subscriber does not exist!" />;
   }
 
   return (
