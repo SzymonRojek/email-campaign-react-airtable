@@ -1,19 +1,21 @@
-import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import api from "api";
+import { sendEmailTo } from "sendEmail";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
-import { capitalizeFirstLetter, validationCampaign } from "helpers";
+import {
+  capitalizeFirstLetter,
+  validationCampaign,
+  toastMessage,
+} from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { FormCampaign } from "components/FormCampaign";
-
-import { sendEmailJSonSuccess } from "sendEmail";
 
 const styles = {
   questionSpan: { color: "crimson", fontWeight: "bold" },
@@ -21,10 +23,11 @@ const styles = {
 };
 
 const CreateEmailPage = () => {
+  const subscribersEndpoint = "/subscribers";
+  const campaignsEndpoint = "/campaigns";
   const {
     handleSubmit,
     control,
-    formState,
     formState: { errors },
     reset,
   } = useForm({
@@ -34,27 +37,27 @@ const CreateEmailPage = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const { data: subscribers } = useQuery("subscribers", api.fetchItems);
+  const { data: subscribers } = useQuery(subscribersEndpoint, api.fetchItems);
 
   const allActiveSubscribers =
-    subscribers &&
-    subscribers.filter(({ fields: { status } }) => status === "active");
+    (subscribers &&
+      subscribers.filter(({ fields: { status } }) => status === "active")) ||
+    [];
 
   const { finalSelectedActiveSubscribers } = useGlobalStoreContext();
   const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
 
-  const [isEmailError, setEmailError] = useState(false);
-  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
-
   const confirmModalProps = {
     onConfirm: () => {
-      if (!allActiveSubscribers.length && pathname === "/campaigns/add") {
-        navigate("/subscribers/add");
+      if (
+        !allActiveSubscribers.length &&
+        pathname === `${campaignsEndpoint}/add`
+      ) {
+        navigate(`${subscribersEndpoint}/add`);
       } else {
-        navigate("/campaigns");
+        navigate(campaignsEndpoint);
       }
     },
-
     onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
   };
 
@@ -96,42 +99,44 @@ const CreateEmailPage = () => {
     });
   };
 
-  const createAPIcampaign = async (data, status) =>
-    await api
-      .post("campaigns", {
-        fields: {
-          title: capitalizeFirstLetter(data.title),
-          description: capitalizeFirstLetter(data.description),
-          status,
-        },
-      })
-      .then((response) => {
-        setDataConfirmModal(response.fields, status);
+  const postDataEmailToAirtable = async (data, status) => {
+    const postData = {
+      fields: {
+        title: capitalizeFirstLetter(data.title),
+        description: capitalizeFirstLetter(data.description),
+        status,
+      },
+    };
 
-        if (status === "sent")
-          sendEmailJSonSuccess(
-            response.fields,
-            finalSelectedActiveSubscribers,
-            allActiveSubscribers,
-            setEmailError
-          );
-      });
+    try {
+      const response = await api.post(campaignsEndpoint, postData);
+
+      setDataConfirmModal(response.fields, status);
+    } catch (error) {
+      toastMessage(`Data were not been sent to the Airtable: ${error.message}`);
+    }
+  };
 
   const { mutateAsync: draftCampaign } = useMutation((data) =>
-    createAPIcampaign(data, "draft")
+    postDataEmailToAirtable(data, "draft")
   );
 
-  const { mutateAsync: sendCampaign } = useMutation((data) =>
-    createAPIcampaign(data, "sent")
-  );
+  const { mutateAsync: sendCampaign } = useMutation((data) => {
+    if (finalSelectedActiveSubscribers.length) {
+      sendEmailTo(
+        data,
+        finalSelectedActiveSubscribers.length
+          ? finalSelectedActiveSubscribers
+          : allActiveSubscribers,
+        postDataEmailToAirtable
+      );
 
-  useEffect(() => {
-    if (formState.isSubmitSuccessful)
       reset({
         title: "",
         description: "",
       });
-  }, [formState, reset]);
+    }
+  });
 
   return (
     <StyledContainer>
@@ -141,17 +146,15 @@ const CreateEmailPage = () => {
         <FormCampaign
           control={control}
           errors={errors}
-          isCheckboxChecked={isCheckboxChecked}
-          setIsCheckboxChecked={setIsCheckboxChecked}
           handleDraftData={handleSubmit(draftCampaign)}
           handleSendData={handleSubmit(sendCampaign)}
-          disabledCheckbox={
-            subscribers && !allActiveSubscribers.length ? true : false
-          }
+          disabledCheckbox={!!!allActiveSubscribers.length}
           labelCheckbox={
-            subscribers
-              ? `select from active subscribers (${allActiveSubscribers.length})`
-              : "no active subscribers"
+            !allActiveSubscribers.length
+              ? "no active subscribers"
+              : finalSelectedActiveSubscribers.length
+              ? `selected subscribers: ${finalSelectedActiveSubscribers.length} from ${allActiveSubscribers.length}`
+              : `active subscribers - ${allActiveSubscribers.length}`
           }
         />
       </StyledMainContent>
