@@ -1,14 +1,14 @@
 import PropTypes from "prop-types";
+import { useQuery } from "react-query";
 
+import api from "api";
 import { generalDataHeadTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
-import { Loader } from "components/DisplayMessage";
+import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { SubscribersList } from "components/SubscribersList";
-import { useQuery } from "react-query";
-import api from "api";
 
 const styles = {
   container: {
@@ -17,13 +17,14 @@ const styles = {
 };
 
 const SubscribersPage = ({ editSubscriber, handleSubscriberDetails }) => {
+  const endpoint = "/subscribers";
   const {
     data: subscribers,
     isLoading,
     isFetching,
-  } = useQuery("subscribers", api.fetchItems, {
+  } = useQuery(endpoint, api.fetchItems, {
     meta: {
-      myMessage: "Cannot get subscribers list:",
+      myMessage: "Cannot get subscribers list.",
     },
   });
 
@@ -36,8 +37,8 @@ const SubscribersPage = ({ editSubscriber, handleSubscriberDetails }) => {
       <StyledContainer>
         <StyledHeading label="all subscribers" />
         <StyledMainContent>
-          {subscribers && !subscribers.length ? (
-            "List of subscribers is empty - please add a subscriber"
+          {!subscribers.length ? (
+            <Error error="List of subscribers is empty - please add a new subscriber" />
           ) : (
             <div style={styles.container}>
               <SubscribersList
