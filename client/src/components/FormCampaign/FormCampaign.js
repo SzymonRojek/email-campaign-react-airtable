@@ -7,7 +7,6 @@ import { Paper, Grid, Typography } from "@material-ui/core";
 import { useStyles, styles } from "./styles";
 import { TextInputController } from "components/Inputs";
 import { ActiveSubscribersPopup } from "../DisplayMessage";
-import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 
 const FormCampaign = ({ ...props }) => {
   const {
@@ -15,14 +14,13 @@ const FormCampaign = ({ ...props }) => {
     errors,
     handleDraftData,
     handleSendData,
-    disabledCheckbox,
     labelCheckbox,
+    disabledCheckbox,
   } = props;
 
   const classes = useStyles();
 
   const [isListChecked, setIsListChecked] = useState(false);
-  const { finalSelectedActiveSubscribers } = useGlobalStoreContext();
 
   const handleActiveSubscribersList = () => setIsListChecked(!isListChecked);
 
@@ -68,7 +66,14 @@ const FormCampaign = ({ ...props }) => {
                 variant="body2"
                 className={classes.label}
               >
-                All active subscribers checked by default
+                all active subscribers're checked by default
+              </Typography>
+              <Typography
+                color="textSecondary"
+                variant="body2"
+                className={classes.label}
+              >
+                change it by pressing the checkox below
               </Typography>
             </Grid>
             <Grid item>
@@ -118,9 +123,7 @@ const FormCampaign = ({ ...props }) => {
                   color="success"
                   onClick={handleSendData}
                   className={classes.sendButton}
-                  disabled={
-                    !finalSelectedActiveSubscribers.length ? true : false
-                  }
+                  disabled={disabledCheckbox}
                 >
                   send email
                 </Button>
@@ -136,6 +139,7 @@ const FormCampaign = ({ ...props }) => {
     </>
   );
 };
+
 FormCampaign.propTypes = {
   control: PropTypes.object,
   errors: PropTypes.object,
