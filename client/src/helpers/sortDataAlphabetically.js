@@ -1,14 +1,15 @@
 const sortDataAlphabetically = (data) => {
-  if (!data) return [];
+  // if (typeof data !== "object") return [];
 
   const copyData = [...data];
-  // const isName =
-  //   copyData.map((item) => item.fields.name).filter(Boolean).length > 0;
+
+  const isName =
+    copyData.map((item) => item.fields?.name).filter(Boolean).length > 0;
 
   const nestedPropertyRetriever = (obj) =>
-    obj.fields.hasOwnProperty("name")
-      ? obj.fields.name.toLowerCase()
-      : obj.fields.title.toLowerCase();
+    obj && isName
+      ? obj.fields?.name.toLowerCase()
+      : obj.fields?.title.toLowerCase();
 
   return copyData.sort((a, b) => {
     const valueA = nestedPropertyRetriever(a);
