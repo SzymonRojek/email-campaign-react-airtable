@@ -7,7 +7,7 @@ const request = async (endpoint = "", method = "get", data) => {
     headers: {
       "Content-type": "application/json",
     },
-    data: method === "post" || method === "put" ? data : {},
+    data: method === "post" || method === "patch" ? data : {},
   };
 
   const response = await axios(requestConfig);
@@ -23,7 +23,7 @@ const get = (endpoint) => request(endpoint);
 
 const post = (endpoint, data) => request(endpoint, "post", data);
 
-const put = (endpoint, data) => request(endpoint, "put", data);
+const patch = (endpoint, data) => request(endpoint, "patch", data);
 
 const _delete = (endpoint) => request(endpoint, "delete");
 
@@ -47,6 +47,6 @@ export default {
   fetchItems,
   get,
   post,
-  put,
+  patch,
   delete: _delete,
 };
