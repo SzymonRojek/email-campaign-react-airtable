@@ -63,7 +63,7 @@ const SubscriberGeneralData = (props) => {
 
   const { handleConfirmModalData } = useRemoveItem(
     "subscribers",
-    subscriber.fields.name,
+    subscriber.fields?.name,
     subscriber.id
   );
 
@@ -92,7 +92,7 @@ const SubscriberGeneralData = (props) => {
         message: (
           <>
             <span style={styles.name}>
-              {capitalizeFirstLetter(subscriber.fields.name)}'s
+              {capitalizeFirstLetter(subscriber.fields?.name)}'s
             </span>
             status is
             <span style={styles.pending}> pending </span> at the moment because
@@ -110,7 +110,7 @@ const SubscriberGeneralData = (props) => {
         message: (
           <>
             <span style={styles.name}>
-              {capitalizeFirstLetter(subscriber.fields.name)}'s
+              {capitalizeFirstLetter(subscriber.fields?.name)}'s
             </span>
             status is
             <span style={styles.blocked}> blocked </span>can not get an access
@@ -149,7 +149,7 @@ const SubscriberGeneralData = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {capitalizeFirstLetter(subscriber.fields.name)}
+          {capitalizeFirstLetter(subscriber.fields?.name)}
         </Typography>
       </TableCell>
       <TableCell>
@@ -158,7 +158,7 @@ const SubscriberGeneralData = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {capitalizeFirstLetter(subscriber.fields.surname)}
+          {capitalizeFirstLetter(subscriber.fields?.surname)}
         </Typography>
       </TableCell>
       <TableCell>
@@ -167,11 +167,11 @@ const SubscriberGeneralData = (props) => {
             key={index}
             className={classes.status}
             style={{
-              backgroundColor: getStatusColor(subscriber.fields.status),
+              backgroundColor: getStatusColor(subscriber.fields?.status),
               ...styles.paragraph,
             }}
           >
-            {subscriber.fields.status}
+            {subscriber.fields?.status}
           </Typography>
         </span>
       </TableCell>
