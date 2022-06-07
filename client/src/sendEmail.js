@@ -1,60 +1,43 @@
 import emailjs from "emailjs-com";
 
+import { toastMessage } from "./helpers";
+
 const {
   REACT_APP_EMAIL_SERVICE_ID,
   REACT_APP_EMAIL_TEMPLATE_ID,
   REACT_APP_EMAIL_USER_ID,
 } = process.env;
 
-const sendEmail = (paramsScheme, setEmailError) => {
-  emailjs
-    .send(
-      REACT_APP_EMAIL_SERVICE_ID,
-      REACT_APP_EMAIL_TEMPLATE_ID,
-      paramsScheme,
-      REACT_APP_EMAIL_USER_ID
-    )
-    .then((res) => {
-      console.log("email sent:", res);
-      setEmailError(false);
-    })
-    .catch((err) => {
-      console.log("Unfortunately,", err);
-      setEmailError(err);
-    });
-};
+export function sendEmailTo(data, receivers, callbackPostAirtable) {
+  if (typeof callbackPostAirtable !== "function") {
+    throw new Error("callbackPostAirtable has to be a function");
+  }
 
-export const sendEmailJSonSuccess = (
-  data,
-  finalSelectedActiveSubscribers,
-  allActiveSubscribers,
-  setEmailError
-) => {
   const { title, description } = data;
 
-  if (finalSelectedActiveSubscribers.length) {
-    finalSelectedActiveSubscribers.map(({ fields: { name, email } }) =>
-      sendEmail(
+  receivers.forEach(({ fields: { name, email } }) =>
+    emailjs
+      .send(
+        REACT_APP_EMAIL_SERVICE_ID,
+        REACT_APP_EMAIL_TEMPLATE_ID,
         {
           name,
           email,
           title,
           description,
         },
-        setEmailError
+        REACT_APP_EMAIL_USER_ID
       )
-    );
-  } else {
-    allActiveSubscribers.forEach(({ fields: { name, email } }) => {
-      sendEmail(
-        {
-          name,
-          email,
-          title,
-          description,
-        },
-        setEmailError
-      );
-    });
-  }
-};
+      .then((res) => {
+        console.log("email sent:", res);
+
+        callbackPostAirtable(data, "sent");
+      })
+      .catch((err) => {
+        console.log("Unfortunately,", err.text);
+
+        callbackPostAirtable(data, "draft");
+        toastMessage("Email has not been sent by EmailJS");
+      })
+  );
+}
