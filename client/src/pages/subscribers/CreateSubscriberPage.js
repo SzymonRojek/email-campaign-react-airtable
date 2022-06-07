@@ -6,7 +6,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import api from "api";
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
-import { capitalizeFirstLetter, validationSubscriber } from "helpers";
+import {
+  capitalizeFirstLetter,
+  validationSubscriber,
+  toastMessage,
+} from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
@@ -19,7 +23,6 @@ const styles = {
 
 const CreateSubscriberPage = () => {
   const endpoint = "/subscribers";
-
   const {
     handleSubmit,
     watch,
@@ -51,9 +54,9 @@ const CreateSubscriberPage = () => {
       reset({
         name: "",
         surname: "",
-        profession: "",
-        status: "select status",
         email: "",
+        status: "select status",
+        profession: "",
         salary: "",
         telephone: "",
       });
@@ -62,7 +65,7 @@ const CreateSubscriberPage = () => {
 
   const confirmModalProps = {
     onConfirm: () =>
-      pathname === "/subscribers/add" ? navigate(`${endpoint}`) : "",
+      pathname === `${endpoint}/add` ? navigate(`${endpoint}`) : "",
     onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
   };
 
@@ -90,22 +93,27 @@ const CreateSubscriberPage = () => {
     });
   };
 
-  const createAPISubscriber = async (data) =>
-    await api
-      .post(`${endpoint}`, {
-        fields: {
-          name: capitalizeFirstLetter(data.name),
-          surname: capitalizeFirstLetter(data.surname),
-          email: data.email,
-          profession: data.profession,
-          status: data.status,
-          salary: data.salary,
-          telephone: data.telephone,
-        },
-      })
-      .then((response) => {
-        setDataConfirmModal(response.fields);
-      });
+  const createAPISubscriber = async (data) => {
+    const postData = {
+      fields: {
+        name: capitalizeFirstLetter(data.name),
+        surname: capitalizeFirstLetter(data.surname),
+        email: data.email,
+        status: data.status,
+        profession: data.profession,
+        salary: data.salary,
+        telephone: data.telephone,
+      },
+    };
+
+    try {
+      const response = await api.post(`${endpoint}`, postData);
+
+      setDataConfirmModal(response.fields);
+    } catch (error) {
+      toastMessage(`Data were not been sent to the Airtable: ${error.message}`);
+    }
+  };
 
   const { mutateAsync: createSubscriber } = useMutation(createAPISubscriber);
 
