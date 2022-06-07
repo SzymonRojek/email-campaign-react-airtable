@@ -13,20 +13,15 @@ export const useRemoveItem = (query, data, id) => {
 
   const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
 
-  const { mutateAsync } = useMutation(
-    (id) => {
-      api.delete(`${query}/${id}`);
+  const { mutateAsync } = useMutation((id) => api.delete(`/${query}/${id}`), {
+    onMutate: (id) => {
+      const previousItems = queryCache.getQueryData(`/${query}`);
+
+      const filteredItems = previousItems.filter((item) => item.id !== id);
+
+      queryCache.setQueryData(`/${query}`, filteredItems);
     },
-    {
-      onMutate: (id) => {
-        const previousItems = queryCache.getQueryData(`${query}`);
-
-        const filteredItems = previousItems.filter((item) => item.id !== id);
-
-        queryCache.setQueryData(`${query}`, filteredItems);
-      },
-    }
-  );
+  });
 
   const confirmModalProps = {
     onConfirm: () => mutateAsync(id),
