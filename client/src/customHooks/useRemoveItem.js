@@ -25,10 +25,6 @@ export const useRemoveItem = (query, data, id) => {
 
         queryCache.setQueryData(`${query}`, filteredItems);
       },
-
-      // onError: (error, editedValue, rollback) => {
-      //   rollback();
-      // },
     }
   );
 
