@@ -51,17 +51,10 @@ exports.createSubscriber = async (req, res) => {
 };
 
 exports.updateSubscriber = async (req, res) => {
-  const { name, surname, email, status, profession, salary, telephone } =
-    req.body.fields;
-
   const { id } = req.params;
 
-  const updatedData = {
-    fields: { name, surname, email, status, profession, salary, telephone },
-  };
-
   try {
-    const { data } = await axiosInstance.put(`${endpoint}/${id}`, updatedData);
+    const { data } = await axiosInstance.patch(`${endpoint}/${id}`, req.body);
 
     res.status(200).json(data);
   } catch (error) {
