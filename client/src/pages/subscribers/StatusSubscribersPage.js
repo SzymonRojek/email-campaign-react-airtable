@@ -1,16 +1,16 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { makeStyles } from "@material-ui/core/styles";
 import { useQuery } from "react-query";
+import { makeStyles } from "@material-ui/core/styles";
 
 import api from "api";
-import { Loader } from "components/DisplayMessage";
+import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { SubscriberStatus } from "components/SubscriberStatus";
-import SelectInputController from "components/Inputs/SelectInputController";
+import { SelectInputController } from "components/Inputs";
 
 const useSelectStyles = makeStyles({
   root: {
@@ -68,15 +68,12 @@ const selectSubscribersStatus = [
 ];
 
 const StatusSubscribersPage = ({ editSubscriber, handleSubscriberDetails }) => {
-  const { data: subscribers, isLoading } = useQuery(
-    "subscribers",
-    api.fetchItems,
-    {
-      meta: {
-        myMessage: "Cannot get subscribers list:",
-      },
-    }
-  );
+  const endpoint = "/subscribers";
+  const { data: subscribers, isLoading } = useQuery(endpoint, api.fetchItems, {
+    meta: {
+      myMessage: "Cannot get subscribers list:",
+    },
+  });
 
   const { control, watch } = useForm();
   const [selectStatus, setSelectStatus] = useState("active");
@@ -118,8 +115,8 @@ const StatusSubscribersPage = ({ editSubscriber, handleSubscriberDetails }) => {
     <StyledContainer>
       <StyledHeading label="subscribers status" />
       <StyledMainContent>
-        {subscribers && !subscribers.length ? (
-          "List of subscribers is empty - please add a subscriber"
+        {!subscribers.length ? (
+          <Error error="List of subscribers is empty - please add a new subscriber" />
         ) : (
           <SubscriberStatus
             subHeading="list"
