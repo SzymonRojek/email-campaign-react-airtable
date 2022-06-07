@@ -14,7 +14,7 @@ router.route("/").get(getAllSubscribers).post(createSubscriber);
 router
   .route("/:id")
   .get(getSubscriber)
-  .put(updateSubscriber)
+  .patch(updateSubscriber)
   .delete(deleteSubscriber);
 
 module.exports = router;
