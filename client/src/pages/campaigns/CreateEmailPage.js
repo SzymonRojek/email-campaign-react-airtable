@@ -122,20 +122,18 @@ const CreateEmailPage = () => {
   );
 
   const { mutateAsync: sendCampaign } = useMutation((data) => {
-    if (finalSelectedActiveSubscribers.length) {
-      sendEmailTo(
-        data,
-        finalSelectedActiveSubscribers.length
-          ? finalSelectedActiveSubscribers
-          : allActiveSubscribers,
-        postDataEmailToAirtable
-      );
+    sendEmailTo(
+      data,
+      finalSelectedActiveSubscribers.length
+        ? finalSelectedActiveSubscribers
+        : allActiveSubscribers,
+      postDataEmailToAirtable
+    );
 
-      reset({
-        title: "",
-        description: "",
-      });
-    }
+    reset({
+      title: "",
+      description: "",
+    });
   });
 
   return (
