@@ -59,8 +59,8 @@ export const stylesFooter = {
 export const useStylesHead = makeStyles(() => ({
   tableHeaderCell: {
     minWidth: 100,
-    fontWeight: "bold",
-    backgroundColor: "#142f43",
+    fontWeight: "bold !important",
+    backgroundColor: "#142f43 !important",
     color: "rgb(221, 220, 220) !important",
   },
   tableHeader: {
