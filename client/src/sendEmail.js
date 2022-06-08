@@ -15,6 +15,9 @@ export function sendEmailTo(data, receivers, callbackPostAirtable) {
 
   const { title, description } = data;
 
+  //locked email.js because requests are limited
+
+  /*
   receivers.forEach(({ fields: { name, email } }) =>
     emailjs
       .send(
@@ -40,4 +43,14 @@ export function sendEmailTo(data, receivers, callbackPostAirtable) {
         toastMessage("Email has not been sent by EmailJS");
       })
   );
+
+  */
+
+  // at the moment I want to show to the user that an email has bent sent
+  try {
+    callbackPostAirtable(data, "sent");
+  } catch (error) {
+    callbackPostAirtable(data, "draft");
+    toastMessage("Email has not been sent by EmailJS");
+  }
 }
