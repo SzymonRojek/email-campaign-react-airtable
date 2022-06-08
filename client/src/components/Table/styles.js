@@ -61,7 +61,7 @@ export const useStylesHead = makeStyles(() => ({
     minWidth: 100,
     fontWeight: "bold",
     backgroundColor: "#142f43",
-    color: "rgb(221, 220, 220)",
+    color: "rgb(221, 220, 220) !important",
   },
   tableHeader: {
     height: "75.50px",
