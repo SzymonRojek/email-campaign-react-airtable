@@ -1,8 +1,4 @@
-# App still in progress
-
-Actually I am working on:
-
-- handling errors
+# Demo:
 
 Check demo on Herokuapp: [demo](https://create-email-campaign.herokuapp.com/)
 
@@ -11,12 +7,13 @@ Check demo on Herokuapp: [demo](https://create-email-campaign.herokuapp.com/)
 - React.js: useForm hook, custom hooks, router v6, createContext, useContext
 - [Airtable data base](https://airtable.com/) - REST API
 - React Query
+- Material UI
 - Postman: testing endpoints
 - Express.js - Proxy (hide api_key, id_base), env variables
 - [Email.js](https://www.emailjs.com/)
 - Deploying on Heroku
 
-# Main goal
+# Main goal:
 
 <p align="center" >
  <img src="./client/src/img/crud.png" width="240">
@@ -43,7 +40,7 @@ Connect app to the Email.js and send personalized email just by one click to all
 <br>
 <br>
 
-# General description
+# General description:
 
 App is devided for two parts: client and server side.
 
@@ -78,7 +75,7 @@ b) Campaigns:
 
 <br>
 
-# Testing
+# Testing:
 
 Also, I have used a tool such as **Postman** to test for valid, invalid, authorised and unauthorised requests, to ensure that the API responds correctly to every endpoint.
 
@@ -102,6 +99,14 @@ Results of API tests and automating their execution by Postman's runner:
 <img src="./client/src/img/runnerTests.png">
 <br>
 <br>
+
+# ToDo:
+
+I would like to rewrite application and add:
+
+- Styled Components
+- Type Script
+- Redux Toolkit + Saga
 
 # Available Scripts:
 
