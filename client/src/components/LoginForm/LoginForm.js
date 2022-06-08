@@ -2,58 +2,13 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Paper, Box, Grid, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 
+import { styles, useStyles } from "./styles";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 import { validationLogin } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { LogFormButton } from "components/LogFormButton";
 import { PasswordInput } from "./PasswordInput";
-
-const styles = {
-  paper: {
-    maxWidth: 600,
-    margin: "0 auto",
-    borderRadius: 8,
-    backgroundColor: "#142F43",
-  },
-  typography: { color: "orange", letterSpacing: 2, wordSpacing: 3 },
-  heading: {
-    color: "orange",
-    textAlign: "center",
-    letterSpacing: 2,
-    wordSpacing: 3,
-  },
-};
-
-const useStyles = makeStyles((theme) => ({
-  logInButton: {
-    "&.MuiButton-root": {
-      maxWidth: 120,
-      margin: "20px 0 20px 0",
-      padding: "10px 20px",
-      fontSize: 16,
-      fontWeight: "bold",
-      color: "#142f43",
-      backgroundColor: "orange",
-      textTransform: "uppercase",
-      border: "none",
-      borderRadius: 3,
-      cursor: "pointer",
-      transition: "all .3s ease",
-
-      "&:hover": {
-        backgroundColor: "#ca880e",
-        color: "rgb(221, 220, 220)",
-        transform: "translateY(-2px)",
-      },
-
-      "&:active": {
-        transform: "translateY(2px)",
-      },
-    },
-  },
-}));
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -89,7 +44,7 @@ const LoginForm = () => {
                 <Typography
                   color="textSecondary"
                   variant="body2"
-                  style={styles.typography}
+                  style={styles.textInfo}
                 >
                   *Fields required
                 </Typography>
@@ -101,9 +56,9 @@ const LoginForm = () => {
                 <Typography
                   color="textSecondary"
                   variant="body2"
-                  style={styles.typography}
+                  style={styles.textPassword}
                 >
-                  - type admin
+                  - Password: type admin
                 </Typography>
               </Grid>
               <Grid item xs={12}>

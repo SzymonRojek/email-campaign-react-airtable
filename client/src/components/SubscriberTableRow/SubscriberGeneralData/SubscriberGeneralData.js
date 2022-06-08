@@ -6,8 +6,8 @@ import { FaUserEdit } from "react-icons/fa";
 import { MdPersonRemoveAlt1 } from "react-icons/md";
 import { CgDetailsMore } from "react-icons/cg";
 import { TableCell, TableRow, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 
+import { styles, useStyles } from "./styles";
 import {
   isEven,
   getStatusColor,
@@ -16,40 +16,6 @@ import {
 } from "helpers";
 import { useInformationModalState } from "contexts/InformationModalContext";
 import { useRemoveItem } from "customHooks/useRemoveItem";
-
-const styles = {
-  button: {
-    fontSize: 12,
-    letterSpacing: 2,
-    fontWeight: "bold",
-    color: "white",
-  },
-  paragraph: {
-    padding: "8px 20px",
-    letterSpacing: 2,
-    textTransform: "uppercase",
-    fontSize: 11,
-    width: 80,
-    display: "flex",
-    justifyContent: "center",
-  },
-  icon: { marginLeft: 10, color: "white" },
-};
-
-const useStyles = makeStyles((theme) => ({
-  status: {
-    fontWeight: "bold",
-    fontSize: "0.75rem",
-    color: "white",
-    backgroundColor: "#ddd",
-    borderRadius: 4,
-    padding: "5px 10px",
-    display: "inline-block",
-  },
-
-  cellNo: { width: 25 },
-  cell: { wordWrap: "break-word", width: 100 },
-}));
 
 const SubscriberGeneralData = (props) => {
   const {

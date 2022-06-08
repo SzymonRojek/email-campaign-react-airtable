@@ -3,29 +3,8 @@ import { Container, Box, Grid } from "@material-ui/core";
 import { AppBar, Typography } from "@material-ui/core";
 import { Link } from "@mui/material";
 import { BsGithub } from "react-icons/bs";
-import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
-  appBar: {
-    position: "absolute",
-    bottom: 0,
-    minHeight: "5vh",
-    color: "#ffffff8c",
-    backgroundColor: "#142f43",
-  },
-  icon: {
-    fontSize: 25,
-    color: "orange",
-    cursor: "pointer",
-    zIndex: -1,
-  },
-  footer: { marginBottom: 180, zIndex: 1, textAlign: "center" },
-  label: {
-    [theme.breakpoints.up("sm")]: {
-      fontSize: 20,
-    },
-  },
-}));
+import { useStyles } from "./styles";
 
 const StyledFooter = ({ label }) => {
   const classes = useStyles();

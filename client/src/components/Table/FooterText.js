@@ -1,27 +1,18 @@
 import PropTypes from "prop-types";
 
-const styles = {
-  footerContainer: {
-    textAlign: "center",
-    padding: 20,
-  },
-  text: { fontSize: 24 },
-  active: { color: "green", fontWeight: "bold", letterSpacing: 2 },
-  pending: { color: "orange", fontWeight: "bold", letterSpacing: 2 },
-  blocked: { color: "crimson", fontWeight: "bold", letterSpacing: 2 },
-};
+import { stylesFooter } from "./styles";
 
 const FooterText = ({ status, text }) => (
-  <footer style={styles.footerContainer}>
-    <p style={styles.text}>
+  <footer style={stylesFooter.footerContainer}>
+    <p style={stylesFooter.text}>
       {text}
       <span
         style={
           status === "active"
-            ? styles.active
+            ? stylesFooter.active
             : status === "pending"
-            ? styles.pending
-            : styles.blocked
+            ? stylesFooter.pending
+            : stylesFooter.blocked
         }
       >
         {`${status}`}
