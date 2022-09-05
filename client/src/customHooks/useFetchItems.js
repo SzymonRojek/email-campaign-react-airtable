@@ -1,9 +1,9 @@
 import { useQuery } from "react-query";
 
-import api from "api";
+import { fetchData } from "services";
 
 export const useFetchItems = (endpoint, config) => {
-  const context = useQuery(endpoint, api.fetchItems, {
+  const context = useQuery(endpoint, fetchData, {
     ...config,
   });
 

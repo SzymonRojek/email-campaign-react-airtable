@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 
-import api from "api";
+import { fetchDataById } from "services";
 import {
   detailsDataHeadTableFirst,
   detailsDataHeadTableSecond,
@@ -31,14 +31,14 @@ const DetailsSubscriberPage = () => {
     isLoading,
     isFetching,
     isError,
-  } = useQuery([endpoint, { id }], api.fetchDetailsItemById, {
+  } = useQuery([endpoint, { id }], fetchDataById, {
     meta: {
       myMessage: "Subscriber does not exist! ",
     },
   });
 
   if (isLoading || isFetching) {
-    return <Loader title="Details" />;
+    return <Loader title="loading" />;
   }
 
   if (isError) {

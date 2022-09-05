@@ -10,6 +10,7 @@ import {
 import { SubscriberGeneralData } from "components/SubscriberTableRow/SubscriberGeneralData";
 import CustomPaginator from "components/PaginationPackage/CustomPaginator";
 import { getFilteredDataByStatus } from "helpers";
+import { Typography } from "@mui/material";
 
 const SubscriberStatus = (props) => {
   const {
@@ -36,38 +37,47 @@ const SubscriberStatus = (props) => {
       disableDigits={false}
       renderData={(data, actualPage) => (
         <>
-          <ContainerTable
-            subHeading={subHeading}
-            passedData={filteredData}
-            setSelectValue={setSelectValue}
-            setSelectStatus={setSelectStatus}
-            disableSelect={filteredData.length > 4 ? true : false}
-          >
-            <HeadTable dataHeadTable={generalDataHeadTable} />
+          {data && data.length === 0 ? (
+            <Typography color="textSecondary" variant="subtitle1" p={2}>
+              Actually the list of subscribers is empty - please add new
+              subscriber.
+            </Typography>
+          ) : (
+            <>
+              <ContainerTable
+                subHeading={subHeading}
+                passedData={filteredData}
+                setSelectValue={setSelectValue}
+                setSelectStatus={setSelectStatus}
+                disableSelect={filteredData.length > 4 ? true : false}
+              >
+                <HeadTable dataHeadTable={generalDataHeadTable} />
 
-            <BodyTable>
-              {data.some((el) => el.fields.status === status)
-                ? data.map((subscriber, index) => (
-                    <SubscriberGeneralData
-                      key={`id-${subscriber.id}`}
-                      subscriber={subscriber}
-                      index={index}
-                      actualPage={actualPage}
-                      dataPerPage={parseInt(selectValue)}
-                      editSubscriber={editSubscriber}
-                      handleSubscriberDetails={handleSubscriberDetails}
-                      removeSubscriber={removeSubscriber}
-                    />
-                  ))
-                : []}
-            </BodyTable>
-          </ContainerTable>
-          {filteredData.length < 1 ? (
-            <FooterText
-              text="There are not subscribers with the status - "
-              status={status}
-            />
-          ) : null}
+                <BodyTable>
+                  {data.some((el) => el.fields.status === status)
+                    ? data.map((subscriber, index) => (
+                        <SubscriberGeneralData
+                          key={`id-${subscriber.id}`}
+                          subscriber={subscriber}
+                          index={index}
+                          actualPage={actualPage}
+                          dataPerPage={parseInt(selectValue)}
+                          editSubscriber={editSubscriber}
+                          handleSubscriberDetails={handleSubscriberDetails}
+                          removeSubscriber={removeSubscriber}
+                        />
+                      ))
+                    : []}
+                </BodyTable>
+              </ContainerTable>
+              {filteredData.length < 1 ? (
+                <FooterText
+                  text="There are not subscribers with the status - "
+                  status={status}
+                />
+              ) : null}
+            </>
+          )}
         </>
       )}
     />

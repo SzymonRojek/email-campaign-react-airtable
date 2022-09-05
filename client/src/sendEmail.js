@@ -13,7 +13,8 @@ export function sendEmailTo(data, receivers, callbackPostAirtable) {
     throw new Error("callbackPostAirtable has to be a function");
   }
 
-  const { title, description } = data;
+  // createEmail({ data, status: "draft", callback: handleConfirmModal })
+  // const { title, description } = data;
 
   //locked email.js because requests are limited
 
@@ -48,9 +49,9 @@ export function sendEmailTo(data, receivers, callbackPostAirtable) {
 
   // at the moment I want to show to the user that an email has bent sent
   try {
-    callbackPostAirtable(data, "sent");
+    callbackPostAirtable();
   } catch (error) {
-    callbackPostAirtable(data, "draft");
+    callbackPostAirtable();
     toastMessage("Email has not been sent by EmailJS");
   }
 }

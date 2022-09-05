@@ -4,9 +4,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 
-import api from "api";
+import { fetchDataById, updateSubscriber } from "services";
 import { useInformationModalState } from "contexts/InformationModalContext";
-import { validationSubscriber, toastMessage } from "helpers";
+import { validationSubscriber } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
@@ -33,7 +33,7 @@ const UpdateSubscriberPage = () => {
     isLoading,
     isFetching,
     isError,
-  } = useQuery([endpoint, { id }], api.fetchDetailsItemById, {
+  } = useQuery([endpoint, { id }], fetchDataById, {
     meta: {
       myMessage: "Subscriber does not exist! ",
     },
@@ -87,14 +87,6 @@ const UpdateSubscriberPage = () => {
   const isSubscriberDataEdited = (data, defaultValues) =>
     JSON.stringify(data) === JSON.stringify(defaultValues);
 
-  const informationModalProps = {
-    colorButton: "success",
-    onClose: () => {
-      setInformationModalState({ isOpenInformationModal: false });
-      navigate(`${endpoint}`);
-    },
-  };
-
   const handleInformationModal = (data) => {
     const styles = {
       noChange: { color: "orange", fontWeight: "bold", letterSpacing: 2 },
@@ -121,42 +113,27 @@ const UpdateSubscriberPage = () => {
       ),
     });
     setInformationModalState({
-      informationModalProps,
+      informationModalProps: {
+        colorButton: "success",
+        onClose: () => {
+          setInformationModalState({ isOpenInformationModal: false });
+          navigate(`${endpoint}`);
+        },
+      },
       isOpenInformationModal: true,
     });
   };
 
-  const updateAPIsubscriber = async (data) => {
-    const { name, surname, email, profession, status, salary, telephone } =
-      data;
-
-    const patchData = {
-      fields: {
-        name,
-        email,
-        surname,
-        status,
-        salary,
-        telephone,
-        profession,
-      },
-    };
-
-    try {
-      const response = await api.patch(`${endpoint}/${id}`, patchData);
-
-      handleInformationModal(response.fields);
-    } catch (error) {
-      toastMessage(
-        `Data were not been updated into Airtable: ${error.message}`
-      );
-    }
-  };
-
-  const { mutateAsync: updateSubscriber } = useMutation(updateAPIsubscriber);
+  const { mutateAsync: updateSubscriberAirtable } = useMutation((data) => {
+    updateSubscriber({
+      data,
+      id,
+      callback: handleInformationModal,
+    });
+  });
 
   if (isLoading || isFetching) {
-    return <Loader title="Getting data" />;
+    return <Loader title="loading" />;
   }
 
   if (isError) {
@@ -170,7 +147,7 @@ const UpdateSubscriberPage = () => {
         <FormSubscriber
           control={control}
           errors={errors}
-          addSubscriber={handleSubmit(updateSubscriber)}
+          addSubscriber={handleSubmit(updateSubscriberAirtable)}
           isCheckboxChecked={isCheckboxChecked}
           labelButton="update subscriber"
         />

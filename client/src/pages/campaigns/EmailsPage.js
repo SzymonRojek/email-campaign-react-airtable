@@ -1,29 +1,30 @@
 import PropTypes from "prop-types";
 import { useQuery } from "react-query";
 
-import api from "api";
+import { fetchData } from "services";
 import { dataHeadEmailTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { CampaignsList } from "components/CampaignsList";
-import { Loader, Error } from "components/DisplayMessage";
+import { Loader } from "components/DisplayMessage";
 
 const EmailsPage = ({ editCampaign }) => {
   const endpoint = "/campaigns";
   const {
     data: campaigns,
+    status,
     isLoading,
     isFetching,
-  } = useQuery(endpoint, api.fetchItems, {
+  } = useQuery(endpoint, fetchData, {
     meta: {
       myMessage: "Can not get campaigns list",
     },
   });
 
   if (isLoading || isFetching) {
-    return <Loader title="Emails" />;
+    return <Loader title="loading" />;
   }
 
   return (
@@ -31,19 +32,17 @@ const EmailsPage = ({ editCampaign }) => {
       <StyledHeading label="all emails" />
       <StyledMainContent>
         <div style={{ marginBottom: 100 }}>
-          {!campaigns.length ? (
-            <Error error="List of emails is empty - please add new campaign" />
-          ) : (
+          {status === "success" && (
             <CampaignsList
               subHeading="list"
               dataHeadEmailTable={dataHeadEmailTable}
-              passedData={sortDataAlphabetically(campaigns ? campaigns : [])}
+              passedData={sortDataAlphabetically(campaigns || [])}
               editCampaign={editCampaign}
             />
           )}
         </div>
 
-        {campaigns && campaigns.length ? (
+        {status === "success" && campaigns.length ? (
           <CampaignsList
             subHeading="latest added"
             dataHeadEmailTable={dataHeadEmailTable}

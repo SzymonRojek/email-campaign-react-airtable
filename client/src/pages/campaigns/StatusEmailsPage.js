@@ -4,13 +4,13 @@ import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
 import { makeStyles } from "@material-ui/core/styles";
 
-import api from "api";
+import { fetchData } from "services";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { CampaignStatus } from "components/CampaignStatus";
 import { SelectInputController } from "components/Inputs";
-import { Loader, Error } from "components/DisplayMessage";
+import { Loader } from "components/DisplayMessage";
 
 const useSelectStyles = makeStyles({
   root: {
@@ -67,9 +67,10 @@ const StatusEmailsPage = ({ editCampaign }) => {
   const endpoint = "/campaigns";
   const {
     data: campaigns,
+    status,
     isLoading,
     isFetching,
-  } = useQuery(endpoint, api.fetchItems, {
+  } = useQuery(endpoint, fetchData, {
     meta: {
       myMessage: "Can not get campaigns status list:",
     },
@@ -106,16 +107,14 @@ const StatusEmailsPage = ({ editCampaign }) => {
   }, [watch]);
 
   if (isLoading || isFetching) {
-    return <Loader title="Status" />;
+    return <Loader title="loading" />;
   }
 
   return (
     <StyledContainer>
       <StyledHeading label="email status" />
       <StyledMainContent>
-        {!campaigns.length ? (
-          <Error error="List of emails is empty - please add new campaign" />
-        ) : (
+        {status === "success" && (
           <CampaignStatus
             subHeading="list"
             dataHeadEmailTable={statusDataHeadTable}

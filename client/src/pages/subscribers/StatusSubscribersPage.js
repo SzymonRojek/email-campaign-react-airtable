@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
 import { makeStyles } from "@material-ui/core/styles";
 
-import api from "api";
+import { fetchData } from "services";
 import { Loader, Error } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
@@ -69,7 +69,12 @@ const selectSubscribersStatus = [
 
 const StatusSubscribersPage = ({ editSubscriber, handleSubscriberDetails }) => {
   const endpoint = "/subscribers";
-  const { data: subscribers, isLoading } = useQuery(endpoint, api.fetchItems, {
+  const {
+    data: subscribers,
+    status,
+    isLoading,
+    isFetching,
+  } = useQuery(endpoint, fetchData, {
     meta: {
       myMessage: "Cannot get subscribers list:",
     },
@@ -107,17 +112,15 @@ const StatusSubscribersPage = ({ editSubscriber, handleSubscriberDetails }) => {
     return () => watchStatus.unsubscribe();
   }, [watch]);
 
-  if (isLoading) {
-    <Loader title="Status" />;
+  if (isLoading | isFetching) {
+    return <Loader title="loading" />;
   }
 
   return (
     <StyledContainer>
       <StyledHeading label="subscribers status" />
       <StyledMainContent>
-        {!subscribers.length ? (
-          <Error error="List of subscribers is empty - please add a new subscriber" />
-        ) : (
+        {status === "success" && (
           <SubscriberStatus
             subHeading="list"
             generalDataHeadTable={statusDataHeadTable}

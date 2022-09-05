@@ -4,13 +4,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import api from "api";
+import { createSubscriber } from "services";
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
-import {
-  capitalizeFirstLetter,
-  validationSubscriber,
-  toastMessage,
-} from "helpers";
+import { capitalizeFirstLetter, validationSubscriber } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
@@ -69,7 +65,7 @@ const CreateSubscriberPage = () => {
     onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
   };
 
-  const setDataConfirmModal = (data) => {
+  const handleConfirmModal = (data) => {
     setConfirmModalState({
       confirmModalProps,
       isOpenConfirmModal: true,
@@ -93,29 +89,9 @@ const CreateSubscriberPage = () => {
     });
   };
 
-  const createAPISubscriber = async (data) => {
-    const postData = {
-      fields: {
-        name: capitalizeFirstLetter(data.name),
-        surname: capitalizeFirstLetter(data.surname),
-        email: data.email,
-        status: data.status,
-        profession: data.profession,
-        salary: data.salary,
-        telephone: data.telephone,
-      },
-    };
-
-    try {
-      const response = await api.post(`${endpoint}`, postData);
-
-      setDataConfirmModal(response.fields);
-    } catch (error) {
-      toastMessage(`Data were not been sent to the Airtable: ${error.message}`);
-    }
-  };
-
-  const { mutateAsync: createSubscriber } = useMutation(createAPISubscriber);
+  const { mutateAsync: createSubscriberAirtable } = useMutation((data) =>
+    createSubscriber({ data, callback: handleConfirmModal })
+  );
 
   return (
     <>
@@ -125,7 +101,7 @@ const CreateSubscriberPage = () => {
           <FormSubscriber
             control={control}
             errors={errors}
-            addSubscriber={handleSubmit(createSubscriber)}
+            addSubscriber={handleSubmit(createSubscriberAirtable)}
             isCheckboxChecked={isCheckboxChecked}
             labelButton="add subscriber"
           />

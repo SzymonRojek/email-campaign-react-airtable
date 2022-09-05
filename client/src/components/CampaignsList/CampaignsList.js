@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
+import { Typography } from "@mui/material";
 
 import { ContainerTable, HeadTable, BodyTable } from "components/Table";
 import { CampaignTableRow } from "components/CampaignTableRow";
@@ -23,28 +24,36 @@ const CampaignsList = (props) => {
       disableArrows={false}
       disableDigits={false}
       renderData={(data, actualPage) => (
-        <ContainerTable
-          subHeading={subHeading}
-          passedData={passedData}
-          setSelectValue={setSelectValue}
-          disableSelect={passedData.length > 4 ? true : false}
-        >
-          <HeadTable dataHeadTable={dataHeadEmailTable} />
-          <BodyTable>
-            {data &&
-              data.map((campaign, index) => (
-                <CampaignTableRow
-                  key={`id-${campaign.id}`}
-                  campaign={campaign}
-                  index={index}
-                  actualPage={actualPage}
-                  dataPerPage={parseInt(selectValue)}
-                  editCampaign={editCampaign}
-                  removeCampaign={removeCampaign}
-                />
-              ))}
-          </BodyTable>
-        </ContainerTable>
+        <>
+          {data && data.length === 0 ? (
+            <Typography color="textSecondary" variant="subtitle1" p={2}>
+              Actually the list of emails is empty - please add new email.
+            </Typography>
+          ) : (
+            <ContainerTable
+              subHeading={subHeading}
+              passedData={passedData}
+              setSelectValue={setSelectValue}
+              disableSelect={passedData.length > 4 ? true : false}
+            >
+              <HeadTable dataHeadTable={dataHeadEmailTable} />
+              <BodyTable>
+                {data &&
+                  data.map((campaign, index) => (
+                    <CampaignTableRow
+                      key={`id-${campaign.id}`}
+                      campaign={campaign}
+                      index={index}
+                      actualPage={actualPage}
+                      dataPerPage={parseInt(selectValue)}
+                      editCampaign={editCampaign}
+                      removeCampaign={removeCampaign}
+                    />
+                  ))}
+              </BodyTable>
+            </ContainerTable>
+          )}
+        </>
       )}
     />
   );

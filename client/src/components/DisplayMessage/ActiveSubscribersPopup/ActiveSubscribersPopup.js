@@ -13,7 +13,6 @@ import { Button } from "@mui/material";
 
 import { useStyles, styles } from "./styles";
 
-import api from "api";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 import {
   handleUncheckedAll,
@@ -21,6 +20,7 @@ import {
   areSomeTruthy,
   countStateTruthy,
 } from "./utilities";
+import fetchData from "../../../services/fetchData";
 
 const ActiveSubscribersPopup = ({
   openListActiveSubscribers,
@@ -28,7 +28,7 @@ const ActiveSubscribersPopup = ({
 }) => {
   const classes = useStyles();
 
-  const { data: subscribers } = useQuery("subscribers", api.fetchItems, {
+  const { data: subscribers } = useQuery("subscribers", fetchData, {
     meta: {
       myMessage: "Cannot get subscribers list:",
     },

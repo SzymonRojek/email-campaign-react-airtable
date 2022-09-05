@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
 import { useQuery } from "react-query";
 
-import api from "api";
+import { fetchData } from "services";
 import { generalDataHeadTable } from "data/dataHeadTable";
 import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
-import { Loader, Error } from "components/DisplayMessage";
+import { Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
@@ -20,16 +20,17 @@ const SubscribersPage = ({ editSubscriber, handleSubscriberDetails }) => {
   const endpoint = "/subscribers";
   const {
     data: subscribers,
+    status,
     isLoading,
     isFetching,
-  } = useQuery(endpoint, api.fetchItems, {
+  } = useQuery(endpoint, fetchData, {
     meta: {
       myMessage: "Cannot get subscribers list.",
     },
   });
 
   if (isLoading | isFetching) {
-    return <Loader title="Subscribers" />;
+    return <Loader title="loading" />;
   }
 
   return (
@@ -37,27 +38,23 @@ const SubscribersPage = ({ editSubscriber, handleSubscriberDetails }) => {
       <StyledContainer>
         <StyledHeading label="all subscribers" />
         <StyledMainContent>
-          {!subscribers.length ? (
-            <Error error="List of subscribers is empty - please add a new subscriber" />
-          ) : (
+          {status === "success" && (
             <div style={styles.container}>
               <SubscribersList
                 subHeading="list"
                 dataHeadTable={generalDataHeadTable}
-                passedData={sortDataAlphabetically(
-                  subscribers ? subscribers : []
-                )}
+                passedData={sortDataAlphabetically(subscribers || [])}
                 editSubscriber={editSubscriber}
                 handleSubscriberDetails={handleSubscriberDetails}
               />
             </div>
           )}
 
-          {subscribers && subscribers.length ? (
+          {status === "success" && subscribers.length ? (
             <SubscribersList
               subHeading="latest added"
               dataHeadTable={generalDataHeadTable}
-              passedData={getLatestAddedItem(subscribers)}
+              passedData={getLatestAddedItem(subscribers || [])}
               editSubscriber={editSubscriber}
               handleSubscriberDetails={handleSubscriberDetails}
             />

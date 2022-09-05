@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "react-query";
 
-import api from "api";
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
 import { capitalizeFirstLetter } from "helpers";
+import api from "../services/api";
 
 const styles = {
   questionText: { color: "crimson", fontWeight: "bold" },

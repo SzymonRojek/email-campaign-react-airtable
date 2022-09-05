@@ -3,19 +3,16 @@ import { useMutation, useQuery } from "react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import api from "api";
+import { fetchData, createEmail } from "services";
 import { sendEmailTo } from "sendEmail";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
-import {
-  capitalizeFirstLetter,
-  validationCampaign,
-  toastMessage,
-} from "helpers";
+import { validationCampaign } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
 import { FormCampaign } from "components/FormCampaign";
+import { useEffect } from "react";
 
 const styles = {
   questionSpan: { color: "crimson", fontWeight: "bold" },
@@ -28,6 +25,7 @@ const CreateEmailPage = () => {
   const {
     handleSubmit,
     control,
+    formState,
     formState: { errors },
     reset,
   } = useForm({
@@ -37,7 +35,7 @@ const CreateEmailPage = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const { data: subscribers } = useQuery(subscribersEndpoint, api.fetchItems);
+  const { data: subscribers } = useQuery(subscribersEndpoint, fetchData);
 
   const allActiveSubscribers =
     (subscribers &&
@@ -61,7 +59,7 @@ const CreateEmailPage = () => {
     onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
   };
 
-  const setDataConfirmModal = (data, status) => {
+  const handleConfirmModal = (data, status) => {
     setConfirmModalState({
       confirmModalProps,
       isOpenConfirmModal: true,
@@ -73,15 +71,10 @@ const CreateEmailPage = () => {
 
       message: (
         <>
-          Email{" "}
-          <span style={styles.campaignName}>
-            {" "}
-            {capitalizeFirstLetter(data.title)}{" "}
-          </span>
-          has been{" "}
+          Email has been
           {status === "sent"
-            ? "sent and added to the list"
-            : "drafted and added to the list"}
+            ? " sent and added to the list"
+            : " drafted and added to the list"}
           😁
         </>
       ),
@@ -99,26 +92,8 @@ const CreateEmailPage = () => {
     });
   };
 
-  const postDataEmailToAirtable = async (data, status) => {
-    const postData = {
-      fields: {
-        title: capitalizeFirstLetter(data.title),
-        description: capitalizeFirstLetter(data.description),
-        status,
-      },
-    };
-
-    try {
-      const response = await api.post(campaignsEndpoint, postData);
-
-      setDataConfirmModal(response.fields, status);
-    } catch (error) {
-      toastMessage(`Data were not been sent to the Airtable: ${error.message}`);
-    }
-  };
-
   const { mutateAsync: draftCampaign } = useMutation((data) =>
-    postDataEmailToAirtable(data, "draft")
+    createEmail({ data, status: "draft", callback: handleConfirmModal })
   );
 
   const { mutateAsync: sendCampaign } = useMutation((data) => {
@@ -127,14 +102,18 @@ const CreateEmailPage = () => {
       finalSelectedActiveSubscribers.length
         ? finalSelectedActiveSubscribers
         : allActiveSubscribers,
-      postDataEmailToAirtable
+      () => createEmail({ data, status: "sent", callback: handleConfirmModal })
     );
-
-    reset({
-      title: "",
-      description: "",
-    });
   });
+
+  useEffect(() => {
+    if (formState.isSubmitSuccessful) {
+      reset({
+        title: "",
+        description: "",
+      });
+    }
+  }, [formState, reset]);
 
   return (
     <StyledContainer>
@@ -146,9 +125,9 @@ const CreateEmailPage = () => {
           errors={errors}
           handleDraftData={handleSubmit(draftCampaign)}
           handleSendData={handleSubmit(sendCampaign)}
-          disabledCheckbox={!!!allActiveSubscribers.length}
+          disabledCheckbox={subscribers && !allActiveSubscribers.length}
           labelCheckbox={
-            !allActiveSubscribers.length
+            subscribers && !allActiveSubscribers.length
               ? "no active subscribers"
               : finalSelectedActiveSubscribers.length
               ? `selected subscribers: ${finalSelectedActiveSubscribers.length} from ${allActiveSubscribers.length}`

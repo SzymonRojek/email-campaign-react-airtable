@@ -5,26 +5,16 @@ import { useParams } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router";
 import { useMutation, useQuery } from "react-query";
 
-import api from "api";
+import { fetchData, fetchDataById, updateEmail } from "services";
 import { sendEmailTo } from "sendEmail";
-import { useConfirmModalState } from "contexts/ConfirmModalContext";
+import { useInformationModalState } from "contexts/InformationModalContext";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
-import {
-  capitalizeFirstLetter,
-  validationCampaign,
-  toastMessage,
-} from "helpers";
+import { capitalizeFirstLetter, validationCampaign } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { FormCampaign } from "components/FormCampaign";
 import { StyledHeading } from "components/StyledHeading";
 import { Loader, Error } from "components/DisplayMessage";
-
-const styles = {
-  title: { color: "green", fontWeight: "bold" },
-  questionSpan: { color: "crimson", fontWeight: "bold" },
-  campaignName: { color: "green", fontWeight: "bold" },
-};
 
 const UpdateEmailsPage = () => {
   const subscribersEndpoint = "/subscribers";
@@ -42,21 +32,22 @@ const UpdateEmailsPage = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const { data: subscribers } = useQuery(subscribersEndpoint, api.fetchItems);
+  const { data: subscribers } = useQuery(subscribersEndpoint, fetchData);
 
   const {
     data: campaign,
     isLoading,
     isFetching,
     isError,
-  } = useQuery([campaignsEndpoint, { id }], api.fetchDetailsItemById, {
+  } = useQuery([campaignsEndpoint, { id }], fetchDataById, {
     meta: {
       myMessage: "Campaign does not exist! ",
     },
   });
 
   const { finalSelectedActiveSubscribers } = useGlobalStoreContext();
-  const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
+  const { setInformationModalState, setInformationModalText } =
+    useInformationModalState();
 
   const defaultValues = {
     title: campaign?.fields.title || "",
@@ -72,94 +63,42 @@ const UpdateEmailsPage = () => {
     return () => clearTimeout(timeoutId);
   }, [setValue, defaultValues.title, defaultValues.description]);
 
-  const isCampaignChanged = (data) =>
-    data.title !== defaultValues.title ||
-    data.description !== defaultValues.description;
-
   const allActiveSubscribers =
     subscribers &&
     subscribers.filter(({ fields: { status } }) => status === "active");
 
-  const confirmModalProps = {
-    onConfirm: () => {
-      if (
-        !allActiveSubscribers.length &&
-        pathname === `${campaignsEndpoint}/edit/${id}`
-      ) {
-        navigate(`${subscribersEndpoint}/add`);
-      } else {
-        navigate(campaignsEndpoint);
-      }
-    },
-    onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
-  };
-
-  const setDataConfirmModal = (data, status) => {
-    const styledTitle = (
-      <span style={styles.title}>{capitalizeFirstLetter(data.title)}</span>
-    );
-
-    setConfirmModalState({
-      confirmModalProps,
-      isOpenConfirmModal: true,
-    });
-    setConfirmModalText({
-      additionalText: !allActiveSubscribers.length
-        ? "No active Subscribers!"
-        : "",
+  const handleInformationModal = (data, status) => {
+    setInformationModalText({
+      title: status === "sent" ? <> That's great 🎊</> : <> Draft... 👋 </>,
       message:
-        isCampaignChanged(data) && status === "sent" ? (
-          <> Email {styledTitle} has been changed and finally sent 👋</>
-        ) : !isCampaignChanged(data) && status === "draft" ? (
-          <>
-            Email {styledTitle} has not been changed and status still is draft
-            😕
-          </>
-        ) : !isCampaignChanged(data) && status === "sent" ? (
-          <>Email {styledTitle} has not been changed but finally sent 👋</>
-        ) : isCampaignChanged(data) && status === "draft" ? (
-          <>Email {styledTitle} has been changed and status still is draft 😕</>
+        status === "sent" ? (
+          <> Email {data.title} has been sent 👋 </>
         ) : (
-          <>Email {styledTitle} has not been changed but finally sent 👋</>
+          <> Email {data.title} is drafted 👋 </>
         ),
-      question: !allActiveSubscribers.length ? (
-        <>
-          Would you like to add a
-          <span style={styles.questionSpan}> new subscriber </span>?
-        </>
-      ) : (
-        <>
-          Would you like to come back to
-          <span style={styles.questionSpan}> the Campaigns List</span> ?
-        </>
-      ),
+    });
+    setInformationModalState({
+      informationModalProps: {
+        colorButton: "success",
+        onClose: () => {
+          setInformationModalState({ isOpenInformationModal: false });
+          navigate(`${campaignsEndpoint}`);
+        },
+      },
+      isOpenInformationModal: true,
     });
   };
 
-  const updateEmailToAirtable = async (data, status) => {
-    const { title, description } = data;
-    const patchData = {
-      fields: {
-        title,
-        description,
-        status,
-      },
+  const { mutateAsync: draftCampaign } = useMutation((data) => {
+    const config = {
+      data,
+      status: "draft",
+      id,
+      callback: handleInformationModal,
     };
 
-    try {
-      const response = await api.patch(`${campaignsEndpoint}/${id}`, patchData);
-
-      setDataConfirmModal(response.fields, status);
-    } catch (error) {
-      toastMessage(
-        `Data were not been updated into Airtable: ${error.message}`
-      );
-    }
-  };
-
-  const { mutateAsync: draftCampaign } = useMutation((data) =>
-    updateEmailToAirtable(data, "draft")
-  );
+    updateEmail(config);
+  });
 
   const { mutateAsync: sendCampaign } = useMutation((data) =>
     sendEmailTo(
@@ -167,17 +106,25 @@ const UpdateEmailsPage = () => {
       finalSelectedActiveSubscribers.length
         ? finalSelectedActiveSubscribers
         : allActiveSubscribers,
-      updateEmailToAirtable
+      () =>
+        updateEmail({
+          data,
+          status: "sent",
+          id,
+          callback: handleInformationModal,
+        })
     )
   );
 
   if (isLoading || isFetching) {
-    return <Loader title="Get details" />;
+    return <Loader title="loading" />;
   }
 
   if (isError) {
     return <Error error="Email Campaign does not exist!" />;
   }
+
+  console.log(allActiveSubscribers);
 
   return (
     <StyledContainer>
@@ -188,9 +135,9 @@ const UpdateEmailsPage = () => {
           errors={errors}
           handleDraftData={handleSubmit(draftCampaign)}
           handleSendData={handleSubmit(sendCampaign)}
-          disabledCheckbox={!!!allActiveSubscribers.length}
+          disabledCheckbox={subscribers && !allActiveSubscribers.length}
           labelCheckbox={
-            !allActiveSubscribers.length
+            subscribers && !allActiveSubscribers.length
               ? "no active subscribers"
               : finalSelectedActiveSubscribers.length
               ? `selected subscribers: ${finalSelectedActiveSubscribers.length} from ${allActiveSubscribers.length}`
