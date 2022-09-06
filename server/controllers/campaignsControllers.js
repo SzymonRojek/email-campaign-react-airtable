@@ -1,12 +1,15 @@
 const { axiosInstance } = require("./axiosInstance");
 
+const { sortDataAlphabetically } = require("../helpers/sortDataAlphabetically");
+const { capitalizeFirstLetter } = require("../helpers/capitalizeFirstLetter");
 const endpoint = "/campaigns";
 
 exports.getAllCampaigns = async (req, res) => {
   try {
     const { data } = await axiosInstance.get(`${endpoint}`);
 
-    res.status(200).json(data.records);
+    const sortedData = sortDataAlphabetically(data.records);
+    res.status(200).json(sortedData);
   } catch (error) {
     res.status(404).json({ status: "fail", error });
   }
@@ -36,7 +39,11 @@ exports.createCampaign = async (req, res) => {
 
   try {
     const { data } = await axiosInstance.post(`${endpoint}`, {
-      fields: { title, description, status },
+      fields: {
+        title: capitalizeFirstLetter(title),
+        description: capitalizeFirstLetter(description),
+        status,
+      },
     });
 
     res.status(200).json(data);

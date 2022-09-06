@@ -1,12 +1,14 @@
 const { axiosInstance } = require("./axiosInstance");
 
+const { sortDataAlphabetically } = require("../helpers/sortDataAlphabetically");
 const endpoint = "/subscribers";
 
 exports.getAllSubscribers = async (req, res) => {
   try {
     const { data } = await axiosInstance.get(`${endpoint}`);
 
-    res.status(200).json(data.records);
+    const sortedData = sortDataAlphabetically(data.records);
+    res.status(200).json(sortedData);
   } catch (error) {
     res.status(404).json({ status: "fail", error });
   }
