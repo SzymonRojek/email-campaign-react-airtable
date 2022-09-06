@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
 
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
-import { capitalizeFirstLetter } from "helpers";
 import api from "../services/api";
 
 const styles = {
@@ -37,8 +36,7 @@ export const useRemoveItem = (query, data, id) => {
       question: (
         <>
           Are you sure you want to remove{" "}
-          <span style={styles.questionText}>{capitalizeFirstLetter(data)}</span>
-          ?
+          <span style={styles.questionText}>{data}</span>?
         </>
       ),
     });

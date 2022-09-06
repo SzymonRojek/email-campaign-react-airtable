@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { createSubscriber } from "services";
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
-import { capitalizeFirstLetter, validationSubscriber } from "helpers";
+import { validationSubscriber } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
@@ -75,7 +75,7 @@ const CreateSubscriberPage = () => {
         <>
           Subscriber
           <span style={styles.subscriberName}>
-            <strong> {capitalizeFirstLetter(data.name)} </strong>
+            <strong> {data.name} </strong>
           </span>
           has been added to the list 😁
         </>

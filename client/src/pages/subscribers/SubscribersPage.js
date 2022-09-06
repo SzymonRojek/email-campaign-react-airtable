@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 
 import { fetchData } from "services";
 import { generalDataHeadTable } from "data/dataHeadTable";
-import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
+import { getLatestAddedItem } from "helpers";
 import { Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
@@ -43,14 +43,14 @@ const SubscribersPage = ({ editSubscriber, handleSubscriberDetails }) => {
               <SubscribersList
                 subHeading="list"
                 dataHeadTable={generalDataHeadTable}
-                passedData={sortDataAlphabetically(subscribers || [])}
+                passedData={subscribers || []}
                 editSubscriber={editSubscriber}
                 handleSubscriberDetails={handleSubscriberDetails}
               />
             </div>
           )}
 
-          {status === "success" && subscribers.length ? (
+          {subscribers && subscribers.length > 0 ? (
             <SubscribersList
               subHeading="latest added"
               dataHeadTable={generalDataHeadTable}

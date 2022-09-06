@@ -1,5 +1,5 @@
 import api from "./api";
-import { capitalizeFirstLetter, toastMessage } from "helpers";
+import { toastMessage } from "helpers";
 
 const createSubscriber = async ({
   data: { name, surname, email, status, profession, salary, telephone },
@@ -7,8 +7,8 @@ const createSubscriber = async ({
 }) => {
   const postData = {
     fields: {
-      name: capitalizeFirstLetter(name),
-      surname: capitalizeFirstLetter(surname),
+      name,
+      surname,
       email,
       status,
       profession,

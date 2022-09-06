@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 
 import { fetchData } from "services";
 import { dataHeadEmailTable } from "data/dataHeadTable";
-import { getLatestAddedItem, sortDataAlphabetically } from "helpers";
+import { getLatestAddedItem } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
@@ -36,13 +36,13 @@ const EmailsPage = ({ editCampaign }) => {
             <CampaignsList
               subHeading="list"
               dataHeadEmailTable={dataHeadEmailTable}
-              passedData={sortDataAlphabetically(campaigns || [])}
+              passedData={campaigns || []}
               editCampaign={editCampaign}
             />
           )}
         </div>
 
-        {status === "success" && campaigns.length ? (
+        {campaigns && campaigns.length > 0 ? (
           <CampaignsList
             subHeading="latest added"
             dataHeadEmailTable={dataHeadEmailTable}
