@@ -7,12 +7,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdEditOff, MdDeleteSweep } from "react-icons/md";
 
 import { styles, useStyles } from "./styles";
-import {
-  isEven,
-  formattedData,
-  getStatusColor,
-  capitalizeFirstLetter,
-} from "helpers";
+import { isEven, formattedData, getStatusColor } from "helpers";
 import { useRemoveItem } from "customHooks/useRemoveItem";
 
 const CampaignTableRow = (props) => {
@@ -50,7 +45,7 @@ const CampaignTableRow = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {capitalizeFirstLetter(campaign.fields.title)}
+          {campaign.fields.title}
         </Typography>
       </TableCell>
       <TableCell>
@@ -59,7 +54,7 @@ const CampaignTableRow = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {capitalizeFirstLetter(campaign.fields.description)}
+          {campaign.fields.description}
         </Typography>
       </TableCell>
       <TableCell>
@@ -68,7 +63,7 @@ const CampaignTableRow = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {formattedData.getFormattedDate(campaign.createdTime)}
+          {formattedData.getFormattedDate(campaign.date)}
         </Typography>
       </TableCell>
       <TableCell>
@@ -77,7 +72,7 @@ const CampaignTableRow = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {formattedData.getFormattedTime(campaign.createdTime)}
+          {formattedData.getFormattedTime(campaign.date)}
         </Typography>
       </TableCell>
       <TableCell>

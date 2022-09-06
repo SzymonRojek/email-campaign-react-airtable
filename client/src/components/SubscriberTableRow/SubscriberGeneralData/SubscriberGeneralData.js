@@ -8,12 +8,7 @@ import { CgDetailsMore } from "react-icons/cg";
 import { TableCell, TableRow, Typography } from "@material-ui/core";
 
 import { styles, useStyles } from "./styles";
-import {
-  isEven,
-  getStatusColor,
-  capitalizeFirstLetter,
-  formattedData,
-} from "helpers";
+import { isEven, getStatusColor, formattedData } from "helpers";
 import { useInformationModalState } from "contexts/InformationModalContext";
 import { useRemoveItem } from "customHooks/useRemoveItem";
 
@@ -57,9 +52,7 @@ const SubscriberGeneralData = (props) => {
         title: <span style={styles.pending}>Please wait...</span>,
         message: (
           <>
-            <span style={styles.name}>
-              {capitalizeFirstLetter(subscriber.fields?.name)}'s
-            </span>
+            <span style={styles.name}>{subscriber.fields?.name}'s</span>
             status is
             <span style={styles.pending}> pending </span> at the moment because
             you need to complete all data in the table
@@ -75,9 +68,7 @@ const SubscriberGeneralData = (props) => {
         title: <span style={styles.blocked}>Unfortunately...</span>,
         message: (
           <>
-            <span style={styles.name}>
-              {capitalizeFirstLetter(subscriber.fields?.name)}'s
-            </span>
+            <span style={styles.name}>{subscriber.fields?.name}'s</span>
             status is
             <span style={styles.blocked}> blocked </span>can not get an access
             to more details 🙁
@@ -115,7 +106,7 @@ const SubscriberGeneralData = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {capitalizeFirstLetter(subscriber.fields?.name)}
+          {subscriber.fields?.name}
         </Typography>
       </TableCell>
       <TableCell>
@@ -124,7 +115,7 @@ const SubscriberGeneralData = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {capitalizeFirstLetter(subscriber.fields?.surname)}
+          {subscriber.fields?.surname}
         </Typography>
       </TableCell>
       <TableCell>
@@ -147,7 +138,7 @@ const SubscriberGeneralData = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {formattedData.getFormattedDate(subscriber.createdTime)}
+          {formattedData.getFormattedDate(subscriber.date)}
         </Typography>
       </TableCell>
       <TableCell>
@@ -156,7 +147,7 @@ const SubscriberGeneralData = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {formattedData.getFormattedTime(subscriber.createdTime)}
+          {formattedData.getFormattedTime(subscriber.date)}
         </Typography>
       </TableCell>
       {pathname === "/subscribers" || pathname === "/subscribers/status" ? (
