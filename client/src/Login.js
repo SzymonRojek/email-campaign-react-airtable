@@ -19,7 +19,7 @@ export const Login = ({ children }) => {
     <>
       {isLogIn && statusLog === "loadingIn" ? (
         <Loader title="Log In" />
-      ) : statusLog === "success" ? (
+      ) : isLogIn && statusLog === "success" ? (
         <>{children}</>
       ) : statusLog === "loadingOut" ? (
         <Loader title="Log Out" />

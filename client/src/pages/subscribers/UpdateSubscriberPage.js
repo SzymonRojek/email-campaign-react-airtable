@@ -124,13 +124,13 @@ const UpdateSubscriberPage = () => {
     });
   };
 
-  const { mutateAsync: updateSubscriberAirtable } = useMutation((data) => {
+  const { mutateAsync: updateSubscriberAirtable } = useMutation((data) =>
     updateSubscriber({
       data,
       id,
       callback: handleInformationModal,
-    });
-  });
+    })
+  );
 
   if (isLoading || isFetching) {
     return <Loader title="loading" />;

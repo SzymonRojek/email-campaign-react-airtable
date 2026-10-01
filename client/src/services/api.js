@@ -1,22 +1,35 @@
 import axios from "axios";
 
+import { getToken, removeToken, UNAUTHORIZED_EVENT } from "./authToken";
+
 const request = async (endpoint = "", method = "get", data) => {
+  const token = getToken();
+
   const requestConfig = {
     method,
+    // all server endpoints live under /api - frontend routes keep the same paths
+    baseURL: "/api",
     url: endpoint,
     headers: {
       "Content-type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
     },
     data: method === "post" || method === "patch" ? data : {},
   };
 
-  const response = await axios(requestConfig);
+  try {
+    const response = await axios(requestConfig);
 
-  // if (!response) {
-  //   throw new Error("Something happened - no data");
-  // }
+    return response.data;
+  } catch (error) {
+    // token expired or invalid - log out the user (except a failed login attempt)
+    if (error.response?.status === 401 && endpoint !== "/auth/login") {
+      removeToken();
+      window.dispatchEvent(new Event(UNAUTHORIZED_EVENT));
+    }
 
-  return response.data;
+    throw error;
+  }
 };
 
 const get = (endpoint) => request(endpoint);

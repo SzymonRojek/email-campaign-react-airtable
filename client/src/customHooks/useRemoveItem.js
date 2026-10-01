@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "react-query";
 
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
 import api from "../services/api";
+import { toastMessage } from "helpers";
 
 const styles = {
   questionText: { color: "crimson", fontWeight: "bold" },
@@ -13,13 +14,28 @@ export const useRemoveItem = (query, data, id) => {
   const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
 
   const { mutateAsync } = useMutation((id) => api.delete(`/${query}/${id}`), {
-    onMutate: (id) => {
+    onMutate: async (id) => {
+      await queryCache.cancelQueries(`/${query}`);
+
       const previousItems = queryCache.getQueryData(`/${query}`);
 
-      const filteredItems = previousItems.filter((item) => item.id !== id);
+      if (previousItems) {
+        queryCache.setQueryData(
+          `/${query}`,
+          previousItems.filter((item) => item.id !== id)
+        );
+      }
 
-      queryCache.setQueryData(`/${query}`, filteredItems);
+      return { previousItems };
     },
+    onError: (error, id, context) => {
+      if (context?.previousItems) {
+        queryCache.setQueryData(`/${query}`, context.previousItems);
+      }
+
+      toastMessage(`Item has not been removed: ${error.message}`);
+    },
+    onSettled: () => queryCache.invalidateQueries(`/${query}`),
   });
 
   const confirmModalProps = {

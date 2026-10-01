@@ -7,14 +7,25 @@ import { ToastContainer } from "react-toastify";
 import { AppContainer } from "./AppContainer";
 import { toastMessage } from "./helpers";
 
-const App = () => {
-  const queryClient = new QueryClient({
-    queryCache: new QueryCache({
-      onError: (error, query) =>
-        toastMessage(`${query.meta?.myMessage} ${error.message}`),
-    }),
-  });
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // no point to retry when the user is logged out
+      retry: (failureCount, error) =>
+        error.response?.status !== 401 && failureCount < 3,
+    },
+  },
+  queryCache: new QueryCache({
+    onError: (error, query) =>
+      toastMessage(
+        `${query.meta?.myMessage ?? "Something wrong - can not get data:"} ${
+          error.message
+        }`
+      ),
+  }),
+});
 
+const App = () => {
   /*
   onError: (error, query) => {
     if (query.state.data === undefined) {

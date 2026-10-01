@@ -2,16 +2,18 @@ const { axiosInstance } = require("./axiosInstance");
 
 const { sortDataAlphabetically } = require("../helpers/sortDataAlphabetically");
 const { capitalizeFirstLetter } = require("../helpers/capitalizeFirstLetter");
+const { getAllRecords } = require("../helpers/getAllRecords");
+const { getErrorMessage } = require("../helpers/getErrorMessage");
 const endpoint = "/campaigns";
 
 exports.getAllCampaigns = async (req, res) => {
   try {
-    const { data } = await axiosInstance.get(`${endpoint}`);
+    const records = await getAllRecords(endpoint);
 
-    const sortedData = sortDataAlphabetically(data.records);
+    const sortedData = sortDataAlphabetically(records);
     res.status(200).json(sortedData);
   } catch (error) {
-    res.status(404).json({ status: "fail", error });
+    res.status(404).json({ status: "fail", error: getErrorMessage(error) });
   }
 };
 
@@ -48,7 +50,7 @@ exports.createCampaign = async (req, res) => {
 
     res.status(200).json(data);
   } catch (error) {
-    res.status(400).json({ status: "fail", error });
+    res.status(400).json({ status: "fail", error: getErrorMessage(error) });
   }
 };
 
@@ -75,11 +77,11 @@ exports.deleteCampaign = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const { data } = axiosInstance.delete(`${endpoint}/${id}`);
+    const { data } = await axiosInstance.delete(`${endpoint}/${id}`);
 
-    res.json(data);
+    res.status(200).json(data);
   } catch (error) {
-    res.json({
+    res.status(404).json({
       status: "fail",
       error: {
         messageOne: "Campaign does not exist",

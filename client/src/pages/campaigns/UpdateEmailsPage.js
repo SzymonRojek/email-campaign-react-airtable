@@ -2,14 +2,14 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useParams } from "react-router-dom";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useMutation, useQuery } from "react-query";
 
 import { fetchData, fetchDataById, updateEmail } from "services";
 import { sendEmailTo } from "sendEmail";
 import { useInformationModalState } from "contexts/InformationModalContext";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
-import { capitalizeFirstLetter, validationCampaign } from "helpers";
+import { validationCampaign, toastMessage } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { FormCampaign } from "components/FormCampaign";
@@ -29,7 +29,6 @@ const UpdateEmailsPage = () => {
   });
 
   const { id } = useParams();
-  const { pathname } = useLocation();
   const navigate = useNavigate();
 
   const { data: subscribers } = useQuery(subscribersEndpoint, fetchData);
@@ -64,8 +63,9 @@ const UpdateEmailsPage = () => {
   }, [setValue, defaultValues.title, defaultValues.description]);
 
   const allActiveSubscribers =
-    subscribers &&
-    subscribers.filter(({ fields: { status } }) => status === "active");
+    (subscribers &&
+      subscribers.filter(({ fields: { status } }) => status === "active")) ||
+    [];
 
   const handleInformationModal = (data, status) => {
     setInformationModalText({
@@ -97,24 +97,26 @@ const UpdateEmailsPage = () => {
       callback: handleInformationModal,
     };
 
-    updateEmail(config);
+    return updateEmail(config);
   });
 
-  const { mutateAsync: sendCampaign } = useMutation((data) =>
-    sendEmailTo(
-      data,
-      finalSelectedActiveSubscribers.length
-        ? finalSelectedActiveSubscribers
-        : allActiveSubscribers,
-      () =>
-        updateEmail({
-          data,
-          status: "sent",
-          id,
-          callback: handleInformationModal,
-        })
-    )
-  );
+  const { mutateAsync: sendCampaign } = useMutation((data) => {
+    const receivers = finalSelectedActiveSubscribers ?? allActiveSubscribers;
+
+    if (!receivers.length) {
+      toastMessage("Please choose at least one subscriber");
+      return Promise.resolve();
+    }
+
+    return sendEmailTo(data, receivers, () =>
+      updateEmail({
+        data,
+        status: "sent",
+        id,
+        callback: handleInformationModal,
+      })
+    );
+  });
 
   if (isLoading || isFetching) {
     return <Loader title="loading" />;
@@ -123,8 +125,6 @@ const UpdateEmailsPage = () => {
   if (isError) {
     return <Error error="Email Campaign does not exist!" />;
   }
-
-  console.log(allActiveSubscribers);
 
   return (
     <StyledContainer>
@@ -139,7 +139,7 @@ const UpdateEmailsPage = () => {
           labelCheckbox={
             subscribers && !allActiveSubscribers.length
               ? "no active subscribers"
-              : finalSelectedActiveSubscribers.length
+              : finalSelectedActiveSubscribers
               ? `selected subscribers: ${finalSelectedActiveSubscribers.length} from ${allActiveSubscribers.length}`
               : `active subscribers - ${allActiveSubscribers.length}`
           }

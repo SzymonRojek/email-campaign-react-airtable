@@ -1,16 +1,10 @@
 import api from "./api";
-import { toastMessage } from "helpers";
 
+// errors are not caught here - react-query sets isError and the QueryCache onError shows a toast
 const fetchDataById = async ({ queryKey }) => {
   const [key, { id }] = queryKey;
 
-  try {
-    const response = await api.get(`${key}/${id}`);
-
-    return response;
-  } catch (error) {
-    toastMessage(`Something wrong - can not get data: ${error.message}`);
-  }
+  return api.get(`${key}/${id}`);
 };
 
 export default fetchDataById;

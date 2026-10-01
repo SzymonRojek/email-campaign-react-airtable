@@ -29,7 +29,7 @@ const SubscribersPage = ({ editSubscriber, handleSubscriberDetails }) => {
     },
   });
 
-  if (isLoading | isFetching) {
+  if (isLoading || isFetching) {
     return <Loader title="loading" />;
   }
 

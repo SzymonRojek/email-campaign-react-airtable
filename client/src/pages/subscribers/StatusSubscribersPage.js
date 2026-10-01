@@ -5,7 +5,7 @@ import { useQuery } from "react-query";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { fetchData } from "services";
-import { Loader, Error } from "components/DisplayMessage";
+import { Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
@@ -112,7 +112,7 @@ const StatusSubscribersPage = ({ editSubscriber, handleSubscriberDetails }) => {
     return () => watchStatus.unsubscribe();
   }, [watch]);
 
-  if (isLoading | isFetching) {
+  if (isLoading || isFetching) {
     return <Loader title="loading" />;
   }
 
