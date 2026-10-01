@@ -1,0 +1,13 @@
+import { AirtableRecord } from "types";
+
+const getLatestAddedItem = <T extends AirtableRecord<unknown>>(
+  data: T[] | undefined
+): T[] => {
+  if (!data) return [];
+
+  return [...data]
+    .sort((a, b) => (a.createdTime > b.createdTime ? 1 : -1))
+    .slice(-1);
+};
+
+export default getLatestAddedItem;
