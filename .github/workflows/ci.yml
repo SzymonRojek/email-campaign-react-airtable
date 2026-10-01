@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          # same version as "engines" in package.json (production on Heroku)
+          node-version: 16
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            client/package-lock.json
+
+      - name: Install server dependencies
+        run: npm ci
+
+      - name: Check server starts
+        run: node -e "require('./server/routes/subscribersRoutes'); require('./server/routes/campaignsRoutes'); require('./server/routes/authRoutes')"
+
+      - name: Install client dependencies
+        run: npm ci
+        working-directory: client
+
+      # CI=true makes every ESLint warning fail the build
+      - name: Build client
+        run: npm run build
+        working-directory: client
+        env:
+          CI: true

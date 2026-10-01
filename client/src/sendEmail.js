@@ -1,3 +1,5 @@
+// EmailJS sending is commented out below (limited requests) - keep its imports/env for re-enabling
+/* eslint-disable no-unused-vars */
 import emailjs from "emailjs-com";
 
 import { toastMessage } from "./helpers";
