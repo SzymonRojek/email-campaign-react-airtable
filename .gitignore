@@ -26,3 +26,6 @@ yarn-error.log*
 todo.md
 # compiled server
 server/dist
+
+# server test tooling
+server/node_modules

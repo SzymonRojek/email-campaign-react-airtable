@@ -12,5 +12,5 @@
     "types": ["node"]
   },
   "include": ["**/*.ts"],
-  "exclude": ["dist", "**/*.test.ts", "**/__tests__/**"]
+  "exclude": ["dist", "node_modules", "**/*.test.ts", "**/__tests__/**", "jest.config.js"]
 }
