@@ -26,8 +26,10 @@ jobs:
       - name: Check server starts
         run: node -e "require('./server/routes/subscribersRoutes'); require('./server/routes/campaignsRoutes'); require('./server/routes/authRoutes')"
 
+      # npm install (not npm ci) - same as heroku-postbuild in production;
+      # client/package-lock.json is out of sync with client/package.json
       - name: Install client dependencies
-        run: npm ci
+        run: npm install
         working-directory: client
 
       # CI=true makes every ESLint warning fail the build
