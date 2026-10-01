@@ -49,9 +49,8 @@ export function sendEmailTo(data, receivers, callbackPostAirtable) {
 
   // at the moment I want to show to the user that an email has bent sent
   try {
-    callbackPostAirtable();
+    return callbackPostAirtable();
   } catch (error) {
-    callbackPostAirtable();
     toastMessage("Email has not been sent by EmailJS");
   }
 }

@@ -6,13 +6,13 @@ const validationSubscriber = Yup.object().shape({
   name: Yup.string()
     .required("name is required")
     .trim()
-    .matches(/^[aA-zZ\s]+$/, "only letters are required")
-    .min(3, "must be at least 6 characters")
+    .matches(/^[\p{L}\s]+$/u, "only letters are required")
+    .min(3, "must be at least 3 characters")
     .max(10, "must not exceed 10 characters"),
   surname: Yup.string()
     .required("surname is required")
     .trim()
-    .matches(/^[aA-zZ\s]+$/, "only letters are required")
+    .matches(/^[\p{L}\s]+$/u, "only letters are required")
     .min(3, "must be at least 3 characters")
     .max(10, "must not exceed 10 characters"),
   email: Yup.string()
@@ -24,7 +24,7 @@ const validationSubscriber = Yup.object().shape({
   profession: Yup.string()
     .required("profession is required")
     .trim()
-    .matches(/^[aA-zZ\s]+$/, "only letters are required")
+    .matches(/^[\p{L}\s]+$/u, "only letters are required")
     .min(3, "must be at least 3 characters")
     .max(10, "must not exceed 10 characters"),
   salary: Yup.string()

@@ -7,7 +7,7 @@ import { fetchData, createEmail } from "services";
 import { sendEmailTo } from "sendEmail";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
-import { validationCampaign } from "helpers";
+import { validationCampaign, toastMessage } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
@@ -97,12 +97,15 @@ const CreateEmailPage = () => {
   );
 
   const { mutateAsync: sendCampaign } = useMutation((data) => {
-    sendEmailTo(
-      data,
-      finalSelectedActiveSubscribers.length
-        ? finalSelectedActiveSubscribers
-        : allActiveSubscribers,
-      () => createEmail({ data, status: "sent", callback: handleConfirmModal })
+    const receivers = finalSelectedActiveSubscribers ?? allActiveSubscribers;
+
+    if (!receivers.length) {
+      toastMessage("Please choose at least one subscriber");
+      return Promise.resolve();
+    }
+
+    return sendEmailTo(data, receivers, () =>
+      createEmail({ data, status: "sent", callback: handleConfirmModal })
     );
   });
 
@@ -129,7 +132,7 @@ const CreateEmailPage = () => {
           labelCheckbox={
             subscribers && !allActiveSubscribers.length
               ? "no active subscribers"
-              : finalSelectedActiveSubscribers.length
+              : finalSelectedActiveSubscribers
               ? `selected subscribers: ${finalSelectedActiveSubscribers.length} from ${allActiveSubscribers.length}`
               : `active subscribers - ${allActiveSubscribers.length}`
           }

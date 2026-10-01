@@ -6,6 +6,8 @@ import { Paper, Box, Grid, Typography } from "@material-ui/core";
 import { styles, useStyles } from "./styles";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 import { validationLogin } from "helpers";
+import api from "services/api";
+import { setToken } from "services/authToken";
 import { StyledContainer } from "components/StyledContainer";
 import { LogFormButton } from "components/LogFormButton";
 import { PasswordInput } from "./PasswordInput";
@@ -18,14 +20,22 @@ const LoginForm = () => {
   const {
     handleSubmit,
     register,
+    setError,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationLogin),
   });
 
-  const onSubmit = (data) => {
-    if (data.password === data.confirmPassword) {
+  const onSubmit = async ({ password }) => {
+    try {
+      const { token } = await api.post("/auth/login", { password });
+
+      setToken(token);
       setIsLogIn(true);
+    } catch (error) {
+      setError("password", {
+        message: error.response?.data?.error ?? error.message,
+      });
     }
   };
 
@@ -51,15 +61,6 @@ const LoginForm = () => {
               </Grid>
               <Grid item xs={12}>
                 <h1 style={styles.heading}>Email Campaign</h1>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography
-                  color="textSecondary"
-                  variant="body2"
-                  style={styles.textPassword}
-                >
-                  - Password: type admin
-                </Typography>
               </Grid>
               <Grid item xs={12}>
                 <PasswordInput

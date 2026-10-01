@@ -63,7 +63,9 @@ const CampaignTableRow = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {formattedData.getFormattedDate(campaign.date)}
+          {formattedData.getFormattedDate(
+            campaign.fields.date || campaign.createdTime
+          )}
         </Typography>
       </TableCell>
       <TableCell>
@@ -72,7 +74,9 @@ const CampaignTableRow = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {formattedData.getFormattedTime(campaign.date)}
+          {formattedData.getFormattedTime(
+            campaign.fields.date || campaign.createdTime
+          )}
         </Typography>
       </TableCell>
       <TableCell>

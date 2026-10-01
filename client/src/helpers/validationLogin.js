@@ -1,15 +1,10 @@
 import * as Yup from "yup";
 
+// the password itself is checked by the server (POST /auth/login)
 const validationLogin = Yup.object().shape({
-  password: Yup.string()
-    .required("please enter your password")
-    .lowercase()
-    .trim()
-    .matches(/admin/, "password is not correct"),
+  password: Yup.string().required("please enter your password"),
   confirmPassword: Yup.string()
     .required("please confirm your password")
-    .lowercase()
-    .trim()
     .oneOf([Yup.ref("password"), null], "passwords don't match."),
 });
 

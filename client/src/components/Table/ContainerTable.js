@@ -44,7 +44,6 @@ const ContainerTable = ({
               <SelectInputConroller
                 control={control}
                 name="rowsNumbers"
-                styles={stylesContainer.select}
                 defaultValue="4"
                 data={selectSubscribersNumber}
                 message=""

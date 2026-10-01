@@ -138,7 +138,9 @@ const SubscriberGeneralData = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {formattedData.getFormattedDate(subscriber.date)}
+          {formattedData.getFormattedDate(
+            subscriber.fields.date || subscriber.createdTime
+          )}
         </Typography>
       </TableCell>
       <TableCell>
@@ -147,7 +149,9 @@ const SubscriberGeneralData = (props) => {
           variant="subtitle1"
           className={classes.cell}
         >
-          {formattedData.getFormattedTime(subscriber.date)}
+          {formattedData.getFormattedTime(
+            subscriber.fields.date || subscriber.createdTime
+          )}
         </Typography>
       </TableCell>
       {pathname === "/subscribers" || pathname === "/subscribers/status" ? (

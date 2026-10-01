@@ -28,7 +28,7 @@ const ActiveSubscribersPopup = ({
 }) => {
   const classes = useStyles();
 
-  const { data: subscribers } = useQuery("subscribers", fetchData, {
+  const { data: subscribers } = useQuery("/subscribers", fetchData, {
     meta: {
       myMessage: "Cannot get subscribers list:",
     },
@@ -55,11 +55,7 @@ const ActiveSubscribersPopup = ({
     [filteredActiveSubscribers]
   );
 
-  const handleOnChange = (position) => {
-    const updatedCheckedState = checkedState.map((item, index) =>
-      index === position ? !item : item
-    );
-
+  const updateSelection = (updatedCheckedState) => {
     setCheckedState(updatedCheckedState);
 
     const updatedActiveSubscribers = updatedCheckedState.map(
@@ -69,6 +65,11 @@ const ActiveSubscribersPopup = ({
 
     setFinalSelectedActiveSubscribers(updatedActiveSubscribers.filter(Boolean));
   };
+
+  const handleOnChange = (position) =>
+    updateSelection(
+      checkedState.map((item, index) => (index === position ? !item : item))
+    );
 
   useEffect(() => {
     setCheckedState(stateForCheckboxes(true));
@@ -91,7 +92,7 @@ const ActiveSubscribersPopup = ({
               color="error"
               onClick={() => {
                 closeListActiveSusbcribers(false);
-                setFinalSelectedActiveSubscribers([]);
+                setFinalSelectedActiveSubscribers(null);
                 handleCheckedAll(setCheckedState, checkedState);
               }}
             >
@@ -113,7 +114,7 @@ const ActiveSubscribersPopup = ({
             className={classes.mainButton}
             variant="contained"
             color="error"
-            onClick={() => handleUncheckedAll(setCheckedState, checkedState)}
+            onClick={() => handleUncheckedAll(updateSelection, checkedState)}
           >
             <span className={classes.buttonText}>uncheck all</span>
           </Button>
@@ -123,7 +124,7 @@ const ActiveSubscribersPopup = ({
             className={classes.mainButton}
             variant="contained"
             color="success"
-            onClick={() => handleCheckedAll(setCheckedState, checkedState)}
+            onClick={() => handleCheckedAll(updateSelection, checkedState)}
           >
             <span className={classes.buttonText}>
               check all <span></span>
