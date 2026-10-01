@@ -57,7 +57,7 @@ function MainNavigation() {
     } else {
       setTabsValue(2);
     }
-  }, [pathname]);
+  }, [pathname, setTabsValue]);
 
   const handleChangeStates = () => {
     const timeID = setTimeout(() => {
