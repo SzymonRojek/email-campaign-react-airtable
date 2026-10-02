@@ -11,8 +11,10 @@
     "start": "nodemon --watch server --ext ts --ignore server/dist --exec ts-node server/index.ts",
     "start:prod": "node server/dist/index.js",
     "build:server": "tsc -p server",
-    "typecheck": "tsc -p server --noEmit && npm run typecheck --prefix client",
-    "heroku-postbuild": "npm run build:server && cd client && npm install && npm run build"
+    "typecheck": "tsc -p server/tsconfig.test.json && npm run typecheck --prefix client",
+    "heroku-postbuild": "npm run build:server && cd client && npm install && npm run build",
+    "test": "npm test --prefix server",
+    "test:coverage": "npm run test:coverage --prefix server"
   },
   "keywords": [],
   "author": "",

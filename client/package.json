@@ -46,6 +46,7 @@
     "build": "react-scripts build",
     "typecheck": "tsc --noEmit",
     "test": "react-scripts test",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -68,6 +69,8 @@
   },
   "proxy": "http://localhost:5000",
   "devDependencies": {
+    "@testing-library/dom": "^7.31.2",
+    "@testing-library/react-hooks": "^8.0.1",
     "@types/jest": "^26.0.24",
     "@types/node": "^16.18.126",
     "@types/react-dom": "^17.0.26",

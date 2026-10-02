@@ -18,10 +18,21 @@ jobs:
           cache: npm
           cache-dependency-path: |
             package-lock.json
+            server/package-lock.json
             client/package-lock.json
 
       - name: Install server dependencies
         run: npm ci
+
+      # jest for the server lives in server/ so it does not clash with react-scripts' jest
+      - name: Install server test tooling
+        run: npm ci --prefix server
+
+      - name: Typecheck server
+        run: npx tsc -p server/tsconfig.test.json
+
+      - name: Server unit tests
+        run: npm run test:coverage
 
       - name: Build server
         run: npm run build:server
@@ -35,6 +46,12 @@ jobs:
       - name: Typecheck client
         run: npm run typecheck
         working-directory: client
+
+      - name: Client unit tests
+        run: npm run test:coverage
+        working-directory: client
+        env:
+          CI: true
 
       # CI=true makes every ESLint warning fail the build
       - name: Build client

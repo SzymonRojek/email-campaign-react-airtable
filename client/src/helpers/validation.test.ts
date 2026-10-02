@@ -1,0 +1,83 @@
+import { validationCampaign, validationLogin, validationSubscriber } from "helpers";
+
+const validSubscriber = {
+  name: "Łukasz",
+  surname: "Żółć",
+  email: "lukasz@example.com",
+  status: "active",
+  profession: "tester",
+  salary: "3000",
+  telephone: "343-234-2344",
+  checkbox: true,
+};
+
+const errorsOf = async (schema: { validate: Function }, value: unknown) => {
+  try {
+    await schema.validate(value, { abortEarly: false });
+    return [];
+  } catch (error) {
+    return (error as { errors: string[] }).errors;
+  }
+};
+
+describe("validationSubscriber", () => {
+  it("accepts a valid subscriber with Polish letters", async () => {
+    expect(await errorsOf(validationSubscriber, validSubscriber)).toEqual([]);
+  });
+
+  it.each([
+    ["name", "Jo", "must be at least 3 characters"],
+    ["name", "Anna_1", "only letters are required"],
+    ["surname", "[]^_`", "only letters are required"],
+    ["email", "not-an-email", "email is invalid"],
+    ["status", "select status", "status is required"],
+    ["salary", "12a", "only numbers are required"],
+    ["telephone", "12345", "type only 10 digits"],
+    ["checkbox", false, "field must be checked"],
+  ])("rejects %s = %p", async (field, value, message) => {
+    const errors = await errorsOf(validationSubscriber, {
+      ...validSubscriber,
+      [field]: value,
+    });
+
+    expect(errors).toContain(message);
+  });
+});
+
+describe("validationCampaign", () => {
+  it("requires a title and a description", async () => {
+    expect(await errorsOf(validationCampaign, {})).toEqual([
+      "title is required",
+      "description is required",
+    ]);
+  });
+
+  it("limits the title length", async () => {
+    const errors = await errorsOf(validationCampaign, {
+      title: "x".repeat(31),
+      description: "ok description",
+    });
+
+    expect(errors).toEqual(["must not exceed 30 characters"]);
+  });
+});
+
+describe("validationLogin", () => {
+  it("requires matching passwords", async () => {
+    expect(
+      await errorsOf(validationLogin, {
+        password: "secret",
+        confirmPassword: "other",
+      })
+    ).toEqual(["passwords don't match."]);
+  });
+
+  it("does not check the password itself (the server does)", async () => {
+    expect(
+      await errorsOf(validationLogin, {
+        password: "anything",
+        confirmPassword: "anything",
+      })
+    ).toEqual([]);
+  });
+});
