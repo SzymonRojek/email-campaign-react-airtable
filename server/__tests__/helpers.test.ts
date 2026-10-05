@@ -25,6 +25,20 @@ describe("sortDataAlphabetically", () => {
     ]);
   });
 
+  it("sorts Polish letters next to their base letters", () => {
+    const data = [
+      record({ name: "Zenon" }, "1"),
+      record({ name: "Łucja" }, "2"),
+      record({ name: "Lena" }, "3"),
+    ];
+
+    expect(sortDataAlphabetically(data).map((item) => item.fields.name)).toEqual([
+      "Lena",
+      "Łucja",
+      "Zenon",
+    ]);
+  });
+
   it("sorts campaigns by title when there are no names", () => {
     const data = [record({ title: "b" }, "1"), record({ title: "A" }, "2")];
 

@@ -13,10 +13,8 @@ export const sortDataAlphabetically = <T extends Record>(data: T[]): T[] => {
       (isName ? obj?.fields?.name : obj?.fields?.title) ?? ""
     ).toLowerCase();
 
-  return copyData.sort((a, b) => {
-    const valueA = nestedPropertyRetriever(a);
-    const valueB = nestedPropertyRetriever(b);
-
-    return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
-  });
+  // localeCompare - Polish letters (Ł, Ś...) next to their base letters, not after "z"
+  return copyData.sort((a, b) =>
+    nestedPropertyRetriever(a).localeCompare(nestedPropertyRetriever(b), "pl")
+  );
 };

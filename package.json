@@ -14,7 +14,8 @@
     "typecheck": "tsc -p server/tsconfig.test.json && npm run typecheck --prefix client",
     "heroku-postbuild": "npm run build:server && cd client && npm install && npm run build",
     "test": "npm test --prefix server",
-    "test:coverage": "npm run test:coverage --prefix server"
+    "test:coverage": "npm run test:coverage --prefix server",
+    "test:e2e": "npm test --prefix e2e"
   },
   "keywords": [],
   "author": "",
