@@ -4,6 +4,7 @@ Check demo on Herokuapp: [demo](https://create-email-campaign.herokuapp.com/)
 
 # Technologies used:
 
+- TypeScript
 - React.js: useForm hook, custom hooks, router v6, createContext, useContext
 - [Airtable data base](https://airtable.com/) - REST API
 - React Query
@@ -11,6 +12,8 @@ Check demo on Herokuapp: [demo](https://create-email-campaign.herokuapp.com/)
 - Postman: testing endpoints
 - Express.js - Proxy (hide api_key, id_base), env variables
 - [Email.js](https://www.emailjs.com/)
+- Jest, Testing Library, supertest, Playwright
+- GitHub Actions CI
 - Deploying on Heroku
 
 # Main goal:
@@ -105,52 +108,41 @@ Results of API tests and automating their execution by Postman's runner:
 I would like to rewrite application and add:
 
 - Styled Components
-- Type Script
 - Redux Toolkit + Saga
 
-# Available Scripts:
+# Running locally:
 
-In the project directory, you can run:
+1. Create `.env` in the project root:
 
-- clinet-side
+```
+REACT_APP_DB_ID=appXXXXXXXXXXXXXX     # Airtable base id
+REACT_APP_API_KEY=patXXXXXXXXXXXXXX   # Airtable personal access token
+ADMIN_PASSWORD=...                    # password for the login form
+AUTH_SECRET=...                       # random string for signing login tokens
+```
 
-### `npm start`
+2. Install and start (two terminals):
 
-- server-side
+```bash
+npm install && npm start                       # API on http://localhost:5000
+cd client && npm install && npm start          # app on http://localhost:3000
+```
 
-### `npm start`
+On Node 17+ start the client with `NODE_OPTIONS=--openssl-legacy-provider npm start` (react-scripts 4).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+# Tests:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+| command                                          | what                                                        |
+| ------------------------------------------------ | ----------------------------------------------------------- |
+| `npm run typecheck`                              | TypeScript (server + client)                                |
+| `npm install --prefix server && npm test`        | server unit tests - Jest + supertest, Airtable mocked       |
+| `cd client && npm test`                          | client unit tests - Jest + Testing Library                  |
+| `npm run build:server && npm run build --prefix client`<br>`npm install --prefix e2e && npm run test:e2e` | Playwright end-to-end tests |
 
-### `npm test`
+The e2e tests run the production build of the client and the server against a fake Airtable (`e2e/mock-airtable.ts`), so they never touch the real base. On macOS 12 (no Playwright Chromium) use the installed Chrome: `PW_CHANNEL=chrome npm run test:e2e`.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Git workflow:
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+`main` = production, `dev` = integration. Every change goes to a feature branch, is merged into `dev`, and gets to `main` through a pull request `dev -> main` after CI (typecheck, unit tests, build, e2e) passes.
 
 - I have used images from the [Email.js](https://www.emailjs.com/) website.
