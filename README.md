@@ -143,6 +143,15 @@ The e2e tests run the production build of the client and the server against a fa
 
 # Git workflow:
 
-`main` = production, `dev` = integration. Every change goes to a feature branch, is merged into `dev`, and gets to `main` through a pull request `dev -> main` after CI (typecheck, unit tests, build, e2e) passes. Render deploys `main` automatically.
+| branch | environment on Render |
+| ------ | --------------------- |
+| `main` | production - [demo](https://email-campaign-react-airtable.onrender.com/) |
+| `dev`  | staging - `email-campaign-react-airtable-staging` |
+
+1. Every change starts on a short-lived branch off `dev` (`feature/...`, `fix/...`, `chore/...`).
+2. Pull request into `dev` - CI runs (typecheck, unit tests, build, e2e) and the PR must have no conflicts. A human reviews and **squash-merges** it; Render deploys it to staging.
+3. After checking staging - pull request `dev -> main`, CI again, a human merges it with a **merge commit** (not squash, so `dev` and `main` do not drift apart); Render deploys production.
+
+Both services are defined in `render.yaml` (free plan).
 
 - I have used images from the [Email.js](https://www.emailjs.com/) website.

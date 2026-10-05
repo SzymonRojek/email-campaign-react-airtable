@@ -1,10 +1,17 @@
 name: CI
 
 on:
-  push:
-    branches: [main, dev]
+  # every PR is checked before the human merges it (feature -> dev, dev -> main);
+  # main is checked again after the merge - it is what Render deploys
   pull_request:
+    branches: [dev, main]
+  push:
     branches: [main]
+
+# a new commit in the same PR cancels the older, now pointless run
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
