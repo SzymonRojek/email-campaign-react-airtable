@@ -1,133 +1,113 @@
-# Demo:
+# Email Campaign App
 
-Check demo on Render: [demo](https://email-campaign-react-airtable.onrender.com/) - login password: `admin` (free plan - the first load after a break can take up to a minute)
+[![CI](https://github.com/SzymonRojek/email-campaign-react-airtable/actions/workflows/ci.yml/badge.svg)](https://github.com/SzymonRojek/email-campaign-react-airtable/actions/workflows/ci.yml)
 
-# Technologies used:
+A full-stack web app for running e-mail campaigns: manage subscribers, write campaigns and send them to the chosen active subscribers. Built with **React, TypeScript and Express**, data stored in **Airtable**, covered by **automated tests** and deployed automatically with **CI/CD**.
 
-- TypeScript
-- React.js: useForm hook, custom hooks, router v6, createContext, useContext
-- [Airtable data base](https://airtable.com/) - REST API
-- React Query
-- Material UI
-- Postman: testing endpoints
-- Express.js - Proxy (hide api_key, id_base), env variables
-- [Email.js](https://www.emailjs.com/)
-- Jest, Testing Library, supertest, Playwright
-- GitHub Actions CI
-- Deploying on Render (free plan, `render.yaml` Blueprint)
+## Live demo
 
-# Main goal:
+| | link | login password |
+| --- | --- | --- |
+| **Production** | [email-campaign-react-airtable.onrender.com](https://email-campaign-react-airtable.onrender.com/) | `admin` |
+| Staging (newest changes) | [email-campaign-react-airtable-staging.onrender.com](https://email-campaign-react-airtable-staging.onrender.com/) | `admin` |
 
-<p align="center" >
- <img src="./client/src/img/crud.png" width="240">
+> Hosted on a free plan - after a break the first load can take up to a minute.
+>
+> **Demo mode:** the password is public, so sending real e-mails is turned off (anybody could send e-mails from my account). "Send email" saves the campaign as `sent` and the app says clearly that no e-mail was really sent.
+
+## What the app does
+
+- **Subscribers** - list, filter by status (active / pending / blocked), add, edit, remove, see details
+- **Campaigns** - write a campaign, save it as a draft or send it, edit drafts, filter by status
+- **Choose recipients** - send to all active subscribers or only to the selected ones
+- **Login** - the app and its data are available only after logging in
+
+## Highlights
+
+- **Full-stack TypeScript** - React client and Express server, strict mode
+- **Secure backend** - the Airtable API key never reaches the browser; login with signed tokens and protection against password guessing
+- **Automated testing** - 37 server and 51 client unit tests, 27 end-to-end tests in a real browser (Playwright)
+- **CI/CD** - every pull request is checked by GitHub Actions; `dev` deploys to staging and `main` to production automatically
+- **Team-style Git workflow** - feature branches, pull requests, staging before production
+
+## Tech stack
+
+| area | technologies |
+| --- | --- |
+| Frontend | React 17, TypeScript, React Router 6, React Query, React Hook Form + Yup, Material UI |
+| Backend | Node.js, Express, TypeScript, Airtable REST API |
+| Testing | Jest, React Testing Library, supertest, Playwright, Postman |
+| DevOps | GitHub Actions, Render (`render.yaml` Blueprint) |
+
+## How it works
+
+<p align="center">
+  <img src="./client/src/img/concept.png" alt="Concept of the app">
 </p>
 
-Create CRUD application, which allows to use five HTTP methods that can and should respond to RESTful APIs so that the client can perform the four basic CRUD operations: Create, Read, Update and Delete.
+```
+React app  ->  Express API (/api, login, proxy)  ->  Airtable
+```
 
-Connect app to the Email.js and send personalized email just by one click to all choosen active subscribers.
+The React app never talks to Airtable directly. The Express server works as a **proxy**: it keeps the Airtable key and base id in environment variables, calls Airtable and returns only the data - the key is not visible in the browser or in the response headers.
 
-> **Demo mode:** in the public demo the sending through Email.js is turned off - the login password is public, so anybody could add any e-mail address and send e-mails from my account. "Send email" saves the campaign with the status `sent` and the app says clearly that no e-mail was really sent. The Email.js code is kept in `client/src/sendEmail.ts`.
+The server also handles the **login**: `POST /api/auth/login` checks the password and returns a signed token valid for 8 hours. All data endpoints require it in the `Authorization: Bearer <token>` header, and after 5 wrong passwords the IP is blocked for 15 minutes.
 
-<br>
+The goal of the project was a CRUD application - Create, Read, Update and Delete over a REST API - connected to [Email.js](https://www.emailjs.com/) to send a personalized e-mail with one click to all chosen active subscribers.
 
-<img src="./client/src/img/concept.png">
+<details>
+<summary>Example of the e-mail template</summary>
 
-<br>
-<br>
+<img src="./client/src/img/exampleEmails.png" alt="Example e-mails">
 
-## Final template email example:
+</details>
 
-<br>
-<br>
+<details>
+<summary>API endpoints</summary>
 
-<img src="./client/src/img/exampleEmails.png">
+All endpoints are under `/api`:
 
-<br>
-<br>
+| method | endpoint | auth |
+| ------ | -------- | ---- |
+| `GET` | `/api/health` | - |
+| `POST` | `/api/auth/login` | - |
+| `GET`, `POST` | `/api/subscribers` | token |
+| `GET`, `PATCH`, `DELETE` | `/api/subscribers/:id` | token |
+| `GET`, `POST` | `/api/campaigns` | token |
+| `GET`, `PATCH`, `DELETE` | `/api/campaigns/:id` | token |
 
-# General description:
+Airtable uses token-based authentication (`Authorization: Bearer <key>` header) - the key is sent in the header, not as an `api_key` query parameter, which is the less secure option.
 
-App is devided for two parts: client and server side.
+<img src="./client/src/img/responseHeaders.png" alt="Response headers without the Airtable key">
 
-1. **Clinet side -** subscribers and campaigns
+</details>
 
-a) Subscribers:
+## Testing
 
-- get a list of the subscribers and general data
-- get a status list and general data
-- get a details of each subscriber
-- add a new subscriber in the form
+Every pull request runs in GitHub Actions: type checking, unit tests, production build and end-to-end tests.
 
-b) Campaigns:
+- **Server unit tests** (Jest + supertest) - login, tokens, protection against password guessing, all endpoints, error handling; Airtable is mocked
+- **Client unit tests** (Jest + React Testing Library) - helpers, form validation, API client, hooks, login form, choosing recipients
+- **End-to-end tests** (Playwright) - real user flows in a browser on the production build: logging in, adding / editing / removing subscribers, drafting and sending campaigns, navigation. They run against a fake Airtable (`e2e/mock-airtable.ts`), so they never touch real data.
 
-- get a list of campaigns and general data
-- get a status list and general data
-- get a details of each campaign to edit them
-- add a new email campaign
+<details>
+<summary>Earlier: API tests in Postman</summary>
 
-2. **Server side - PROXY**
+I have used **Postman** to test valid, invalid, authorised and unauthorised requests. The screenshots show the old endpoints - today they live under `/api/...` and need a token from `/api/auth/login`.
 
-   The data are downloading from the Airtable - it uses simple token=based authentication "Authorization: Bearer YOUR_API_KEY" - authenticate to the API by providing my API key in the HTTP authorization bearer token header. I didn't want to provide my API key with api_key query parameter because of slightly lower-security approach.
-
-   <br>
-
-      <img src="./client/src/img/responseHeaders.png">
-
-   <br>
-   <br>
-
-   I have used an **express.js** to build a backend proxy server - backend API that will make requests to the Airtable, get back that response and then respond to someone who made that request. In this case sensitive data like key or id_base are hidden and are not available in the response header.
-
-   The server also handles the login: `POST /api/auth/login` checks the password (`ADMIN_PASSWORD`) and returns a signed token valid for 8 hours. All data endpoints require it in the `Authorization: Bearer <token>` header, and after 5 wrong passwords the IP is blocked for 15 minutes.
-
-   API endpoints (all under `/api`):
-
-   | method | endpoint | auth |
-   | ------ | -------- | ---- |
-   | `GET` | `/api/health` | - |
-   | `POST` | `/api/auth/login` | - |
-   | `GET`, `POST` | `/api/subscribers` | token |
-   | `GET`, `PATCH`, `DELETE` | `/api/subscribers/:id` | token |
-   | `GET`, `POST` | `/api/campaigns` | token |
-   | `GET`, `PATCH`, `DELETE` | `/api/campaigns/:id` | token |
-
-<br>
-
-# Testing:
-
-The app is tested automatically on every push (GitHub Actions) - unit tests of the server and the client (Jest, Testing Library, supertest) and end-to-end tests (Playwright). See [Tests](#tests) below.
-
-Earlier, I have used a tool such as **Postman** to test for valid, invalid, authorised and unauthorised requests, to ensure that the API responds correctly to every endpoint. The screenshots below show the old endpoints - today they live under `/api/...` and need a token from `/api/auth/login`.
-
-<br>
-
-<img src="./client/src/img/postman.png">
-
-<br>
-<br>
+<img src="./client/src/img/postman.png" alt="Postman">
 
 Example of API tests:
 
-<br>
-<img src="./client/src/img/tests.png">
-<br>
-<br>
+<img src="./client/src/img/tests.png" alt="Postman tests">
 
-Results of API tests and automating their execution by Postman's runner:
+Results of the API tests run automatically by Postman's runner:
 
-<br>
-<img src="./client/src/img/runnerTests.png">
-<br>
-<br>
+<img src="./client/src/img/runnerTests.png" alt="Postman runner results">
 
-# ToDo:
+</details>
 
-I would like to rewrite application and add:
-
-- Styled Components
-- Redux Toolkit + Saga
-
-# Running locally:
+## Running locally
 
 1. Create `.env` in the project root:
 
@@ -147,28 +127,41 @@ cd client && npm install && npm start          # app on http://localhost:3000
 
 On Node 17+ start the client with `NODE_OPTIONS=--openssl-legacy-provider npm start` (react-scripts 4).
 
-# Tests:
+### Running the tests
 
-| command                                          | what                                                        |
-| ------------------------------------------------ | ----------------------------------------------------------- |
-| `npm run typecheck`                              | TypeScript (server + client)                                |
-| `npm install --prefix server && npm test`        | server unit tests - Jest + supertest, Airtable mocked       |
-| `cd client && npm test`                          | client unit tests - Jest + Testing Library                  |
-| `npm run build`<br>`npm install --prefix e2e && npm run test:e2e` | Playwright end-to-end tests |
+| command | what |
+| --- | --- |
+| `npm run typecheck` | TypeScript (server + client) |
+| `npm install --prefix server && npm test` | server unit tests |
+| `cd client && npm test` | client unit tests |
+| `npm run build`<br>`npm install --prefix e2e && npm run test:e2e` | end-to-end tests (need the production build) |
 
-The e2e tests run the production build of the client and the server against a fake Airtable (`e2e/mock-airtable.ts`), so they never touch the real base. On macOS 12 (no Playwright Chromium) use the installed Chrome: `PW_CHANNEL=chrome npm run test:e2e`.
+On macOS 12 (no Playwright Chromium) run the e2e tests on the installed Chrome: `PW_CHANNEL=chrome npm run test:e2e`.
 
-# Git workflow:
+## Git workflow and deployment
 
 | branch | environment on Render |
 | ------ | --------------------- |
 | `main` | production - [demo](https://email-campaign-react-airtable.onrender.com/) |
-| `dev`  | staging - `email-campaign-react-airtable-staging` |
+| `dev`  | staging - [staging demo](https://email-campaign-react-airtable-staging.onrender.com/) |
 
 1. Every change starts on a short-lived branch off `dev` (`feature/...`, `fix/...`, `chore/...`).
-2. Pull request into `dev` - CI runs (typecheck, unit tests, build, e2e) and the PR must have no conflicts. A human reviews and **squash-merges** it; Render deploys it to staging.
+2. Pull request into `dev` - CI runs and the PR must have no conflicts. A human reviews and **squash-merges** it; Render deploys it to staging.
 3. After checking staging - pull request `dev -> main`, CI again, a human merges it with a **merge commit** (not squash, so `dev` and `main` do not drift apart); Render deploys production.
+
+**Hotfix** - only for an urgent fix of production:
+
+1. Branch `hotfix/...` off `main`.
+2. Pull request into `main` - CI runs, a human merges it; Render deploys production.
+3. Right after that, pull request `main -> dev` (merge commit), so `dev` gets the fix too and the next release does not undo it.
 
 Both services are defined in `render.yaml` (free plan).
 
-- I have used images from the [Email.js](https://www.emailjs.com/) website.
+## Roadmap
+
+- Styled Components
+- Redux Toolkit + Saga
+
+## Credits
+
+- Images from the [Email.js](https://www.emailjs.com/) website.
