@@ -6,6 +6,7 @@ import { Paper, Grid, Typography } from "@material-ui/core";
 import { useStyles, styles } from "./styles";
 import { TextInputController } from "components/Inputs";
 import { ActiveSubscribersPopup } from "../DisplayMessage";
+import { DEMO_EMAIL_NOTICE } from "sendEmail";
 import { CampaignFormValues } from "types";
 
 interface FormCampaignProps {
@@ -82,7 +83,15 @@ const FormCampaign = (props: FormCampaignProps) => {
                 variant="body2"
                 className={classes.label}
               >
-                change it by pressing the checkox below
+                change it by pressing the checkbox below
+              </Typography>
+              <Typography
+                color="textSecondary"
+                variant="body2"
+                className={classes.label}
+                style={styles.demoNotice}
+              >
+                {DEMO_EMAIL_NOTICE}
               </Typography>
             </Grid>
             <Grid item>

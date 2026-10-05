@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 import { useMutation } from "react-query";
 
 import { updateEmail } from "services";
-import { sendEmailTo } from "sendEmail";
+import { DEMO_EMAIL_NOTICE, sendEmailTo } from "sendEmail";
 import { useCampaign, useSubscribers } from "customHooks/queries";
 import { useInformationModalState } from "contexts/InformationModalContext";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
@@ -70,6 +70,7 @@ const UpdateEmailsPage = () => {
   ) => {
     setInformationModalText({
       title: status === "sent" ? <> That's great 🎊</> : <> Draft... 👋 </>,
+      additionalText: status === "sent" ? DEMO_EMAIL_NOTICE : "",
       message:
         status === "sent" ? (
           <> Email {data.title} has been sent 👋 </>
