@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { createEmail } from "services";
-import { sendEmailTo } from "sendEmail";
+import { DEMO_EMAIL_NOTICE, sendEmailTo } from "sendEmail";
 import { useSubscribers } from "customHooks/queries";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
@@ -69,6 +69,8 @@ const CreateEmailPage = () => {
     setConfirmModalText({
       additionalText: !allActiveSubscribers.length
         ? "No active Subscribers!"
+        : status === "sent"
+        ? DEMO_EMAIL_NOTICE
         : "",
 
       message: (

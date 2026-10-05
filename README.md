@@ -26,6 +26,8 @@ Create CRUD application, which allows to use five HTTP methods that can and shou
 
 Connect app to the Email.js and send personalized email just by one click to all choosen active subscribers.
 
+> **Demo mode:** in the public demo the sending through Email.js is turned off - the login password is public, so anybody could add any e-mail address and send e-mails from my account. "Send email" saves the campaign with the status `sent` and the app says clearly that no e-mail was really sent. The Email.js code is kept in `client/src/sendEmail.ts`.
+
 <br>
 
 <img src="./client/src/img/concept.png">
@@ -76,11 +78,26 @@ b) Campaigns:
 
    I have used an **express.js** to build a backend proxy server - backend API that will make requests to the Airtable, get back that response and then respond to someone who made that request. In this case sensitive data like key or id_base are hidden and are not available in the response header.
 
+   The server also handles the login: `POST /api/auth/login` checks the password (`ADMIN_PASSWORD`) and returns a signed token valid for 8 hours. All data endpoints require it in the `Authorization: Bearer <token>` header, and after 5 wrong passwords the IP is blocked for 15 minutes.
+
+   API endpoints (all under `/api`):
+
+   | method | endpoint | auth |
+   | ------ | -------- | ---- |
+   | `GET` | `/api/health` | - |
+   | `POST` | `/api/auth/login` | - |
+   | `GET`, `POST` | `/api/subscribers` | token |
+   | `GET`, `PATCH`, `DELETE` | `/api/subscribers/:id` | token |
+   | `GET`, `POST` | `/api/campaigns` | token |
+   | `GET`, `PATCH`, `DELETE` | `/api/campaigns/:id` | token |
+
 <br>
 
 # Testing:
 
-Also, I have used a tool such as **Postman** to test for valid, invalid, authorised and unauthorised requests, to ensure that the API responds correctly to every endpoint.
+The app is tested automatically on every push (GitHub Actions) - unit tests of the server and the client (Jest, Testing Library, supertest) and end-to-end tests (Playwright). See [Tests](#tests) below.
+
+Earlier, I have used a tool such as **Postman** to test for valid, invalid, authorised and unauthorised requests, to ensure that the API responds correctly to every endpoint. The screenshots below show the old endpoints - today they live under `/api/...` and need a token from `/api/auth/login`.
 
 <br>
 
@@ -143,6 +160,15 @@ The e2e tests run the production build of the client and the server against a fa
 
 # Git workflow:
 
-`main` = production, `dev` = integration. Every change goes to a feature branch, is merged into `dev`, and gets to `main` through a pull request `dev -> main` after CI (typecheck, unit tests, build, e2e) passes. Render deploys `main` automatically.
+| branch | environment on Render |
+| ------ | --------------------- |
+| `main` | production - [demo](https://email-campaign-react-airtable.onrender.com/) |
+| `dev`  | staging - `email-campaign-react-airtable-staging` |
+
+1. Every change starts on a short-lived branch off `dev` (`feature/...`, `fix/...`, `chore/...`).
+2. Pull request into `dev` - CI runs (typecheck, unit tests, build, e2e) and the PR must have no conflicts. A human reviews and **squash-merges** it; Render deploys it to staging.
+3. After checking staging - pull request `dev -> main`, CI again, a human merges it with a **merge commit** (not squash, so `dev` and `main` do not drift apart); Render deploys production.
+
+Both services are defined in `render.yaml` (free plan).
 
 - I have used images from the [Email.js](https://www.emailjs.com/) website.

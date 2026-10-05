@@ -1,11 +1,38 @@
-# Render Blueprint - free web service: Express API + the React build in one service.
-# render.com -> New -> Blueprint -> pick this repo. Deploys automatically from main.
+# Render Blueprint - free web services: Express API + the React build in one service.
+# render.com -> New -> Blueprint -> pick this repo. Each service deploys its branch on every merge.
 services:
+  # production
   - type: web
     name: email-campaign-react-airtable
     runtime: node
     plan: free
     branch: main
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm run start:prod
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # react-scripts 4 (webpack 4) needs the legacy OpenSSL on Node 17+
+      - key: NODE_OPTIONS
+        value: --openssl-legacy-provider
+      # demo app - the password is shown on the login form
+      - key: ADMIN_PASSWORD
+        value: admin
+      - key: AUTH_SECRET
+        generateValue: true
+      # Airtable - fill in on the Render dashboard (never commit them)
+      - key: REACT_APP_DB_ID
+        sync: false
+      - key: REACT_APP_API_KEY
+        sync: false
+
+  # staging - to check the changes before the PR dev -> main
+  - type: web
+    name: email-campaign-react-airtable-staging
+    runtime: node
+    plan: free
+    branch: dev
     buildCommand: npm install --include=dev && npm run build
     startCommand: npm run start:prod
     healthCheckPath: /api/health
