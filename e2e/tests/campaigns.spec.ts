@@ -55,10 +55,17 @@ test("sends a campaign to all active subscribers", async ({ page, request }) => 
   await page.goto("/#/campaigns/add");
 
   await expect(page.getByText("active subscribers - 2")).toBeVisible();
+  await expect(
+    page.getByText("Demo mode - emails are not really sent", { exact: false })
+  ).toBeVisible();
   await fillCampaign(page, "Newsletter");
   await page.getByRole("button", { name: "send" }).click();
 
   await expect(page.getByText("sent and added to the list")).toBeVisible();
+  // the confirmation says no email was really sent
+  await expect(
+    page.getByRole("dialog").getByText("Demo mode", { exact: false })
+  ).toBeVisible();
   expect((await campaignByTitle(request, "Newsletter"))?.fields.status).toBe(
     "sent"
   );
@@ -111,6 +118,9 @@ test("edits and sends a draft", async ({ page, request }) => {
   await page.getByRole("button", { name: "send" }).click();
 
   await expect(page.getByText("has been sent")).toBeVisible();
+  await expect(
+    page.getByRole("dialog").getByText("Demo mode", { exact: false })
+  ).toBeVisible();
   await page.getByRole("button", { name: "close" }).click();
 
   await expect(page).toHaveURL(/#\/campaigns$/);

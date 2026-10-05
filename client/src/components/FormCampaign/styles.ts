@@ -62,6 +62,7 @@ export const styles = {
     backgroundColor: "#142F43",
   },
   typography: { color: "orange", letterSpacing: 2, wordSpacing: 3 },
+  demoNotice: { marginTop: 12, fontStyle: "italic" },
   checkbox: {
     [`&, &.${checkboxClasses.checked}`]: {
       transform: "scale(1.1)",
