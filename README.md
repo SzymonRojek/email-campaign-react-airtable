@@ -1,6 +1,6 @@
 # Demo:
 
-Check demo on Herokuapp: [demo](https://create-email-campaign.herokuapp.com/)
+Check demo on Render: [demo](https://email-campaign-react-airtable.onrender.com/) - login password: `admin` (free plan - the first load after a break can take up to a minute)
 
 # Technologies used:
 
@@ -14,7 +14,7 @@ Check demo on Herokuapp: [demo](https://create-email-campaign.herokuapp.com/)
 - [Email.js](https://www.emailjs.com/)
 - Jest, Testing Library, supertest, Playwright
 - GitHub Actions CI
-- Deploying on Heroku
+- Deploying on Render (free plan, `render.yaml` Blueprint)
 
 # Main goal:
 
@@ -137,12 +137,12 @@ On Node 17+ start the client with `NODE_OPTIONS=--openssl-legacy-provider npm st
 | `npm run typecheck`                              | TypeScript (server + client)                                |
 | `npm install --prefix server && npm test`        | server unit tests - Jest + supertest, Airtable mocked       |
 | `cd client && npm test`                          | client unit tests - Jest + Testing Library                  |
-| `npm run build:server && npm run build --prefix client`<br>`npm install --prefix e2e && npm run test:e2e` | Playwright end-to-end tests |
+| `npm run build`<br>`npm install --prefix e2e && npm run test:e2e` | Playwright end-to-end tests |
 
 The e2e tests run the production build of the client and the server against a fake Airtable (`e2e/mock-airtable.ts`), so they never touch the real base. On macOS 12 (no Playwright Chromium) use the installed Chrome: `PW_CHANNEL=chrome npm run test:e2e`.
 
 # Git workflow:
 
-`main` = production, `dev` = integration. Every change goes to a feature branch, is merged into `dev`, and gets to `main` through a pull request `dev -> main` after CI (typecheck, unit tests, build, e2e) passes.
+`main` = production, `dev` = integration. Every change goes to a feature branch, is merged into `dev`, and gets to `main` through a pull request `dev -> main` after CI (typecheck, unit tests, build, e2e) passes. Render deploys `main` automatically.
 
 - I have used images from the [Email.js](https://www.emailjs.com/) website.

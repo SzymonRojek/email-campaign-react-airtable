@@ -21,6 +21,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// health check for the hosting (Render) - no auth, no Airtable call
+app.get("/api/health", (req, res) => res.json({ status: "ok" }));
+
 app.use("/api/auth", authRouter);
 app.use("/api/subscribers", requireAuth, subscribersRouter);
 app.use("/api/campaigns", requireAuth, campaignsRouter);
