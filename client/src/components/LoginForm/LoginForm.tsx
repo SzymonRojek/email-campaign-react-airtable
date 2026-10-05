@@ -67,6 +67,15 @@ const LoginForm = () => {
                 <h1 style={styles.heading}>Email Campaign</h1>
               </Grid>
               <Grid item xs={12}>
+                <Typography
+                  color="textSecondary"
+                  variant="body2"
+                  style={styles.textPassword}
+                >
+                  - Password: type admin
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
                 <PasswordInput
                   name="password"
                   register={register}

@@ -92,6 +92,15 @@ describe("POST /api/auth/login", () => {
   });
 });
 
+describe("GET /api/health", () => {
+  it("answers without a token", async () => {
+    const res = await request(app).get("/api/health");
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ status: "ok" });
+  });
+});
+
 describe("protected endpoints", () => {
   it.each(["/api/subscribers", "/api/campaigns", "/api/campaigns/rec1"])(
     "%s requires a token",
