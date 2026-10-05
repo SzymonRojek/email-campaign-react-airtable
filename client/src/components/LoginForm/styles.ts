@@ -13,7 +13,7 @@ export const styles = {
     letterSpacing: 1,
     wordSpacing: 2,
     textTransform: "uppercase",
-    fontWeight: "600",
+    fontWeight: 600,
   },
   heading: {
     color: "orange",

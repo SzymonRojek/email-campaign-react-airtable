@@ -7,13 +7,13 @@ test.beforeEach(async ({ request }) => {
 });
 
 test.describe("login", () => {
-  test("shows the login form to a guest", async ({ page }) => {
+  test("shows the login form with the demo password hint", async ({ page }) => {
     await page.goto("/");
 
     await expect(
       page.getByRole("heading", { name: "Email Campaign" })
     ).toBeVisible();
-    await expect(page.getByText("Password: type admin")).toHaveCount(0);
+    await expect(page.getByText("Password: type admin")).toBeVisible();
   });
 
   test("rejects a wrong password", async ({ page }) => {
