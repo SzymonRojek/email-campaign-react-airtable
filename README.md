@@ -34,7 +34,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 | area | technologies |
 | --- | --- |
-| Frontend | React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui (Radix), React Router 6, React Query, React Hook Form + Yup |
+| Frontend | React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui (Radix), React Router 7, TanStack Query, React Hook Form + Yup |
 | Backend | Node.js, Express, TypeScript, Airtable REST API |
 | Testing | Jest, Vitest, React Testing Library, supertest, Playwright, Postman |
 | DevOps | GitHub Actions, Render (`render.yaml` Blueprint) |
@@ -157,7 +157,6 @@ Both services are defined in `render.yaml` (free plan).
 
 ## Roadmap
 
-- React 19 and React Router 7
 - Daily reset of the demo data
 - Sending to a test inbox (Ethereal) with previews of the sent e-mails
 - E-mail templates with personalization (`{{name}}`) and a preview before sending

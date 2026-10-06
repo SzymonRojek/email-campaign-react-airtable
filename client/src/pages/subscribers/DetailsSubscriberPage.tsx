@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 
 import { formatMobileNumber, formattedData } from "helpers";
 import { useSubscriber } from "customHooks/queries";

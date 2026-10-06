@@ -42,21 +42,20 @@ const buttonVariants = cva(
   }
 )
 
-type ButtonProps = React.ComponentProps<"button"> &
+function Button({
+  className,
+  variant = "default",
+  size = "default",
+  asChild = false,
+  ...props
+}: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
-  }
-
-// forwardRef: React 18 does not pass ref as a prop (Radix Slot / asChild needs it) - can go with React 19
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { className, variant = "default", size = "default", asChild = false, ...props },
-  ref
-) {
+  }) {
   const Comp = asChild ? Slot.Root : "button"
 
   return (
     <Comp
-      ref={ref}
       data-slot="button"
       data-variant={variant}
       data-size={size}
@@ -64,6 +63,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
       {...props}
     />
   )
-})
+}
 
 export { Button, buttonVariants }

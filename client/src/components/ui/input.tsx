@@ -1,12 +1,9 @@
 import * as React from "react"
 import { cn } from "cn"
 
-// forwardRef: React 18 does not pass ref as a prop (react-hook-form needs it) - can go with React 19
-const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
-  function Input({ className, type, ...props }, ref) {
+function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
     <input
-      ref={ref}
       type={type}
       data-slot="input"
       className={cn(
@@ -16,6 +13,6 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       {...props}
     />
   )
-})
+}
 
 export { Input }

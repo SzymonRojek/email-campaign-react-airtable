@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router";
 
 import { sectionLinks } from "data/navigationLinks";
 import { cn } from "@/lib/utils";

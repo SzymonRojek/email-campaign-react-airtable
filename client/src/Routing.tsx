@@ -1,4 +1,4 @@
-import { useRoutes } from "react-router-dom";
+import { useRoutes } from "react-router";
 
 import "App.css";
 import { SubMainNavigation } from "components/Navigation";

@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router";
 import { LogOut } from "lucide-react";
 
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";

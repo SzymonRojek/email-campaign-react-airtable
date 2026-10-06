@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 import { LogOut, Menu } from "lucide-react";
 
 import { mainLinks, sectionLinks } from "data/navigationLinks";

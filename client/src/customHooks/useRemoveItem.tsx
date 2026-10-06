@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
 import api from "../services/api";
@@ -17,24 +17,23 @@ export const useRemoveItem = (
   data: string | undefined,
   id: string
 ) => {
-  const queryCache = useQueryClient();
+  const queryClient = useQueryClient();
 
   const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
 
-  const { mutateAsync } = useMutation<
-    unknown,
-    unknown,
-    string,
-    { previousItems?: Item[] }
-  >((id) => api.delete(`/${query}/${id}`), {
-    onMutate: async (id) => {
-      await queryCache.cancelQueries(`/${query}`);
+  const queryKey = [`/${query}`];
 
-      const previousItems = queryCache.getQueryData<Item[]>(`/${query}`);
+  const { mutateAsync } = useMutation({
+    mutationFn: (id: string) => api.delete(`/${query}/${id}`),
+    // remove the row at once, bring it back if the server fails
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey });
+
+      const previousItems = queryClient.getQueryData<Item[]>(queryKey);
 
       if (previousItems) {
-        queryCache.setQueryData(
-          `/${query}`,
+        queryClient.setQueryData(
+          queryKey,
           previousItems.filter((item) => item.id !== id)
         );
       }
@@ -43,12 +42,12 @@ export const useRemoveItem = (
     },
     onError: (error, id, context) => {
       if (context?.previousItems) {
-        queryCache.setQueryData(`/${query}`, context.previousItems);
+        queryClient.setQueryData(queryKey, context.previousItems);
       }
 
       toastMessage(`Item has not been removed: ${getErrorMessage(error)}`);
     },
-    onSettled: () => queryCache.invalidateQueries(`/${query}`),
+    onSettled: () => queryClient.invalidateQueries({ queryKey }),
   });
 
   const confirmModalProps = {
