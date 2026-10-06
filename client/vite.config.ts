@@ -2,6 +2,7 @@
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
 // absolute imports from src (e.g. "components/Table") - the same paths CRA allowed via baseUrl
 const srcFolders = [
@@ -20,9 +21,11 @@ const srcFolders = [
 ];
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: [
+      // "@/..." - the alias shadcn/ui components use
+      { find: /^@\//, replacement: `${fileURLToPath(new URL("./src", import.meta.url))}/` },
       {
         find: new RegExp(`^(${srcFolders.join("|").replace(".", "\\.")})(/.*)?$`),
         replacement: `${fileURLToPath(new URL("./src", import.meta.url))}/$1$2`,

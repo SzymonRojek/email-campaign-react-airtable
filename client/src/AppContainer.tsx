@@ -31,13 +31,15 @@ export const AppContainer = () => {
       <GlobalStoreContextProvider>
         <MainNavigation />
 
-        <Login>
-          <Routing
-            handleEditSubscriber={handleEditSubscriber}
-            handleSubscriberDetails={handleSubscriberDetails}
-            handleEditCampaign={handleEditCampaign}
-          />
-        </Login>
+        <main className="flex flex-1 flex-col">
+          <Login>
+            <Routing
+              handleEditSubscriber={handleEditSubscriber}
+              handleSubscriberDetails={handleSubscriberDetails}
+              handleEditCampaign={handleEditCampaign}
+            />
+          </Login>
+        </main>
 
         <StyledFooter label="Coded By Szymon Rojek © 2022" />
       </GlobalStoreContextProvider>
