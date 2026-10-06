@@ -6,7 +6,6 @@ import {
   FieldValues,
   Path,
   PathValue,
-  UnpackNestedValue,
 } from "react-hook-form";
 import { Typography } from "@material-ui/core";
 
@@ -53,7 +52,7 @@ const CheckboxInputController = <T extends FieldValues>({
       <Controller
         control={control}
         name={name}
-        defaultValue={defaultValue as UnpackNestedValue<PathValue<T, Path<T>>>}
+        defaultValue={defaultValue as PathValue<T, Path<T>>}
         rules={{ required: true }}
         render={({ field: { ref, value, ...field } }) => (
           <Checkbox

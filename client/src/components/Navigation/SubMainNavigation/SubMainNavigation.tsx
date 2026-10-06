@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, useEffect, useCallback } from "react";
+import { SyntheticEvent, useState, useEffect, useCallback } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import clsx from "clsx";
 import { Collapse, Tab } from "@mui/material";
@@ -23,7 +23,7 @@ const SubMainNavigation = () => {
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => setExpanded(!expanded);
-  const handleClickTab = (e: ChangeEvent<{}>, newTabsValue: number) =>
+  const handleClickTab = (e: SyntheticEvent, newTabsValue: number) =>
     setTabsSubValue(newTabsValue);
 
   const handleChangeTabsOnReload = useCallback(() => {

@@ -39,7 +39,8 @@ const Routing = ({
       element: <SubMainNavigation />,
       children: [
         {
-          path: "/",
+          // the list at /subscribers or /campaigns
+          index: true,
           element: (
             <SubscribersPage
               editSubscriber={handleEditSubscriber}
@@ -77,7 +78,8 @@ const Routing = ({
       element: <SubMainNavigation />,
       children: [
         {
-          path: "/",
+          // the list at /subscribers or /campaigns
+          index: true,
           element: <EmailsPage editCampaign={handleEditCampaign} />,
         },
         {

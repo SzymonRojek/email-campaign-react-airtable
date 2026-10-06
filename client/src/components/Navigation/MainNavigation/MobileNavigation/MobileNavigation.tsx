@@ -11,10 +11,13 @@ import {
   Collapse,
   Grid,
 } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
-import MenuOpenIcon from "@mui/icons-material/MenuOpen";
-import IconExpandLess from "@material-ui/icons/ExpandLess";
-import IconExpandMore from "@material-ui/icons/ExpandMore";
+// named imports from the package roots (ESM) - the per-icon files are CommonJS
+import {
+  Menu as MenuIcon,
+  ExpandLess as IconExpandLess,
+  ExpandMore as IconExpandMore,
+} from "@material-ui/icons";
+import { MenuOpen as MenuOpenIcon } from "@mui/icons-material";
 import { MdPeopleAlt } from "react-icons/md";
 import { AiFillMail } from "react-icons/ai";
 import { AiFillHome } from "react-icons/ai";
@@ -193,7 +196,11 @@ const MobileNavigation = () => {
         </Grid>
       </Drawer>
       <div className={classes.menuIconContainer}>
-        <IconButton onClick={() => setOpenDrawer(!openDrawer)} disableRipple>
+        <IconButton
+          onClick={() => setOpenDrawer(!openDrawer)}
+          disableRipple
+          aria-label={openDrawer ? "close menu" : "open menu"}
+        >
           {!openDrawer ? (
             <MenuIcon style={styles.menuIcon} />
           ) : (

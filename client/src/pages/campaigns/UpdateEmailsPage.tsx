@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMutation } from "react-query";
 
 import { updateEmail } from "services";
