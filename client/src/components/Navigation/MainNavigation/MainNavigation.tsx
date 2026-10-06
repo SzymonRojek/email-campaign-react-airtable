@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect } from "react";
+import { SyntheticEvent, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "@material-ui/core/styles";
 import {
@@ -46,7 +46,7 @@ function MainNavigation() {
   const { isLogIn, setIsLogIn, setStatusLog, tabsValue, setTabsValue } =
     useGlobalStoreContext();
 
-  const handleClickTab = (e: ChangeEvent<{}>, newTabsValue: number) =>
+  const handleClickTab = (e: SyntheticEvent, newTabsValue: number) =>
     setTabsValue(newTabsValue);
 
   useEffect(() => {

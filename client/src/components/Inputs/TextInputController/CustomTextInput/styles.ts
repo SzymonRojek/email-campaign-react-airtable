@@ -13,7 +13,7 @@ export const inputLabelProps = {
   },
 } as const;
 
-export const useStyles = makeStyles((theme) =>
+export const useStyles = makeStyles(() =>
   createStyles({
     root: {
       "& .MuiInputBase-root": {

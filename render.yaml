@@ -13,9 +13,6 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      # react-scripts 4 (webpack 4) needs the legacy OpenSSL on Node 17+
-      - key: NODE_OPTIONS
-        value: --openssl-legacy-provider
       # demo app - the password is shown on the login form
       - key: ADMIN_PASSWORD
         value: admin
@@ -39,9 +36,6 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      # react-scripts 4 (webpack 4) needs the legacy OpenSSL on Node 17+
-      - key: NODE_OPTIONS
-        value: --openssl-legacy-provider
       # demo app - the password is shown on the login form
       - key: ADMIN_PASSWORD
         value: admin

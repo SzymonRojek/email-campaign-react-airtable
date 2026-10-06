@@ -4,7 +4,6 @@ import {
   FieldValues,
   Path,
   PathValue,
-  UnpackNestedValue,
 } from "react-hook-form";
 import { Typography } from "@mui/material";
 
@@ -38,7 +37,7 @@ const TextInputController = <T extends FieldValues>({
       name={name}
       control={control}
       rules={{ required: true }}
-      defaultValue={defaultValue as UnpackNestedValue<PathValue<T, Path<T>>>}
+      defaultValue={defaultValue as PathValue<T, Path<T>>}
       render={({ field: { ref, value, ...field } }) => (
         <CustomTextInput
           {...field}

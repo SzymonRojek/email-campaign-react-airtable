@@ -11,7 +11,10 @@ const validSubscriber = {
   checkbox: true,
 };
 
-const errorsOf = async (schema: { validate: Function }, value: unknown) => {
+const errorsOf = async (
+  schema: { validate: (value: unknown, options: object) => Promise<unknown> },
+  value: unknown
+) => {
   try {
     await schema.validate(value, { abortEarly: false });
     return [];

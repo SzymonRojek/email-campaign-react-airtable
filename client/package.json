@@ -5,14 +5,13 @@
   "dependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
-    "@hookform/resolvers": "^2.8.1",
+    "@hookform/resolvers": "^3.10.0",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/styles": "^4.11.4",
     "@mui/icons-material": "^5.0.1",
     "@mui/material": "^5.0.2",
     "@mui/styles": "^5.0.1",
-    "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "@types/react": "^17.0.24",
@@ -26,14 +25,13 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-error-boundary": "^3.1.4",
-    "react-hook-form": "^7.16.1",
+    "react-hook-form": "^7.89.0",
     "react-icons": "^4.3.1",
     "react-image": "^4.0.3",
     "react-moment": "^1.1.1",
     "react-query": "^3.34.16",
     "react-router": "^6.0.0-alpha.5",
     "react-router-dom": "^6.0.0-alpha.5",
-    "react-scripts": "4.0.3",
     "react-table": "^7.7.0",
     "react-toastify": "^8.2.0",
     "twin.macro": "^2.7.0",
@@ -42,38 +40,32 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "test": "react-scripts test",
-    "test:coverage": "react-scripts test --coverage --watchAll=false",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "lint": "eslint .",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "proxy": "http://localhost:5000",
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
     "@testing-library/dom": "^7.31.2",
+    "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react-hooks": "^8.0.1",
-    "@types/jest": "^26.0.24",
     "@types/node": "^16.18.126",
     "@types/react-dom": "^17.0.26",
-    "typescript": "^4.9.5"
-  }
+    "@vitejs/plugin-react": "^6.1.2",
+    "@vitest/coverage-v8": "^5.0.3",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "jsdom": "^30.1.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.71.1",
+    "vite": "^8.3.3",
+    "vitest": "^5.0.3"
+  },
+  "type": "module"
 }

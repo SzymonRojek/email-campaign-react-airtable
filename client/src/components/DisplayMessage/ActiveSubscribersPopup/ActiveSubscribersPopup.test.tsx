@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
@@ -9,7 +10,7 @@ import {
 } from "contexts/GlobalStoreContextProvider";
 import { Subscriber, SubscriberStatus } from "types";
 
-jest.mock("customHooks/queries", () => ({ useSubscribers: jest.fn() }));
+vi.mock("customHooks/queries", () => ({ useSubscribers: vi.fn() }));
 
 const subscriber = (
   id: string,
@@ -36,7 +37,7 @@ const SelectedSubscribers = () => {
 };
 
 const renderPopup = () => {
-  const close = jest.fn();
+  const close = vi.fn();
 
   render(
     <GlobalStoreContextProvider>
@@ -53,7 +54,7 @@ const renderPopup = () => {
 
 describe("ActiveSubscribersPopup", () => {
   beforeEach(() => {
-    (useSubscribers as jest.Mock).mockReturnValue({
+    (useSubscribers as Mock).mockReturnValue({
       data: [
         subscriber("1", "Anna", "active"),
         subscriber("2", "Bartek", "blocked"),

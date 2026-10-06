@@ -19,7 +19,7 @@ export const styles = {
   icon: { marginLeft: 10, color: "white" },
 } as const;
 
-export const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles(() => ({
   status: {
     fontWeight: "bold",
     fontSize: "0.75rem",

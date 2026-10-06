@@ -11,10 +11,10 @@ export const DEMO_EMAIL_NOTICE =
   "Demo mode - emails are not really sent, the campaign is only marked as sent.";
 
 const {
-  REACT_APP_EMAIL_SERVICE_ID,
-  REACT_APP_EMAIL_TEMPLATE_ID,
-  REACT_APP_EMAIL_USER_ID,
-} = process.env;
+  VITE_EMAIL_SERVICE_ID,
+  VITE_EMAIL_TEMPLATE_ID,
+  VITE_EMAIL_USER_ID,
+} = import.meta.env;
 
 export function sendEmailTo(
   data: CampaignFormValues,
@@ -34,15 +34,15 @@ export function sendEmailTo(
   receivers.forEach(({ fields: { name, email } }) =>
     emailjs
       .send(
-        REACT_APP_EMAIL_SERVICE_ID,
-        REACT_APP_EMAIL_TEMPLATE_ID,
+        VITE_EMAIL_SERVICE_ID,
+        VITE_EMAIL_TEMPLATE_ID,
         {
           name,
           email,
           title,
           description,
         },
-        REACT_APP_EMAIL_USER_ID
+        VITE_EMAIL_USER_ID
       )
       .then((res) => {
         console.log("email sent:", res);

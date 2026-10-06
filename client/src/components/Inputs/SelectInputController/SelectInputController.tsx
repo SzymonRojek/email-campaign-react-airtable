@@ -5,7 +5,6 @@ import {
   FieldValues,
   Path,
   PathValue,
-  UnpackNestedValue,
 } from "react-hook-form";
 import { FormControl, Select, MenuItem } from "@mui/material";
 import { Typography } from "@material-ui/core";
@@ -43,7 +42,7 @@ const SelectInputController = <T extends FieldValues>({
       <Controller
         control={control}
         name={name}
-        defaultValue={defaultValue as UnpackNestedValue<PathValue<T, Path<T>>>}
+        defaultValue={defaultValue as PathValue<T, Path<T>>}
         render={({ field: { ref, value, ...field } }) => (
           <Select
             {...field}

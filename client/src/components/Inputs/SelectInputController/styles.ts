@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-export const useMenuItemStyles = makeStyles((theme) => ({
+export const useMenuItemStyles = makeStyles(() => ({
   root: {
     "&.MuiMenuItem-root": {
       padding: 10,

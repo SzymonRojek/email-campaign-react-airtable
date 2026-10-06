@@ -23,7 +23,7 @@ export const styles = {
   },
 } as const;
 
-export const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles(() => ({
   logInButton: {
     "&.MuiButton-root": {
       maxWidth: 120,
