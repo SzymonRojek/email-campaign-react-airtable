@@ -1,5 +1,4 @@
-import { Dialog, DialogContent } from "@mui/material";
-import Button from "@mui/material/Button";
+import { Button, Dialog, DialogContent } from "@mui/material";
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
 
 import { styles, useStyles } from "./styles";

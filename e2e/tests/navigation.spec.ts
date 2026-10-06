@@ -40,3 +40,16 @@ test("shows an error for a missing subscriber", async ({ page }) => {
     timeout: 15_000,
   });
 });
+
+test("navigates with the mobile menu", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "open menu" }).click();
+  await page.getByRole("button", { name: "Subscribers" }).click();
+  await page.locator('a[href="#/subscribers/status"]').click();
+
+  await expect(
+    page.getByRole("heading", { name: "subscribers status" })
+  ).toBeVisible();
+});

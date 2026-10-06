@@ -1,4 +1,4 @@
-import { inputLabelClasses } from "@mui/material/InputLabel";
+import { inputLabelClasses } from "@mui/material";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 
 export const inputLabelProps = {
