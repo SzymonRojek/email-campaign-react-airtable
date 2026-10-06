@@ -37,6 +37,7 @@ const SelectedSubscribers = () => {
 };
 
 const renderPopup = () => {
+  const user = userEvent.setup();
   const close = vi.fn();
 
   render(
@@ -49,7 +50,7 @@ const renderPopup = () => {
     </GlobalStoreContextProvider>
   );
 
-  return { close };
+  return { close, user };
 };
 
 describe("ActiveSubscribersPopup", () => {
@@ -75,33 +76,33 @@ describe("ActiveSubscribersPopup", () => {
     expect(screen.getByTestId("selected")).toHaveTextContent("all");
   });
 
-  it("selects only the checked subscribers", () => {
-    renderPopup();
+  it("selects only the checked subscribers", async () => {
+    const { user } = renderPopup();
 
-    userEvent.click(screen.getByLabelText(/Anna/));
+    await user.click(screen.getByLabelText(/Anna/));
 
     expect(screen.getByTestId("selected")).toHaveTextContent("3");
     expect(screen.getByText("Checked subscribers: 1")).toBeInTheDocument();
   });
 
-  it("'uncheck all' selects nobody instead of everybody", () => {
-    renderPopup();
+  it("'uncheck all' selects nobody instead of everybody", async () => {
+    const { user } = renderPopup();
 
-    userEvent.click(screen.getByRole("button", { name: "unchecked" }));
+    await user.click(screen.getByRole("button", { name: "unchecked" }));
 
     expect(screen.getByTestId("selected")).toHaveTextContent("none");
     expect(screen.getByText("Please choose subscribers")).toBeInTheDocument();
 
-    userEvent.click(screen.getByRole("button", { name: "checked" }));
+    await user.click(screen.getByRole("button", { name: "checked" }));
 
     expect(screen.getByTestId("selected")).toHaveTextContent("1,3");
   });
 
-  it("closing with X resets the selection to all active subscribers", () => {
-    const { close } = renderPopup();
+  it("closing with X resets the selection to all active subscribers", async () => {
+    const { close, user } = renderPopup();
 
-    userEvent.click(screen.getByLabelText(/Anna/));
-    userEvent.click(screen.getByRole("button", { name: "close" }));
+    await user.click(screen.getByLabelText(/Anna/));
+    await user.click(screen.getByRole("button", { name: "close" }));
 
     expect(close).toHaveBeenCalledWith(false);
     expect(screen.getByTestId("selected")).toHaveTextContent("all");

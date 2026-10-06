@@ -33,10 +33,12 @@ const renderLoginForm = () =>
     </MemoryRouter>
   );
 
-const fillPasswords = (password: string, confirmPassword = password) => {
-  userEvent.type(screen.getByLabelText("password*"), password);
-  userEvent.type(screen.getByLabelText("confirmPassword*"), confirmPassword);
-  userEvent.click(screen.getByRole("button", { name: /log in/i }));
+const fillPasswords = async (password: string, confirmPassword = password) => {
+  const user = userEvent.setup();
+
+  await user.type(screen.getByLabelText("password*"), password);
+  await user.type(screen.getByLabelText("confirmPassword*"), confirmPassword);
+  await user.click(screen.getByRole("button", { name: /log in/i }));
 };
 
 describe("LoginForm", () => {
@@ -49,7 +51,7 @@ describe("LoginForm", () => {
     mockedPost.mockResolvedValue({ token: "server-token" });
     renderLoginForm();
 
-    fillPasswords("secret-password");
+    await fillPasswords("secret-password");
 
     await waitFor(() =>
       expect(screen.getByTestId("login-state")).toHaveTextContent("true")
@@ -68,7 +70,7 @@ describe("LoginForm", () => {
     );
     renderLoginForm();
 
-    fillPasswords("wrong");
+    await fillPasswords("wrong");
 
     expect(
       await screen.findByText("password is not correct")
@@ -80,7 +82,7 @@ describe("LoginForm", () => {
   it("does not call the server when the passwords do not match", async () => {
     renderLoginForm();
 
-    fillPasswords("secret", "other");
+    await fillPasswords("secret", "other");
 
     expect(await screen.findByText("passwords don't match.")).toBeInTheDocument();
     expect(mockedPost).not.toHaveBeenCalled();
