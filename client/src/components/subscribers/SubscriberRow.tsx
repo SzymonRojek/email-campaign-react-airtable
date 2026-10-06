@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { Info, Pencil, Trash2 } from "lucide-react";
 
 import { formattedData } from "helpers";
