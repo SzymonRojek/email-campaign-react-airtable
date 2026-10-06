@@ -34,7 +34,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 | area | technologies |
 | --- | --- |
-| Frontend | React 17, TypeScript, Vite, React Router 6, React Query, React Hook Form + Yup, Material UI |
+| Frontend | React 18, TypeScript, Vite, React Router 6, React Query, React Hook Form + Yup, Material UI |
 | Backend | Node.js, Express, TypeScript, Airtable REST API |
 | Testing | Jest, Vitest, React Testing Library, supertest, Playwright, Postman |
 | DevOps | GitHub Actions, Render (`render.yaml` Blueprint) |
