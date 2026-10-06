@@ -9,17 +9,11 @@ import {
 } from "react";
 import { useLocalStorageValue } from "customHooks/useLocalStorageValue";
 import { getToken, removeToken, UNAUTHORIZED_EVENT } from "services/authToken";
-import { StatusLog, Subscriber } from "types";
+import { Subscriber } from "types";
 
 interface GlobalStoreContextValue {
-  statusLog: StatusLog;
-  setStatusLog: Dispatch<SetStateAction<StatusLog>>;
   isLogIn: boolean;
   setIsLogIn: Dispatch<SetStateAction<boolean>>;
-  tabsValue: number;
-  setTabsValue: Dispatch<SetStateAction<number>>;
-  tabsSubValue: number;
-  setTabsSubValue: Dispatch<SetStateAction<number>>;
   finalSelectedActiveSubscribers: Subscriber[] | null;
   setFinalSelectedActiveSubscribers: Dispatch<
     SetStateAction<Subscriber[] | null>
@@ -35,11 +29,6 @@ export const GlobalStoreContextProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  // login form
-  const [statusLog, setStatusLog] = useLocalStorageValue<StatusLog>(
-    "status",
-    "loadingIn"
-  );
   const [isLogIn, setIsLogIn] = useLocalStorageValue<boolean>(
     "login",
     false,
@@ -54,20 +43,13 @@ export const GlobalStoreContextProvider = ({
 
   // the server rejected the token (expired / invalid)
   useEffect(() => {
-    const handleUnauthorized = () => {
-      setIsLogIn(false);
-      setStatusLog("loadingIn");
-    };
+    const handleUnauthorized = () => setIsLogIn(false);
 
     window.addEventListener(UNAUTHORIZED_EVENT, handleUnauthorized);
 
     return () =>
       window.removeEventListener(UNAUTHORIZED_EVENT, handleUnauthorized);
-  }, [setIsLogIn, setStatusLog]);
-
-  // navigation tabs
-  const [tabsValue, setTabsValue] = useState(0);
-  const [tabsSubValue, setTabsSubValue] = useState(0);
+  }, [setIsLogIn]);
 
   // selectedActiveSubscribers in the popup before update or create an email
   // null = nothing chosen in the popup yet (all active subscribers by default)
@@ -75,14 +57,8 @@ export const GlobalStoreContextProvider = ({
     useState<Subscriber[] | null>(null);
 
   const contextValues = {
-    statusLog,
-    setStatusLog,
     isLogIn,
     setIsLogIn,
-    tabsValue,
-    setTabsValue,
-    tabsSubValue,
-    setTabsSubValue,
     finalSelectedActiveSubscribers,
     setFinalSelectedActiveSubscribers,
   };

@@ -1,120 +1,63 @@
-import { SyntheticEvent, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useTheme } from "@material-ui/core/styles";
-import {
-  AppBar,
-  Tab,
-  Toolbar,
-  CssBaseline,
-  useMediaQuery,
-} from "@material-ui/core";
-import { MdPeopleAlt } from "react-icons/md";
-import { AiFillMail } from "react-icons/ai";
-import { AiFillHome } from "react-icons/ai";
+import { Link, NavLink } from "react-router-dom";
+import { LogOut } from "lucide-react";
 
-import { useStyles } from "./styles";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
-import { StyledTabs } from "./StyledTabs";
-import { MobileNavigation } from "./MobileNavigation";
+import { mainLinks } from "data/navigationLinks";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import Logo from "../../../img/logo.svg";
-import { LogFormButton } from "components/LogFormButton";
-
-const mainNavigationLinks = [
-  {
-    icon: <MdPeopleAlt style={{ color: "orange", fontSize: 17 }} />,
-    name: "Subscribers",
-    to: "/subscribers",
-  },
-  {
-    icon: <AiFillMail style={{ color: "orange", fontSize: 17 }} />,
-    name: "Campaigns",
-    to: "/campaigns",
-  },
-  {
-    icon: <AiFillHome style={{ color: "orange", fontSize: 17 }} />,
-    name: "Home",
-    to: "/",
-  },
-];
+import { MobileNavigation } from "./MobileNavigation";
+import { useLogOut } from "./useLogOut";
 
 function MainNavigation() {
-  const theme = useTheme();
-  const classes = useStyles();
-  const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
-  const { isLogIn, setIsLogIn, setStatusLog, tabsValue, setTabsValue } =
-    useGlobalStoreContext();
-
-  const handleClickTab = (e: SyntheticEvent, newTabsValue: number) =>
-    setTabsValue(newTabsValue);
-
-  useEffect(() => {
-    if (pathname === "/subscribers") {
-      setTabsValue(0);
-    } else if (pathname === "/campaigns") {
-      setTabsValue(1);
-    } else {
-      setTabsValue(2);
-    }
-  }, [pathname, setTabsValue]);
-
-  const handleChangeStates = () => {
-    const timeID = setTimeout(() => {
-      setTabsValue(2);
-      navigate("/");
-      setIsLogIn(false);
-      setStatusLog("loadingIn");
-    }, 2_000);
-
-    return () => clearTimeout(timeID);
-  };
+  const { isLogIn } = useGlobalStoreContext();
+  const logOut = useLogOut();
 
   return (
-    <AppBar position="static">
-      <CssBaseline />
+    <header className="sticky top-0 z-40 bg-primary text-primary-foreground shadow-md">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
+        <Link to="/" className="flex items-center gap-3">
+          <img src={Logo} alt="Email Campaign - home" className="size-10" />
+          <span className="hidden text-lg font-semibold tracking-wide sm:inline">
+            Email Campaign
+          </span>
+        </Link>
 
-      <Toolbar className={classes.container}>
-        <div className={classes.logoContainer}>
-          <Link to="/" onClick={() => setTabsValue(2)}>
-            <img src={Logo} alt="logo" />
-          </Link>
-        </div>
-
-        {isSmallDevice ? (
-          <MobileNavigation />
-        ) : (
+        {isLogIn && (
           <>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <StyledTabs onChange={handleClickTab} value={tabsValue}>
-                {mainNavigationLinks.map(({ icon, name, to }) => (
-                  <Tab
-                    key={name}
-                    icon={icon}
-                    disableRipple
-                    label={name}
-                    component={Link}
-                    to={to}
-                    className={classes.link}
-                    disabled={!isLogIn ? true : false}
-                  />
-                ))}
-              </StyledTabs>
-            </div>
-            <LogFormButton
-              aria-label="log out button"
-              label="log out"
-              onClick={() => {
-                setStatusLog("loadingOut");
-                handleChangeStates();
-              }}
-              className={classes.logOutButton}
-              disabled={!isLogIn ? true : false}
-            />
+            <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
+              {mainLinks.map(({ to, label, icon: Icon, end }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  end={end}
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-primary-foreground/80 transition-colors hover:bg-white/10 hover:text-primary-foreground",
+                      isActive && "bg-white/10 text-brand"
+                    )
+                  }
+                >
+                  {Icon && <Icon className="size-4" />}
+                  {label}
+                </NavLink>
+              ))}
+            </nav>
+
+            <Button
+              variant="brand"
+              onClick={logOut}
+              className="hidden md:inline-flex"
+            >
+              <LogOut />
+              Log out
+            </Button>
+
+            <MobileNavigation />
           </>
         )}
-      </Toolbar>
-    </AppBar>
+      </div>
+    </header>
   );
 }
 

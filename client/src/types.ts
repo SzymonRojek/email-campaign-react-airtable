@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import * as Yup from "yup";
 
 import type validationSubscriber from "helpers/validationSubscriber";
@@ -45,11 +44,3 @@ export interface SelectOption {
   label: string;
 }
 
-export interface NavigationLink {
-  icon: ReactNode;
-  to: string;
-  name: string;
-  tabsValue: number;
-}
-
-export type StatusLog = "loadingIn" | "loadingOut" | "success";

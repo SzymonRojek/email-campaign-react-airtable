@@ -101,7 +101,7 @@ const Routing = ({
 
   const routing = useRoutes(routes);
 
-  return <div className="routing-container">{routing}</div>;
+  return <div className="flex flex-1 flex-col">{routing}</div>;
 };
 
 export default Routing;

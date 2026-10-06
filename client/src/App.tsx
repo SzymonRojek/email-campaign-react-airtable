@@ -36,7 +36,7 @@ const App = () => {
   },
   */
   return (
-    <div className="page-container">
+    <div className="flex min-h-screen flex-col">
       <QueryClientProvider client={queryClient}>
         <AppContainer />
         <ToastContainer

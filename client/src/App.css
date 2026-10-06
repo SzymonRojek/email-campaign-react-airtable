@@ -3,30 +3,6 @@ html {
 }
 
 body {
-  background-color: #fff;
-  background: url("./img/bgc-gradient.svg") no-repeat center center;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
+  background: url("./img/bgc-gradient.svg") no-repeat center center fixed;
   background-size: cover;
-  /* overscroll-behavior: none; */
-}
-
-.page-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  position: relative;
-}
-
-@media (max-width: 480px) {
-  .routing-children {
-    margin: 10px;
-  }
-}
-
-@media (max-width: 959px) {
-  .page-container {
-    justify-content: center;
-  }
 }
