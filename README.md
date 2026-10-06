@@ -153,7 +153,7 @@ On macOS 12 (no Playwright Chromium) run the e2e tests on the installed Chrome: 
 
 1. Branch `hotfix/...` off `main`.
 2. Pull request into `main` - CI runs, a human merges it; Render deploys production.
-3. Right after that, pull request `main -> dev` (merge commit), so `dev` gets the fix too and the next release does not undo it.
+3. Right after that, pull request `main -> dev` (merge commit) - otherwise staging would run a different version than production and new work on `dev` could conflict with the fix.
 
 Both services are defined in `render.yaml` (free plan).
 
