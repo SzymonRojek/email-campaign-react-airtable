@@ -2,7 +2,7 @@ import type { Mock } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import ActiveSubscribersPopup from "./ActiveSubscribersPopup";
+import RecipientsDialog from "./RecipientsDialog";
 import { useSubscribers } from "customHooks/queries";
 import {
   GlobalStoreContextProvider,
@@ -42,10 +42,7 @@ const renderPopup = () => {
 
   render(
     <GlobalStoreContextProvider>
-      <ActiveSubscribersPopup
-        openListActiveSubscribers
-        closeListActiveSusbcribers={close}
-      />
+      <RecipientsDialog isOpen onClose={close} />
       <SelectedSubscribers />
     </GlobalStoreContextProvider>
   );
@@ -53,7 +50,7 @@ const renderPopup = () => {
   return { close, user };
 };
 
-describe("ActiveSubscribersPopup", () => {
+describe("RecipientsDialog", () => {
   beforeEach(() => {
     (useSubscribers as Mock).mockReturnValue({
       data: [
@@ -88,12 +85,12 @@ describe("ActiveSubscribersPopup", () => {
   it("'uncheck all' selects nobody instead of everybody", async () => {
     const { user } = renderPopup();
 
-    await user.click(screen.getByRole("button", { name: "unchecked" }));
+    await user.click(screen.getByRole("button", { name: "Uncheck all" }));
 
     expect(screen.getByTestId("selected")).toHaveTextContent("none");
     expect(screen.getByText("Please choose subscribers")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "checked" }));
+    await user.click(screen.getByRole("button", { name: "Check all" }));
 
     expect(screen.getByTestId("selected")).toHaveTextContent("1,3");
   });
@@ -102,9 +99,9 @@ describe("ActiveSubscribersPopup", () => {
     const { close, user } = renderPopup();
 
     await user.click(screen.getByLabelText(/Anna/));
-    await user.click(screen.getByRole("button", { name: "close" }));
+    await user.click(screen.getByRole("button", { name: "Close" }));
 
-    expect(close).toHaveBeenCalledWith(false);
+    expect(close).toHaveBeenCalled();
     expect(screen.getByTestId("selected")).toHaveTextContent("all");
   });
 });

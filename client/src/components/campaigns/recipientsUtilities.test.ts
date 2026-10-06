@@ -3,7 +3,7 @@ import {
   countStateTruthy,
   handleCheckedAll,
   handleUncheckedAll,
-} from "./utilities";
+} from "./recipientsUtilities";
 
 describe("ActiveSubscribersPopup utilities", () => {
   it("checks and unchecks all checkboxes", () => {

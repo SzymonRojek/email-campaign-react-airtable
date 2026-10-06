@@ -1,127 +1,63 @@
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { makeStyles } from "@material-ui/core/styles";
+import { useState } from "react";
 
+import { getFilteredDataByStatus } from "helpers";
 import { useCampaigns } from "customHooks/queries";
+import { Error, Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
-import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
-import { CampaignStatus } from "components/CampaignStatus";
-import { SelectInputController } from "components/Inputs";
-import { Loader } from "components/DisplayMessage";
-import { Campaign, SelectOption } from "types";
+import CampaignsTable from "components/campaigns/CampaignsTable";
+import { CampaignStatus } from "types";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-interface StatusEmailsPageProps {
-  editCampaign: (campaign: Campaign) => void;
-}
+const statuses: CampaignStatus[] = ["sent", "draft"];
 
-const useSelectStyles = makeStyles({
-  root: {
-    "& .MuiOutlinedInput-input": {
-      color: "rgb(221, 220, 220)",
-      fontWeight: "bold",
-      backgroundColor: "#142f43",
-      minWidth: 20,
-      fontSize: 14,
-      padding: 10,
-      margin: 0,
-      transition: ".3 easy-out",
-    },
-    "& .MuiInputLabel-root": {
-      color: "rgb(221, 220, 220)",
-    },
-    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "rgb(221, 220, 220)",
-    },
-    "& .MuiSvgIcon-root": {
-      color: "rgb(221, 220, 220)",
-    },
-    "&:hover .MuiOutlinedInput-input": {
-      color: "rgb(221, 220, 220)",
-    },
-    "&:hover .MuiInputLabel-root": {
-      color: "rgb(221, 220, 220)",
-    },
-    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "rgb(221, 220, 220)",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-      color: "rgb(221, 220, 220)",
-    },
-    "& .MuiInputLabel-root.Mui-focused": {
-      color: "rgb(221, 220, 220)",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#ffa500",
-    },
-  },
-});
+const StatusEmailsPage = () => {
+  const [status, setStatus] = useState<CampaignStatus>("sent");
+  const { data: campaigns, isLoading, isError } = useCampaigns(
+    "Can not get campaigns status list:"
+  );
 
-const styles = {
-  textError: { color: "transparent", padding: 0 },
-} as const;
-
-const selectCampaignsStatus: SelectOption[] = [
-  { value: "sent", label: "sent" },
-  { value: "draft", label: "draft" },
-];
-
-const StatusEmailsPage = ({ editCampaign }: StatusEmailsPageProps) => {
-  const {
-    data: campaigns,
-    status,
-    isLoading,
-    isFetching,
-  } = useCampaigns("Can not get campaigns status list:");
-
-  const { control, watch } = useForm<{ status: string }>();
-  const [selectStatus, setSelectStatus] = useState("sent");
-  const classesSelectStyles = useSelectStyles();
-
-  const statusDataHeadTable = [
-    "no",
-    "title",
-    "description",
-    "date",
-    "time",
-    <SelectInputController
-      control={control}
-      name="status"
-      defaultValue={selectStatus}
-      data={selectCampaignsStatus}
-      message=""
-      error={false}
-      classesSelectStyles={classesSelectStyles.root}
-      styles={styles.textError}
-    />,
-    "details",
-    "delete",
-  ];
-
-  useEffect(() => {
-    const watchStatus = watch((value) => setSelectStatus(value.status ?? "sent"));
-
-    return () => watchStatus.unsubscribe();
-  }, [watch]);
-
-  if (isLoading || isFetching) {
-    return <Loader title="loading" />;
-  }
+  if (isLoading) return <Loader />;
+  if (isError || !campaigns)
+    return <Error error="Cannot load the campaigns - please try again later." />;
 
   return (
     <StyledContainer>
       <StyledHeading label="email status" />
-      <StyledMainContent>
-        {status === "success" && (
-          <CampaignStatus
-            subHeading="list"
-            dataHeadEmailTable={statusDataHeadTable}
-            passedData={campaigns}
-            status={selectStatus}
-            editCampaign={editCampaign}
-          />
-        )}
-      </StyledMainContent>
+      <CampaignsTable
+        // a new filter starts from the first page
+        key={status}
+        title="List"
+        campaigns={getFilteredDataByStatus(campaigns, status)}
+        emptyMessage={`There are no campaigns with the status ${status}.`}
+        toolbar={
+          <div className="flex items-center gap-2">
+            <Label htmlFor="status-id">Status</Label>
+            <Select
+              value={status}
+              onValueChange={(value) => setStatus(value as CampaignStatus)}
+            >
+              <SelectTrigger id="status-id" className="w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {statuses.map((value) => (
+                  <SelectItem key={value} value={value}>
+                    {value}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        }
+      />
     </StyledContainer>
   );
 };

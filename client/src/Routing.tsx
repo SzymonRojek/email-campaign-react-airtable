@@ -17,13 +17,7 @@ import {
   StatusEmailsPage,
 } from "pages/campaigns";
 import { NotFoundPage } from "pages/notFoundPage";
-import { Campaign } from "types";
-
-interface RoutingProps {
-  handleEditCampaign: (campaign: Campaign) => void;
-}
-
-const Routing = ({ handleEditCampaign }: RoutingProps) => {
+const Routing = () => {
   const routes = [
     { path: "/", element: <HomePage /> },
 
@@ -63,11 +57,11 @@ const Routing = ({ handleEditCampaign }: RoutingProps) => {
         {
           // the list at /subscribers or /campaigns
           index: true,
-          element: <EmailsPage editCampaign={handleEditCampaign} />,
+          element: <EmailsPage />,
         },
         {
           path: "status",
-          element: <StatusEmailsPage editCampaign={handleEditCampaign} />,
+          element: <StatusEmailsPage />,
         },
         {
           path: "add",
