@@ -1,10 +1,16 @@
-import { Button, Dialog, DialogContent } from "@mui/material";
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
-
-import { styles, useStyles } from "./styles";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const ConfirmModal = () => {
-  const classes = useStyles();
   const {
     isOpenConfirmModal,
     confirmModalText: { message, additionalText, question },
@@ -12,34 +18,33 @@ const ConfirmModal = () => {
   } = useConfirmModalState();
 
   return (
-    <Dialog open={isOpenConfirmModal} classes={{ paper: classes.paper }}>
-      <div style={styles.containerText}>
-        <p className={classes.additionalText}>{additionalText}</p>
-        <p className={classes.text}>{message}</p>
-        <p className={classes.text}>{question}</p>
-      </div>
-      <DialogContent dividers style={styles.dialogContent}>
-        <Button
-          variant="contained"
-          color="error"
-          style={styles.button}
-          onClick={() => {
-            onConfirm?.();
-            onClose?.();
-          }}
-        >
-          YES
-        </Button>
-        <Button
-          variant="contained"
-          color="success"
-          style={styles.button}
-          onClick={() => onClose?.()}
-        >
-          NO
-        </Button>
-      </DialogContent>
-    </Dialog>
+    <AlertDialog
+      open={isOpenConfirmModal}
+      onOpenChange={(isOpen) => !isOpen && onClose?.()}
+    >
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{message ?? question}</AlertDialogTitle>
+          {additionalText && (
+            <p className="font-semibold text-destructive">{additionalText}</p>
+          )}
+          <AlertDialogDescription>
+            {message && question ? question : "This cannot be undone."}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => onClose?.()}>No</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => {
+              onConfirm?.();
+              onClose?.();
+            }}
+          >
+            Yes
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 

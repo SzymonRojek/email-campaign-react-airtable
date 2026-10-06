@@ -26,7 +26,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 - **Full-stack TypeScript** - React client and Express server, strict mode
 - **Secure backend** - the Airtable API key never reaches the browser; login with signed tokens and protection against password guessing
-- **Automated testing** - 37 server and 51 client unit tests, 27 end-to-end tests in a real browser (Playwright)
+- **Automated testing** - 37 server and 44 client unit tests, 28 end-to-end tests in a real browser (Playwright)
 - **CI/CD** - every pull request is checked by GitHub Actions; `dev` deploys to staging and `main` to production automatically
 - **Team-style Git workflow** - feature branches, pull requests, staging before production
 
@@ -34,7 +34,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 | area | technologies |
 | --- | --- |
-| Frontend | React 18, TypeScript, Vite, React Router 6, React Query, React Hook Form + Yup, Material UI |
+| Frontend | React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui (Radix), React Router 6, React Query, React Hook Form + Yup |
 | Backend | Node.js, Express, TypeScript, Airtable REST API |
 | Testing | Jest, Vitest, React Testing Library, supertest, Playwright, Postman |
 | DevOps | GitHub Actions, Render (`render.yaml` Blueprint) |
@@ -157,8 +157,11 @@ Both services are defined in `render.yaml` (free plan).
 
 ## Roadmap
 
-- Styled Components
-- Redux Toolkit + Saga
+- React 19 and React Router 7
+- Daily reset of the demo data
+- Sending to a test inbox (Ethereal) with previews of the sent e-mails
+- E-mail templates with personalization (`{{name}}`) and a preview before sending
+- Campaign details and history; duplicate e-mail check, search and CSV import / export of subscribers
 
 ## Credits
 

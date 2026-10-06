@@ -1,11 +1,14 @@
-import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
-
-import { styles, useStyles } from "./styles";
 import { useInformationModalState } from "contexts/InformationModalContext";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
 const InformationModal = () => {
-  const classes = useStyles();
-
   const {
     isOpenInformationModal,
     informationModalText: { title, additionalText, message },
@@ -13,26 +16,27 @@ const InformationModal = () => {
   } = useInformationModalState();
 
   return (
-    <Dialog open={isOpenInformationModal} classes={{ paper: classes.paper }}>
-      <DialogTitle>
-        <div style={styles.titleContainer}>
-          <p style={styles.title} className={classes.heading}>
-            {title}
-          </p>
-          <Button
-            aria-label="close"
-            className={classes.smallButton}
-            variant="contained"
-            color={colorButton}
-            onClick={() => onClose?.()}
+    <Dialog
+      open={isOpenInformationModal}
+      onOpenChange={(isOpen) => !isOpen && onClose?.()}
+    >
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle
+            className={cn(
+              "text-xl",
+              colorButton === "error" ? "text-destructive" : "text-primary"
+            )}
           >
-            x
-          </Button>
-        </div>
-      </DialogTitle>
-      <DialogContent dividers>
-        <p className={classes.contentText}>{additionalText}</p>
-        <p className={classes.contentText}>{message}</p>
+            {title}
+          </DialogTitle>
+          {additionalText && (
+            <p className="font-medium text-muted-foreground">{additionalText}</p>
+          )}
+          <DialogDescription className="text-base text-foreground">
+            {message}
+          </DialogDescription>
+        </DialogHeader>
       </DialogContent>
     </Dialog>
   );

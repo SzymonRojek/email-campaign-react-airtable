@@ -1,6 +1,11 @@
 import { expect, test } from "@playwright/test";
 
-import { loginByApi, loginByForm, resetAirtable } from "./helpers";
+import {
+  loginByApi,
+  loginByForm,
+  mainNavLink,
+  resetAirtable,
+} from "./helpers";
 
 test.beforeEach(async ({ request }) => {
   await resetAirtable(request);
@@ -13,7 +18,9 @@ test.describe("login", () => {
     await expect(
       page.getByRole("heading", { name: "Email Campaign" })
     ).toBeVisible();
-    await expect(page.getByText("Password: type admin")).toBeVisible();
+    await expect(page.getByText("the password is", { exact: false })).toContainText(
+      "admin"
+    );
   });
 
   test("rejects a wrong password", async ({ page }) => {
@@ -30,9 +37,9 @@ test.describe("login", () => {
   test("validates that both passwords match", async ({ page }) => {
     await page.goto("/");
 
-    await page.getByLabel("password*", { exact: true }).fill("one");
-    await page.getByLabel("confirmPassword*", { exact: true }).fill("two");
-    await page.getByRole("button", { name: "log in button" }).click();
+    await page.getByLabel("Password", { exact: true }).fill("one");
+    await page.getByLabel("Confirm password", { exact: true }).fill("two");
+    await page.getByRole("button", { name: "Log in" }).click();
 
     await expect(page.getByText("passwords don't match.")).toBeVisible();
   });
@@ -46,7 +53,7 @@ test.describe("login", () => {
       timeout: 10_000,
     });
 
-    await page.getByRole("button", { name: "log out button" }).click();
+    await page.getByRole("button", { name: "Log out" }).click();
 
     await expect(
       page.getByRole("heading", { name: "Email Campaign" })
@@ -63,7 +70,7 @@ test.describe("login", () => {
 
     // e.g. the token expired or the server secret changed
     await page.evaluate(() => localStorage.setItem("authToken", "invalid.token"));
-    await page.getByRole("tab", { name: "Campaigns" }).click();
+    await mainNavLink(page, "Campaigns").click();
 
     await expect(
       page.getByRole("heading", { name: "Email Campaign" })

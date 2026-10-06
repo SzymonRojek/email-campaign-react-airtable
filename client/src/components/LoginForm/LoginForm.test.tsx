@@ -36,8 +36,8 @@ const renderLoginForm = () =>
 const fillPasswords = async (password: string, confirmPassword = password) => {
   const user = userEvent.setup();
 
-  await user.type(screen.getByLabelText("password*"), password);
-  await user.type(screen.getByLabelText("confirmPassword*"), confirmPassword);
+  await user.type(screen.getByLabelText("Password"), password);
+  await user.type(screen.getByLabelText("Confirm password"), confirmPassword);
   await user.click(screen.getByRole("button", { name: /log in/i }));
 };
 

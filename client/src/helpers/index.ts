@@ -1,6 +1,4 @@
-export { default as getStatusColor } from "./getStatusColor";
 export { default as formattedData } from "./formattedData";
-export { default as isEven } from "./isEven";
 export { default as validationSubscriber } from "./validationSubscriber";
 export { default as validationCampaign } from "./validationCampaign";
 export { default as getLatestAddedItem } from "./getLatestAddedItem";

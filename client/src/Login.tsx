@@ -1,31 +1,11 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 import { LoginForm } from "components/LoginForm";
-import { Loader } from "components/DisplayMessage";
 
+// the app is shown only after logging in
 export const Login = ({ children }: { children: ReactNode }) => {
-  const { isLogIn, statusLog, setStatusLog } = useGlobalStoreContext();
+  const { isLogIn } = useGlobalStoreContext();
 
-  useEffect(() => {
-    const timeID = setTimeout(() => {
-      if (isLogIn) setStatusLog("success");
-    }, 3_000);
-
-    return () => clearTimeout(timeID);
-  });
-
-  return (
-    <>
-      {isLogIn && statusLog === "loadingIn" ? (
-        <Loader title="Log In" />
-      ) : isLogIn && statusLog === "success" ? (
-        <>{children}</>
-      ) : statusLog === "loadingOut" ? (
-        <Loader title="Log Out" />
-      ) : (
-        <LoginForm />
-      )}
-    </>
-  );
+  return isLogIn ? <>{children}</> : <LoginForm />;
 };

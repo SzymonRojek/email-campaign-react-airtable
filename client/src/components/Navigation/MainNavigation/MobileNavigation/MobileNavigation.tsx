@@ -1,214 +1,88 @@
-import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import {
-  Divider,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Collapse,
-  Grid,
-} from "@material-ui/core";
-// named imports from the package roots (ESM) - the per-icon files are CommonJS
-import {
-  Menu as MenuIcon,
-  ExpandLess as IconExpandLess,
-  ExpandMore as IconExpandMore,
-} from "@material-ui/icons";
-import { MenuOpen as MenuOpenIcon } from "@mui/icons-material";
-import { MdPeopleAlt } from "react-icons/md";
-import { AiFillMail } from "react-icons/ai";
-import { AiFillHome } from "react-icons/ai";
+import { NavLink } from "react-router-dom";
+import { LogOut, Menu } from "lucide-react";
 
-import { styles, useStyles, StyledListItem } from "./styles";
-import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
-import { LogFormButton } from "components/LogFormButton";
-import { campaignsLinks, subscribersLinks } from "data/dataLinksNavigation";
+import { mainLinks, sectionLinks } from "data/navigationLinks";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
+import { useLogOut } from "../useLogOut";
+
+const linkClassName = ({ isActive }: { isActive: boolean }) =>
+  cn(
+    "block rounded-md px-3 py-2 text-sm text-primary-foreground/80 hover:bg-white/10 hover:text-primary-foreground",
+    isActive && "bg-white/10 text-brand"
+  );
+
+const groups = [
+  { title: "Subscribers", links: sectionLinks.subscribers },
+  { title: "Campaigns", links: sectionLinks.campaigns },
+];
+
+const home = mainLinks.find(({ to }) => to === "/");
 
 const MobileNavigation = () => {
-  const classes = useStyles();
-  const location = useLocation();
-  const [openDrawer, setOpenDrawer] = useState(false);
-  const [openSubscribersLinks, setOpenSubscribersLinks] = useState(false);
-  const [openCampaignsLinks, setOpenCampaignsLinks] = useState(false);
-  const { setIsLogIn, setStatusLog, setTabsValue } = useGlobalStoreContext();
-
-  useEffect(() => {
-    if (!openDrawer) {
-      setOpenSubscribersLinks(false);
-      setOpenCampaignsLinks(false);
-    }
-  }, [openDrawer, openSubscribersLinks, openCampaignsLinks]);
-
-  const handleSubscribersClick = () => {
-    setOpenSubscribersLinks(!openSubscribersLinks);
-    setOpenCampaignsLinks(false);
-  };
-
-  const handleCampaignsClick = () => {
-    setOpenCampaignsLinks(!openCampaignsLinks);
-    setOpenSubscribersLinks(false);
-  };
-
-  const handleChangeStates = () => {
-    const timeID = setTimeout(() => {
-      setIsLogIn(false);
-      setStatusLog("loadingIn");
-    }, 2_000);
-
-    return () => clearTimeout(timeID);
-  };
+  const logOut = useLogOut();
 
   return (
-    <>
-      <Drawer
-        anchor="right"
-        style={styles.drawer}
-        open={openDrawer}
-        onClose={() => setOpenDrawer(false)}
+    <Sheet>
+      <SheetTrigger
+        aria-label="open menu"
+        className={cn(
+          buttonVariants({ variant: "ghost", size: "icon-lg" }),
+          "text-brand hover:bg-white/10 hover:text-brand md:hidden"
+        )}
       >
-        <Grid
-          container
-          direction="column"
-          justifyContent="space-evenly"
-          className={classes.container}
-        >
-          <Grid item>
-            <List>
-              <ListItem
-                button
-                onClick={handleSubscribersClick}
-                className={classes.linkCollapse}
-              >
-                <ListItemIcon className={classes.listItemIcon}>
-                  <MdPeopleAlt />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Subscribers"
-                  className={classes.listItemText}
-                />
-                {openSubscribersLinks ? <IconExpandLess /> : <IconExpandMore />}
-              </ListItem>
-              <Divider className={classes.mainDivider} />
+        <Menu className="size-6" />
+      </SheetTrigger>
 
-              <Collapse in={openSubscribersLinks} timeout="auto" unmountOnExit>
-                {subscribersLinks.map(({ icon, to, tabsValue }) => (
-                  <div key={to}>
-                    <Link
-                      to={to}
-                      onClick={() => setTabsValue(tabsValue)}
-                      className={classes.link}
-                    >
-                      <StyledListItem
-                        button
-                        onClick={() => setOpenDrawer(false)}
-                        selected={to === location.pathname}
-                      >
-                        <ListItemIcon
-                          className={classes.listItemIcon}
-                          onClick={() => setTabsValue(tabsValue)}
-                        >
-                          {icon}
-                        </ListItemIcon>
-                      </StyledListItem>
-                    </Link>
-                    <Divider className={classes.subDivider} />
-                  </div>
-                ))}
-              </Collapse>
-            </List>
-            <List>
-              <ListItem
-                button
-                onClick={handleCampaignsClick}
-                className={classes.linkCollapse}
-              >
-                <ListItemIcon className={classes.listItemIcon}>
-                  <AiFillMail />
-                </ListItemIcon>
-                <ListItemText primary="Campaigns" />
-                {openCampaignsLinks ? <IconExpandLess /> : <IconExpandMore />}
-              </ListItem>
-              <Divider className={classes.mainDivider} />
+      <SheetContent className="w-72 border-none bg-primary text-primary-foreground">
+        <SheetHeader>
+          <SheetTitle className="text-brand">Menu</SheetTitle>
+        </SheetHeader>
 
-              <Collapse in={openCampaignsLinks} timeout="auto" unmountOnExit>
-                {campaignsLinks.map(({ icon, to, tabsValue }) => (
-                  <div key={to}>
-                    <Link
-                      to={to}
-                      onClick={() => setTabsValue(tabsValue)}
-                      className={classes.link}
-                    >
-                      <StyledListItem
-                        button
-                        onClick={() => setOpenDrawer(false)}
-                        selected={to === location.pathname}
-                      >
-                        <ListItemIcon
-                          className={classes.listItemIcon}
-                          onClick={() => setTabsValue(tabsValue)}
-                        >
-                          {icon}
-                        </ListItemIcon>
-                      </StyledListItem>
-                    </Link>
-                    <Divider className={classes.subDivider} />
-                  </div>
-                ))}
-              </Collapse>
-            </List>
-          </Grid>
-          <Grid item>
-            <Link
-              to="/"
-              onClick={() => setTabsValue(2)}
-              className={classes.link}
-            >
-              <StyledListItem
-                button
-                onClick={() => setOpenDrawer(false)}
-                selected={"/" === location.pathname}
-              >
-                <ListItemIcon className={classes.listItemIcon}>
-                  <AiFillHome />
-                </ListItemIcon>
-                <ListItemText onClick={() => setTabsValue(2)}>
-                  Home
-                </ListItemText>
-              </StyledListItem>
-            </Link>
-            <Divider className={classes.subDivider} />
-
-            <div style={{ textAlign: "center", marginTop: 80 }}>
-              <LogFormButton
-                aria-label="log out button"
-                label="log out"
-                onClick={() => {
-                  setStatusLog("loadingOut");
-                  handleChangeStates();
-                }}
-                className={classes.logInButton}
-              />
+        <nav aria-label="Mobile" className="flex flex-col gap-4 px-4">
+          {groups.map(({ title, links }) => (
+            <div key={title}>
+              <p className="px-3 pb-1 text-xs font-semibold tracking-wider text-brand uppercase">
+                {title}
+              </p>
+              {links.map(({ to, label, end }) => (
+                <SheetClose asChild key={to}>
+                  <NavLink to={to} end={end} className={linkClassName}>
+                    {label}
+                  </NavLink>
+                </SheetClose>
+              ))}
             </div>
-          </Grid>
-        </Grid>
-      </Drawer>
-      <div className={classes.menuIconContainer}>
-        <IconButton
-          onClick={() => setOpenDrawer(!openDrawer)}
-          disableRipple
-          aria-label={openDrawer ? "close menu" : "open menu"}
-        >
-          {!openDrawer ? (
-            <MenuIcon style={styles.menuIcon} />
-          ) : (
-            <MenuOpenIcon style={styles.menuIcon} />
+          ))}
+
+          <Separator className="bg-white/20" />
+
+          {home && (
+            <SheetClose asChild>
+              <NavLink to={home.to} end className={linkClassName}>
+                {home.label}
+              </NavLink>
+            </SheetClose>
           )}
-        </IconButton>
-      </div>
-    </>
+
+          <SheetClose asChild>
+            <Button variant="brand" onClick={logOut}>
+              <LogOut />
+              Log out
+            </Button>
+          </SheetClose>
+        </nav>
+      </SheetContent>
+    </Sheet>
   );
 };
 

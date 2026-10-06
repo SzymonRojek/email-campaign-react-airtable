@@ -1,41 +1,18 @@
-import { Container, Box, Grid } from "@material-ui/core";
-import { AppBar, Typography } from "@material-ui/core";
-import { Link } from "@mui/material";
 import { BsGithub } from "react-icons/bs";
 
-import { useStyles } from "./styles";
-
-const StyledFooter = ({ label }: { label: string }) => {
-  const classes = useStyles();
-
-  return (
-    <footer className={classes.footer}>
-      <AppBar position="static" color="primary" className={classes.appBar}>
-        <Container maxWidth="md">
-          <Box p={3}>
-            <Grid
-              container
-              direction="column"
-              justifyContent="center"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={12}>
-                <Typography variant="body1" className={classes.label}>
-                  {label}
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Link href="https://github.com/SzymonRojek" target="_blank">
-                  <BsGithub className={classes.icon} />
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Container>
-      </AppBar>
-    </footer>
-  );
-};
+const StyledFooter = ({ label }: { label: string }) => (
+  <footer className="bg-primary py-6 text-center text-sm text-primary-foreground/70">
+    <p>{label}</p>
+    <a
+      href="https://github.com/SzymonRojek"
+      target="_blank"
+      rel="noreferrer"
+      aria-label="GitHub profile"
+      className="mt-3 inline-flex text-brand hover:text-brand/80"
+    >
+      <BsGithub className="size-6" />
+    </a>
+  </footer>
+);
 
 export default StyledFooter;

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { loginByApi, resetAirtable } from "./helpers";
+import { loginByApi, mainNavLink, resetAirtable } from "./helpers";
 
 test.beforeEach(async ({ page, request }) => {
   await resetAirtable(request);
@@ -10,13 +10,13 @@ test.beforeEach(async ({ page, request }) => {
 test("navigates with the main tabs", async ({ page }) => {
   await page.goto("/");
 
-  await page.getByRole("tab", { name: "Subscribers" }).click();
+  await mainNavLink(page, "Subscribers").click();
   await expect(page.getByRole("heading", { name: "all subscribers" })).toBeVisible();
 
-  await page.getByRole("tab", { name: "Campaigns" }).click();
+  await mainNavLink(page, "Campaigns").click();
   await expect(page.getByRole("heading", { name: "all emails" })).toBeVisible();
 
-  await page.getByRole("tab", { name: "Home" }).click();
+  await mainNavLink(page, "Home").click();
   await expect(page.getByRole("heading", { name: /Hello/ })).toBeVisible();
 });
 
@@ -46,8 +46,10 @@ test("navigates with the mobile menu", async ({ page }) => {
   await page.goto("/");
 
   await page.getByRole("button", { name: "open menu" }).click();
-  await page.getByRole("button", { name: "Subscribers" }).click();
-  await page.locator('a[href="#/subscribers/status"]').click();
+  await page
+    .getByRole("navigation", { name: "Mobile" })
+    .getByRole("link", { name: "Subscribers status" })
+    .click();
 
   await expect(
     page.getByRole("heading", { name: "subscribers status" })

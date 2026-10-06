@@ -27,11 +27,10 @@ test("adds a subscriber", async ({ page, request }) => {
   await page.locator("#email").fill("lucja@example.com");
   await page.locator("#status-id").click();
   await page.getByRole("option", { name: "active" }).click();
-  await page.getByRole("checkbox", { name: "checkbox" }).check();
   await page.locator("#profession").fill("analyst");
   await page.locator("#salary").fill("4500");
   await page.locator("#telephone").fill("3432342399");
-  await page.getByRole("button", { name: "add", exact: true }).click();
+  await page.getByRole("button", { name: "Add subscriber" }).click();
 
   await expect(page.getByText("has been added to the list")).toBeVisible();
   await page.getByRole("button", { name: "YES" }).click();
@@ -51,11 +50,10 @@ test("shows validation errors and does not save", async ({ page, request }) => {
 
   await page.locator("#name").fill("Jo");
   await page.locator("#email").fill("not-an-email");
-  await page.getByRole("button", { name: "add", exact: true }).click();
+  await page.getByRole("button", { name: "Add subscriber" }).click();
 
   await expect(page.getByText("must be at least 3 characters")).toBeVisible();
   await expect(page.getByText("email is invalid")).toBeVisible();
-  await expect(page.getByText("field must be checked")).toBeVisible();
 
   const db = await getAirtable(request);
   expect(db.subscribers).toHaveLength(4);
@@ -70,9 +68,8 @@ test("edits a subscriber", async ({ page, request }) => {
   // the form is filled with the current data
   await expect(page.locator("#surname")).toHaveValue("Wiśniewska");
 
-  await page.getByRole("checkbox", { name: "checkbox" }).check();
   await page.locator("#surname").fill("Nowicka");
-  await page.getByRole("button", { name: "add", exact: true }).click();
+  await page.getByRole("button", { name: "Save changes" }).click();
 
   await expect(page.getByText("has been edited")).toBeVisible();
   await page.getByRole("button", { name: "close" }).click();

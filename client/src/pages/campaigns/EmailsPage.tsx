@@ -1,55 +1,45 @@
-import { dataHeadEmailTable } from "data/dataHeadTable";
+import { Link } from "react-router-dom";
+
 import { getLatestAddedItem } from "helpers";
 import { useCampaigns } from "customHooks/queries";
+import { Error, Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
-import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
-import { CampaignsList } from "components/CampaignsList";
-import { Loader } from "components/DisplayMessage";
-import { Campaign } from "types";
+import CampaignsTable from "components/campaigns/CampaignsTable";
+import { Button } from "@/components/ui/button";
 
-interface EmailsPageProps {
-  editCampaign: (campaign: Campaign) => void;
-}
+const EmailsPage = () => {
+  const { data: campaigns, isLoading, isError } = useCampaigns(
+    "Can not get campaigns list"
+  );
 
-const EmailsPage = ({ editCampaign }: EmailsPageProps) => {
-  const {
-    data: campaigns,
-    status,
-    isLoading,
-    isFetching,
-  } = useCampaigns("Can not get campaigns list");
-
-  if (isLoading || isFetching) {
-    return <Loader title="loading" />;
-  }
+  if (isLoading) return <Loader />;
+  if (isError || !campaigns)
+    return <Error error="Cannot load the campaigns - please try again later." />;
 
   return (
     <StyledContainer>
       <StyledHeading label="all emails" />
-      <StyledMainContent>
-        <div style={{ marginBottom: 100 }}>
-          {status === "success" && (
-            <CampaignsList
-              subHeading="list"
-              dataHeadEmailTable={dataHeadEmailTable}
-              passedData={campaigns || []}
-              editCampaign={editCampaign}
-            />
-          )}
-        </div>
-
-        {campaigns && campaigns.length > 0 ? (
-          <CampaignsList
-            subHeading="latest added"
-            dataHeadEmailTable={dataHeadEmailTable}
-            passedData={getLatestAddedItem(campaigns)}
-            editCampaign={editCampaign}
+      <div className="grid gap-8">
+        <CampaignsTable
+          title="List"
+          campaigns={campaigns}
+          emptyMessage={
+            <>
+              <p>There are no campaigns yet.</p>
+              <Button asChild variant="brand" className="mt-4">
+                <Link to="/campaigns/add">Add campaign</Link>
+              </Button>
+            </>
+          }
+        />
+        {campaigns.length > 0 && (
+          <CampaignsTable
+            title="Latest added"
+            campaigns={getLatestAddedItem(campaigns)}
           />
-        ) : (
-          ""
         )}
-      </StyledMainContent>
+      </div>
     </StyledContainer>
   );
 };

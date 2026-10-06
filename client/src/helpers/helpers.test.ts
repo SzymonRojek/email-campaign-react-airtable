@@ -3,8 +3,6 @@ import {
   formattedData,
   getFilteredDataByStatus,
   getLatestAddedItem,
-  getStatusColor,
-  isEven,
 } from "helpers";
 import { Subscriber } from "types";
 
@@ -16,29 +14,6 @@ const subscriber = (
   id,
   createdTime,
   fields: { name: "Anna", surname: "Nowak", email: "a@b.pl", status },
-});
-
-describe("getStatusColor", () => {
-  it.each([
-    ["active", "green"],
-    ["sent", "green"],
-    ["pending", "orange"],
-    ["draft", "orange"],
-    ["blocked", "crimson"],
-  ])("%s -> %s", (status, color) => {
-    expect(getStatusColor(status)).toBe(color);
-  });
-
-  it("returns undefined without a status", () => {
-    expect(getStatusColor(undefined)).toBeUndefined();
-  });
-});
-
-describe("isEven", () => {
-  it("returns the color only for odd indexes (zebra rows)", () => {
-    expect(isEven(0, "#eee")).toBe("");
-    expect(isEven(1, "#eee")).toBe("#eee");
-  });
 });
 
 describe("formatMobileNumber", () => {

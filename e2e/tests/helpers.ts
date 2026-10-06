@@ -31,16 +31,21 @@ export const loginByApi = async (page: Page, request: APIRequestContext) => {
   await page.addInitScript((authToken) => {
     localStorage.setItem("authToken", authToken);
     localStorage.setItem("login", "true");
-    localStorage.setItem("status", JSON.stringify("success"));
   }, token);
 };
 
 export const loginByForm = async (page: Page, password = ADMIN_PASSWORD) => {
-  await page.getByLabel("password*", { exact: true }).fill(password);
-  await page.getByLabel("confirmPassword*", { exact: true }).fill(password);
-  await page.getByRole("button", { name: "log in button" }).click();
+  await page.getByLabel("Password", { exact: true }).fill(password);
+  await page.getByLabel("Confirm password", { exact: true }).fill(password);
+  await page.getByRole("button", { name: "Log in" }).click();
 };
 
 // the first table on the page is the full list ("latest added" is the second one)
 export const listRow = (page: Page, text: string) =>
   page.getByRole("table").first().getByRole("row").filter({ hasText: text });
+
+// links of the main navigation in the header (desktop)
+export const mainNavLink = (page: Page, name: string) =>
+  page
+    .getByRole("navigation", { name: "Main" })
+    .getByRole("link", { name, exact: true });

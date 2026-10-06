@@ -21,7 +21,6 @@ const validationSubscriber = Yup.object({
     .required("email is required")
     .trim()
     .matches(/^([^.@]+)(\.[^.@]+)*@([^.@]+\.)+([^.@]+)$/, "email is invalid"),
-  checkbox: Yup.bool().oneOf([true], "field must be checked"),
   status: Yup.mixed<SubscriberStatus>()
     .required("status is required")
     .oneOf(status, "status is required"),

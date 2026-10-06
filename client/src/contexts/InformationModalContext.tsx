@@ -1,5 +1,4 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import { ButtonProps } from "@mui/material";
 
 import { InformationModal } from "Modals";
 
@@ -10,7 +9,8 @@ export interface InformationModalText {
 }
 
 export interface InformationModalProps {
-  colorButton?: ButtonProps["color"];
+  // "error" shows the title in red
+  colorButton?: "success" | "error";
   onClose?: () => void;
 }
 

@@ -17,20 +17,7 @@ import {
   StatusEmailsPage,
 } from "pages/campaigns";
 import { NotFoundPage } from "pages/notFoundPage";
-import { Campaign, Subscriber } from "types";
-
-interface RoutingProps {
-  handleEditSubscriber: (subscriber: Subscriber) => void;
-  handleSubscriberDetails: (subscriber: Subscriber) => void;
-  handleEditCampaign: (campaign: Campaign) => void;
-}
-
-const Routing = ({
-  handleEditSubscriber,
-  handleSubscriberDetails,
-  handleEditCampaign,
-}: RoutingProps) => {
-
+const Routing = () => {
   const routes = [
     { path: "/", element: <HomePage /> },
 
@@ -41,21 +28,11 @@ const Routing = ({
         {
           // the list at /subscribers or /campaigns
           index: true,
-          element: (
-            <SubscribersPage
-              editSubscriber={handleEditSubscriber}
-              handleSubscriberDetails={handleSubscriberDetails}
-            />
-          ),
+          element: <SubscribersPage />,
         },
         {
           path: "status",
-          element: (
-            <StatusSubscribersPage
-              editSubscriber={handleEditSubscriber}
-              handleSubscriberDetails={handleSubscriberDetails}
-            />
-          ),
+          element: <StatusSubscribersPage />,
         },
         {
           path: "add",
@@ -80,11 +57,11 @@ const Routing = ({
         {
           // the list at /subscribers or /campaigns
           index: true,
-          element: <EmailsPage editCampaign={handleEditCampaign} />,
+          element: <EmailsPage />,
         },
         {
           path: "status",
-          element: <StatusEmailsPage editCampaign={handleEditCampaign} />,
+          element: <StatusEmailsPage />,
         },
         {
           path: "add",
@@ -101,7 +78,7 @@ const Routing = ({
 
   const routing = useRoutes(routes);
 
-  return <div className="routing-container">{routing}</div>;
+  return <div className="flex flex-1 flex-col">{routing}</div>;
 };
 
 export default Routing;

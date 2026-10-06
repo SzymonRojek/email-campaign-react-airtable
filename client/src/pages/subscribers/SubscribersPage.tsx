@@ -1,70 +1,46 @@
-import { generalDataHeadTable } from "data/dataHeadTable";
+import { Link } from "react-router-dom";
+
 import { getLatestAddedItem } from "helpers";
 import { useSubscribers } from "customHooks/queries";
-import { Loader } from "components/DisplayMessage";
+import { Error, Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
-import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
-import { SubscribersList } from "components/SubscribersList";
-import { Subscriber } from "types";
+import SubscribersTable from "components/subscribers/SubscribersTable";
+import { Button } from "@/components/ui/button";
 
-const styles = {
-  container: {
-    marginBottom: 100,
-  },
-} as const;
+const SubscribersPage = () => {
+  const { data: subscribers, isLoading, isError } = useSubscribers(
+    "Cannot get subscribers list."
+  );
 
-interface SubscribersPageProps {
-  editSubscriber: (subscriber: Subscriber) => void;
-  handleSubscriberDetails: (subscriber: Subscriber) => void;
-}
-
-const SubscribersPage = ({
-  editSubscriber,
-  handleSubscriberDetails,
-}: SubscribersPageProps) => {
-  const {
-    data: subscribers,
-    status,
-    isLoading,
-    isFetching,
-  } = useSubscribers("Cannot get subscribers list.");
-
-  if (isLoading || isFetching) {
-    return <Loader title="loading" />;
-  }
+  if (isLoading) return <Loader />;
+  if (isError || !subscribers)
+    return <Error error="Cannot load the subscribers - please try again later." />;
 
   return (
-    <>
-      <StyledContainer>
-        <StyledHeading label="all subscribers" />
-        <StyledMainContent>
-          {status === "success" && (
-            <div style={styles.container}>
-              <SubscribersList
-                subHeading="list"
-                dataHeadTable={generalDataHeadTable}
-                passedData={subscribers || []}
-                editSubscriber={editSubscriber}
-                handleSubscriberDetails={handleSubscriberDetails}
-              />
-            </div>
-          )}
-
-          {subscribers && subscribers.length > 0 ? (
-            <SubscribersList
-              subHeading="latest added"
-              dataHeadTable={generalDataHeadTable}
-              passedData={getLatestAddedItem(subscribers || [])}
-              editSubscriber={editSubscriber}
-              handleSubscriberDetails={handleSubscriberDetails}
-            />
-          ) : (
-            ""
-          )}
-        </StyledMainContent>
-      </StyledContainer>
-    </>
+    <StyledContainer>
+      <StyledHeading label="all subscribers" />
+      <div className="grid gap-8">
+        <SubscribersTable
+          title="List"
+          subscribers={subscribers}
+          emptyMessage={
+            <>
+              <p>There are no subscribers yet.</p>
+              <Button asChild variant="brand" className="mt-4">
+                <Link to="/subscribers/add">Add subscriber</Link>
+              </Button>
+            </>
+          }
+        />
+        {subscribers.length > 0 && (
+          <SubscribersTable
+            title="Latest added"
+            subscribers={getLatestAddedItem(subscribers)}
+          />
+        )}
+      </div>
+    </StyledContainer>
   );
 };
 
