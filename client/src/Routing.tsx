@@ -17,20 +17,13 @@ import {
   StatusEmailsPage,
 } from "pages/campaigns";
 import { NotFoundPage } from "pages/notFoundPage";
-import { Campaign, Subscriber } from "types";
+import { Campaign } from "types";
 
 interface RoutingProps {
-  handleEditSubscriber: (subscriber: Subscriber) => void;
-  handleSubscriberDetails: (subscriber: Subscriber) => void;
   handleEditCampaign: (campaign: Campaign) => void;
 }
 
-const Routing = ({
-  handleEditSubscriber,
-  handleSubscriberDetails,
-  handleEditCampaign,
-}: RoutingProps) => {
-
+const Routing = ({ handleEditCampaign }: RoutingProps) => {
   const routes = [
     { path: "/", element: <HomePage /> },
 
@@ -41,21 +34,11 @@ const Routing = ({
         {
           // the list at /subscribers or /campaigns
           index: true,
-          element: (
-            <SubscribersPage
-              editSubscriber={handleEditSubscriber}
-              handleSubscriberDetails={handleSubscriberDetails}
-            />
-          ),
+          element: <SubscribersPage />,
         },
         {
           path: "status",
-          element: (
-            <StatusSubscribersPage
-              editSubscriber={handleEditSubscriber}
-              handleSubscriberDetails={handleSubscriberDetails}
-            />
-          ),
+          element: <StatusSubscribersPage />,
         },
         {
           path: "add",
