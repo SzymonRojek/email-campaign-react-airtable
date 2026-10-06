@@ -7,18 +7,10 @@ import { Login } from "./Login";
 import { StyledFooter } from "components/StyledFooter";
 import { GlobalStoreContextProvider } from "contexts/GlobalStoreContextProvider";
 import Modals from "./Modals";
-import { Campaign, Subscriber } from "types";
+import { Campaign } from "types";
 
 export const AppContainer = () => {
   const navigate = useNavigate();
-
-  const handleSubscriberDetails = (subscriber: Subscriber) => {
-    if (subscriber.fields.status === "active")
-      navigate(`/subscribers/details/${subscriber.id}`);
-  };
-
-  const handleEditSubscriber = (subscriber: Subscriber) =>
-    navigate(`/subscribers/edit/${subscriber.id}`);
 
   const handleEditCampaign = (campaign: Campaign) => {
     if (campaign.fields.status === "draft") {
@@ -33,11 +25,7 @@ export const AppContainer = () => {
 
         <main className="flex flex-1 flex-col">
           <Login>
-            <Routing
-              handleEditSubscriber={handleEditSubscriber}
-              handleSubscriberDetails={handleSubscriberDetails}
-              handleEditCampaign={handleEditCampaign}
-            />
+            <Routing handleEditCampaign={handleEditCampaign} />
           </Login>
         </main>
 

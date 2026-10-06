@@ -1,138 +1,63 @@
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { makeStyles } from "@material-ui/core/styles";
+import { useState } from "react";
 
+import { getFilteredDataByStatus } from "helpers";
 import { useSubscribers } from "customHooks/queries";
-import { Loader } from "components/DisplayMessage";
+import { Error, Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
-import { StyledMainContent } from "components/StyledMainContent";
 import { StyledHeading } from "components/StyledHeading";
-import { SubscriberStatus } from "components/SubscriberStatus";
-import { SelectInputController } from "components/Inputs";
-import { SelectOption, Subscriber } from "types";
+import SubscribersTable from "components/subscribers/SubscribersTable";
+import { SubscriberStatus } from "types";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-interface StatusSubscribersPageProps {
-  editSubscriber: (subscriber: Subscriber) => void;
-  handleSubscriberDetails: (subscriber: Subscriber) => void;
-}
+const statuses: SubscriberStatus[] = ["active", "pending", "blocked"];
 
-const useSelectStyles = makeStyles({
-  root: {
-    "& .MuiOutlinedInput-input": {
-      color: "rgb(221, 220, 220)",
-      fontWeight: "bold",
-      backgroundColor: "#142f43",
-      minWidth: 20,
-      fontSize: 14,
-      padding: 10,
-      margin: 0,
-      transition: ".3 easy-out",
-    },
-    "& .MuiInputLabel-root": {
-      color: "rgb(221, 220, 220)",
-    },
-    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "rgb(221, 220, 220)",
-    },
-    "& .MuiSvgIcon-root": {
-      color: "rgb(221, 220, 220)",
-    },
-    "&:hover .MuiOutlinedInput-input": {
-      color: "rgb(221, 220, 220)",
-    },
-    "&:hover .MuiInputLabel-root": {
-      color: "rgb(221, 220, 220)",
-    },
-    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "rgb(221, 220, 220)",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-      color: "rgb(221, 220, 220)",
-    },
-    "& .MuiInputLabel-root.Mui-focused": {
-      color: "rgb(221, 220, 220)",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#ffa500",
-    },
-  },
-});
+const StatusSubscribersPage = () => {
+  const [status, setStatus] = useState<SubscriberStatus>("active");
+  const { data: subscribers, isLoading, isError } = useSubscribers(
+    "Cannot get subscribers list:"
+  );
 
-const styles = {
-  textError: {
-    color: "transparent",
-    paddingTop: 0,
-  },
-} as const;
-
-const selectSubscribersStatus: SelectOption[] = [
-  { value: "active", label: "active" },
-  { value: "pending", label: "pending" },
-  { value: "blocked", label: "blocked" },
-];
-
-const StatusSubscribersPage = ({
-  editSubscriber,
-  handleSubscriberDetails,
-}: StatusSubscribersPageProps) => {
-  const {
-    data: subscribers,
-    status,
-    isLoading,
-    isFetching,
-  } = useSubscribers("Cannot get subscribers list:");
-
-  const { control, watch } = useForm<{ status: string }>();
-  const [selectStatus, setSelectStatus] = useState("active");
-
-  const classesSelectStyles = useSelectStyles();
-
-  const statusDataHeadTable = [
-    "no",
-    "name",
-    "surname",
-    <SelectInputController
-      control={control}
-      name="status"
-      defaultValue={selectStatus}
-      data={selectSubscribersStatus}
-      message=""
-      error={false}
-      classesSelectStyles={classesSelectStyles.root}
-      styles={styles.textError}
-    />,
-    "date",
-    "time",
-    "edit",
-    "details",
-    "delete",
-  ];
-
-  useEffect(() => {
-    const watchStatus = watch((value) => setSelectStatus(value.status ?? "active"));
-
-    return () => watchStatus.unsubscribe();
-  }, [watch]);
-
-  if (isLoading || isFetching) {
-    return <Loader title="loading" />;
-  }
+  if (isLoading) return <Loader />;
+  if (isError || !subscribers)
+    return <Error error="Cannot load the subscribers - please try again later." />;
 
   return (
     <StyledContainer>
       <StyledHeading label="subscribers status" />
-      <StyledMainContent>
-        {status === "success" && (
-          <SubscriberStatus
-            subHeading="list"
-            generalDataHeadTable={statusDataHeadTable}
-            passedData={subscribers}
-            status={selectStatus}
-            editSubscriber={editSubscriber}
-            handleSubscriberDetails={handleSubscriberDetails}
-          />
-        )}
-      </StyledMainContent>
+      <SubscribersTable
+        // a new filter starts from the first page
+        key={status}
+        title="List"
+        subscribers={getFilteredDataByStatus(subscribers, status)}
+        emptyMessage={`There are no subscribers with the status ${status}.`}
+        toolbar={
+          <div className="flex items-center gap-2">
+            <Label htmlFor="status-id">Status</Label>
+            <Select
+              value={status}
+              onValueChange={(value) => setStatus(value as SubscriberStatus)}
+            >
+              <SelectTrigger id="status-id" className="w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {statuses.map((value) => (
+                  <SelectItem key={value} value={value}>
+                    {value}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        }
+      />
     </StyledContainer>
   );
 };

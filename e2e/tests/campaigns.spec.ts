@@ -64,7 +64,7 @@ test("sends a campaign to all active subscribers", async ({ page, request }) => 
   await expect(page.getByText("sent and added to the list")).toBeVisible();
   // the confirmation says no email was really sent
   await expect(
-    page.getByRole("dialog").getByText("Demo mode", { exact: false })
+    page.getByRole("alertdialog").getByText("Demo mode", { exact: false })
   ).toBeVisible();
   expect((await campaignByTitle(request, "Newsletter"))?.fields.status).toBe(
     "sent"

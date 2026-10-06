@@ -8,7 +8,6 @@ const validSubscriber = {
   profession: "tester",
   salary: "3000",
   telephone: "343-234-2344",
-  checkbox: true,
 };
 
 const errorsOf = async (
@@ -36,7 +35,6 @@ describe("validationSubscriber", () => {
     ["status", "select status", "status is required"],
     ["salary", "12a", "only numbers are required"],
     ["telephone", "12345", "type only 10 digits"],
-    ["checkbox", false, "field must be checked"],
   ])("rejects %s = %p", async (field, value, message) => {
     const errors = await errorsOf(validationSubscriber, {
       ...validSubscriber,
