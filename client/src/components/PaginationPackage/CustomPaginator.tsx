@@ -1,7 +1,10 @@
 import { ReactNode, useCallback, useEffect } from "react";
 import { IconButton } from "@mui/material";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+// named imports from the package root (ESM) - the per-icon files are CommonJS
+import {
+  ArrowBackIos as ArrowBackIosIcon,
+  ArrowForwardIos as ArrowForwardIosIcon,
+} from "@mui/icons-material";
 
 import usePagination from "./usePagination";
 import paginNumbers from "./switchPages";

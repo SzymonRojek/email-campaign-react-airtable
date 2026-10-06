@@ -31,7 +31,7 @@ jobs:
       - name: Install server dependencies
         run: npm ci
 
-      # jest for the server lives in server/ so it does not clash with react-scripts' jest
+      # jest + supertest for the server live in server/package.json
       - name: Install server test tooling
         run: npm ci --prefix server
 
@@ -44,30 +44,26 @@ jobs:
       - name: Build server
         run: npm run build:server
 
-      # npm install (not npm ci) - same as the build on Render;
-      # client/package-lock.json is out of sync with client/package.json
       - name: Install client dependencies
-        run: npm install
+        run: npm ci
         working-directory: client
 
       - name: Typecheck client
         run: npm run typecheck
         working-directory: client
 
+      # warnings fail the job too (like the old CRA build with CI=true)
+      - name: Lint client
+        run: npm run lint -- --max-warnings=0
+        working-directory: client
+
       - name: Client unit tests
         run: npm run test:coverage
         working-directory: client
-        env:
-          CI: true
 
-      # CI=true makes every ESLint warning fail the build
       - name: Build client
         run: npm run build
         working-directory: client
-        env:
-          CI: true
-          # react-scripts 4 (webpack 4) needs the legacy OpenSSL on Node 17+
-          NODE_OPTIONS: --openssl-legacy-provider
 
       - uses: actions/upload-artifact@v7
         with:

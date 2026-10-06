@@ -1,12 +1,13 @@
+import type { Mock } from "vitest";
 import axios from "axios";
 
 import api from "./api";
 import getErrorMessage from "./getErrorMessage";
 import { getToken, removeToken, setToken, UNAUTHORIZED_EVENT } from "./authToken";
 
-jest.mock("axios", () => jest.fn());
+vi.mock("axios", () => ({ default: vi.fn() }));
 
-const mockedAxios = axios as unknown as jest.Mock;
+const mockedAxios = axios as unknown as Mock;
 
 const httpError = (status: number, error?: string) =>
   Object.assign(new Error(`Request failed with status code ${status}`), {
@@ -57,7 +58,7 @@ describe("api", () => {
   it("logs the user out on 401", async () => {
     setToken("expired");
     mockedAxios.mockRejectedValue(httpError(401));
-    const onUnauthorized = jest.fn();
+    const onUnauthorized = vi.fn();
     window.addEventListener(UNAUTHORIZED_EVENT, onUnauthorized);
 
     await expect(api.get("/subscribers")).rejects.toThrow();
@@ -69,7 +70,7 @@ describe("api", () => {
 
   it("does not log out on a failed login attempt", async () => {
     mockedAxios.mockRejectedValue(httpError(401));
-    const onUnauthorized = jest.fn();
+    const onUnauthorized = vi.fn();
     window.addEventListener(UNAUTHORIZED_EVENT, onUnauthorized);
 
     await expect(api.post("/auth/login", { password: "x" })).rejects.toThrow();

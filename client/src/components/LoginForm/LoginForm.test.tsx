@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
@@ -10,12 +11,11 @@ import {
   useGlobalStoreContext,
 } from "contexts/GlobalStoreContextProvider";
 
-jest.mock("services/api", () => ({
-  __esModule: true,
-  default: { post: jest.fn() },
+vi.mock("services/api", () => ({
+  default: { post: vi.fn() },
 }));
 
-const mockedPost = api.post as jest.Mock;
+const mockedPost = api.post as Mock;
 
 const LoginState = () => {
   const { isLogIn } = useGlobalStoreContext();

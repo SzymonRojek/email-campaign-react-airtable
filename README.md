@@ -34,9 +34,9 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 | area | technologies |
 | --- | --- |
-| Frontend | React 17, TypeScript, React Router 6, React Query, React Hook Form + Yup, Material UI |
+| Frontend | React 17, TypeScript, Vite, React Router 6, React Query, React Hook Form + Yup, Material UI |
 | Backend | Node.js, Express, TypeScript, Airtable REST API |
-| Testing | Jest, React Testing Library, supertest, Playwright, Postman |
+| Testing | Jest, Vitest, React Testing Library, supertest, Playwright, Postman |
 | DevOps | GitHub Actions, Render (`render.yaml` Blueprint) |
 
 ## How it works
@@ -87,7 +87,7 @@ Airtable uses token-based authentication (`Authorization: Bearer <key>` header) 
 Every pull request runs in GitHub Actions: type checking, unit tests, production build and end-to-end tests.
 
 - **Server unit tests** (Jest + supertest) - login, tokens, protection against password guessing, all endpoints, error handling; Airtable is mocked
-- **Client unit tests** (Jest + React Testing Library) - helpers, form validation, API client, hooks, login form, choosing recipients
+- **Client unit tests** (Vitest + React Testing Library) - helpers, form validation, API client, hooks, login form, choosing recipients
 - **End-to-end tests** (Playwright) - real user flows in a browser on the production build: logging in, adding / editing / removing subscribers, drafting and sending campaigns, navigation. They run against a fake Airtable (`e2e/mock-airtable.ts`), so they never touch real data.
 
 <details>
@@ -124,8 +124,6 @@ AUTH_SECRET=...                       # random string for signing login tokens
 npm install && npm start                       # API on http://localhost:5000
 cd client && npm install && npm start          # app on http://localhost:3000
 ```
-
-On Node 17+ start the client with `NODE_OPTIONS=--openssl-legacy-provider npm start` (react-scripts 4).
 
 ### Running the tests
 

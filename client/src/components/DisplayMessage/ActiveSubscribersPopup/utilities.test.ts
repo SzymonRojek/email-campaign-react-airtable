@@ -7,7 +7,7 @@ import {
 
 describe("ActiveSubscribersPopup utilities", () => {
   it("checks and unchecks all checkboxes", () => {
-    const setState = jest.fn();
+    const setState = vi.fn();
 
     handleCheckedAll(setState, [false, true, false]);
     handleUncheckedAll(setState, [false, true, false]);

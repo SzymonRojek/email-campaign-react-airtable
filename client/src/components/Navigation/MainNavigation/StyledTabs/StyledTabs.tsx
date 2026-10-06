@@ -1,11 +1,11 @@
-import { ChangeEvent, CSSProperties } from "react";
+import { SyntheticEvent, CSSProperties } from "react";
 import { Tabs, TabsProps } from "@material-ui/core";
 import styled from "@emotion/styled";
 
 // MUI v4 types onChange as an intersection with a form event handler - expose a simple one
 type StyledTabsProps = Omit<TabsProps, "style" | "onChange"> & {
   style?: CSSProperties;
-  onChange?: (event: ChangeEvent<{}>, value: number) => void;
+  onChange?: (event: SyntheticEvent, value: number) => void;
 };
 
 const StyledTabs = styled(({ style, onChange, ...other }: StyledTabsProps) => {

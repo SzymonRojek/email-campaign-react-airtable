@@ -14,7 +14,8 @@ export const useLocalStorageValue = <T>(
       }
 
       return parseValue(JSON.parse(localStorageValue));
-    } catch (error) {
+    } catch {
+      // no localStorage (e.g. private mode) or broken json
       return defaultValue;
     }
   };
@@ -24,7 +25,9 @@ export const useLocalStorageValue = <T>(
   useEffect(() => {
     try {
       localStorage.setItem(keyName, JSON.stringify(state));
-    } catch (error) {}
+    } catch {
+      // no localStorage (e.g. private mode) - keep the value in memory only
+    }
   }, [keyName, state]);
 
   return [state, setState];
