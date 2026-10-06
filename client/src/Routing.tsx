@@ -1,22 +1,23 @@
+import { lazy } from "react";
 import { useRoutes } from "react-router";
 
 import "App.css";
 import { SubMainNavigation } from "components/Navigation";
 import { HomePage } from "pages/homePage";
-import {
-  SubscribersPage,
-  StatusSubscribersPage,
-  CreateSubscriberPage,
-  DetailsSubscriberPage,
-  UpdateSubscriberPage,
-} from "pages/subscribers";
-import {
-  UpdateEmailsPage,
-  CreateEmailPage,
-  EmailsPage,
-  StatusEmailsPage,
-} from "pages/campaigns";
 import { NotFoundPage } from "pages/notFoundPage";
+
+// the subscribers and campaigns pages are loaded on demand - the home page does not need them
+// (the Suspense boundary is in SubMainNavigation, so the section tabs stay while a page loads)
+const SubscribersPage = lazy(() => import("pages/subscribers/SubscribersPage"));
+const StatusSubscribersPage = lazy(() => import("pages/subscribers/StatusSubscribersPage"));
+const CreateSubscriberPage = lazy(() => import("pages/subscribers/CreateSubscriberPage"));
+const DetailsSubscriberPage = lazy(() => import("pages/subscribers/DetailsSubscriberPage"));
+const UpdateSubscriberPage = lazy(() => import("pages/subscribers/UpdateSubscriberPage"));
+const EmailsPage = lazy(() => import("pages/campaigns/EmailsPage"));
+const StatusEmailsPage = lazy(() => import("pages/campaigns/StatusEmailsPage"));
+const CreateEmailPage = lazy(() => import("pages/campaigns/CreateEmailPage"));
+const UpdateEmailsPage = lazy(() => import("pages/campaigns/UpdateEmailsPage"));
+
 const Routing = () => {
   const routes = [
     { path: "/", element: <HomePage /> },
