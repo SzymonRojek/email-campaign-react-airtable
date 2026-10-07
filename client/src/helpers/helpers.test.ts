@@ -36,6 +36,12 @@ describe("formattedData", () => {
     expect(formattedData.getFormattedTime(date)).toBe("9:05 pm");
   });
 
+  it("formats the date and the time in one text", () => {
+    const date = new Date(2022, 8, 6, 21, 5).toISOString();
+
+    expect(formattedData.getFormattedDateTime(date)).toBe("2022/09/06, 9:05 pm");
+  });
+
   it("formats midnight and noon like moment did", () => {
     expect(formattedData.getFormattedTime(new Date(2022, 0, 1, 0, 0).toISOString())).toBe("12:00 am");
     expect(formattedData.getFormattedTime(new Date(2022, 0, 1, 12, 30).toISOString())).toBe("12:30 pm");

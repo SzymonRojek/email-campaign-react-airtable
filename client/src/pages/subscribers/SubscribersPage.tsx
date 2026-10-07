@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { Plus } from "lucide-react";
 
 import { useSubscribers } from "customHooks/queries";
 import { Error, Loader } from "components/DisplayMessage";
@@ -22,14 +23,15 @@ const SubscribersPage = () => {
       <SubscribersTable
         title="List"
         subscribers={subscribers}
-        emptyMessage={
-          <>
-            <p>There are no subscribers yet.</p>
-            <Button asChild variant="brand" className="mt-4">
-              <Link to="/subscribers/add">Add subscriber</Link>
-            </Button>
-          </>
+        action={
+          <Button asChild variant="brand" size="sm">
+            <Link to="/subscribers/add">
+              <Plus />
+              Add subscriber
+            </Link>
+          </Button>
         }
+        emptyMessage="There are no subscribers yet - add the first one."
       />
     </StyledContainer>
   );

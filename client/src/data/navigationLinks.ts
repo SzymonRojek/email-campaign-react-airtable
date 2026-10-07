@@ -14,6 +14,7 @@ export const mainLinks: NavigationLink[] = [
   { to: "/", label: "Home", icon: Home, end: true },
 ];
 
+// the links of a section in the mobile menu (on bigger screens: the list has an "Add" button)
 export const sectionLinks: Record<"subscribers" | "campaigns", NavigationLink[]> =
   {
     subscribers: [

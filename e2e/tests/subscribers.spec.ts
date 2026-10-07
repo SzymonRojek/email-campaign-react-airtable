@@ -115,15 +115,45 @@ test("shows the details of an active subscriber", async ({ page }) => {
   await expect(page.getByText("+44 (343) 234-2344")).toBeVisible();
 });
 
-test("does not show the details of a blocked subscriber", async ({ page }) => {
+test("opens the details from the name of an active subscriber", async ({
+  page,
+}) => {
   await page.goto("/#/subscribers");
 
-  await listRow(page, "Bartek")
-    .getByRole("button", { name: "subscriber-details" })
-    .click();
+  await listRow(page, "Anna").getByRole("link", { name: "Anna" }).click();
 
-  await expect(page.getByText("Unfortunately...")).toBeVisible();
-  await expect(page).toHaveURL(/#\/subscribers$/);
+  await expect(page).toHaveURL(/#\/subscribers\/details\/recSubAnna000001$/);
+});
+
+test("explains why a blocked subscriber has no details", async ({ page }) => {
+  await page.goto("/#/subscribers");
+
+  const row = listRow(page, "Bartek");
+  const details = row.getByRole("button", { name: "subscriber-details" });
+
+  await expect(details).toBeDisabled();
+  // the name is not a link either
+  await expect(row.getByRole("link", { name: "Bartek" })).toHaveCount(0);
+
+  // the tooltip of the disabled button (its wrapper gets the hover)
+  await details.locator("..").hover();
+  await expect(page.getByRole("tooltip")).toContainText("Bartek is blocked");
+});
+
+test("shows cards with a sort button on a phone", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/#/subscribers");
+
+  // no table on a phone - a list of cards, newest first
+  await expect(page.getByRole("table")).toHaveCount(0);
+  const cards = page.getByRole("list", { name: "List" }).getByRole("listitem");
+  await expect(cards).toHaveCount(4);
+  await expect(cards.first()).toContainText("Darek");
+
+  await page.getByRole("button", { name: "Newest first" }).click();
+
+  await expect(page.getByRole("button", { name: "Oldest first" })).toBeVisible();
+  await expect(cards.first()).toContainText("Anna");
 });
 
 test("filters the subscribers by status", async ({ page }) => {

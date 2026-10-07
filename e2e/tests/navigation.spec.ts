@@ -27,6 +27,16 @@ test("keeps the page after a reload", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "new email" })).toBeVisible();
 });
 
+test("opens the add forms from the lists", async ({ page }) => {
+  await page.goto("/#/subscribers");
+  await page.getByRole("link", { name: "Add subscriber" }).click();
+  await expect(page.getByRole("heading", { name: "new subscriber" })).toBeVisible();
+
+  await page.goto("/#/campaigns");
+  await page.getByRole("link", { name: "Add campaign" }).click();
+  await expect(page.getByRole("heading", { name: "new email" })).toBeVisible();
+});
+
 test("shows the not found page for an unknown address", async ({ page }) => {
   await page.goto("/#/does-not-exist");
 

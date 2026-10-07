@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { Plus } from "lucide-react";
 
 import { useCampaigns } from "customHooks/queries";
 import { Error, Loader } from "components/DisplayMessage";
@@ -22,14 +23,15 @@ const EmailsPage = () => {
       <CampaignsTable
         title="List"
         campaigns={campaigns}
-        emptyMessage={
-          <>
-            <p>There are no campaigns yet.</p>
-            <Button asChild variant="brand" className="mt-4">
-              <Link to="/campaigns/add">Add campaign</Link>
-            </Button>
-          </>
+        action={
+          <Button asChild variant="brand" size="sm">
+            <Link to="/campaigns/add">
+              <Plus />
+              Add campaign
+            </Link>
+          </Button>
         }
+        emptyMessage="There are no campaigns yet - add the first one."
       />
     </StyledContainer>
   );
