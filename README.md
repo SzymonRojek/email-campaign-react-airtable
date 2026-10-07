@@ -8,8 +8,8 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 | | link | login password |
 | --- | --- | --- |
-| **Production** | [email-campaign-dashboard-demo.onrender.com](https://email-campaign-dashboard-demo.onrender.com/) | `admin` |
-| Staging (newest changes) | [email-campaign-dashboard-demo-staging.onrender.com](https://email-campaign-dashboard-demo-staging.onrender.com/) | `admin` |
+| **Production** | [email-campaign-dashboard-app.onrender.com](https://email-campaign-dashboard-app.onrender.com/) | `admin` |
+| Staging (newest changes) | [email-campaign-dashboard-staging.onrender.com](https://email-campaign-dashboard-staging.onrender.com/) | `admin` |
 
 > Hosted on a free plan - after a break the first load can take up to a minute.
 >
@@ -158,8 +158,8 @@ On macOS 12 (no Playwright Chromium) run the e2e tests on the installed Chrome: 
 
 | branch | environment on Render |
 | ------ | --------------------- |
-| `main` | production - [demo](https://email-campaign-dashboard-demo.onrender.com/) |
-| `dev`  | staging - [staging demo](https://email-campaign-dashboard-demo-staging.onrender.com/) |
+| `main` | production - [demo](https://email-campaign-dashboard-app.onrender.com/) |
+| `dev`  | staging - [staging demo](https://email-campaign-dashboard-staging.onrender.com/) |
 
 1. Every change starts on a short-lived branch off `dev` (`feature/...`, `fix/...`, `chore/...`).
 2. Pull request into `dev` - CI runs and the PR must have no conflicts. A human reviews and **squash-merges** it; Render deploys it to staging.

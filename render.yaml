@@ -3,7 +3,7 @@
 services:
   # production
   - type: web
-    name: email-campaign-dashboard-demo
+    name: email-campaign-dashboard-app
     runtime: node
     plan: free
     branch: main
@@ -30,7 +30,7 @@ services:
 
   # staging - to check the changes before the PR dev -> main
   - type: web
-    name: email-campaign-dashboard-demo-staging
+    name: email-campaign-dashboard-staging
     runtime: node
     plan: free
     branch: dev
