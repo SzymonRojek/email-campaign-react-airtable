@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { Navigate, useRoutes } from "react-router";
+import { Navigate, useParams, useRoutes } from "react-router";
 
 import "App.css";
 import { SectionLayout } from "components/Navigation";
@@ -10,11 +10,17 @@ import { NotFoundPage } from "pages/notFoundPage";
 // (the Suspense boundary is in SectionLayout)
 const SubscribersPage = lazy(() => import("pages/subscribers/SubscribersPage"));
 const CreateSubscriberPage = lazy(() => import("pages/subscribers/CreateSubscriberPage"));
-const DetailsSubscriberPage = lazy(() => import("pages/subscribers/DetailsSubscriberPage"));
 const UpdateSubscriberPage = lazy(() => import("pages/subscribers/UpdateSubscriberPage"));
 const EmailsPage = lazy(() => import("pages/campaigns/EmailsPage"));
 const CreateEmailPage = lazy(() => import("pages/campaigns/CreateEmailPage"));
 const UpdateEmailsPage = lazy(() => import("pages/campaigns/UpdateEmailsPage"));
+
+// the details are a panel over the list now - old links still open them
+const SubscriberDetailsRedirect = () => {
+  const { id } = useParams();
+
+  return <Navigate to={`/subscribers?view=${id}`} replace />;
+};
 
 const Routing = () => {
   const routes = [
@@ -37,7 +43,7 @@ const Routing = () => {
         },
         {
           path: "details/:id",
-          element: <DetailsSubscriberPage />,
+          element: <SubscriberDetailsRedirect />,
         },
         {
           path: "edit/:id",

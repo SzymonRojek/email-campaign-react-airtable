@@ -8,6 +8,7 @@ import { Error, Loader } from "components/DisplayMessage";
 import { PageHeader } from "components/PageHeader";
 import { StyledContainer } from "components/StyledContainer";
 import ImportSubscribersDialog from "components/subscribers/ImportSubscribersDialog";
+import SubscriberDetailsPanel from "components/subscribers/SubscriberDetailsPanel";
 import SubscribersTable from "components/subscribers/SubscribersTable";
 import { Button } from "@/components/ui/button";
 
@@ -44,6 +45,7 @@ const SubscribersPage = () => {
         }
       />
       <ImportSubscribersDialog isOpen={isImportOpen} onOpenChange={setIsImportOpen} />
+      <SubscriberDetailsPanel />
       <SubscribersTable
         subscribers={subscribers}
         emptyMessage="There are no subscribers yet - add the first one."

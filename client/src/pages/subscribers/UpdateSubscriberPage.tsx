@@ -19,7 +19,8 @@ const UpdateSubscriberPage = () => {
 
   const handleUpdated = (updated: SubscriberFields) => {
     toastSuccess(`Subscriber ${updated.name} has been edited`);
-    navigate("/subscribers");
+    // back to the list with the details panel - the changes are visible at once
+    navigate(`/subscribers?view=${id}`);
   };
 
   if (isLoading) return <Loader />;

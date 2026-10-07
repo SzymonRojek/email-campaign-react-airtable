@@ -48,7 +48,9 @@ test("shows the not found page for an unknown address", async ({ page }) => {
 });
 
 test("shows an error for a missing subscriber", async ({ page }) => {
+  // the old details address opens the panel
   await page.goto("/#/subscribers/details/recDoesNotExist0");
+  await expect(page).toHaveURL(/#\/subscribers\?view=recDoesNotExist0$/);
 
   await expect(page.getByText("Subscriber does not exist!").first()).toBeVisible({
     timeout: 15_000,

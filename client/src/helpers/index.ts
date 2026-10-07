@@ -9,3 +9,4 @@ export { default as toastMessage } from "./toastMessage";
 export { default as toastSuccess } from "./toastSuccess";
 export { default as pluralize } from "./pluralize";
 export { default as normalizeText } from "./normalizeText";
+export { default as isInteractiveClick } from "./isInteractiveClick";

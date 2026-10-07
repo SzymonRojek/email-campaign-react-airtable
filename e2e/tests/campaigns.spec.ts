@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { getAirtable, listRow, loginByApi, resetAirtable } from "./helpers";
+import { getAirtable, listRow, loginByApi, resetAirtable, rowAction } from "./helpers";
 
 test.beforeEach(async ({ page, request }) => {
   await resetAirtable(request);
@@ -29,9 +29,8 @@ test("lists the campaigns with their status", async ({ page }) => {
   await expect(listRow(page, "Autumn sale")).toContainText("draft");
   await expect(listRow(page, "Welcome")).toContainText("sent");
   // only drafts can be edited
-  await expect(
-    listRow(page, "Welcome").getByRole("button", { name: "edit off" })
-  ).toBeVisible();
+  await page.getByRole("button", { name: "Actions for Welcome" }).click();
+  await expect(page.getByRole("menuitem", { name: "Edit draft" })).toBeDisabled();
 });
 
 test("saves a draft", async ({ page, request }) => {
@@ -110,7 +109,7 @@ test("does not send when every subscriber is unchecked", async ({
 test("edits and sends a draft", async ({ page, request }) => {
   await page.goto("/#/campaigns");
 
-  await listRow(page, "Autumn sale").getByRole("button", { name: "edit" }).click();
+  await rowAction(page, "Autumn sale", "Edit draft");
 
   await expect(page).toHaveURL(/#\/campaigns\/edit\/recCampDraft0001$/);
   await expect(page.locator("#title")).toHaveValue("Autumn sale");
@@ -131,7 +130,7 @@ test("edits and sends a draft", async ({ page, request }) => {
 test("removes a campaign", async ({ page, request }) => {
   await page.goto("/#/campaigns");
 
-  await listRow(page, "Welcome").getByRole("button", { name: "delete" }).click();
+  await rowAction(page, "Welcome", "Delete");
   await expect(page.getByRole("alertdialog")).toContainText("Delete campaign?");
   await page.getByRole("button", { name: "Delete", exact: true }).click();
 
