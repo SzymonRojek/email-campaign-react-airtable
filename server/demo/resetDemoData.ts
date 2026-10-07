@@ -21,23 +21,29 @@ const chunks = <T>(items: T[]) =>
     items.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE)
   );
 
-// the content of a table without the dates, in a stable order
-const fingerprint = (fieldsList: Fields[]) =>
+// the content of a table in a stable order - only the columns the examples have
+// (not the dates, not extra Airtable columns like "Last Modified")
+const fingerprint = (fieldsList: Fields[], columns: string[]) =>
   fieldsList
-    .map(({ date, ...fields }) =>
-      JSON.stringify(Object.entries(fields).sort(([a], [b]) => a.localeCompare(b)))
-    )
+    .map((fields) => JSON.stringify(columns.map((column) => fields[column] ?? null)))
     .sort()
     .join("\n");
 
-const isUntouched = (records: AirtableRecord[], seed: { fields: object }[]) =>
-  fingerprint(records.map((record) => record.fields)) ===
-  fingerprint(seed.map((record) => record.fields as Fields));
+const isUntouched = (records: AirtableRecord[], seed: { fields: object }[]) => {
+  const columns = [
+    ...new Set(seed.flatMap((record) => Object.keys(record.fields))),
+  ].sort();
+
+  return (
+    fingerprint(records.map((record) => record.fields), columns) ===
+    fingerprint(seed.map((record) => record.fields as Fields), columns)
+  );
+};
 
 export type ResetResult = "reset" | "skipped";
 
 /**
- * Brings the demo data back: deletes all records and creates the seed again.
+ * Brings the demo data back: creates the seed again and deletes the old records.
  * Skipped when nobody changed the data (saves Airtable API calls), unless the
  * examples are older than 7 days (their dates would start to look old).
  */
@@ -58,16 +64,18 @@ export const resetDemoData = async ({
 
   if (!force && untouched && !tooOld) return "skipped";
 
+  // create first, delete after - when Airtable refuses the new records
+  // (e.g. a renamed column), the old data stays instead of an empty table
   for (const [i, { endpoint, seed }] of tables.entries()) {
-    for (const ids of chunks(current[i].map((record) => record.id))) {
-      await axiosInstance.delete(endpoint, { params: { records: ids } });
-      await wait(pauseMs);
-    }
-
     for (const batch of chunks(seed)) {
       await axiosInstance.post(endpoint, {
         records: batch.map((record) => ({ fields: toAirtableFields(record, now) })),
       });
+      await wait(pauseMs);
+    }
+
+    for (const ids of chunks(current[i].map((record) => record.id))) {
+      await axiosInstance.delete(endpoint, { params: { records: ids } });
       await wait(pauseMs);
     }
   }
