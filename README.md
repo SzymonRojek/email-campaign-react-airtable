@@ -8,8 +8,8 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 | | link | login password |
 | --- | --- | --- |
-| **Production** | [email-campaign-react-airtable.onrender.com](https://email-campaign-react-airtable.onrender.com/) | `admin` |
-| Staging (newest changes) | [email-campaign-react-airtable-staging.onrender.com](https://email-campaign-react-airtable-staging.onrender.com/) | `admin` |
+| **Production** | [email-campaign-dashboard-app.onrender.com](https://email-campaign-dashboard-app.onrender.com/) | `admin` |
+| Staging (newest changes) | [email-campaign-dashboard-staging.onrender.com](https://email-campaign-dashboard-staging.onrender.com/) | `admin` |
 
 > Hosted on a free plan - after a break the first load can take up to a minute.
 >
@@ -20,8 +20,10 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 ## What the app does
 
 - **Dashboard** - the numbers at a glance (subscribers, active, sent campaigns), recent campaigns and newest subscribers, quick actions
-- **Subscribers** - list (newest first, sortable by date), filter by status (active / pending / blocked), add, edit, remove, see details
-- **Campaigns** - write a campaign, save it as a draft or send it, edit drafts, filter by status, sort by date
+- **Subscribers** - list (newest first, sortable by date), search by name or e-mail, filter by status (active / pending / blocked), remove; details, adding and editing in a side panel over the list (with a link of its own, quick activation of pending / blocked subscribers); one e-mail can belong to one subscriber only
+- **CSV import / export** - export what the list shows; import a file (comma or semicolon) with a preview that checks every row like the form, finds duplicates and imports only the valid rows
+- **Campaigns** - write a campaign, save it as a draft or send it (after a confirmation with the number of recipients), edit drafts (click the row), duplicate any campaign as a new draft, search, filter by status, sort by date
+- **No lost work** - leaving a form with unsaved changes (another page, "back", closing the panel or the tab) asks first
 - **Choose recipients** - send to all active subscribers or only to the selected ones
 - **Login** - the app and its data are available only after logging in
 - **Light and dark mode** - light, dark or like the operating system, remembered in the browser; works on phones (the lists become cards)
@@ -30,7 +32,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 - **Full-stack TypeScript** - React client and Express server, strict mode
 - **Secure backend** - the Airtable API key never reaches the browser; login with signed tokens and protection against password guessing
-- **Automated testing** - 58 server and 59 client unit tests, 35 end-to-end tests in a real browser (Playwright)
+- **Automated testing** - 69 server and 80 client unit tests, 47 end-to-end tests in a real browser (Playwright)
 - **CI/CD** - every pull request is checked by GitHub Actions; `dev` deploys to staging and `main` to production automatically
 - **Team-style Git workflow** - feature branches, pull requests, staging before production
 
@@ -76,6 +78,7 @@ All endpoints are under `/api`:
 | `GET` | `/api/health` | - |
 | `POST` | `/api/auth/login` | - |
 | `GET`, `POST` | `/api/subscribers` | token |
+| `POST` | `/api/subscribers/import` | token |
 | `GET`, `PATCH`, `DELETE` | `/api/subscribers/:id` | token |
 | `GET`, `POST` | `/api/campaigns` | token |
 | `GET`, `PATCH`, `DELETE` | `/api/campaigns/:id` | token |
@@ -155,8 +158,8 @@ On macOS 12 (no Playwright Chromium) run the e2e tests on the installed Chrome: 
 
 | branch | environment on Render |
 | ------ | --------------------- |
-| `main` | production - [demo](https://email-campaign-react-airtable.onrender.com/) |
-| `dev`  | staging - [staging demo](https://email-campaign-react-airtable-staging.onrender.com/) |
+| `main` | production - [demo](https://email-campaign-dashboard-app.onrender.com/) |
+| `dev`  | staging - [staging demo](https://email-campaign-dashboard-staging.onrender.com/) |
 
 1. Every change starts on a short-lived branch off `dev` (`feature/...`, `fix/...`, `chore/...`).
 2. Pull request into `dev` - CI runs and the PR must have no conflicts. A human reviews and **squash-merges** it; Render deploys it to staging.
@@ -174,7 +177,8 @@ Both services are defined in `render.yaml` (free plan).
 
 - Sending to a test inbox (Ethereal) with previews of the sent e-mails
 - E-mail templates with personalization (`{{name}}`) and a preview before sending
-- Campaign details and history; duplicate e-mail check, search and CSV import / export of subscribers
+- Campaign details and history (recipients, sent date) with a CSV export of the recipients
+- An unsubscribe link in every e-mail
 
 ## Credits
 

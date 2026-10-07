@@ -1,58 +1,47 @@
 import { useNavigate } from "react-router";
-import { Pencil, PencilOff, Trash2 } from "lucide-react";
+import { Copy, Pencil, Trash2 } from "lucide-react";
 
 import { useRemoveItem } from "customHooks/useRemoveItem";
+import RowActionsTrigger from "components/DataTable/RowActionsTrigger";
 import { Campaign } from "types";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { useDuplicateCampaign } from "./useDuplicateCampaign";
 
-// edit / delete - the same in the table row and in the mobile card
+// a draft: Edit / Duplicate / Delete; a sent campaign: Duplicate / Delete
+// (the "Sent" badge already says it can not be changed)
 const CampaignActions = ({ campaign }: { campaign: Campaign }) => {
   const navigate = useNavigate();
+  const duplicate = useDuplicateCampaign();
   const { id, fields } = campaign;
   const { handleConfirmModalData } = useRemoveItem("campaigns", fields.title, id);
 
   return (
-    <div className="flex justify-end gap-1">
-      {fields.status === "draft" ? (
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label="edit"
-          title="Edit draft"
-          onClick={() => navigate(`/campaigns/edit/${id}`)}
-        >
-          <Pencil />
-        </Button>
-      ) : (
-        <Tooltip>
-          {/* a disabled button gets no hover / focus - the wrapper shows the tooltip */}
-          <TooltipTrigger asChild>
-            <span tabIndex={0} className="inline-flex rounded-md">
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="edit off"
-                disabled
-                className="pointer-events-none"
-              >
-                <PencilOff />
-              </Button>
-            </span>
-          </TooltipTrigger>
-          <TooltipContent>Already sent - a sent campaign can not be changed.</TooltipContent>
-        </Tooltip>
-      )}
-      <Button
-        variant="ghost"
-        size="icon"
-        aria-label="delete"
-        title="Delete"
-        className="text-destructive hover:text-destructive"
-        onClick={handleConfirmModalData}
-      >
-        <Trash2 />
-      </Button>
+    <div className="flex justify-end">
+      <DropdownMenu>
+        <RowActionsTrigger label={`Actions for ${fields.title}`} />
+        <DropdownMenuContent align="end">
+          {fields.status === "draft" && (
+            <DropdownMenuItem onSelect={() => navigate(`/campaigns/edit/${id}`)}>
+              <Pencil />
+              Edit
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem onSelect={() => duplicate(campaign)}>
+            <Copy />
+            Duplicate
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem variant="destructive" onSelect={handleConfirmModalData}>
+            <Trash2 />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };

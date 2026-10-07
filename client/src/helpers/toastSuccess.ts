@@ -7,6 +7,8 @@ const toastSuccess = (message: ReactNode, autoClose = 4000) => {
     position: "top-center",
     autoClose,
     closeOnClick: true,
+    // calm - no countdown bar
+    hideProgressBar: true,
     pauseOnHover: true,
   });
 };

@@ -1,5 +1,5 @@
 {
-  "name": "email-campaign-e2e",
+  "name": "email-campaign-dashboard-e2e",
   "private": true,
   "description": "Playwright end-to-end tests - the real client build and server, with a fake Airtable",
   "scripts": {

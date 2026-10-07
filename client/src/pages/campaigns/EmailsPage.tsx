@@ -10,13 +10,19 @@ import CampaignsTable from "components/campaigns/CampaignsTable";
 import { Button } from "@/components/ui/button";
 
 const EmailsPage = () => {
-  const { data: campaigns, isLoading, isError } = useCampaigns(
+  const { data: campaigns, isLoading, isError, refetch, isFetching } = useCampaigns(
     "Can not get campaigns list"
   );
 
   if (isLoading) return <Loader />;
   if (isError || !campaigns)
-    return <Error error="Cannot load the campaigns - please try again later." />;
+    return (
+      <Error
+        error="Cannot load the campaigns - please try again later."
+        onRetry={() => refetch()}
+        isRetrying={isFetching}
+      />
+    );
 
   const sent = campaigns.filter(({ fields }) => fields.status === "sent");
 

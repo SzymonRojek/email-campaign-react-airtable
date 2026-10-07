@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { getAirtable, listRow, loginByApi, resetAirtable } from "./helpers";
+import { getAirtable, listRow, loginByApi, resetAirtable, rowAction } from "./helpers";
 
 test.beforeEach(async ({ page, request }) => {
   await resetAirtable(request);
@@ -24,8 +24,10 @@ test("lists the subscribers, newest first", async ({ page }) => {
   await expect(rows.nth(4)).toContainText("Darek");
 });
 
-test("adds a subscriber", async ({ page, request }) => {
-  await page.goto("/#/subscribers/add");
+test("adds a subscriber in the panel", async ({ page, request }) => {
+  await page.goto("/#/subscribers");
+  await page.getByRole("button", { name: "Add subscriber" }).click();
+  await expect(page.getByRole("dialog")).toContainText("New subscriber");
 
   await page.locator("#name").fill("Łucja");
   await page.locator("#surname").fill("Zając");
@@ -37,8 +39,11 @@ test("adds a subscriber", async ({ page, request }) => {
   await page.locator("#telephone").fill("3432342399");
   await page.getByRole("button", { name: "Add subscriber" }).click();
 
-  await expect(page.getByText("Subscriber Łucja has been added")).toBeVisible();
-  await expect(page).toHaveURL(/#\/subscribers$/);
+  // the panel shows the new subscriber at once
+  await expect(page).toHaveURL(/#\/subscribers\?view=recE2E\d+$/);
+  await expect(page.getByRole("dialog")).toContainText("Łucja Zając");
+
+  await page.keyboard.press("Escape");
   // newest first - the new subscriber is on the first page
   await expect(listRow(page, "Łucja")).toContainText("active");
 
@@ -63,28 +68,69 @@ test("shows validation errors and does not save", async ({ page, request }) => {
 test("edits a subscriber", async ({ page, request }) => {
   await page.goto("/#/subscribers");
 
-  await listRow(page, "Celina").getByRole("button", { name: "edit" }).click();
+  await rowAction(page, "Celina Wiśniewska", "Edit");
 
-  await expect(page).toHaveURL(/#\/subscribers\/edit\/recSubCelina0003$/);
+  await expect(page).toHaveURL(/#\/subscribers\?view=recSubCelina0003&mode=edit$/);
   // the form is filled with the current data
   await expect(page.locator("#surname")).toHaveValue("Wiśniewska");
 
   await page.locator("#surname").fill("Nowicka");
   await page.getByRole("button", { name: "Save changes" }).click();
 
-  await expect(page.getByText("Subscriber Celina has been edited")).toBeVisible();
-  await expect(page).toHaveURL(/#\/subscribers$/);
-  await expect(listRow(page, "Celina")).toContainText("Nowicka");
+  // back to the list with the details panel of the edited subscriber
+  await expect(page).toHaveURL(/#\/subscribers\?view=recSubCelina0003$/);
+  await expect(page.getByRole("dialog")).toContainText("Celina Nowicka");
   const db = await getAirtable(request);
   expect(
     db.subscribers.find(({ id }) => id === "recSubCelina0003")?.fields.surname
   ).toBe("Nowicka");
 });
 
+test("asks before closing the panel with unsaved changes", async ({
+  page,
+  request,
+}) => {
+  await page.goto("/#/subscribers");
+  await rowAction(page, "Celina Wiśniewska", "Edit");
+  await page.locator("#surname").fill("Changed");
+
+  // Esc closes the panel - but there is something unsaved
+  await page.keyboard.press("Escape");
+  const question = page.getByRole("alertdialog");
+  await expect(question).toContainText("Discard changes?");
+
+  await question.getByRole("button", { name: "Keep editing" }).click();
+  await expect(question).toHaveCount(0);
+  await expect(page.locator("#surname")).toHaveValue("Changed");
+  // the keyboard is back in the field the user was in
+  await expect(page.locator("#surname")).toBeFocused();
+
+  await page.keyboard.press("Escape");
+  await question.getByRole("button", { name: "Discard" }).click();
+
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect(page).toHaveURL(/#\/subscribers$/);
+  expect(
+    (await getAirtable(request)).subscribers.find(({ id }) => id === "recSubCelina0003")
+      ?.fields.surname
+  ).toBe("Wiśniewska");
+});
+
+test("closes an unchanged form without asking", async ({ page }) => {
+  await page.goto("/#/subscribers");
+  await rowAction(page, "Celina Wiśniewska", "Edit");
+
+  await page.getByRole("button", { name: "Cancel" }).click();
+
+  // back to the details, no question
+  await expect(page.getByRole("alertdialog")).toHaveCount(0);
+  await expect(page).toHaveURL(/#\/subscribers\?view=recSubCelina0003$/);
+});
+
 test("removes a subscriber after confirmation", async ({ page, request }) => {
   await page.goto("/#/subscribers");
 
-  await listRow(page, "Bartek").getByRole("button", { name: "delete" }).click();
+  await rowAction(page, "Bartek Kowalski", "Delete");
   const dialog = page.getByRole("alertdialog");
   await expect(dialog).toContainText("Delete subscriber?");
   // the full name, so it is clear who goes
@@ -100,47 +146,72 @@ test("removes a subscriber after confirmation", async ({ page, request }) => {
 test("keeps the subscriber when the removal is cancelled", async ({ page }) => {
   await page.goto("/#/subscribers");
 
-  await listRow(page, "Bartek").getByRole("button", { name: "delete" }).click();
+  await rowAction(page, "Bartek Kowalski", "Delete");
   await page.getByRole("button", { name: "Cancel" }).click();
 
   await expect(listRow(page, "Bartek")).toHaveCount(1);
 });
 
-test("shows the details of an active subscriber", async ({ page }) => {
+test("shows the details in a panel over the list", async ({ page }) => {
   await page.goto("/#/subscribers");
+  await page.getByLabel("Search subscribers").fill("anna");
 
-  await listRow(page, "Anna")
-    .getByRole("button", { name: "subscriber-details" })
-    .click();
+  await page.getByRole("link", { name: "Anna Nowak" }).click();
 
-  await expect(page).toHaveURL(/#\/subscribers\/details\/recSubAnna000001$/);
-  await expect(page.getByText("anna@example.com")).toBeVisible();
-  await expect(page.getByText("+44 (343) 234-2344")).toBeVisible();
+  // the address opens the same panel later
+  await expect(page).toHaveURL(/#\/subscribers\?view=recSubAnna000001$/);
+  const panel = page.getByRole("dialog");
+  await expect(panel).toContainText("anna@example.com");
+  await expect(panel).toContainText("+44 (343) 234-2344");
+
+  // "back" closes the panel - the list keeps its search
+  await page.goBack();
+  await expect(panel).toHaveCount(0);
+  await expect(page.getByLabel("Search subscribers")).toHaveValue("anna");
 });
 
-test("opens the details from the name of an active subscriber", async ({
+test("opens the details by clicking anywhere in the row", async ({ page }) => {
+  await page.goto("/#/subscribers");
+
+  await listRow(page, "Celina").getByRole("cell").nth(2).click();
+
+  await expect(page.getByRole("dialog")).toContainText("Celina Wiśniewska");
+});
+
+test("shows the details of a pending subscriber and activates them", async ({
   page,
+  request,
 }) => {
   await page.goto("/#/subscribers");
+  await rowAction(page, "Darek Lis", "View details");
 
-  await listRow(page, "Anna").getByRole("link", { name: "Anna" }).click();
+  const panel = page.getByRole("dialog");
+  await expect(panel).toContainText("Waiting for a confirmation");
 
-  await expect(page).toHaveURL(/#\/subscribers\/details\/recSubAnna000001$/);
+  await panel.getByRole("button", { name: "Activate" }).click();
+
+  // the badge and the notice are the confirmation - no toast
+  await expect(panel).not.toContainText("Waiting for a confirmation");
+  await expect(panel).toContainText("active");
+  await expect(page.locator(".Toastify__toast")).toHaveCount(0);
+  await expect
+    .poll(async () =>
+      (await getAirtable(request)).subscribers.find(({ id }) => id === "recSubDarek00004")
+        ?.fields.status
+    )
+    .toBe("active");
 });
 
-test("explains why a blocked subscriber has no details", async ({ page }) => {
-  await page.goto("/#/subscribers");
+test("deletes a subscriber from the panel", async ({ page, request }) => {
+  await page.goto("/#/subscribers?view=recSubBartek0002");
 
-  const row = listRow(page, "Bartek");
-  const details = row.getByRole("button", { name: "subscriber-details" });
+  await page.getByRole("dialog").getByRole("button", { name: "Delete" }).click();
+  await page.getByRole("alertdialog").getByRole("button", { name: "Delete" }).click();
 
-  await expect(details).toBeDisabled();
-  // the name is not a link either
-  await expect(row.getByRole("link", { name: "Bartek" })).toHaveCount(0);
-
-  // the tooltip of the disabled button (its wrapper gets the hover)
-  await details.locator("..").hover();
-  await expect(page.getByRole("tooltip")).toContainText("Bartek is blocked");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect
+    .poll(async () => (await getAirtable(request)).subscribers.length)
+    .toBe(3);
 });
 
 test("shows cards with a sort button on a phone", async ({ page }) => {

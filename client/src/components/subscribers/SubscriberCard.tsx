@@ -1,4 +1,5 @@
-import { formattedData } from "helpers";
+import { formattedData, isInteractiveClick } from "helpers";
+import { useSubscriberPanel } from "customHooks/useSubscriberPanel";
 import StatusBadge from "components/StatusBadge";
 import { Subscriber } from "types";
 import SubscriberActions from "./SubscriberActions";
@@ -11,10 +12,14 @@ interface SubscriberCardProps {
 
 // a list row on a phone - the table is too wide there
 const SubscriberCard = ({ subscriber, withActions }: SubscriberCardProps) => {
-  const { fields, createdTime } = subscriber;
+  const { id, fields, createdTime } = subscriber;
+  const { open } = useSubscriberPanel();
 
   return (
-    <li className="grid gap-3 px-4 py-3">
+    <li
+      onClick={(event) => !isInteractiveClick(event) && open(id)}
+      className="grid cursor-pointer gap-3 px-4 py-3 transition-colors hover:bg-muted/50"
+    >
       <div className="flex items-start justify-between gap-3">
         <SubscriberIdentity subscriber={subscriber} />
         <StatusBadge status={fields.status} />

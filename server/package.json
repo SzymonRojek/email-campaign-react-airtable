@@ -1,5 +1,5 @@
 {
-  "name": "email-campaign-server-tests",
+  "name": "email-campaign-dashboard-server-tests",
   "private": true,
   "description": "Server test tooling - kept apart from the root so its jest does not clash with the jest of react-scripts in client/",
   "scripts": {
