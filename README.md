@@ -177,7 +177,8 @@ Both services are defined in `render.yaml` (free plan).
 
 - Sending to a test inbox (Ethereal) with previews of the sent e-mails
 - E-mail templates with personalization (`{{name}}`) and a preview before sending
-- Campaign details and history; an unsubscribe link in every e-mail
+- Campaign details and history (recipients, sent date) with a CSV export of the recipients
+- An unsubscribe link in every e-mail
 
 ## Credits
 
