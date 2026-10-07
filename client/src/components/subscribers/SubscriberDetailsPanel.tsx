@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CircleAlert, Pencil, Trash2, UserCheck } from "lucide-react";
 
-import { formatMobileNumber, formattedData, toastMessage, toastSuccess } from "helpers";
+import { formatMobileNumber, formattedData, toastMessage } from "helpers";
 import { subscribersKey, useSubscribers } from "customHooks/queries";
 import { useRemoveItem } from "customHooks/useRemoveItem";
 import { useSubscriberPanel } from "customHooks/useSubscriberPanel";
@@ -48,10 +48,8 @@ const Details = ({ subscriber, onEdit, onRemoved }: DetailsProps) => {
 
   const activate = useMutation({
     mutationFn: () => api.patch(`/subscribers/${id}`, { fields: { status: "active" } }),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: subscribersKey });
-      toastSuccess(`${fullName} is active now`);
-    },
+    // the badge and the notice change - that is the confirmation
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: subscribersKey }),
     onError: (error) => toastMessage(`The status has not been changed: ${getErrorMessage(error)}`),
   });
 
@@ -144,6 +142,7 @@ const useSaveInList = () => {
 };
 
 // the edit form in the panel - after saving, back to the details
+// (no toast: the details show the saved data at once)
 const Edit = ({ subscriber, onDone }: { subscriber: Subscriber; onDone: () => void }) => {
   const { id, fields } = subscriber;
   const saveInList = useSaveInList();
@@ -178,7 +177,6 @@ const Edit = ({ subscriber, onDone }: { subscriber: Subscriber; onDone: () => vo
             id,
             callback: (updated) => {
               saveInList({ ...subscriber, fields: { ...subscriber.fields, ...updated } });
-              toastSuccess(`Subscriber ${updated.name} has been edited`);
               onDone();
             },
           })
@@ -213,7 +211,6 @@ const SubscriberDetailsPanel = () => {
                 // show the new subscriber at once
                 callback: (created) => {
                   saveInList(created);
-                  toastSuccess(`Subscriber ${created.fields.name} has been added`);
                   panel.open(created.id);
                 },
               })

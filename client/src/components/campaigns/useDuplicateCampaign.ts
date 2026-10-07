@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 
-import { toastMessage, toastSuccess } from "helpers";
+import { toastMessage } from "helpers";
 import { campaignsKey } from "customHooks/queries";
 import { getErrorMessage } from "services";
 import api from "services/api";
@@ -25,9 +25,9 @@ export const useDuplicateCampaign = () => {
           status: "draft",
         },
       }),
+    // the editor with "... (copy)" in the title says what happened - no toast
     onSuccess: (copy) => {
       queryClient.invalidateQueries({ queryKey: campaignsKey });
-      toastSuccess(`Draft "${copy.fields.title}" created - change it and send it`);
       navigate(`/campaigns/edit/${copy.id}`);
     },
     onError: (error) =>

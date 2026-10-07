@@ -39,7 +39,6 @@ test("adds a subscriber in the panel", async ({ page, request }) => {
   await page.locator("#telephone").fill("3432342399");
   await page.getByRole("button", { name: "Add subscriber" }).click();
 
-  await expect(page.getByText("Subscriber Łucja has been added")).toBeVisible();
   // the panel shows the new subscriber at once
   await expect(page).toHaveURL(/#\/subscribers\?view=recE2E\d+$/);
   await expect(page.getByRole("dialog")).toContainText("Łucja Zając");
@@ -78,7 +77,6 @@ test("edits a subscriber", async ({ page, request }) => {
   await page.locator("#surname").fill("Nowicka");
   await page.getByRole("button", { name: "Save changes" }).click();
 
-  await expect(page.getByText("Subscriber Celina has been edited")).toBeVisible();
   // back to the list with the details panel of the edited subscriber
   await expect(page).toHaveURL(/#\/subscribers\?view=recSubCelina0003$/);
   await expect(page.getByRole("dialog")).toContainText("Celina Nowicka");
@@ -192,8 +190,10 @@ test("shows the details of a pending subscriber and activates them", async ({
 
   await panel.getByRole("button", { name: "Activate" }).click();
 
-  await expect(page.getByText("Darek Lis is active now")).toBeVisible();
+  // the badge and the notice are the confirmation - no toast
   await expect(panel).not.toContainText("Waiting for a confirmation");
+  await expect(panel).toContainText("active");
+  await expect(page.locator(".Toastify__toast")).toHaveCount(0);
   await expect
     .poll(async () =>
       (await getAirtable(request)).subscribers.find(({ id }) => id === "recSubDarek00004")

@@ -72,11 +72,10 @@ test("sends a campaign to all active subscribers", async ({ page, request }) => 
   await expect(confirm).toContainText("all 2 active subscribers");
   await confirm.getByRole("button", { name: "Send", exact: true }).click();
 
-  // the confirmation says no email was really sent
-  const toast = page.getByRole("alert").filter({ hasText: "has been sent" });
-  await expect(toast).toContainText('Campaign "Newsletter" has been sent');
-  await expect(toast).toContainText("Demo mode");
+  // back on the list - no toast, the campaign shows as sent
   await expect(page).toHaveURL(/#\/campaigns$/);
+  await expect(listRow(page, "Newsletter")).toContainText("sent");
+  await expect(page.locator(".Toastify__toast")).toHaveCount(0);
   expect((await campaignByTitle(request, "Newsletter"))?.fields.status).toBe(
     "sent"
   );
@@ -131,8 +130,7 @@ test("edits and sends a draft", async ({ page, request }) => {
   await page.getByRole("button", { name: "send" }).click();
   await page.getByRole("alertdialog").getByRole("button", { name: "Send", exact: true }).click();
 
-  const toast = page.getByRole("alert").filter({ hasText: "has been sent" });
-  await expect(toast).toContainText("Demo mode");
+  await expect(page.locator(".Toastify__toast")).toHaveCount(0);
   await expect(page).toHaveURL(/#\/campaigns$/);
   const db = await getAirtable(request);
   expect(db.campaigns.find(({ id }) => id === "recCampDraft0001")?.fields).toMatchObject({
@@ -217,7 +215,6 @@ test("duplicates a sent campaign as a new draft", async ({ page, request }) => {
 
   await rowAction(page, "Welcome", "Duplicate");
 
-  await expect(page.getByText('Draft "Welcome (copy)" created')).toBeVisible();
   // the copy opens in the editor to be changed
   await expect(page).toHaveURL(/#\/campaigns\/edit\/recE2E\d+$/);
   await expect(page.locator("#title")).toHaveValue("Welcome (copy)");

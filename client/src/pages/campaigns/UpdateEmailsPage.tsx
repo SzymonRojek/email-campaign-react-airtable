@@ -9,8 +9,6 @@ import { Error, Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { PageHeader } from "components/PageHeader";
 import CampaignForm from "components/campaigns/CampaignForm";
-import toastCampaignSaved from "components/campaigns/toastCampaignSaved";
-import { CampaignFields, CampaignStatus } from "types";
 
 const UpdateEmailsPage = () => {
   const { id } = useParams();
@@ -21,10 +19,8 @@ const UpdateEmailsPage = () => {
     "Campaign does not exist! "
   );
 
-  const handleSaved = (saved: CampaignFields, status: CampaignStatus) => {
-    toastCampaignSaved(saved.title, status);
-    navigate("/campaigns");
-  };
+  // back to the list - the saved draft / the sent campaign is there, no toast needed
+  const handleSaved = () => navigate("/campaigns");
 
   if (isLoading) return <Loader />;
   if (isError || !campaign)
