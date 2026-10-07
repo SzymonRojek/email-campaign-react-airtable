@@ -40,9 +40,9 @@ test("saves a draft", async ({ page, request }) => {
   await fillCampaign(page, "black friday");
   await page.getByRole("button", { name: "draft" }).click();
 
-  await expect(page.getByText("drafted and added to the list")).toBeVisible();
-  await page.getByRole("button", { name: "YES" }).click();
-
+  await expect(
+    page.getByText('Campaign "Black friday" has been saved as a draft')
+  ).toBeVisible();
   await expect(page).toHaveURL(/#\/campaigns$/);
   // the server capitalizes the first letter only
   await expect(listRow(page, "Black friday")).toContainText("draft");
@@ -61,11 +61,11 @@ test("sends a campaign to all active subscribers", async ({ page, request }) => 
   await fillCampaign(page, "Newsletter");
   await page.getByRole("button", { name: "send" }).click();
 
-  await expect(page.getByText("sent and added to the list")).toBeVisible();
   // the confirmation says no email was really sent
-  await expect(
-    page.getByRole("alertdialog").getByText("Demo mode", { exact: false })
-  ).toBeVisible();
+  const toast = page.getByRole("alert").filter({ hasText: "has been sent" });
+  await expect(toast).toContainText('Campaign "Newsletter" has been sent');
+  await expect(toast).toContainText("Demo mode");
+  await expect(page).toHaveURL(/#\/campaigns$/);
   expect((await campaignByTitle(request, "Newsletter"))?.fields.status).toBe(
     "sent"
   );
@@ -117,12 +117,8 @@ test("edits and sends a draft", async ({ page, request }) => {
   await page.locator("#title").fill("Autumn sale 2");
   await page.getByRole("button", { name: "send" }).click();
 
-  await expect(page.getByText("has been sent")).toBeVisible();
-  await expect(
-    page.getByRole("dialog").getByText("Demo mode", { exact: false })
-  ).toBeVisible();
-  await page.getByRole("button", { name: "close" }).click();
-
+  const toast = page.getByRole("alert").filter({ hasText: "has been sent" });
+  await expect(toast).toContainText("Demo mode");
   await expect(page).toHaveURL(/#\/campaigns$/);
   const db = await getAirtable(request);
   expect(db.campaigns.find(({ id }) => id === "recCampDraft0001")?.fields).toMatchObject({
@@ -141,4 +137,22 @@ test("removes a campaign", async ({ page, request }) => {
   await expect
     .poll(async () => (await getAirtable(request)).campaigns.length)
     .toBe(1);
+});
+
+test("lists the campaigns newest first and filters them by status", async ({
+  page,
+}) => {
+  await page.goto("/#/campaigns");
+
+  const rows = page.getByRole("table").first().getByRole("row");
+
+  // Welcome (6 September) before Autumn sale (5 September)
+  await expect(rows.nth(1)).toContainText("Welcome");
+  await expect(rows.nth(2)).toContainText("Autumn sale");
+
+  await page.locator("#status-filter").click();
+  await page.getByRole("option", { name: "draft" }).click();
+
+  await expect(rows).toHaveCount(2);
+  await expect(rows.nth(1)).toContainText("Autumn sale");
 });

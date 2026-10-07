@@ -21,10 +21,10 @@ test("navigates with the main tabs", async ({ page }) => {
 });
 
 test("keeps the page after a reload", async ({ page }) => {
-  await page.goto("/#/campaigns/status");
+  await page.goto("/#/campaigns/add");
   await page.reload();
 
-  await expect(page.getByRole("heading", { name: "email status" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "new email" })).toBeVisible();
 });
 
 test("shows the not found page for an unknown address", async ({ page }) => {
@@ -48,10 +48,8 @@ test("navigates with the mobile menu", async ({ page }) => {
   await page.getByRole("button", { name: "open menu" }).click();
   await page
     .getByRole("navigation", { name: "Mobile" })
-    .getByRole("link", { name: "Subscribers status" })
+    .getByRole("link", { name: "Add subscriber" })
     .click();
 
-  await expect(
-    page.getByRole("heading", { name: "subscribers status" })
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "new subscriber" })).toBeVisible();
 });

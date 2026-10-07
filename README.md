@@ -19,8 +19,8 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 ## What the app does
 
-- **Subscribers** - list, filter by status (active / pending / blocked), add, edit, remove, see details
-- **Campaigns** - write a campaign, save it as a draft or send it, edit drafts, filter by status
+- **Subscribers** - list (newest first, sortable by date), filter by status (active / pending / blocked), add, edit, remove, see details
+- **Campaigns** - write a campaign, save it as a draft or send it, edit drafts, filter by status, sort by date
 - **Choose recipients** - send to all active subscribers or only to the selected ones
 - **Login** - the app and its data are available only after logging in
 
@@ -28,7 +28,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 - **Full-stack TypeScript** - React client and Express server, strict mode
 - **Secure backend** - the Airtable API key never reaches the browser; login with signed tokens and protection against password guessing
-- **Automated testing** - 58 server and 48 client unit tests, 28 end-to-end tests in a real browser (Playwright)
+- **Automated testing** - 58 server and 52 client unit tests, 30 end-to-end tests in a real browser (Playwright)
 - **CI/CD** - every pull request is checked by GitHub Actions; `dev` deploys to staging and `main` to production automatically
 - **Team-style Git workflow** - feature branches, pull requests, staging before production
 

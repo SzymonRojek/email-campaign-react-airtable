@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 
-import { getLatestAddedItem } from "helpers";
 import { useCampaigns } from "customHooks/queries";
 import { Error, Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
@@ -20,26 +19,18 @@ const EmailsPage = () => {
   return (
     <StyledContainer>
       <StyledHeading label="all emails" />
-      <div className="grid gap-8">
-        <CampaignsTable
-          title="List"
-          campaigns={campaigns}
-          emptyMessage={
-            <>
-              <p>There are no campaigns yet.</p>
-              <Button asChild variant="brand" className="mt-4">
-                <Link to="/campaigns/add">Add campaign</Link>
-              </Button>
-            </>
-          }
-        />
-        {campaigns.length > 0 && (
-          <CampaignsTable
-            title="Latest added"
-            campaigns={getLatestAddedItem(campaigns)}
-          />
-        )}
-      </div>
+      <CampaignsTable
+        title="List"
+        campaigns={campaigns}
+        emptyMessage={
+          <>
+            <p>There are no campaigns yet.</p>
+            <Button asChild variant="brand" className="mt-4">
+              <Link to="/campaigns/add">Add campaign</Link>
+            </Button>
+          </>
+        }
+      />
     </StyledContainer>
   );
 };

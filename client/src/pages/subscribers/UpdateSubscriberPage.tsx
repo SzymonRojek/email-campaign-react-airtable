@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router";
 
 import { updateSubscriber } from "services";
 import { useSubscriber } from "customHooks/queries";
-import { useInformationModalState } from "contexts/InformationModalContext";
+import { toastSuccess } from "helpers";
 import { Error, Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { StyledHeading } from "components/StyledHeading";
@@ -16,24 +16,10 @@ const UpdateSubscriberPage = () => {
     id,
     "Subscriber does not exist! "
   );
-  const { setInformationModalState, setInformationModalText } =
-    useInformationModalState();
 
   const handleUpdated = (updated: SubscriberFields) => {
-    setInformationModalText({
-      title: "That's great 🎊",
-      message: `Subscriber ${updated.name} has been edited 👋`,
-    });
-    setInformationModalState({
-      isOpenInformationModal: true,
-      informationModalProps: {
-        colorButton: "success",
-        onClose: () => {
-          setInformationModalState({ isOpenInformationModal: false });
-          navigate("/subscribers");
-        },
-      },
-    });
+    toastSuccess(`Subscriber ${updated.name} has been edited`);
+    navigate("/subscribers");
   };
 
   if (isLoading) return <Loader />;

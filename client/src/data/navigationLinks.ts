@@ -18,12 +18,10 @@ export const sectionLinks: Record<"subscribers" | "campaigns", NavigationLink[]>
   {
     subscribers: [
       { to: "/subscribers", label: "All subscribers", end: true },
-      { to: "/subscribers/status", label: "Subscribers status" },
       { to: "/subscribers/add", label: "Add subscriber" },
     ],
     campaigns: [
       { to: "/campaigns", label: "All campaigns", end: true },
-      { to: "/campaigns/status", label: "Campaigns status" },
       { to: "/campaigns/add", label: "Add campaign" },
     ],
   };

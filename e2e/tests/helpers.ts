@@ -40,7 +40,7 @@ export const loginByForm = async (page: Page, password = ADMIN_PASSWORD) => {
   await page.getByRole("button", { name: "Log in" }).click();
 };
 
-// the first table on the page is the full list ("latest added" is the second one)
+// a row of the list table
 export const listRow = (page: Page, text: string) =>
   page.getByRole("table").first().getByRole("row").filter({ hasText: text });
 

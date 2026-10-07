@@ -7,16 +7,21 @@ test.beforeEach(async ({ page, request }) => {
   await loginByApi(page, request);
 });
 
-test("lists the subscribers sorted by name", async ({ page }) => {
+test("lists the subscribers, newest first", async ({ page }) => {
   await page.goto("/#/subscribers");
 
   const rows = page.getByRole("table").first().getByRole("row");
 
-  // header + 4 subscribers
+  // header + 4 subscribers, added on 1-4 September
   await expect(rows).toHaveCount(5);
+  await expect(rows.nth(1)).toContainText("Darek");
+  await expect(rows.nth(4)).toContainText("Anna");
+  await expect(listRow(page, "Celina")).toContainText("2022/09/03");
+
+  await page.getByRole("button", { name: /^Date/ }).click();
+
   await expect(rows.nth(1)).toContainText("Anna");
   await expect(rows.nth(4)).toContainText("Darek");
-  await expect(listRow(page, "Celina")).toContainText("2022/09/03");
 });
 
 test("adds a subscriber", async ({ page, request }) => {
@@ -32,14 +37,10 @@ test("adds a subscriber", async ({ page, request }) => {
   await page.locator("#telephone").fill("3432342399");
   await page.getByRole("button", { name: "Add subscriber" }).click();
 
-  await expect(page.getByText("has been added to the list")).toBeVisible();
-  await page.getByRole("button", { name: "YES" }).click();
-
+  await expect(page.getByText("Subscriber Łucja has been added")).toBeVisible();
   await expect(page).toHaveURL(/#\/subscribers$/);
-  // the full list shows 4 rows per page - the new one is in "latest added"
-  await expect(
-    page.getByRole("table").nth(1).getByRole("row").filter({ hasText: "Łucja" })
-  ).toContainText("active");
+  // newest first - the new subscriber is on the first page
+  await expect(listRow(page, "Łucja")).toContainText("active");
 
   const db = await getAirtable(request);
   expect(db.subscribers.map(({ fields }) => fields.name)).toContain("Łucja");
@@ -71,9 +72,8 @@ test("edits a subscriber", async ({ page, request }) => {
   await page.locator("#surname").fill("Nowicka");
   await page.getByRole("button", { name: "Save changes" }).click();
 
-  await expect(page.getByText("has been edited")).toBeVisible();
-  await page.getByRole("button", { name: "close" }).click();
-
+  await expect(page.getByText("Subscriber Celina has been edited")).toBeVisible();
+  await expect(page).toHaveURL(/#\/subscribers$/);
   await expect(listRow(page, "Celina")).toContainText("Nowicka");
   const db = await getAirtable(request);
   expect(
@@ -127,16 +127,30 @@ test("does not show the details of a blocked subscriber", async ({ page }) => {
 });
 
 test("filters the subscribers by status", async ({ page }) => {
-  await page.goto("/#/subscribers/status");
+  await page.goto("/#/subscribers");
 
   const rows = page.getByRole("table").first().getByRole("row");
 
-  // header + Anna, Celina (active is the default filter)
-  await expect(rows).toHaveCount(3);
+  // all statuses by default
+  await expect(rows).toHaveCount(5);
 
-  await page.locator("#status-id").click();
+  await page.locator("#status-filter").click();
+  await page.getByRole("option", { name: "active" }).click();
+
+  // header + Celina, Anna
+  await expect(rows).toHaveCount(3);
+  await expect(rows.nth(1)).toContainText("Celina");
+
+  await page.locator("#status-filter").click();
   await page.getByRole("option", { name: "pending" }).click();
 
   await expect(rows).toHaveCount(2);
   await expect(rows.nth(1)).toContainText("Darek");
+});
+
+test("opens the list for the old status address", async ({ page }) => {
+  await page.goto("/#/subscribers/status");
+
+  await expect(page).toHaveURL(/#\/subscribers$/);
+  await expect(page.getByRole("heading", { name: "all subscribers" })).toBeVisible();
 });

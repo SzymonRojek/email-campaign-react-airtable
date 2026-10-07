@@ -2,7 +2,7 @@ import {
   formatMobileNumber,
   formattedData,
   getFilteredDataByStatus,
-  getLatestAddedItem,
+  sortByDate,
 } from "helpers";
 import { Subscriber } from "types";
 
@@ -64,19 +64,29 @@ describe("getFilteredDataByStatus", () => {
   });
 });
 
-describe("getLatestAddedItem", () => {
-  it("returns the newest item without changing the input", () => {
-    const data = [
-      subscriber("old", "active", "2022-01-01T00:00:00.000Z"),
-      subscriber("new", "active", "2022-03-01T00:00:00.000Z"),
-      subscriber("mid", "active", "2022-02-01T00:00:00.000Z"),
-    ];
+describe("sortByDate", () => {
+  const data = [
+    subscriber("old", "active", "2022-01-01T00:00:00.000Z"),
+    subscriber("new", "active", "2022-03-01T00:00:00.000Z"),
+    subscriber("mid", "active", "2022-02-01T00:00:00.000Z"),
+  ];
+  const ids = (items: Subscriber[]) => items.map(({ id }) => id);
 
-    expect(getLatestAddedItem(data).map(({ id }) => id)).toEqual(["new"]);
-    expect(data[0].id).toBe("old");
+  it("puts the newest first without changing the input", () => {
+    expect(ids(sortByDate(data, "newest"))).toEqual(["new", "mid", "old"]);
+    expect(ids(data)).toEqual(["old", "new", "mid"]);
   });
 
-  it("returns an empty array without data", () => {
-    expect(getLatestAddedItem(undefined)).toEqual([]);
+  it("puts the oldest first", () => {
+    expect(ids(sortByDate(data, "oldest"))).toEqual(["old", "mid", "new"]);
+  });
+
+  it("uses the date field before the Airtable creation time", () => {
+    const withDate = {
+      ...subscriber("dated", "active", "2022-01-01T00:00:00.000Z"),
+    };
+    withDate.fields = { ...withDate.fields, date: "2022-04-01T00:00:00.000Z" };
+
+    expect(ids(sortByDate([...data, withDate], "newest"))[0]).toBe("dated");
   });
 });
