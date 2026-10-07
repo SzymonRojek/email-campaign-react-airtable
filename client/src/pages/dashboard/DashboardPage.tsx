@@ -82,7 +82,16 @@ const DashboardPage = () => {
 
   if (subscribersQuery.isLoading || campaignsQuery.isLoading) return <Loader />;
   if (!subscribersQuery.data || !campaignsQuery.data)
-    return <Error error="Cannot load the data - please try again later." />;
+    return (
+      <Error
+        error="Cannot load the data - please try again later."
+        onRetry={() => {
+          subscribersQuery.refetch();
+          campaignsQuery.refetch();
+        }}
+        isRetrying={subscribersQuery.isFetching || campaignsQuery.isFetching}
+      />
+    );
 
   const subscribers = subscribersQuery.data;
   const campaigns = campaignsQuery.data;

@@ -13,7 +13,6 @@ import ThemeToggle from "components/ThemeToggle";
 import { LoginFormValues } from "types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import LogoMark from "components/LogoMark";
 import PasswordField from "./PasswordField";
 
 const LoginForm = () => {
@@ -49,7 +48,6 @@ const LoginForm = () => {
       <ThemeToggle className="absolute top-4 right-4" />
 
       <div className="flex flex-1 flex-col items-center justify-center px-4 py-16">
-        <LogoMark className="mb-6 size-12 rounded-xl" />
         <h1 className="text-2xl font-semibold tracking-tight">Email Campaign Dashboard</h1>
         <p className="mt-1 mb-8 text-sm text-muted-foreground">
           Sign in to manage subscribers and send campaigns.

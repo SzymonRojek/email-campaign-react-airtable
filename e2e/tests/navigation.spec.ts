@@ -100,3 +100,29 @@ test("switches to dark mode and keeps it after a reload", async ({ page }) => {
     "true"
   );
 });
+
+test("shows one error with 'Try again' when the data can not be loaded", async ({
+  page,
+}) => {
+  let isDown = true;
+  await page.route(/\/api\/(subscribers|campaigns)$/, (route) =>
+    isDown
+      ? route.fulfill({ status: 500, json: { status: "fail", error: "Airtable is down" } })
+      : route.fallback()
+  );
+  await page.goto("/");
+
+  // after the automatic retries: one message on the page, no pile of toasts
+  const error = page.getByRole("alert").filter({ hasText: "Cannot load the data" });
+  await expect(error).toBeVisible({ timeout: 20_000 });
+  await expect(page.locator(".Toastify__toast")).toHaveCount(0);
+  // no link to the dashboard on the dashboard itself
+  await expect(error.getByRole("link", { name: "Back to the dashboard" })).toHaveCount(0);
+
+  isDown = false;
+  await error.getByRole("button", { name: "Try again" }).click();
+
+  await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible({
+    timeout: 20_000,
+  });
+});

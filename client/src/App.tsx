@@ -23,12 +23,17 @@ const queryClient = new QueryClient({
     },
   },
   queryCache: new QueryCache({
-    onError: (error, query) =>
+    // the first load failed: the page itself shows the error with "Try again" -
+    // a toast only when a refresh in the background failed (old data on the screen),
+    // and one toast for all queries (the dashboard loads two at once)
+    onError: (error, query) => {
+      if (query.state.data === undefined) return;
+
       toastMessage(
-        `${
-          query.meta?.myMessage ?? "Something wrong - can not get data:"
-        } ${getErrorMessage(error)}`
-      ),
+        `Could not refresh the data: ${getErrorMessage(error)}`,
+        "query-refresh-error"
+      );
+    },
   }),
 });
 
@@ -37,13 +42,6 @@ const queryClient = new QueryClient({
 const router = createHashRouter([{ element: <AppContainer />, children: appRoutes }]);
 
 const App = () => {
-  /*
-  onError: (error, query) => {
-    if (query.state.data === undefined) {
-      toastMessage(`${query.meta?.myMessage} ${error.message}`),
-    }
-  },
-  */
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>

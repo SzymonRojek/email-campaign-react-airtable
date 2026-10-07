@@ -15,13 +15,19 @@ import { Button } from "@/components/ui/button";
 const SubscribersPage = () => {
   const [isImportOpen, setIsImportOpen] = useState(false);
   const panel = useSubscriberPanel();
-  const { data: subscribers, isLoading, isError } = useSubscribers(
+  const { data: subscribers, isLoading, isError, refetch, isFetching } = useSubscribers(
     "Cannot get subscribers list."
   );
 
   if (isLoading) return <Loader />;
   if (isError || !subscribers)
-    return <Error error="Cannot load the subscribers - please try again later." />;
+    return (
+      <Error
+        error="Cannot load the subscribers - please try again later."
+        onRetry={() => refetch()}
+        isRetrying={isFetching}
+      />
+    );
 
   const active = subscribers.filter(({ fields }) => fields.status === "active");
 
