@@ -29,12 +29,12 @@ test("keeps the page after a reload", async ({ page }) => {
 
 test("opens the add forms from the lists", async ({ page }) => {
   await page.goto("/#/subscribers");
-  await page.getByRole("main").getByRole("link", { name: "Add subscriber" }).click();
+  await page.getByRole("main").getByRole("button", { name: "Add subscriber" }).click();
   await expect(page.getByRole("heading", { name: "New subscriber" })).toBeVisible();
 
-  // back to the list from the form
-  await page.getByRole("main").getByRole("link", { name: "Subscribers" }).click();
-  await expect(page.getByRole("heading", { name: "Subscribers" })).toBeVisible();
+  // an untouched form closes without a question
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
 
   await page.goto("/#/campaigns");
   await page.getByRole("main").getByRole("link", { name: "New campaign" }).click();

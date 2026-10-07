@@ -3,11 +3,24 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Send, Users } from "lucide-react";
 
-import { validationCampaign } from "helpers";
+import { pluralize, validationCampaign } from "helpers";
 import { DEMO_EMAIL_NOTICE } from "sendEmail";
+import { useLeaveGuard } from "customHooks/useLeaveGuard";
 import { useRecipients } from "customHooks/useRecipients";
+import DiscardChangesDialog from "components/DiscardChangesDialog";
 import TextField from "components/form/TextField";
 import { CampaignFormValues } from "types";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -28,19 +41,34 @@ const CampaignForm = ({
   onSend,
 }: CampaignFormProps) => {
   const [isRecipientsOpen, setIsRecipientsOpen] = useState(false);
-  const { hasNoActiveSubscribers, label } = useRecipients();
+  // the form values waiting for "Send" in the confirmation
+  const [toSend, setToSend] = useState<CampaignFormValues | null>(null);
+  const { activeSubscribers, receivers, hasNoActiveSubscribers, label } =
+    useRecipients();
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<CampaignFormValues>({
     resolver: yupResolver(validationCampaign),
     defaultValues,
   });
 
+  const { blocker, whileSaving, discard } = useLeaveGuard(isDirty);
+
   const submitWith = (action: (values: CampaignFormValues) => Promise<void>) =>
-    handleSubmit(action);
+    handleSubmit((values) => whileSaving(() => action(values)));
+
+  // sending can not be undone - ask first (with nobody chosen the page explains it)
+  const askToSend = handleSubmit((values) =>
+    receivers.length ? setToSend(values) : whileSaving(() => onSend(values))
+  );
+
+  const recipientsText =
+    receivers.length === activeSubscribers.length
+      ? `all ${pluralize(receivers.length, "active subscriber")}`
+      : `${receivers.length} of ${pluralize(activeSubscribers.length, "active subscriber")}`;
 
   return (
     <Card className="w-full max-w-2xl">
@@ -101,7 +129,7 @@ const CampaignForm = ({
               variant="brand"
               className="h-10"
               disabled={isSubmitting || hasNoActiveSubscribers}
-              onClick={submitWith(onSend)}
+              onClick={askToSend}
             >
               <Send />
               Send email
@@ -114,6 +142,37 @@ const CampaignForm = ({
         isOpen={isRecipientsOpen}
         onClose={() => setIsRecipientsOpen(false)}
       />
+
+      <AlertDialog open={Boolean(toSend)} onOpenChange={(isOpen) => !isOpen && setToSend(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogMedia className="rounded-full bg-brand/15 text-brand">
+              <Send />
+            </AlertDialogMedia>
+            <AlertDialogTitle>Send "{toSend?.title}"?</AlertDialogTitle>
+            <AlertDialogDescription>
+              It goes to {recipientsText}. A sent campaign can not be changed or
+              sent back. {DEMO_EMAIL_NOTICE}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              variant="brand"
+              onClick={() => {
+                const values = toSend;
+                setToSend(null);
+                if (values) whileSaving(() => onSend(values));
+              }}
+            >
+              <Send />
+              Send
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <DiscardChangesDialog blocker={blocker} onDiscard={discard} />
     </Card>
   );
 };

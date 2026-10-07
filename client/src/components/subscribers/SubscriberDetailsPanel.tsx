@@ -1,4 +1,3 @@
-import { Link } from "react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CircleAlert, Pencil, Trash2, UserCheck } from "lucide-react";
 
@@ -6,11 +5,12 @@ import { formatMobileNumber, formattedData, toastMessage, toastSuccess } from "h
 import { subscribersKey, useSubscribers } from "customHooks/queries";
 import { useRemoveItem } from "customHooks/useRemoveItem";
 import { useSubscriberPanel } from "customHooks/useSubscriberPanel";
-import { getErrorMessage } from "services";
+import { createSubscriber, getErrorMessage, updateSubscriber } from "services";
 import api from "services/api";
 import Avatar from "components/Avatar";
 import StatusBadge from "components/StatusBadge";
 import { Subscriber } from "types";
+import SubscriberForm from "./SubscriberForm";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -33,7 +33,13 @@ const notices = {
   },
 };
 
-const Details = ({ subscriber, onRemoved }: { subscriber: Subscriber; onRemoved: () => void }) => {
+interface DetailsProps {
+  subscriber: Subscriber;
+  onEdit: () => void;
+  onRemoved: () => void;
+}
+
+const Details = ({ subscriber, onEdit, onRemoved }: DetailsProps) => {
   const queryClient = useQueryClient();
   const { id, fields, createdTime } = subscriber;
   const fullName = `${fields.name} ${fields.surname}`;
@@ -105,11 +111,9 @@ const Details = ({ subscriber, onRemoved }: { subscriber: Subscriber; onRemoved:
       </div>
 
       <SheetFooter className="flex-row border-t">
-        <Button asChild variant="outline" className="flex-1">
-          <Link to={`/subscribers/edit/${id}`}>
-            <Pencil />
-            Edit
-          </Link>
+        <Button variant="outline" className="flex-1" onClick={onEdit}>
+          <Pencil />
+          Edit
         </Button>
         <Button
           variant="ghost"
@@ -124,14 +128,127 @@ const Details = ({ subscriber, onRemoved }: { subscriber: Subscriber; onRemoved:
   );
 };
 
-// the details of one subscriber over the list - the list keeps its search, filter and page
-const SubscriberDetailsPanel = () => {
-  const { viewId, close } = useSubscriberPanel();
-  const { data: subscribers, isLoading } = useSubscribers();
-  const subscriber = subscribers?.find(({ id }) => id === viewId);
+// the list in the cache gets the saved subscriber at once (no "not found" flash),
+// then it is loaded again from the server
+const useSaveInList = () => {
+  const queryClient = useQueryClient();
+
+  return (saved: Subscriber) => {
+    queryClient.setQueryData<Subscriber[]>(subscribersKey, (list = []) =>
+      list.some(({ id }) => id === saved.id)
+        ? list.map((item) => (item.id === saved.id ? saved : item))
+        : [...list, saved]
+    );
+    queryClient.invalidateQueries({ queryKey: subscribersKey });
+  };
+};
+
+// the edit form in the panel - after saving, back to the details
+const Edit = ({ subscriber, onDone }: { subscriber: Subscriber; onDone: () => void }) => {
+  const { id, fields } = subscriber;
+  const saveInList = useSaveInList();
 
   return (
-    <Sheet open={Boolean(viewId)} onOpenChange={(isOpen) => !isOpen && close()}>
+    <>
+      <SheetHeader className="flex-row items-center gap-3 border-b p-6">
+        <Avatar name={fields.name} surname={fields.surname} className="size-10" />
+        <div className="min-w-0">
+          <SheetTitle className="text-xl">Edit subscriber</SheetTitle>
+          <SheetDescription className="truncate">
+            {fields.name} {fields.surname}
+          </SheetDescription>
+        </div>
+      </SheetHeader>
+      <SubscriberForm
+        currentId={id}
+        defaultValues={{
+          name: fields.name ?? "",
+          surname: fields.surname ?? "",
+          email: fields.email ?? "",
+          status: fields.status,
+          profession: fields.profession ?? "",
+          salary: fields.salary ?? "",
+          telephone: fields.telephone ?? "",
+        }}
+        submitLabel="Save changes"
+        onCancel={onDone}
+        onSubmit={(data) =>
+          updateSubscriber({
+            data,
+            id,
+            callback: (updated) => {
+              saveInList({ ...subscriber, fields: { ...subscriber.fields, ...updated } });
+              toastSuccess(`Subscriber ${updated.name} has been edited`);
+              onDone();
+            },
+          })
+        }
+      />
+    </>
+  );
+};
+
+// the subscriber panel over the list - the list keeps its search, filter and page;
+// it shows the details, the edit form or the "add subscriber" form (see useSubscriberPanel)
+const SubscriberDetailsPanel = () => {
+  const panel = useSubscriberPanel();
+  const saveInList = useSaveInList();
+  const { data: subscribers, isLoading } = useSubscribers();
+  const subscriber = subscribers?.find(({ id }) => id === panel.viewId);
+
+  const content = () => {
+    if (panel.mode === "new") {
+      return (
+        <>
+          <SheetHeader className="border-b p-6">
+            <SheetTitle className="text-xl">New subscriber</SheetTitle>
+            <SheetDescription>Add a person to your mailing list.</SheetDescription>
+          </SheetHeader>
+          <SubscriberForm
+            submitLabel="Add subscriber"
+            onCancel={panel.close}
+            onSubmit={(data) =>
+              createSubscriber({
+                data,
+                // show the new subscriber at once
+                callback: (created) => {
+                  saveInList(created);
+                  toastSuccess(`Subscriber ${created.fields.name} has been added`);
+                  panel.open(created.id);
+                },
+              })
+            }
+          />
+        </>
+      );
+    }
+
+    if (!subscriber) {
+      return (
+        <SheetHeader className="p-6">
+          <SheetTitle>{isLoading ? "Loading..." : "Subscriber not found"}</SheetTitle>
+          <SheetDescription>
+            {isLoading ? "" : "Subscriber does not exist! Maybe it has just been removed."}
+          </SheetDescription>
+        </SheetHeader>
+      );
+    }
+
+    if (panel.mode === "edit") {
+      return <Edit subscriber={subscriber} onDone={() => panel.open(subscriber.id)} />;
+    }
+
+    return (
+      <Details
+        subscriber={subscriber}
+        onEdit={() => panel.edit(subscriber.id)}
+        onRemoved={panel.close}
+      />
+    );
+  };
+
+  return (
+    <Sheet open={panel.isOpen} onOpenChange={(isOpen) => !isOpen && panel.close()}>
       <SheetContent
         side="right"
         className="gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:max-w-md"
@@ -141,16 +258,7 @@ const SubscriberDetailsPanel = () => {
           (event.currentTarget as HTMLElement).focus();
         }}
       >
-        {subscriber ? (
-          <Details subscriber={subscriber} onRemoved={close} />
-        ) : (
-          <SheetHeader className="p-6">
-            <SheetTitle>{isLoading ? "Loading..." : "Subscriber not found"}</SheetTitle>
-            <SheetDescription>
-              {isLoading ? "" : "Subscriber does not exist! Maybe it has just been removed."}
-            </SheetDescription>
-          </SheetHeader>
-        )}
+        {content()}
       </SheetContent>
     </Sheet>
   );

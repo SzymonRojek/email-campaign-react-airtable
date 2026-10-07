@@ -6,6 +6,7 @@ import { ArrowRight, Plus, Send, UserCheck, Users, type LucideIcon } from "lucid
 
 import { formattedData, pluralize, sortByDate } from "helpers";
 import { useCampaigns, useSubscribers } from "customHooks/queries";
+import { subscriberPanelLink } from "customHooks/useSubscriberPanel";
 import { Error, Loader } from "components/DisplayMessage";
 import { PageHeader } from "components/PageHeader";
 import { StyledContainer } from "components/StyledContainer";
@@ -99,7 +100,7 @@ const DashboardPage = () => {
         actions={
           <>
             <Button asChild variant="outline">
-              <Link to="/subscribers/add">
+              <Link {...subscriberPanelLink(undefined, "new")}>
                 <Plus />
                 Add subscriber
               </Link>

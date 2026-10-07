@@ -60,6 +60,12 @@ test("sends a campaign to all active subscribers", async ({ page, request }) => 
   await fillCampaign(page, "Newsletter");
   await page.getByRole("button", { name: "send" }).click();
 
+  // sending can not be undone - the app asks first
+  const confirm = page.getByRole("alertdialog");
+  await expect(confirm).toContainText('Send "Newsletter"?');
+  await expect(confirm).toContainText("all 2 active subscribers");
+  await confirm.getByRole("button", { name: "Send", exact: true }).click();
+
   // the confirmation says no email was really sent
   const toast = page.getByRole("alert").filter({ hasText: "has been sent" });
   await expect(toast).toContainText('Campaign "Newsletter" has been sent');
@@ -116,6 +122,7 @@ test("edits and sends a draft", async ({ page, request }) => {
 
   await page.locator("#title").fill("Autumn sale 2");
   await page.getByRole("button", { name: "send" }).click();
+  await page.getByRole("alertdialog").getByRole("button", { name: "Send", exact: true }).click();
 
   const toast = page.getByRole("alert").filter({ hasText: "has been sent" });
   await expect(toast).toContainText("Demo mode");
@@ -156,4 +163,39 @@ test("lists the campaigns newest first and filters them by status", async ({
 
   await expect(rows).toHaveCount(2);
   await expect(rows.nth(1)).toContainText("Autumn sale");
+});
+
+test("does not send when the confirmation is cancelled", async ({ page, request }) => {
+  await page.goto("/#/campaigns/add");
+  await fillCampaign(page, "Maybe later");
+  await page.getByRole("button", { name: "send" }).click();
+
+  await page.getByRole("alertdialog").getByRole("button", { name: "Cancel" }).click();
+
+  await expect(page).toHaveURL(/#\/campaigns\/add$/);
+  expect(await campaignByTitle(request, "Maybe later")).toBeUndefined();
+});
+
+test("asks before leaving a campaign with unsaved changes", async ({ page }) => {
+  // opened from the list - "back" stays in the app
+  await page.goto("/#/campaigns");
+  await page.getByRole("main").getByRole("link", { name: "New campaign" }).click();
+  await page.locator("#title").fill("Half written");
+
+  await page
+    .getByRole("navigation", { name: "Main" })
+    .getByRole("link", { name: "Dashboard" })
+    .click();
+
+  const question = page.getByRole("alertdialog");
+  await expect(question).toContainText("Discard changes?");
+  await question.getByRole("button", { name: "Keep editing" }).click();
+  await expect(question).toHaveCount(0);
+  await expect(page).toHaveURL(/#\/campaigns\/add$/);
+  await expect(page.locator("#title")).toHaveValue("Half written");
+
+  // "back" in the browser asks too
+  await page.goBack();
+  await question.getByRole("button", { name: "Discard" }).click();
+  await expect(page).toHaveURL(/#\/campaigns$/);
 });

@@ -1,11 +1,12 @@
 import api from "./api";
 import getErrorMessage from "./getErrorMessage";
 import { toastMessage } from "helpers";
-import { Subscriber, SubscriberFields, SubscriberFormValues } from "types";
+import { Subscriber, SubscriberFormValues } from "types";
 
 interface CreateSubscriberConfig {
   data: SubscriberFormValues;
-  callback: (fields: SubscriberFields) => void;
+  // gets the new record - e.g. to open its details
+  callback: (subscriber: Subscriber) => void;
 }
 
 const createSubscriber = async ({
@@ -27,7 +28,7 @@ const createSubscriber = async ({
   try {
     const response = await api.post<Subscriber>("/subscribers", postData);
 
-    callback(response.fields);
+    callback(response);
   } catch (error) {
     toastMessage(
       `The subscriber has not been added: ${getErrorMessage(error)}`

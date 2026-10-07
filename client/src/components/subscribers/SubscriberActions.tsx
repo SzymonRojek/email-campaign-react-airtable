@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router";
 import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
 import { useRemoveItem } from "customHooks/useRemoveItem";
@@ -15,8 +14,7 @@ import {
 
 // one "..." menu instead of three icons - the same in the table row and the phone card
 const SubscriberActions = ({ subscriber }: { subscriber: Subscriber }) => {
-  const navigate = useNavigate();
-  const { open } = useSubscriberPanel();
+  const { open, edit } = useSubscriberPanel();
   const { id, fields } = subscriber;
   const fullName = `${fields.name} ${fields.surname}`;
   const { handleConfirmModalData } = useRemoveItem("subscribers", fullName, id);
@@ -34,7 +32,7 @@ const SubscriberActions = ({ subscriber }: { subscriber: Subscriber }) => {
             <Eye />
             View details
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => navigate(`/subscribers/edit/${id}`)}>
+          <DropdownMenuItem onSelect={() => edit(id)}>
             <Pencil />
             Edit
           </DropdownMenuItem>

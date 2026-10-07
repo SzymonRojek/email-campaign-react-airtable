@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router";
 import { Plus, Upload } from "lucide-react";
 
 import { pluralize } from "helpers";
 import { useSubscribers } from "customHooks/queries";
+import { useSubscriberPanel } from "customHooks/useSubscriberPanel";
 import { Error, Loader } from "components/DisplayMessage";
 import { PageHeader } from "components/PageHeader";
 import { StyledContainer } from "components/StyledContainer";
@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 
 const SubscribersPage = () => {
   const [isImportOpen, setIsImportOpen] = useState(false);
+  const panel = useSubscriberPanel();
   const { data: subscribers, isLoading, isError } = useSubscribers(
     "Cannot get subscribers list."
   );
@@ -35,11 +36,9 @@ const SubscribersPage = () => {
               <Upload />
               Import CSV
             </Button>
-            <Button asChild variant="brand">
-              <Link to="/subscribers/add">
-                <Plus />
-                Add subscriber
-              </Link>
+            <Button variant="brand" onClick={panel.create}>
+              <Plus />
+              Add subscriber
             </Button>
           </>
         }

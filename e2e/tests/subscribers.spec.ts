@@ -24,8 +24,10 @@ test("lists the subscribers, newest first", async ({ page }) => {
   await expect(rows.nth(4)).toContainText("Darek");
 });
 
-test("adds a subscriber", async ({ page, request }) => {
-  await page.goto("/#/subscribers/add");
+test("adds a subscriber in the panel", async ({ page, request }) => {
+  await page.goto("/#/subscribers");
+  await page.getByRole("button", { name: "Add subscriber" }).click();
+  await expect(page.getByRole("dialog")).toContainText("New subscriber");
 
   await page.locator("#name").fill("Łucja");
   await page.locator("#surname").fill("Zając");
@@ -38,7 +40,11 @@ test("adds a subscriber", async ({ page, request }) => {
   await page.getByRole("button", { name: "Add subscriber" }).click();
 
   await expect(page.getByText("Subscriber Łucja has been added")).toBeVisible();
-  await expect(page).toHaveURL(/#\/subscribers$/);
+  // the panel shows the new subscriber at once
+  await expect(page).toHaveURL(/#\/subscribers\?view=recE2E\d+$/);
+  await expect(page.getByRole("dialog")).toContainText("Łucja Zając");
+
+  await page.keyboard.press("Escape");
   // newest first - the new subscriber is on the first page
   await expect(listRow(page, "Łucja")).toContainText("active");
 
@@ -65,7 +71,7 @@ test("edits a subscriber", async ({ page, request }) => {
 
   await rowAction(page, "Celina Wiśniewska", "Edit");
 
-  await expect(page).toHaveURL(/#\/subscribers\/edit\/recSubCelina0003$/);
+  await expect(page).toHaveURL(/#\/subscribers\?view=recSubCelina0003&mode=edit$/);
   // the form is filled with the current data
   await expect(page.locator("#surname")).toHaveValue("Wiśniewska");
 
@@ -80,6 +86,45 @@ test("edits a subscriber", async ({ page, request }) => {
   expect(
     db.subscribers.find(({ id }) => id === "recSubCelina0003")?.fields.surname
   ).toBe("Nowicka");
+});
+
+test("asks before closing the panel with unsaved changes", async ({
+  page,
+  request,
+}) => {
+  await page.goto("/#/subscribers");
+  await rowAction(page, "Celina Wiśniewska", "Edit");
+  await page.locator("#surname").fill("Changed");
+
+  // Esc closes the panel - but there is something unsaved
+  await page.keyboard.press("Escape");
+  const question = page.getByRole("alertdialog");
+  await expect(question).toContainText("Discard changes?");
+
+  await question.getByRole("button", { name: "Keep editing" }).click();
+  await expect(question).toHaveCount(0);
+  await expect(page.locator("#surname")).toHaveValue("Changed");
+
+  await page.keyboard.press("Escape");
+  await question.getByRole("button", { name: "Discard" }).click();
+
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect(page).toHaveURL(/#\/subscribers$/);
+  expect(
+    (await getAirtable(request)).subscribers.find(({ id }) => id === "recSubCelina0003")
+      ?.fields.surname
+  ).toBe("Wiśniewska");
+});
+
+test("closes an unchanged form without asking", async ({ page }) => {
+  await page.goto("/#/subscribers");
+  await rowAction(page, "Celina Wiśniewska", "Edit");
+
+  await page.getByRole("button", { name: "Cancel" }).click();
+
+  // back to the details, no question
+  await expect(page.getByRole("alertdialog")).toHaveCount(0);
+  await expect(page).toHaveURL(/#\/subscribers\?view=recSubCelina0003$/);
 });
 
 test("removes a subscriber after confirmation", async ({ page, request }) => {
