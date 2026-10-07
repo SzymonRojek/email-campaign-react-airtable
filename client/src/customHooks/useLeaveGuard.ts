@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { FocusEvent, useEffect, useRef } from "react";
 import { useBlocker } from "react-router";
 
 // asks before leaving a form with unsaved changes: another page, "back",
@@ -6,6 +6,9 @@ import { useBlocker } from "react-router";
 export const useLeaveGuard = (isDirty: boolean) => {
   // a save that moves on (e.g. back to the list) or "Discard" must not ask
   const canLeave = useRef(false);
+  const form = useRef<HTMLFormElement>(null);
+  // the field the user was in - "Keep editing" brings the keyboard back there
+  const lastField = useRef<HTMLElement | null>(null);
 
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
@@ -41,5 +44,26 @@ export const useLeaveGuard = (isDirty: boolean) => {
     blocker.proceed?.();
   };
 
-  return { blocker, whileSaving, discard };
+  const restoreFocus = () => {
+    const field =
+      lastField.current?.isConnected
+        ? lastField.current
+        : form.current?.querySelector<HTMLElement>("input, textarea, button[role='combobox']");
+
+    field?.focus();
+  };
+
+  // spread on the <form>
+  const formProps = {
+    ref: form,
+    onFocusCapture: (event: FocusEvent<HTMLFormElement>) => {
+      // React focus events bubble out of portals too (e.g. the question dialog) -
+      // remember only the real fields of this form
+      if (event.target instanceof HTMLElement && event.currentTarget.contains(event.target)) {
+        lastField.current = event.target;
+      }
+    },
+  };
+
+  return { blocker, whileSaving, discard, restoreFocus, formProps };
 };

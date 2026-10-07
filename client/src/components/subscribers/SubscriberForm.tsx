@@ -57,7 +57,8 @@ const SubscriberForm = ({
     defaultValues,
   });
 
-  const { blocker, whileSaving, discard } = useLeaveGuard(isDirty);
+  const { blocker, whileSaving, discard, restoreFocus, formProps } =
+    useLeaveGuard(isDirty);
 
   const submit = handleSubmit(async (values) => {
     // the server checks it too - this answers at once, next to the field
@@ -77,7 +78,7 @@ const SubscriberForm = ({
   });
 
   return (
-    <form onSubmit={submit} noValidate className="flex min-h-0 flex-1 flex-col">
+    <form {...formProps} onSubmit={submit} noValidate className="flex min-h-0 flex-1 flex-col">
       <div className="grid gap-5 overflow-y-auto p-6">
         <p className="text-sm text-muted-foreground">All fields are required.</p>
 
@@ -156,7 +157,11 @@ const SubscriberForm = ({
         </Button>
       </div>
 
-      <DiscardChangesDialog blocker={blocker} onDiscard={discard} />
+      <DiscardChangesDialog
+        blocker={blocker}
+        onDiscard={discard}
+        onKeepEditing={restoreFocus}
+      />
     </form>
   );
 };

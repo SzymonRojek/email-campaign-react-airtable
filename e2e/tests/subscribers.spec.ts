@@ -104,6 +104,8 @@ test("asks before closing the panel with unsaved changes", async ({
   await question.getByRole("button", { name: "Keep editing" }).click();
   await expect(question).toHaveCount(0);
   await expect(page.locator("#surname")).toHaveValue("Changed");
+  // the keyboard is back in the field the user was in
+  await expect(page.locator("#surname")).toBeFocused();
 
   await page.keyboard.press("Escape");
   await question.getByRole("button", { name: "Discard" }).click();

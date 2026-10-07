@@ -55,7 +55,8 @@ const CampaignForm = ({
     defaultValues,
   });
 
-  const { blocker, whileSaving, discard } = useLeaveGuard(isDirty);
+  const { blocker, whileSaving, discard, restoreFocus, formProps } =
+    useLeaveGuard(isDirty);
 
   const submitWith = (action: (values: CampaignFormValues) => Promise<void>) =>
     handleSubmit((values) => whileSaving(() => action(values)));
@@ -73,7 +74,7 @@ const CampaignForm = ({
   return (
     <Card className="w-full max-w-2xl">
       <CardContent>
-        <form noValidate className="grid gap-5" onSubmit={(e) => e.preventDefault()}>
+        <form {...formProps} noValidate className="grid gap-5" onSubmit={(e) => e.preventDefault()}>
           <p className="text-sm text-muted-foreground">All fields are required.</p>
 
           <TextField
@@ -172,7 +173,11 @@ const CampaignForm = ({
         </AlertDialogContent>
       </AlertDialog>
 
-      <DiscardChangesDialog blocker={blocker} onDiscard={discard} />
+      <DiscardChangesDialog
+        blocker={blocker}
+        onDiscard={discard}
+        onKeepEditing={restoreFocus}
+      />
     </Card>
   );
 };

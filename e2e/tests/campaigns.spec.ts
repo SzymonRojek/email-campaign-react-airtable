@@ -193,6 +193,7 @@ test("asks before leaving a campaign with unsaved changes", async ({ page }) => 
   await expect(question).toHaveCount(0);
   await expect(page).toHaveURL(/#\/campaigns\/add$/);
   await expect(page.locator("#title")).toHaveValue("Half written");
+  await expect(page.locator("#title")).toBeFocused();
 
   // "back" in the browser asks too
   await page.goBack();
