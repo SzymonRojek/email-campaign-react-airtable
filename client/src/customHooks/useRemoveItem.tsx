@@ -6,15 +6,12 @@ import getErrorMessage from "../services/getErrorMessage";
 import { toastMessage } from "helpers";
 import { AirtableRecord } from "types";
 
-const styles = {
-  questionText: { color: "crimson", fontWeight: "bold" },
-} as const;
-
 type Item = AirtableRecord<unknown>;
 
 export const useRemoveItem = (
   query: "subscribers" | "campaigns",
-  data: string | undefined,
+  // shown in the question, e.g. "Anna Nowak" or the campaign title
+  name: string | undefined,
   id: string
 ) => {
   const queryClient = useQueryClient();
@@ -61,12 +58,14 @@ export const useRemoveItem = (
       isOpenConfirmModal: true,
     });
     setConfirmModalText({
-      question: (
+      title: `Delete ${query === "subscribers" ? "subscriber" : "campaign"}?`,
+      description: (
         <>
-          Are you sure you want to remove{" "}
-          <span style={styles.questionText}>{data}</span>?
+          <strong className="font-medium text-foreground">{name}</strong> will be
+          removed permanently. This cannot be undone.
         </>
       ),
+      confirmLabel: "Delete",
     });
   };
 

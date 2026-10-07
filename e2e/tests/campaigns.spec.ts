@@ -76,11 +76,11 @@ test("sends a campaign to the chosen subscribers", async ({ page }) => {
 
   await page.getByRole("button", { name: "Choose recipients" }).click();
   const popup = page.getByRole("dialog");
-  await expect(popup.getByText("Checked subscribers: 2")).toBeVisible();
+  await expect(popup.getByText("2 of 2 selected")).toBeVisible();
 
   await popup.getByLabel(/Celina/).uncheck();
-  await expect(popup.getByText("Checked subscribers: 1")).toBeVisible();
-  await popup.getByRole("button", { name: "OK", exact: true }).click();
+  await expect(popup.getByText("1 of 2 selected")).toBeVisible();
+  await popup.getByRole("button", { name: "Done" }).click();
 
   await expect(page.getByText("selected subscribers: 1 from 2")).toBeVisible();
 });
@@ -93,9 +93,10 @@ test("does not send when every subscriber is unchecked", async ({
 
   await page.getByRole("button", { name: "Choose recipients" }).click();
   const popup = page.getByRole("dialog");
-  await popup.getByRole("button", { name: "Uncheck all" }).click();
-  await expect(popup.getByText("Please choose subscribers")).toBeVisible();
-  await popup.getByRole("button", { name: "OK", exact: true }).click();
+  // everybody is selected - "Select all" unchecks everybody
+  await popup.getByLabel("Select all").click();
+  await expect(popup.getByText("Choose at least one subscriber")).toBeVisible();
+  await popup.getByRole("button", { name: "Done" }).click();
 
   await fillCampaign(page, "Nobody");
   await page.getByRole("button", { name: "send" }).click();
@@ -131,7 +132,8 @@ test("removes a campaign", async ({ page, request }) => {
   await page.goto("/#/campaigns");
 
   await listRow(page, "Welcome").getByRole("button", { name: "delete" }).click();
-  await page.getByRole("button", { name: "YES" }).click();
+  await expect(page.getByRole("alertdialog")).toContainText("Delete campaign?");
+  await page.getByRole("button", { name: "Delete", exact: true }).click();
 
   await expect(listRow(page, "Welcome")).toHaveCount(0);
   await expect

@@ -1,3 +1,5 @@
+import { Trash2 } from "lucide-react";
+
 import { useConfirmModalState } from "contexts/ConfirmModalContext";
 import {
   AlertDialog,
@@ -7,13 +9,15 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogMedia,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
+// asks before an action that can not be undone (removing a subscriber / campaign)
 const ConfirmModal = () => {
   const {
     isOpenConfirmModal,
-    confirmModalText: { message, additionalText, question },
+    confirmModalText: { title, description, confirmLabel = "Delete" },
     confirmModalProps: { onConfirm, onClose },
   } = useConfirmModalState();
 
@@ -24,23 +28,22 @@ const ConfirmModal = () => {
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{message ?? question}</AlertDialogTitle>
-          {additionalText && (
-            <p className="font-semibold text-destructive">{additionalText}</p>
-          )}
-          <AlertDialogDescription>
-            {message && question ? question : "This cannot be undone."}
-          </AlertDialogDescription>
+          <AlertDialogMedia className="rounded-full bg-destructive/10 text-destructive">
+            <Trash2 />
+          </AlertDialogMedia>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => onClose?.()}>No</AlertDialogCancel>
+          <AlertDialogCancel onClick={() => onClose?.()}>Cancel</AlertDialogCancel>
           <AlertDialogAction
+            variant="danger"
             onClick={() => {
               onConfirm?.();
               onClose?.();
             }}
           >
-            Yes
+            {confirmLabel}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
