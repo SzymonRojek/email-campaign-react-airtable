@@ -1,4 +1,5 @@
-import { formattedData } from "helpers";
+import { formattedData, isInteractiveClick } from "helpers";
+import { useSubscriberPanel } from "customHooks/useSubscriberPanel";
 import StatusBadge from "components/StatusBadge";
 import { Subscriber } from "types";
 import { TableCell, TableRow } from "@/components/ui/table";
@@ -11,10 +12,15 @@ interface SubscriberRowProps {
 }
 
 const SubscriberRow = ({ subscriber, withActions }: SubscriberRowProps) => {
-  const { fields, createdTime } = subscriber;
+  const { id, fields, createdTime } = subscriber;
+  const { open } = useSubscriberPanel();
 
   return (
-    <TableRow>
+    // the whole row opens the details panel (the name link does it for the keyboard)
+    <TableRow
+      onClick={(event) => !isInteractiveClick(event) && open(id)}
+      className="cursor-pointer"
+    >
       <TableCell className="max-w-72 pl-4">
         <SubscriberIdentity subscriber={subscriber} />
       </TableCell>

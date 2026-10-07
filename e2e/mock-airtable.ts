@@ -2,7 +2,7 @@
  * Fake Airtable REST API for the e2e tests - keeps the records in memory,
  * so the tests never touch the real base and CI needs no secrets.
  *
- *   GET/POST          /v0/:base/:table
+ *   GET/POST          /v0/:base/:table   (POST: one record or a batch)
  *   GET/PATCH/DELETE  /v0/:base/:table/:id
  *   POST              /__reset   restores the seed data (called before every test)
  *   GET               /__db      current records (assertions in tests)
@@ -52,15 +52,28 @@ app.get("/v0/:base/:table", (req, res) => {
   res.json({ records: db[req.params.table] ?? [] });
 });
 
-app.post("/v0/:base/:table", (req, res) => {
+const createRecord = (table: string, fields: Fields) => {
   const record: AirtableRecord = {
     id: `recE2E${String(nextId++).padStart(11, "0")}`,
     createdTime: new Date().toISOString(),
-    fields: { ...req.body.fields, date: new Date().toISOString() },
+    fields: { ...fields, date: new Date().toISOString() },
   };
 
-  (db[req.params.table] ??= []).push(record);
-  res.json(record);
+  (db[table] ??= []).push(record);
+  return record;
+};
+
+// one record ({ fields }) or a batch ({ records: [{ fields }] }) like the real API
+app.post("/v0/:base/:table", (req, res) => {
+  if (Array.isArray(req.body.records)) {
+    return res.json({
+      records: req.body.records.map(({ fields }: { fields: Fields }) =>
+        createRecord(req.params.table, fields)
+      ),
+    });
+  }
+
+  res.json(createRecord(req.params.table, req.body.fields));
 });
 
 const findRecord = (table: string, id: string) =>

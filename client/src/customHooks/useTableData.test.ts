@@ -50,4 +50,32 @@ describe("useTableData", () => {
     expect(result.current.direction).toBe("oldest");
     expect(ids(result.current.rows)).toEqual(["day1", "day4", "day7", "day10"]);
   });
+
+  it("searches in the given text, every word, without letter case and accents", () => {
+    const people = [
+      { ...items[0], id: "lucja", fields: { ...items[0].fields, name: "Łucja", surname: "Zając" } },
+      { ...items[1], id: "anna", fields: { ...items[1].fields, name: "Anna", surname: "Nowak" } },
+    ];
+    const { result } = renderHook(() =>
+      useTableData(people, ({ fields }) => `${fields.name} ${fields.surname}`)
+    );
+
+    act(() => result.current.setQuery("lucja zaj"));
+    expect(ids(result.current.rows)).toEqual(["lucja"]);
+
+    act(() => result.current.setQuery("NOWAK"));
+    expect(ids(result.current.rows)).toEqual(["anna"]);
+
+    act(() => result.current.setQuery("nobody"));
+    expect(result.current.rows).toEqual([]);
+  });
+
+  it("starts from the first page after a new search", () => {
+    const { result } = renderHook(() => useTableData(items, ({ id }) => id));
+
+    act(() => result.current.setPage(2));
+    act(() => result.current.setQuery("day"));
+
+    expect(result.current.page).toBe(1);
+  });
 });

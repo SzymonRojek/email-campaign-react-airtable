@@ -1,78 +1,43 @@
-import { useNavigate } from "react-router";
-import { Info, Pencil, Trash2 } from "lucide-react";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 
 import { useRemoveItem } from "customHooks/useRemoveItem";
+import { useSubscriberPanel } from "customHooks/useSubscriberPanel";
 import { Subscriber } from "types";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import RowActionsTrigger from "components/DataTable/RowActionsTrigger";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
-// why there is no details page - shown on the disabled button
-const noDetailsReason = (name: string, status: string) =>
-  status === "pending"
-    ? `${name} is pending - complete all the data to see the details.`
-    : `${name} is blocked - the details are not available.`;
-
-// edit / details / delete - the same in the table row and in the mobile card
+// one "..." menu instead of three icons - the same in the table row and the phone card
 const SubscriberActions = ({ subscriber }: { subscriber: Subscriber }) => {
-  const navigate = useNavigate();
+  const { open, edit } = useSubscriberPanel();
   const { id, fields } = subscriber;
-  const { handleConfirmModalData } = useRemoveItem(
-    "subscribers",
-    `${fields.name} ${fields.surname}`,
-    id
-  );
-  const hasDetails = fields.status === "active";
+  const fullName = `${fields.name} ${fields.surname}`;
+  const { handleConfirmModalData } = useRemoveItem("subscribers", fullName, id);
 
   return (
-    <div className="flex justify-end gap-1">
-      <Button
-        variant="ghost"
-        size="icon"
-        aria-label="edit"
-        title="Edit"
-        onClick={() => navigate(`/subscribers/edit/${id}`)}
-      >
-        <Pencil />
-      </Button>
-      {hasDetails ? (
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label="subscriber-details"
-          title="Details"
-          onClick={() => navigate(`/subscribers/details/${id}`)}
-        >
-          <Info />
-        </Button>
-      ) : (
-        <Tooltip>
-          {/* a disabled button gets no hover / focus - the wrapper shows the tooltip */}
-          <TooltipTrigger asChild>
-            <span tabIndex={0} className="inline-flex rounded-md">
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="subscriber-details"
-                disabled
-                className="pointer-events-none"
-              >
-                <Info />
-              </Button>
-            </span>
-          </TooltipTrigger>
-          <TooltipContent>{noDetailsReason(fields.name, fields.status)}</TooltipContent>
-        </Tooltip>
-      )}
-      <Button
-        variant="ghost"
-        size="icon"
-        aria-label="delete"
-        title="Delete"
-        className="text-destructive hover:text-destructive"
-        onClick={handleConfirmModalData}
-      >
-        <Trash2 />
-      </Button>
+    <div className="flex justify-end">
+      <DropdownMenu>
+        <RowActionsTrigger label={`Actions for ${fullName}`} />
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onSelect={() => open(id)}>
+            <Eye />
+            View details
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => edit(id)}>
+            <Pencil />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem variant="destructive" onSelect={handleConfirmModalData}>
+            <Trash2 />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };

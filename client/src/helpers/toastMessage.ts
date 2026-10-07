@@ -1,7 +1,9 @@
 import { toast } from "react-toastify";
 
-const toastMessage = (error: string) => {
+// toastId: the same id shows one toast instead of a pile of them
+const toastMessage = (error: string, toastId?: string) => {
   toast.error(error, {
+    toastId,
     position: "top-center",
     autoClose: 5000,
     hideProgressBar: false,

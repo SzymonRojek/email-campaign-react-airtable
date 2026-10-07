@@ -3,11 +3,10 @@ import { useNavigate } from "react-router";
 import { createEmail } from "services";
 import { sendEmailTo } from "sendEmail";
 import { useRecipients } from "customHooks/useRecipients";
-import { toastMessage } from "helpers";
+import { toastMessage, toastSuccess } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { PageHeader } from "components/PageHeader";
 import CampaignForm from "components/campaigns/CampaignForm";
-import toastCampaignSaved from "components/campaigns/toastCampaignSaved";
 import { CampaignFields, CampaignStatus } from "types";
 
 const CreateEmailPage = () => {
@@ -16,7 +15,9 @@ const CreateEmailPage = () => {
 
   // back to the list - the new campaign is at the top (newest first)
   const handleSaved = (saved: CampaignFields, status: CampaignStatus) => {
-    toastCampaignSaved(saved.title, status);
+    // a sent campaign is visible on the list (the demo note was in the confirmation) -
+    // a draft gets a word, it is easy to miss that it was not sent
+    if (status === "draft") toastSuccess(`Campaign "${saved.title}" has been saved as a draft`);
     navigate("/campaigns");
   };
 

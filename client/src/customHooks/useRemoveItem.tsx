@@ -12,7 +12,9 @@ export const useRemoveItem = (
   query: "subscribers" | "campaigns",
   // shown in the question, e.g. "Anna Nowak" or the campaign title
   name: string | undefined,
-  id: string
+  id: string,
+  // e.g. close the details panel of the removed subscriber
+  onRemoved?: () => void
 ) => {
   const queryClient = useQueryClient();
 
@@ -48,7 +50,10 @@ export const useRemoveItem = (
   });
 
   const confirmModalProps = {
-    onConfirm: () => mutateAsync(id),
+    onConfirm: () => {
+      onRemoved?.();
+      return mutateAsync(id);
+    },
     onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
   };
 

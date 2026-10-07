@@ -48,3 +48,9 @@ export const mainNavLink = (page: Page, name: string) =>
   page
     .getByRole("navigation", { name: "Main" })
     .getByRole("link", { name, exact: true });
+
+// the "..." menu of a list row, e.g. rowAction(page, "Anna Nowak", "Edit")
+export const rowAction = async (page: Page, name: string, action: string) => {
+  await page.getByRole("button", { name: `Actions for ${name}` }).click();
+  await page.getByRole("menuitem", { name: action }).click();
+};

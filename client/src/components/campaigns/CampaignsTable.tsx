@@ -7,6 +7,7 @@ import DataTablePagination, {
 import SortableDateHead, {
   SortDirectionButton,
 } from "components/DataTable/SortableDateHead";
+import SearchInput from "components/DataTable/SearchInput";
 import StatusFilter from "components/DataTable/StatusFilter";
 import { Campaign, CampaignStatus } from "types";
 import { Card } from "@/components/ui/card";
@@ -32,7 +33,10 @@ const CampaignsTable = ({
   campaigns,
   emptyMessage = "There are no campaigns yet.",
 }: CampaignsTableProps) => {
-  const table = useTableData(campaigns);
+  const table = useTableData(
+    campaigns,
+    ({ fields }) => `${fields.title} ${fields.description}`
+  );
 
   if (campaigns.length === 0) {
     return (
@@ -44,7 +48,14 @@ const CampaignsTable = ({
 
   return (
     <Card className="gap-0 overflow-hidden py-0">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3">
+      <div className="flex flex-wrap items-center gap-3 border-b px-4 py-3">
+        <SearchInput
+          value={table.query}
+          onChange={table.setQuery}
+          label="Search campaigns"
+          placeholder="Search title or description"
+          className="w-full sm:w-64"
+        />
         <StatusFilter
           statuses={statuses}
           value={table.status}
@@ -55,14 +66,16 @@ const CampaignsTable = ({
           <SortDirectionButton
             direction={table.direction}
             onToggle={table.toggleDirection}
-            className="md:hidden"
+            className="ml-auto md:hidden"
           />
         )}
       </div>
 
       {table.rows.length === 0 ? (
         <p className="px-6 py-12 text-center text-sm text-muted-foreground">
-          There are no campaigns with the status {table.status}.
+          {table.query
+            ? `No campaigns match "${table.query}"${table.status === "all" ? "" : ` with the status ${table.status}`}.`
+            : `There are no campaigns with the status ${table.status}.`}
         </p>
       ) : (
         <>

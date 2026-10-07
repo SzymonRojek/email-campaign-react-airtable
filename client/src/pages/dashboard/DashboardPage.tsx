@@ -6,6 +6,7 @@ import { ArrowRight, Plus, Send, UserCheck, Users, type LucideIcon } from "lucid
 
 import { formattedData, pluralize, sortByDate } from "helpers";
 import { useCampaigns, useSubscribers } from "customHooks/queries";
+import { subscriberPanelLink } from "customHooks/useSubscriberPanel";
 import { Error, Loader } from "components/DisplayMessage";
 import { PageHeader } from "components/PageHeader";
 import { StyledContainer } from "components/StyledContainer";
@@ -81,7 +82,16 @@ const DashboardPage = () => {
 
   if (subscribersQuery.isLoading || campaignsQuery.isLoading) return <Loader />;
   if (!subscribersQuery.data || !campaignsQuery.data)
-    return <Error error="Cannot load the data - please try again later." />;
+    return (
+      <Error
+        error="Cannot load the data - please try again later."
+        onRetry={() => {
+          subscribersQuery.refetch();
+          campaignsQuery.refetch();
+        }}
+        isRetrying={subscribersQuery.isFetching || campaignsQuery.isFetching}
+      />
+    );
 
   const subscribers = subscribersQuery.data;
   const campaigns = campaignsQuery.data;
@@ -99,7 +109,7 @@ const DashboardPage = () => {
         actions={
           <>
             <Button asChild variant="outline">
-              <Link to="/subscribers/add">
+              <Link {...subscriberPanelLink(undefined, "new")}>
                 <Plus />
                 Add subscriber
               </Link>

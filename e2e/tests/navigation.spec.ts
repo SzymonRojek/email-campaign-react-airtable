@@ -29,12 +29,12 @@ test("keeps the page after a reload", async ({ page }) => {
 
 test("opens the add forms from the lists", async ({ page }) => {
   await page.goto("/#/subscribers");
-  await page.getByRole("main").getByRole("link", { name: "Add subscriber" }).click();
+  await page.getByRole("main").getByRole("button", { name: "Add subscriber" }).click();
   await expect(page.getByRole("heading", { name: "New subscriber" })).toBeVisible();
 
-  // back to the list from the form
-  await page.getByRole("main").getByRole("link", { name: "Subscribers" }).click();
-  await expect(page.getByRole("heading", { name: "Subscribers" })).toBeVisible();
+  // an untouched form closes without a question
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
 
   await page.goto("/#/campaigns");
   await page.getByRole("main").getByRole("link", { name: "New campaign" }).click();
@@ -48,7 +48,9 @@ test("shows the not found page for an unknown address", async ({ page }) => {
 });
 
 test("shows an error for a missing subscriber", async ({ page }) => {
+  // the old details address opens the panel
   await page.goto("/#/subscribers/details/recDoesNotExist0");
+  await expect(page).toHaveURL(/#\/subscribers\?view=recDoesNotExist0$/);
 
   await expect(page.getByText("Subscriber does not exist!").first()).toBeVisible({
     timeout: 15_000,
@@ -97,4 +99,30 @@ test("switches to dark mode and keeps it after a reload", async ({ page }) => {
     "aria-checked",
     "true"
   );
+});
+
+test("shows one error with 'Try again' when the data can not be loaded", async ({
+  page,
+}) => {
+  let isDown = true;
+  await page.route(/\/api\/(subscribers|campaigns)$/, (route) =>
+    isDown
+      ? route.fulfill({ status: 500, json: { status: "fail", error: "Airtable is down" } })
+      : route.fallback()
+  );
+  await page.goto("/");
+
+  // after the automatic retries: one message on the page, no pile of toasts
+  const error = page.getByRole("alert").filter({ hasText: "Cannot load the data" });
+  await expect(error).toBeVisible({ timeout: 20_000 });
+  await expect(page.locator(".Toastify__toast")).toHaveCount(0);
+  // no link to the dashboard on the dashboard itself
+  await expect(error.getByRole("link", { name: "Back to the dashboard" })).toHaveCount(0);
+
+  isDown = false;
+  await error.getByRole("button", { name: "Try again" }).click();
+
+  await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible({
+    timeout: 20_000,
+  });
 });

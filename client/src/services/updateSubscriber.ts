@@ -35,7 +35,7 @@ const updateSubscriber = async ({
     callback(response.fields);
   } catch (error) {
     toastMessage(
-      `Data were not been updated into Airtable: ${getErrorMessage(error)}`
+      `The subscriber has not been saved: ${getErrorMessage(error)}`
     );
   }
 };

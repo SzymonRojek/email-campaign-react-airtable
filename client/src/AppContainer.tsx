@@ -1,5 +1,6 @@
+import { Outlet } from "react-router";
+
 import "App.css";
-import Routing from "./Routing";
 import { AppShell } from "components/Navigation";
 import { LoginForm } from "components/LoginForm";
 import {
@@ -16,11 +17,14 @@ const LoggedInOnly = () => {
 
   return (
     <AppShell>
-      <Routing />
+      <div className="flex flex-1 flex-col">
+        <Outlet />
+      </div>
     </AppShell>
   );
 };
 
+// the root route of the router - every page renders in its Outlet
 export const AppContainer = () => (
   <Modals>
     <GlobalStoreContextProvider>

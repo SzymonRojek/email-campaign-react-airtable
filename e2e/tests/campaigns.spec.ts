@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { getAirtable, listRow, loginByApi, resetAirtable } from "./helpers";
+import { getAirtable, listRow, loginByApi, resetAirtable, rowAction } from "./helpers";
 
 test.beforeEach(async ({ page, request }) => {
   await resetAirtable(request);
@@ -28,10 +28,15 @@ test("lists the campaigns with their status", async ({ page }) => {
 
   await expect(listRow(page, "Autumn sale")).toContainText("draft");
   await expect(listRow(page, "Welcome")).toContainText("sent");
-  // only drafts can be edited
-  await expect(
-    listRow(page, "Welcome").getByRole("button", { name: "edit off" })
-  ).toBeVisible();
+  // the "..." button says what it is for
+  const actions = page.getByRole("button", { name: "Actions for Welcome" });
+  await actions.hover();
+  await expect(page.getByRole("tooltip")).toContainText("More actions");
+
+  // a sent campaign: no "Edit" at all - it can be duplicated
+  await actions.click();
+  await expect(page.getByRole("menuitem", { name: "Duplicate" })).toBeVisible();
+  await expect(page.getByRole("menuitem", { name: "Edit" })).toHaveCount(0);
 });
 
 test("saves a draft", async ({ page, request }) => {
@@ -61,11 +66,16 @@ test("sends a campaign to all active subscribers", async ({ page, request }) => 
   await fillCampaign(page, "Newsletter");
   await page.getByRole("button", { name: "send" }).click();
 
-  // the confirmation says no email was really sent
-  const toast = page.getByRole("alert").filter({ hasText: "has been sent" });
-  await expect(toast).toContainText('Campaign "Newsletter" has been sent');
-  await expect(toast).toContainText("Demo mode");
+  // sending can not be undone - the app asks first
+  const confirm = page.getByRole("alertdialog");
+  await expect(confirm).toContainText('Send "Newsletter"?');
+  await expect(confirm).toContainText("all 2 active subscribers");
+  await confirm.getByRole("button", { name: "Send", exact: true }).click();
+
+  // back on the list - no toast, the campaign shows as sent
   await expect(page).toHaveURL(/#\/campaigns$/);
+  await expect(listRow(page, "Newsletter")).toContainText("sent");
+  await expect(page.locator(".Toastify__toast")).toHaveCount(0);
   expect((await campaignByTitle(request, "Newsletter"))?.fields.status).toBe(
     "sent"
   );
@@ -110,16 +120,17 @@ test("does not send when every subscriber is unchecked", async ({
 test("edits and sends a draft", async ({ page, request }) => {
   await page.goto("/#/campaigns");
 
-  await listRow(page, "Autumn sale").getByRole("button", { name: "edit" }).click();
+  // a click anywhere in a draft's row opens the editor
+  await listRow(page, "Autumn sale").getByRole("cell").nth(2).click();
 
   await expect(page).toHaveURL(/#\/campaigns\/edit\/recCampDraft0001$/);
   await expect(page.locator("#title")).toHaveValue("Autumn sale");
 
   await page.locator("#title").fill("Autumn sale 2");
   await page.getByRole("button", { name: "send" }).click();
+  await page.getByRole("alertdialog").getByRole("button", { name: "Send", exact: true }).click();
 
-  const toast = page.getByRole("alert").filter({ hasText: "has been sent" });
-  await expect(toast).toContainText("Demo mode");
+  await expect(page.locator(".Toastify__toast")).toHaveCount(0);
   await expect(page).toHaveURL(/#\/campaigns$/);
   const db = await getAirtable(request);
   expect(db.campaigns.find(({ id }) => id === "recCampDraft0001")?.fields).toMatchObject({
@@ -131,7 +142,7 @@ test("edits and sends a draft", async ({ page, request }) => {
 test("removes a campaign", async ({ page, request }) => {
   await page.goto("/#/campaigns");
 
-  await listRow(page, "Welcome").getByRole("button", { name: "delete" }).click();
+  await rowAction(page, "Welcome", "Delete");
   await expect(page.getByRole("alertdialog")).toContainText("Delete campaign?");
   await page.getByRole("button", { name: "Delete", exact: true }).click();
 
@@ -157,4 +168,58 @@ test("lists the campaigns newest first and filters them by status", async ({
 
   await expect(rows).toHaveCount(2);
   await expect(rows.nth(1)).toContainText("Autumn sale");
+});
+
+test("does not send when the confirmation is cancelled", async ({ page, request }) => {
+  await page.goto("/#/campaigns/add");
+  await fillCampaign(page, "Maybe later");
+  await page.getByRole("button", { name: "send" }).click();
+
+  await page.getByRole("alertdialog").getByRole("button", { name: "Cancel" }).click();
+
+  await expect(page).toHaveURL(/#\/campaigns\/add$/);
+  expect(await campaignByTitle(request, "Maybe later")).toBeUndefined();
+});
+
+test("asks before leaving a campaign with unsaved changes", async ({ page }) => {
+  // opened from the list - "back" stays in the app
+  await page.goto("/#/campaigns");
+  await page.getByRole("main").getByRole("link", { name: "New campaign" }).click();
+  await page.locator("#title").fill("Half written");
+
+  await page
+    .getByRole("navigation", { name: "Main" })
+    .getByRole("link", { name: "Dashboard" })
+    .click();
+
+  const question = page.getByRole("alertdialog");
+  await expect(question).toContainText("Discard changes?");
+  await question.getByRole("button", { name: "Keep editing" }).click();
+  await expect(question).toHaveCount(0);
+  await expect(page).toHaveURL(/#\/campaigns\/add$/);
+  await expect(page.locator("#title")).toHaveValue("Half written");
+  await expect(page.locator("#title")).toBeFocused();
+
+  // "back" in the browser asks too
+  await page.goBack();
+  await question.getByRole("button", { name: "Discard" }).click();
+  await expect(page).toHaveURL(/#\/campaigns$/);
+});
+
+test("duplicates a sent campaign as a new draft", async ({ page, request }) => {
+  await page.goto("/#/campaigns");
+
+  // a sent campaign's row does not open anything
+  await listRow(page, "Welcome").getByRole("cell").nth(2).click();
+  await expect(page).toHaveURL(/#\/campaigns$/);
+
+  await rowAction(page, "Welcome", "Duplicate");
+
+  // the copy opens in the editor to be changed
+  await expect(page).toHaveURL(/#\/campaigns\/edit\/recE2E\d+$/);
+  await expect(page.locator("#title")).toHaveValue("Welcome (copy)");
+  expect((await campaignByTitle(request, "Welcome (copy)"))?.fields).toMatchObject({
+    description: "Hello new subscribers",
+    status: "draft",
+  });
 });
