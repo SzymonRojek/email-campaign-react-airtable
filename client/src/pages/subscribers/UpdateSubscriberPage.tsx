@@ -46,6 +46,7 @@ const UpdateSubscriberPage = () => {
           telephone: fields.telephone ?? "",
         }}
         submitLabel="Save changes"
+        currentId={id}
         onSubmit={(data) =>
           updateSubscriber({ data, id, callback: handleUpdated })
         }

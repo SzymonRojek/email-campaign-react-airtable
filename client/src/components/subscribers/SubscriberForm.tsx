@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { validationSubscriber } from "helpers";
+import { normalizeText, validationSubscriber } from "helpers";
+import { useSubscribers } from "customHooks/queries";
 import TextField from "components/form/TextField";
 import SelectField from "components/form/SelectField";
 import { SelectOption, SubscriberFormValues } from "types";
@@ -27,24 +28,46 @@ interface SubscriberFormProps {
   defaultValues?: SubscriberFormValues;
   submitLabel: string;
   onSubmit: (values: SubscriberFormValues) => Promise<void>;
+  // the edited subscriber may keep their own e-mail
+  currentId?: string;
 }
 
 const SubscriberForm = ({
   defaultValues = emptyValues,
   submitLabel,
   onSubmit,
+  currentId,
 }: SubscriberFormProps) => {
+  // the list is usually cached already - used for the duplicate e-mail check
+  const { data: subscribers } = useSubscribers();
+
   const {
     control,
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<SubscriberFormValues>({
     resolver: yupResolver(validationSubscriber),
     defaultValues,
   });
 
-  const submit = handleSubmit(onSubmit);
+  const submit = handleSubmit(async (values) => {
+    // the server checks it too - this answers at once, next to the field
+    const owner = subscribers?.find(
+      ({ id, fields }) =>
+        id !== currentId && normalizeText(fields.email) === normalizeText(values.email)
+    );
+
+    if (owner) {
+      setError("email", {
+        message: `this e-mail is already used by ${owner.fields.name} ${owner.fields.surname}`,
+      });
+      return;
+    }
+
+    await onSubmit(values);
+  });
 
   return (
     <Card className="w-full max-w-2xl">

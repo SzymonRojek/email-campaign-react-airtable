@@ -30,7 +30,7 @@ const createSubscriber = async ({
     callback(response.fields);
   } catch (error) {
     toastMessage(
-      `Data were not been sent to the Airtable: ${getErrorMessage(error)}`
+      `The subscriber has not been added: ${getErrorMessage(error)}`
     );
   }
 };

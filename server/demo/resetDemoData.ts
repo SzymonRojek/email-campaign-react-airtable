@@ -1,10 +1,9 @@
 import { axiosInstance } from "../controllers/axiosInstance";
+import { chunks, wait } from "../helpers/batches";
 import { getAllRecords } from "../helpers/getAllRecords";
 import { AirtableRecord } from "../types";
 import { seedCampaigns, seedSubscribers, toAirtableFields } from "./seedData";
 
-// Airtable: max 10 records per create/delete request, max 5 requests per second
-const BATCH_SIZE = 10;
 const MAX_SEED_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
 const tables = [
@@ -13,13 +12,6 @@ const tables = [
 ];
 
 type Fields = Record<string, unknown>;
-
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const chunks = <T>(items: T[]) =>
-  Array.from({ length: Math.ceil(items.length / BATCH_SIZE) }, (_, i) =>
-    items.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE)
-  );
 
 // the content of a table in a stable order - only the columns the examples have
 // (not the dates, not extra Airtable columns like "Last Modified")

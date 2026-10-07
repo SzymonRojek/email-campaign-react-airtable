@@ -6,3 +6,4 @@ export { default as createSubscriber } from "./createSubscriber";
 export { default as createEmail } from "./createEmail";
 export { default as getErrorMessage } from "./getErrorMessage";
 export { default as HttpError } from "./HttpError";
+export { default as importSubscribers } from "./importSubscribers";
