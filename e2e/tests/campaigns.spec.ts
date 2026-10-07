@@ -28,9 +28,15 @@ test("lists the campaigns with their status", async ({ page }) => {
 
   await expect(listRow(page, "Autumn sale")).toContainText("draft");
   await expect(listRow(page, "Welcome")).toContainText("sent");
-  // only drafts can be edited
-  await page.getByRole("button", { name: "Actions for Welcome" }).click();
-  await expect(page.getByRole("menuitem", { name: "Edit draft" })).toBeDisabled();
+  // the "..." button says what it is for
+  const actions = page.getByRole("button", { name: "Actions for Welcome" });
+  await actions.hover();
+  await expect(page.getByRole("tooltip")).toContainText("More actions");
+
+  // a sent campaign: no "Edit" at all - it can be duplicated
+  await actions.click();
+  await expect(page.getByRole("menuitem", { name: "Duplicate" })).toBeVisible();
+  await expect(page.getByRole("menuitem", { name: "Edit" })).toHaveCount(0);
 });
 
 test("saves a draft", async ({ page, request }) => {
@@ -115,7 +121,8 @@ test("does not send when every subscriber is unchecked", async ({
 test("edits and sends a draft", async ({ page, request }) => {
   await page.goto("/#/campaigns");
 
-  await rowAction(page, "Autumn sale", "Edit draft");
+  // a click anywhere in a draft's row opens the editor
+  await listRow(page, "Autumn sale").getByRole("cell").nth(2).click();
 
   await expect(page).toHaveURL(/#\/campaigns\/edit\/recCampDraft0001$/);
   await expect(page.locator("#title")).toHaveValue("Autumn sale");
@@ -199,4 +206,23 @@ test("asks before leaving a campaign with unsaved changes", async ({ page }) => 
   await page.goBack();
   await question.getByRole("button", { name: "Discard" }).click();
   await expect(page).toHaveURL(/#\/campaigns$/);
+});
+
+test("duplicates a sent campaign as a new draft", async ({ page, request }) => {
+  await page.goto("/#/campaigns");
+
+  // a sent campaign's row does not open anything
+  await listRow(page, "Welcome").getByRole("cell").nth(2).click();
+  await expect(page).toHaveURL(/#\/campaigns$/);
+
+  await rowAction(page, "Welcome", "Duplicate");
+
+  await expect(page.getByText('Draft "Welcome (copy)" created')).toBeVisible();
+  // the copy opens in the editor to be changed
+  await expect(page).toHaveURL(/#\/campaigns\/edit\/recE2E\d+$/);
+  await expect(page.locator("#title")).toHaveValue("Welcome (copy)");
+  expect((await campaignByTitle(request, "Welcome (copy)"))?.fields).toMatchObject({
+    description: "Hello new subscribers",
+    status: "draft",
+  });
 });

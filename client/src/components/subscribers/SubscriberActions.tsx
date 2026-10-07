@@ -1,15 +1,14 @@
-import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 
 import { useRemoveItem } from "customHooks/useRemoveItem";
 import { useSubscriberPanel } from "customHooks/useSubscriberPanel";
 import { Subscriber } from "types";
-import { Button } from "@/components/ui/button";
+import RowActionsTrigger from "components/DataTable/RowActionsTrigger";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 // one "..." menu instead of three icons - the same in the table row and the phone card
@@ -22,11 +21,7 @@ const SubscriberActions = ({ subscriber }: { subscriber: Subscriber }) => {
   return (
     <div className="flex justify-end">
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" aria-label={`Actions for ${fullName}`}>
-            <MoreHorizontal />
-          </Button>
-        </DropdownMenuTrigger>
+        <RowActionsTrigger label={`Actions for ${fullName}`} />
         <DropdownMenuContent align="end">
           <DropdownMenuItem onSelect={() => open(id)}>
             <Eye />

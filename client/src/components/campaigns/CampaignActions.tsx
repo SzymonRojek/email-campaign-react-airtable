@@ -1,44 +1,40 @@
 import { useNavigate } from "react-router";
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Copy, Pencil, Trash2 } from "lucide-react";
 
 import { useRemoveItem } from "customHooks/useRemoveItem";
+import RowActionsTrigger from "components/DataTable/RowActionsTrigger";
 import { Campaign } from "types";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useDuplicateCampaign } from "./useDuplicateCampaign";
 
-// the same "..." menu as the subscribers - only a draft can be edited
+// a draft: Edit / Duplicate / Delete; a sent campaign: Duplicate / Delete
+// (the "Sent" badge already says it can not be changed)
 const CampaignActions = ({ campaign }: { campaign: Campaign }) => {
   const navigate = useNavigate();
+  const duplicate = useDuplicateCampaign();
   const { id, fields } = campaign;
   const { handleConfirmModalData } = useRemoveItem("campaigns", fields.title, id);
-  const isDraft = fields.status === "draft";
 
   return (
     <div className="flex justify-end">
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" aria-label={`Actions for ${fields.title}`}>
-            <MoreHorizontal />
-          </Button>
-        </DropdownMenuTrigger>
+        <RowActionsTrigger label={`Actions for ${fields.title}`} />
         <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            disabled={!isDraft}
-            onSelect={() => navigate(`/campaigns/edit/${id}`)}
-          >
-            <Pencil />
-            Edit draft
-          </DropdownMenuItem>
-          {!isDraft && (
-            <DropdownMenuLabel>Sent - a campaign can not be changed.</DropdownMenuLabel>
+          {fields.status === "draft" && (
+            <DropdownMenuItem onSelect={() => navigate(`/campaigns/edit/${id}`)}>
+              <Pencil />
+              Edit
+            </DropdownMenuItem>
           )}
+          <DropdownMenuItem onSelect={() => duplicate(campaign)}>
+            <Copy />
+            Duplicate
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant="destructive" onSelect={handleConfirmModalData}>
             <Trash2 />
