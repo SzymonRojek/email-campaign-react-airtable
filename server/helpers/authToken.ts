@@ -8,7 +8,7 @@ const sign = (payload: string) =>
     .update(payload)
     .digest("base64url");
 
-const safeEqual = (a: unknown, b: unknown) => {
+export const safeEqual = (a: unknown, b: unknown) => {
   const hashA = crypto.createHash("sha256").update(String(a)).digest();
   const hashB = crypto.createHash("sha256").update(String(b)).digest();
 

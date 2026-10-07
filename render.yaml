@@ -23,6 +23,10 @@ services:
         sync: false
       - key: REACT_APP_API_KEY
         sync: false
+      # daily demo data reset (.github/workflows/demo-reset.yml) - the same value as the
+      # DEMO_RESET_KEY secret on GitHub; only production has it (staging uses the same base)
+      - key: DEMO_RESET_KEY
+        sync: false
 
   # staging - to check the changes before the PR dev -> main
   - type: web
