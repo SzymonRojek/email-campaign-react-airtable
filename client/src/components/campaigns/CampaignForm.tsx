@@ -20,15 +20,12 @@ interface CampaignFormProps {
   defaultValues?: CampaignFormValues;
   onDraft: (values: CampaignFormValues) => Promise<void>;
   onSend: (values: CampaignFormValues) => Promise<void>;
-  // clear the form after saving (a new campaign)
-  resetAfterSubmit?: boolean;
 }
 
 const CampaignForm = ({
   defaultValues = emptyValues,
   onDraft,
   onSend,
-  resetAfterSubmit = false,
 }: CampaignFormProps) => {
   const [isRecipientsOpen, setIsRecipientsOpen] = useState(false);
   const { hasNoActiveSubscribers, label } = useRecipients();
@@ -36,7 +33,6 @@ const CampaignForm = ({
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm<CampaignFormValues>({
     resolver: yupResolver(validationCampaign),
@@ -44,13 +40,10 @@ const CampaignForm = ({
   });
 
   const submitWith = (action: (values: CampaignFormValues) => Promise<void>) =>
-    handleSubmit(async (values) => {
-      await action(values);
-      if (resetAfterSubmit) reset(emptyValues);
-    });
+    handleSubmit(action);
 
   return (
-    <Card className="mx-auto w-full max-w-2xl">
+    <Card className="w-full max-w-2xl">
       <CardContent>
         <form noValidate className="grid gap-5" onSubmit={(e) => e.preventDefault()}>
           <p className="text-sm text-muted-foreground">All fields are required.</p>

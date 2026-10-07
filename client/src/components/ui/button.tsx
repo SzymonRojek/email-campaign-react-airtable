@@ -20,6 +20,9 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         // app accent (orange) - main actions
         brand: "bg-brand text-brand-foreground font-semibold hover:bg-brand/85",
+        // confirms an action that can not be undone (delete)
+        danger:
+          "bg-destructive text-white font-semibold hover:bg-destructive/90 dark:bg-red-600 dark:hover:bg-red-600/90 focus-visible:border-destructive/40 focus-visible:ring-destructive/30",
       },
       size: {
         default:

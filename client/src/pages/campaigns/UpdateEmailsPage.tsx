@@ -1,15 +1,15 @@
 import { useNavigate, useParams } from "react-router";
 
 import { updateEmail } from "services";
-import { DEMO_EMAIL_NOTICE, sendEmailTo } from "sendEmail";
+import { sendEmailTo } from "sendEmail";
 import { useCampaign } from "customHooks/queries";
 import { useRecipients } from "customHooks/useRecipients";
-import { useInformationModalState } from "contexts/InformationModalContext";
 import { toastMessage } from "helpers";
 import { Error, Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
-import { StyledHeading } from "components/StyledHeading";
+import { PageHeader } from "components/PageHeader";
 import CampaignForm from "components/campaigns/CampaignForm";
+import toastCampaignSaved from "components/campaigns/toastCampaignSaved";
 import { CampaignFields, CampaignStatus } from "types";
 
 const UpdateEmailsPage = () => {
@@ -20,38 +20,23 @@ const UpdateEmailsPage = () => {
     id,
     "Campaign does not exist! "
   );
-  const { setInformationModalState, setInformationModalText } =
-    useInformationModalState();
 
   const handleSaved = (saved: CampaignFields, status: CampaignStatus) => {
-    setInformationModalText(
-      status === "sent"
-        ? {
-            title: "That's great 🎊",
-            additionalText: DEMO_EMAIL_NOTICE,
-            message: `Email ${saved.title} has been sent 👋`,
-          }
-        : { title: "Draft... 👋", message: `Email ${saved.title} is drafted 👋` }
-    );
-    setInformationModalState({
-      isOpenInformationModal: true,
-      informationModalProps: {
-        colorButton: "success",
-        onClose: () => {
-          setInformationModalState({ isOpenInformationModal: false });
-          navigate("/campaigns");
-        },
-      },
-    });
+    toastCampaignSaved(saved.title, status);
+    navigate("/campaigns");
   };
 
   if (isLoading) return <Loader />;
   if (isError || !campaign)
-    return <Error error="Email Campaign does not exist!" />;
+    return <Error error="Campaign does not exist!" />;
 
   return (
     <StyledContainer>
-      <StyledHeading label="update email" />
+      <PageHeader
+        title="Edit campaign"
+        description="Only drafts can be changed - sending makes the campaign final."
+        back={{ to: "/campaigns", label: "Campaigns" }}
+      />
       {/* the form gets the loaded data as its starting values */}
       <CampaignForm
         defaultValues={{

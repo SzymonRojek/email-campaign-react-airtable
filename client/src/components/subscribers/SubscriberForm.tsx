@@ -27,34 +27,27 @@ interface SubscriberFormProps {
   defaultValues?: SubscriberFormValues;
   submitLabel: string;
   onSubmit: (values: SubscriberFormValues) => Promise<void>;
-  // clear the form after a successful submit (adding a new subscriber)
-  resetAfterSubmit?: boolean;
 }
 
 const SubscriberForm = ({
   defaultValues = emptyValues,
   submitLabel,
   onSubmit,
-  resetAfterSubmit = false,
 }: SubscriberFormProps) => {
   const {
     control,
     register,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm<SubscriberFormValues>({
     resolver: yupResolver(validationSubscriber),
     defaultValues,
   });
 
-  const submit = handleSubmit(async (values) => {
-    await onSubmit(values);
-    if (resetAfterSubmit) reset(emptyValues);
-  });
+  const submit = handleSubmit(onSubmit);
 
   return (
-    <Card className="mx-auto w-full max-w-2xl">
+    <Card className="w-full max-w-2xl">
       <CardContent>
         <form onSubmit={submit} noValidate className="grid gap-5">
           <p className="text-sm text-muted-foreground">All fields are required.</p>

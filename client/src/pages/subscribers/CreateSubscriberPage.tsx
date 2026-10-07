@@ -1,36 +1,30 @@
 import { useNavigate } from "react-router";
 
 import { createSubscriber } from "services";
-import { useConfirmModalState } from "contexts/ConfirmModalContext";
+import { toastSuccess } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
-import { StyledHeading } from "components/StyledHeading";
+import { PageHeader } from "components/PageHeader";
 import SubscriberForm from "components/subscribers/SubscriberForm";
 import { SubscriberFields } from "types";
 
 const CreateSubscriberPage = () => {
   const navigate = useNavigate();
-  const { setConfirmModalState, setConfirmModalText } = useConfirmModalState();
 
+  // back to the list - the new subscriber is at the top (newest first)
   const handleCreated = (subscriber: SubscriberFields) => {
-    setConfirmModalText({
-      message: `Subscriber ${subscriber.name} has been added to the list 😁`,
-      question: "Would you like to come back to the subscribers list?",
-    });
-    setConfirmModalState({
-      isOpenConfirmModal: true,
-      confirmModalProps: {
-        onConfirm: () => navigate("/subscribers"),
-        onClose: () => setConfirmModalState({ isOpenConfirmModal: false }),
-      },
-    });
+    toastSuccess(`Subscriber ${subscriber.name} has been added`);
+    navigate("/subscribers");
   };
 
   return (
     <StyledContainer>
-      <StyledHeading label="new subscriber" />
+      <PageHeader
+        title="New subscriber"
+        description="Add a person to your mailing list."
+        back={{ to: "/subscribers", label: "Subscribers" }}
+      />
       <SubscriberForm
         submitLabel="Add subscriber"
-        resetAfterSubmit
         onSubmit={(data) => createSubscriber({ data, callback: handleCreated })}
       />
     </StyledContainer>

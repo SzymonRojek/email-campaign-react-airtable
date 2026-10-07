@@ -1,10 +1,11 @@
 import { Link } from "react-router";
+import { Plus } from "lucide-react";
 
-import { getLatestAddedItem } from "helpers";
+import { pluralize } from "helpers";
 import { useCampaigns } from "customHooks/queries";
 import { Error, Loader } from "components/DisplayMessage";
+import { PageHeader } from "components/PageHeader";
 import { StyledContainer } from "components/StyledContainer";
-import { StyledHeading } from "components/StyledHeading";
 import CampaignsTable from "components/campaigns/CampaignsTable";
 import { Button } from "@/components/ui/button";
 
@@ -17,29 +18,26 @@ const EmailsPage = () => {
   if (isError || !campaigns)
     return <Error error="Cannot load the campaigns - please try again later." />;
 
+  const sent = campaigns.filter(({ fields }) => fields.status === "sent");
+
   return (
     <StyledContainer>
-      <StyledHeading label="all emails" />
-      <div className="grid gap-8">
-        <CampaignsTable
-          title="List"
-          campaigns={campaigns}
-          emptyMessage={
-            <>
-              <p>There are no campaigns yet.</p>
-              <Button asChild variant="brand" className="mt-4">
-                <Link to="/campaigns/add">Add campaign</Link>
-              </Button>
-            </>
-          }
-        />
-        {campaigns.length > 0 && (
-          <CampaignsTable
-            title="Latest added"
-            campaigns={getLatestAddedItem(campaigns)}
-          />
-        )}
-      </div>
+      <PageHeader
+        title="Campaigns"
+        description={`${pluralize(campaigns.length, "campaign")} · ${sent.length} sent · ${pluralize(campaigns.length - sent.length, "draft")}`}
+        actions={
+          <Button asChild variant="brand">
+            <Link to="/campaigns/add">
+              <Plus />
+              New campaign
+            </Link>
+          </Button>
+        }
+      />
+      <CampaignsTable
+        campaigns={campaigns}
+        emptyMessage="There are no campaigns yet - write the first one."
+      />
     </StyledContainer>
   );
 };

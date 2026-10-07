@@ -6,6 +6,7 @@ import { MemoryRouter } from "react-router";
 import LoginForm from "./LoginForm";
 import api from "services/api";
 import { getToken } from "services/authToken";
+import { ThemeProvider } from "contexts/ThemeContext";
 import HttpError from "services/HttpError";
 import {
   GlobalStoreContextProvider,
@@ -26,19 +27,20 @@ const LoginState = () => {
 
 const renderLoginForm = () =>
   render(
-    <MemoryRouter>
-      <GlobalStoreContextProvider>
-        <LoginForm />
-        <LoginState />
-      </GlobalStoreContextProvider>
-    </MemoryRouter>
+    <ThemeProvider>
+      <MemoryRouter>
+        <GlobalStoreContextProvider>
+          <LoginForm />
+          <LoginState />
+        </GlobalStoreContextProvider>
+      </MemoryRouter>
+    </ThemeProvider>
   );
 
-const fillPasswords = async (password: string, confirmPassword = password) => {
+const logIn = async (password?: string) => {
   const user = userEvent.setup();
 
-  await user.type(screen.getByLabelText("Password"), password);
-  await user.type(screen.getByLabelText("Confirm password"), confirmPassword);
+  if (password) await user.type(screen.getByLabelText("Password"), password);
   await user.click(screen.getByRole("button", { name: /log in/i }));
 };
 
@@ -52,7 +54,7 @@ describe("LoginForm", () => {
     mockedPost.mockResolvedValue({ token: "server-token" });
     renderLoginForm();
 
-    await fillPasswords("secret-password");
+    await logIn("secret-password");
 
     await waitFor(() =>
       expect(screen.getByTestId("login-state")).toHaveTextContent("true")
@@ -69,7 +71,7 @@ describe("LoginForm", () => {
     );
     renderLoginForm();
 
-    await fillPasswords("wrong");
+    await logIn("wrong");
 
     expect(
       await screen.findByText("password is not correct")
@@ -78,12 +80,21 @@ describe("LoginForm", () => {
     expect(getToken()).toBeNull();
   });
 
-  it("does not call the server when the passwords do not match", async () => {
+  it("asks for a password before calling the server", async () => {
     renderLoginForm();
 
-    await fillPasswords("secret", "other");
+    await logIn();
 
-    expect(await screen.findByText("passwords don't match.")).toBeInTheDocument();
+    expect(
+      await screen.findByText("please enter your password")
+    ).toBeInTheDocument();
     expect(mockedPost).not.toHaveBeenCalled();
+  });
+
+  it("asks only for the password - no confirmation on a login form", () => {
+    renderLoginForm();
+
+    expect(screen.getByLabelText("Password")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Confirm password")).not.toBeInTheDocument();
   });
 });

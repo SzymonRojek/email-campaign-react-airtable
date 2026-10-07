@@ -1,12 +1,15 @@
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
+import { Pencil } from "lucide-react";
 
 import { formatMobileNumber, formattedData } from "helpers";
 import { useSubscriber } from "customHooks/queries";
 import { Error, Loader } from "components/DisplayMessage";
+import { PageHeader } from "components/PageHeader";
 import { StyledContainer } from "components/StyledContainer";
-import { StyledHeading } from "components/StyledHeading";
+import Avatar from "components/Avatar";
 import StatusBadge from "components/StatusBadge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 const DetailsSubscriberPage = () => {
   const { id } = useParams();
@@ -19,7 +22,6 @@ const DetailsSubscriberPage = () => {
   if (isError || !subscriber) return <Error error="Subscriber does not exist!" />;
 
   const { fields, createdTime } = subscriber;
-  const date = fields.date || createdTime;
 
   const details = [
     { label: "E-mail", value: fields.email },
@@ -28,26 +30,39 @@ const DetailsSubscriberPage = () => {
     { label: "Telephone", value: `+44 ${formatMobileNumber(fields.telephone)}` },
     {
       label: "Added",
-      value: `${formattedData.getFormattedDate(date)}, ${formattedData.getFormattedTime(date)}`,
+      value: formattedData.getFormattedDateTime(fields.date || createdTime),
     },
   ];
 
   return (
     <StyledContainer>
-      <StyledHeading label="subscriber details" />
-      <Card className="mx-auto w-full max-w-2xl">
-        <CardHeader className="flex flex-wrap items-center justify-between gap-3">
-          <CardTitle className="text-2xl">
+      <PageHeader
+        title={
+          <span className="flex flex-wrap items-center gap-3">
+            <Avatar name={fields.name} surname={fields.surname} className="size-10 text-sm" />
             {fields.name} {fields.surname}
-          </CardTitle>
-          <StatusBadge status={fields.status} />
-        </CardHeader>
+            <StatusBadge status={fields.status} />
+          </span>
+        }
+        back={{ to: "/subscribers", label: "Subscribers" }}
+        actions={
+          <Button asChild variant="outline">
+            <Link to={`/subscribers/edit/${id}`}>
+              <Pencil />
+              Edit
+            </Link>
+          </Button>
+        }
+      />
+      <Card className="max-w-2xl">
         <CardContent>
-          <dl className="grid gap-4 sm:grid-cols-2">
+          <dl className="grid gap-x-6 gap-y-5 sm:grid-cols-2">
             {details.map(({ label, value }) => (
               <div key={label}>
-                <dt className="text-sm text-muted-foreground">{label}</dt>
-                <dd className="font-medium break-words">{value || "-"}</dd>
+                <dt className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                  {label}
+                </dt>
+                <dd className="mt-1 font-medium break-words">{value || "-"}</dd>
               </div>
             ))}
           </dl>

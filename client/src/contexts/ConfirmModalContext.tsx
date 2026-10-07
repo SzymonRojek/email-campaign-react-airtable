@@ -2,9 +2,10 @@ import { createContext, ReactNode, useContext, useState } from "react";
 import { ConfirmModal } from "Modals";
 
 export interface ConfirmModalText {
-  message?: ReactNode;
-  additionalText?: ReactNode;
-  question?: ReactNode;
+  title?: ReactNode;
+  description?: ReactNode;
+  // the red button, e.g. "Delete"
+  confirmLabel?: string;
 }
 
 export interface ConfirmModalProps {

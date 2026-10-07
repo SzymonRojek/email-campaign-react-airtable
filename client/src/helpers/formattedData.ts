@@ -31,6 +31,10 @@ const getFormattedTime = (time?: string) => {
   return `${part("hour")}:${part("minute")} ${part("dayPeriod").toLowerCase()}`;
 };
 
-const formattedData = { getFormattedDate, getFormattedTime };
+// "2022/09/06, 9:05 pm" - one "Date" column in the lists
+const getFormattedDateTime = (value?: string) =>
+  `${getFormattedDate(value)}, ${getFormattedTime(value)}`;
+
+const formattedData = { getFormattedDate, getFormattedTime, getFormattedDateTime };
 
 export default formattedData;

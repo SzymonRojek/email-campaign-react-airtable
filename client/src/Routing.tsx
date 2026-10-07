@@ -1,40 +1,36 @@
 import { lazy } from "react";
-import { useRoutes } from "react-router";
+import { Navigate, useRoutes } from "react-router";
 
 import "App.css";
-import { SubMainNavigation } from "components/Navigation";
-import { HomePage } from "pages/homePage";
+import { SectionLayout } from "components/Navigation";
+import { DashboardPage } from "pages/dashboard";
 import { NotFoundPage } from "pages/notFoundPage";
 
 // the subscribers and campaigns pages are loaded on demand - the home page does not need them
-// (the Suspense boundary is in SubMainNavigation, so the section tabs stay while a page loads)
+// (the Suspense boundary is in SectionLayout)
 const SubscribersPage = lazy(() => import("pages/subscribers/SubscribersPage"));
-const StatusSubscribersPage = lazy(() => import("pages/subscribers/StatusSubscribersPage"));
 const CreateSubscriberPage = lazy(() => import("pages/subscribers/CreateSubscriberPage"));
 const DetailsSubscriberPage = lazy(() => import("pages/subscribers/DetailsSubscriberPage"));
 const UpdateSubscriberPage = lazy(() => import("pages/subscribers/UpdateSubscriberPage"));
 const EmailsPage = lazy(() => import("pages/campaigns/EmailsPage"));
-const StatusEmailsPage = lazy(() => import("pages/campaigns/StatusEmailsPage"));
 const CreateEmailPage = lazy(() => import("pages/campaigns/CreateEmailPage"));
 const UpdateEmailsPage = lazy(() => import("pages/campaigns/UpdateEmailsPage"));
 
 const Routing = () => {
   const routes = [
-    { path: "/", element: <HomePage /> },
+    { path: "/", element: <DashboardPage /> },
 
     {
       path: "subscribers",
-      element: <SubMainNavigation />,
+      element: <SectionLayout />,
       children: [
         {
           // the list at /subscribers or /campaigns
           index: true,
           element: <SubscribersPage />,
         },
-        {
-          path: "status",
-          element: <StatusSubscribersPage />,
-        },
+        // the status filter is on the list now - old links still work
+        { path: "status", element: <Navigate to="/subscribers" replace /> },
         {
           path: "add",
           element: <CreateSubscriberPage />,
@@ -53,17 +49,14 @@ const Routing = () => {
 
     {
       path: "campaigns",
-      element: <SubMainNavigation />,
+      element: <SectionLayout />,
       children: [
         {
           // the list at /subscribers or /campaigns
           index: true,
           element: <EmailsPage />,
         },
-        {
-          path: "status",
-          element: <StatusEmailsPage />,
-        },
+        { path: "status", element: <Navigate to="/campaigns" replace /> },
         {
           path: "add",
           element: <CreateEmailPage />,

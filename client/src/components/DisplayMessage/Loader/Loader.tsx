@@ -4,13 +4,13 @@ interface LoaderProps {
   title?: string;
 }
 
-const Loader = ({ title = "loading" }: LoaderProps) => (
+const Loader = ({ title = "Loading..." }: LoaderProps) => (
   <div
     role="status"
-    className="flex flex-1 flex-col items-center justify-center gap-4 py-24 text-white"
+    className="flex flex-1 flex-col items-center justify-center gap-3 py-24 text-muted-foreground"
   >
-    <LoaderCircle className="size-10 animate-spin text-brand" aria-hidden />
-    <p className="text-sm tracking-wider uppercase">{title}</p>
+    <LoaderCircle className="size-8 animate-spin text-brand" aria-hidden />
+    <p className="text-sm">{title}</p>
   </div>
 );
 

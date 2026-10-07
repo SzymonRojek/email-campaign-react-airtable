@@ -1,8 +1,10 @@
 export { default as formattedData } from "./formattedData";
 export { default as validationSubscriber } from "./validationSubscriber";
 export { default as validationCampaign } from "./validationCampaign";
-export { default as getLatestAddedItem } from "./getLatestAddedItem";
+export { default as sortByDate } from "./sortByDate";
 export { default as getFilteredDataByStatus } from "./getFilteredDataByStatus";
 export { default as validationLogin } from "./validationLogin";
 export { default as formatMobileNumber } from "./formatMobileNumber";
 export { default as toastMessage } from "./toastMessage";
+export { default as toastSuccess } from "./toastSuccess";
+export { default as pluralize } from "./pluralize";
