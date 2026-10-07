@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import {
   QueryCache,
   QueryClient,
@@ -10,14 +9,15 @@ import { ToastContainer } from "react-toastify";
 
 import { AppContainer } from "./AppContainer";
 import { toastMessage } from "./helpers";
-import { getErrorMessage } from "./services";
+import { getErrorMessage, HttpError } from "./services";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       // no point to retry when the user is logged out
       retry: (failureCount, error) =>
-        (error as AxiosError).response?.status !== 401 && failureCount < 3,
+        !(error instanceof HttpError && error.status === 401) &&
+        failureCount < 3,
     },
   },
   queryCache: new QueryCache({
