@@ -58,6 +58,42 @@ describe("resetDemoData", () => {
     await expect(reset()).resolves.toBe("skipped");
   });
 
+  it("ignores extra Airtable columns like Last Modified", async () => {
+    const subscribers = asRecords(seedSubscribers, "recS");
+    subscribers.forEach((record) => {
+      record.fields["Last Modified"] = "2026-10-07T08:17:52.000Z";
+    });
+    tables(subscribers, asRecords(seedCampaigns, "recC"));
+
+    await expect(reset()).resolves.toBe("skipped");
+  });
+
+  it("resets when a column of the examples was emptied", async () => {
+    const subscribers = asRecords(seedSubscribers, "recS");
+    delete subscribers[0].fields.profession;
+    tables(subscribers, asRecords(seedCampaigns, "recC"));
+
+    await expect(reset()).resolves.toBe("reset");
+  });
+
+  it("creates the new records before it deletes the old ones", async () => {
+    tables([{ id: "recOld", createdTime: daysBefore(0), fields: { name: "Tomek" } }], []);
+
+    await reset();
+
+    const [firstCreate] = airtable.post.mock.invocationCallOrder;
+    const [firstDelete] = airtable.delete.mock.invocationCallOrder;
+    expect(firstCreate).toBeLessThan(firstDelete);
+  });
+
+  it("keeps the old records when Airtable refuses the new ones", async () => {
+    tables([{ id: "recOld", createdTime: daysBefore(0), fields: { name: "Tomek" } }], []);
+    airtable.post.mockRejectedValue(new Error('Unknown field name: "date"'));
+
+    await expect(reset()).rejects.toThrow("Unknown field name");
+    expect(airtable.delete).not.toHaveBeenCalled();
+  });
+
   it("deletes everything and creates the examples again after a change", async () => {
     const subscribers = asRecords(seedSubscribers, "recS");
     subscribers[0].fields.name = "Changed";
