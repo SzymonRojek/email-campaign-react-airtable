@@ -1,11 +1,12 @@
 import type { Mock } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router";
 
 import LoginForm from "./LoginForm";
 import api from "services/api";
 import { getToken } from "services/authToken";
+import HttpError from "services/HttpError";
 import {
   GlobalStoreContextProvider,
   useGlobalStoreContext,
@@ -64,9 +65,7 @@ describe("LoginForm", () => {
 
   it("shows the error from the server for a wrong password", async () => {
     mockedPost.mockRejectedValue(
-      Object.assign(new Error("Request failed with status code 401"), {
-        response: { status: 401, data: { error: "password is not correct" } },
-      })
+      new HttpError(401, { error: "password is not correct" })
     );
     renderLoginForm();
 

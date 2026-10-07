@@ -35,6 +35,16 @@ describe("formattedData", () => {
     expect(formattedData.getFormattedDate(date)).toBe("2022/09/06");
     expect(formattedData.getFormattedTime(date)).toBe("9:05 pm");
   });
+
+  it("formats midnight and noon like moment did", () => {
+    expect(formattedData.getFormattedTime(new Date(2022, 0, 1, 0, 0).toISOString())).toBe("12:00 am");
+    expect(formattedData.getFormattedTime(new Date(2022, 0, 1, 12, 30).toISOString())).toBe("12:30 pm");
+  });
+
+  it("returns 'Invalid date' for a value that is not a date", () => {
+    expect(formattedData.getFormattedDate("not a date")).toBe("Invalid date");
+    expect(formattedData.getFormattedTime("not a date")).toBe("Invalid date");
+  });
 });
 
 describe("getFilteredDataByStatus", () => {

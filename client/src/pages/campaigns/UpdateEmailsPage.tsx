@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 
 import { updateEmail } from "services";
 import { DEMO_EMAIL_NOTICE, sendEmailTo } from "sendEmail";

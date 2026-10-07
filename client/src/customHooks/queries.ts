@@ -1,33 +1,37 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { fetchData, fetchDataById } from "services";
-import { QueryKeyById } from "services/fetchDataById";
 import { Campaign, Subscriber } from "types";
 
 // typed react-query hooks - one place for the query keys and the data types
 
+export const subscribersKey = ["/subscribers"] as [string];
+export const campaignsKey = ["/campaigns"] as [string];
+
 export const useSubscribers = (errorMessage?: string) =>
-  useQuery<Subscriber[], Error, Subscriber[], string>(
-    "/subscribers",
-    fetchData,
-    { meta: { myMessage: errorMessage } }
-  );
+  useQuery({
+    queryKey: subscribersKey,
+    queryFn: fetchData<Subscriber[]>,
+    meta: { myMessage: errorMessage },
+  });
 
 export const useCampaigns = (errorMessage?: string) =>
-  useQuery<Campaign[], Error, Campaign[], string>("/campaigns", fetchData, {
+  useQuery({
+    queryKey: campaignsKey,
+    queryFn: fetchData<Campaign[]>,
     meta: { myMessage: errorMessage },
   });
 
 export const useSubscriber = (id?: string, errorMessage?: string) =>
-  useQuery<Subscriber, Error, Subscriber, QueryKeyById>(
-    ["/subscribers", { id }],
-    fetchDataById,
-    { meta: { myMessage: errorMessage } }
-  );
+  useQuery({
+    queryKey: ["/subscribers", { id }] as [string, { id?: string }],
+    queryFn: fetchDataById<Subscriber>,
+    meta: { myMessage: errorMessage },
+  });
 
 export const useCampaign = (id?: string, errorMessage?: string) =>
-  useQuery<Campaign, Error, Campaign, QueryKeyById>(
-    ["/campaigns", { id }],
-    fetchDataById,
-    { meta: { myMessage: errorMessage } }
-  );
+  useQuery({
+    queryKey: ["/campaigns", { id }] as [string, { id?: string }],
+    queryFn: fetchDataById<Campaign>,
+    meta: { myMessage: errorMessage },
+  });

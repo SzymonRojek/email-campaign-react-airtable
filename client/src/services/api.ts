@@ -1,6 +1,18 @@
-import axios, { AxiosError, AxiosRequestConfig, Method } from "axios";
-
 import { getToken, removeToken, UNAUTHORIZED_EVENT } from "./authToken";
+import HttpError from "./HttpError";
+
+type Method = "get" | "post" | "patch" | "delete";
+
+// JSON when possible - a proxy in front of the server may answer with HTML or nothing
+const parseBody = async (response: Response) => {
+  const text = await response.text();
+
+  try {
+    return text ? JSON.parse(text) : undefined;
+  } catch {
+    return text;
+  }
+};
 
 const request = async <T>(
   endpoint = "",
@@ -9,34 +21,31 @@ const request = async <T>(
 ): Promise<T> => {
   const token = getToken();
 
-  const requestConfig: AxiosRequestConfig = {
-    method,
-    // all server endpoints live under /api - frontend routes keep the same paths
-    baseURL: "/api",
-    url: endpoint,
+  // all server endpoints live under /api - frontend routes keep the same paths
+  const response = await fetch(`/api${endpoint}`, {
+    method: method.toUpperCase(),
     headers: {
       "Content-type": "application/json",
       ...(token && { Authorization: `Bearer ${token}` }),
     },
-    data: method === "post" || method === "patch" ? data : {},
-  };
+    ...((method === "post" || method === "patch") && {
+      body: JSON.stringify(data),
+    }),
+  });
 
-  try {
-    const response = await axios(requestConfig);
+  const body = await parseBody(response);
 
-    return response.data;
-  } catch (error) {
+  if (!response.ok) {
     // token expired or invalid - log out the user (except a failed login attempt)
-    if (
-      (error as AxiosError).response?.status === 401 &&
-      endpoint !== "/auth/login"
-    ) {
+    if (response.status === 401 && endpoint !== "/auth/login") {
       removeToken();
       window.dispatchEvent(new Event(UNAUTHORIZED_EVENT));
     }
 
-    throw error;
+    throw new HttpError(response.status, body);
   }
+
+  return body as T;
 };
 
 const get = <T>(endpoint: string) => request<T>(endpoint);

@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import subscribersRouter from "./routes/subscribersRoutes";
 import campaignsRouter from "./routes/campaignsRoutes";
 import authRouter from "./routes/authRoutes";
+import demoRouter from "./routes/demoRoutes";
 import { requireAuth } from "./middleware/requireAuth";
 
 dotenv.config();
@@ -25,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
 app.use("/api/auth", authRouter);
+app.use("/api/demo", demoRouter);
 app.use("/api/subscribers", requireAuth, subscribersRouter);
 app.use("/api/campaigns", requireAuth, campaignsRouter);
 

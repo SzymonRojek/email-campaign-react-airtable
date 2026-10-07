@@ -1,0 +1,51 @@
+name: Demo data reset
+
+# brings the demo data in Airtable back to the examples (server/demo/seedData.ts);
+# the server skips the reset when nobody changed anything
+on:
+  schedule:
+    # 01:00 UTC = 03:00 in Poland in summer, 02:00 in winter
+    - cron: "0 1 * * *"
+  # "Run workflow" button on the Actions tab
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Reset even when nobody changed the data
+        type: boolean
+        default: false
+
+concurrency:
+  group: demo-reset
+
+jobs:
+  reset:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      # repository variable + secret (Settings -> Secrets and variables -> Actions)
+      APP_URL: ${{ vars.DEMO_APP_URL }}
+      DEMO_RESET_KEY: ${{ secrets.DEMO_RESET_KEY }}
+      FORCE: ${{ inputs.force || false }}
+    steps:
+      - name: Check the settings
+        run: |
+          if [ -z "$APP_URL" ] || [ -z "$DEMO_RESET_KEY" ]; then
+            echo "::error::Set the DEMO_APP_URL variable and the DEMO_RESET_KEY secret"
+            exit 1
+          fi
+
+      # Render free plan: the server sleeps when nobody uses it - wake it up first
+      - name: Wake up the server
+        run: >
+          curl --fail --silent --show-error --max-time 90
+          --retry 5 --retry-delay 20 --retry-all-errors
+          "$APP_URL/api/health"
+
+      - name: Reset the demo data
+        run: |
+          curl --fail-with-body --silent --show-error --max-time 120 \
+            -X POST "$APP_URL/api/demo/reset" \
+            -H "Authorization: Bearer $DEMO_RESET_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"force\": $FORCE}"
+          echo

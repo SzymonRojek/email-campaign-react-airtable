@@ -1,5 +1,7 @@
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { Suspense } from "react";
+import { NavLink, Outlet, useLocation } from "react-router";
 
+import { Loader } from "components/DisplayMessage";
 import { sectionLinks } from "data/navigationLinks";
 import { cn } from "@/lib/utils";
 
@@ -30,7 +32,10 @@ const SubMainNavigation = () => {
           </NavLink>
         ))}
       </nav>
-      <Outlet />
+      {/* the pages are lazy-loaded (see Routing) */}
+      <Suspense fallback={<Loader />}>
+        <Outlet />
+      </Suspense>
     </>
   );
 };

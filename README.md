@@ -14,6 +14,8 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 > Hosted on a free plan - after a break the first load can take up to a minute.
 >
 > **Demo mode:** the password is public, so sending real e-mails is turned off (anybody could send e-mails from my account). "Send email" saves the campaign as `sent` and the app says clearly that no e-mail was really sent.
+>
+> Feel free to add, edit and remove anything - the example data comes back every night.
 
 ## What the app does
 
@@ -26,7 +28,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 - **Full-stack TypeScript** - React client and Express server, strict mode
 - **Secure backend** - the Airtable API key never reaches the browser; login with signed tokens and protection against password guessing
-- **Automated testing** - 37 server and 44 client unit tests, 28 end-to-end tests in a real browser (Playwright)
+- **Automated testing** - 54 server and 48 client unit tests, 28 end-to-end tests in a real browser (Playwright)
 - **CI/CD** - every pull request is checked by GitHub Actions; `dev` deploys to staging and `main` to production automatically
 - **Team-style Git workflow** - feature branches, pull requests, staging before production
 
@@ -34,7 +36,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 | area | technologies |
 | --- | --- |
-| Frontend | React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui (Radix), React Router 6, React Query, React Hook Form + Yup |
+| Frontend | React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui (Radix), React Router 7, TanStack Query, React Hook Form + Yup |
 | Backend | Node.js, Express, TypeScript, Airtable REST API |
 | Testing | Jest, Vitest, React Testing Library, supertest, Playwright, Postman |
 | DevOps | GitHub Actions, Render (`render.yaml` Blueprint) |
@@ -75,6 +77,7 @@ All endpoints are under `/api`:
 | `GET`, `PATCH`, `DELETE` | `/api/subscribers/:id` | token |
 | `GET`, `POST` | `/api/campaigns` | token |
 | `GET`, `PATCH`, `DELETE` | `/api/campaigns/:id` | token |
+| `POST` | `/api/demo/reset` | reset key (only production) |
 
 Airtable uses token-based authentication (`Authorization: Bearer <key>` header) - the key is sent in the header, not as an `api_key` query parameter, which is the less secure option.
 
@@ -82,11 +85,20 @@ Airtable uses token-based authentication (`Authorization: Bearer <key>` header) 
 
 </details>
 
+<details>
+<summary>Daily reset of the demo data</summary>
+
+The login password is public, so visitors change the data. Every night a scheduled GitHub Action (`.github/workflows/demo-reset.yml`) wakes the server up and calls `POST /api/demo/reset` with a secret key. The server deletes all records and creates the examples from `server/demo/seedData.ts` again - their dates are counted back from the day of the reset, so they never look old.
+
+To save Airtable API calls (the free plan has a monthly limit), the server first compares both tables with the examples and **skips the reset when nobody changed anything** - unless the examples are older than 7 days. The endpoint exists only where `DEMO_RESET_KEY` is set (production), and two resets never run at the same time.
+
+</details>
+
 ## Testing
 
 Every pull request runs in GitHub Actions: type checking, unit tests, production build and end-to-end tests.
 
-- **Server unit tests** (Jest + supertest) - login, tokens, protection against password guessing, all endpoints, error handling; Airtable is mocked
+- **Server unit tests** (Jest + supertest) - login, tokens, protection against password guessing, all endpoints, error handling, the demo data reset; Airtable is mocked
 - **Client unit tests** (Vitest + React Testing Library) - helpers, form validation, API client, hooks, login form, choosing recipients
 - **End-to-end tests** (Playwright) - real user flows in a browser on the production build: logging in, adding / editing / removing subscribers, drafting and sending campaigns, navigation. They run against a fake Airtable (`e2e/mock-airtable.ts`), so they never touch real data.
 
@@ -116,6 +128,7 @@ REACT_APP_DB_ID=appXXXXXXXXXXXXXX     # Airtable base id
 REACT_APP_API_KEY=patXXXXXXXXXXXXXX   # Airtable personal access token
 ADMIN_PASSWORD=...                    # password for the login form
 AUTH_SECRET=...                       # random string for signing login tokens
+# DEMO_RESET_KEY=...                  # optional - turns on POST /api/demo/reset (it wipes the base!)
 ```
 
 2. Install and start (two terminals):
@@ -157,8 +170,6 @@ Both services are defined in `render.yaml` (free plan).
 
 ## Roadmap
 
-- React 19 and React Router 7
-- Daily reset of the demo data
 - Sending to a test inbox (Ethereal) with previews of the sent e-mails
 - E-mail templates with personalization (`{{name}}`) and a preview before sending
 - Campaign details and history; duplicate e-mail check, search and CSV import / export of subscribers

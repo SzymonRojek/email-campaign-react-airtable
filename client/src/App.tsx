@@ -1,20 +1,23 @@
-import { AxiosError } from "axios";
-import { QueryClient, QueryCache, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
-import "react-toastify/dist/ReactToastify.min.css";
+import {
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { ToastContainer } from "react-toastify";
 
 import { AppContainer } from "./AppContainer";
 import { toastMessage } from "./helpers";
-import { getErrorMessage } from "./services";
+import { getErrorMessage, HttpError } from "./services";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       // no point to retry when the user is logged out
       retry: (failureCount, error) =>
-        (error as AxiosError).response?.status !== 401 && failureCount < 3,
+        !(error instanceof HttpError && error.status === 401) &&
+        failureCount < 3,
     },
   },
   queryCache: new QueryCache({
@@ -51,7 +54,7 @@ const App = () => {
           pauseOnHover
         />
 
-        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+        <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-right" />
       </QueryClientProvider>
     </div>
   );
