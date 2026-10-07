@@ -3,8 +3,8 @@ import { act, renderHook } from "@testing-library/react";
 import { Subscriber, SubscriberStatus } from "types";
 import { useTableData } from "./useTableData";
 
-// day 1..10 of January, every third one pending
-const items: Subscriber[] = Array.from({ length: 10 }, (_, index) => ({
+// day 1..12 of January, every third one pending
+const items: Subscriber[] = Array.from({ length: 12 }, (_, index) => ({
   id: `day${index + 1}`,
   createdTime: new Date(Date.UTC(2022, 0, index + 1)).toISOString(),
   fields: {
@@ -22,8 +22,10 @@ describe("useTableData", () => {
     const { result } = renderHook(() => useTableData(items));
 
     expect(result.current.status).toBe("all");
-    expect(result.current.rows).toHaveLength(10);
-    expect(ids(result.current.pageData)).toEqual(["day10", "day9", "day8", "day7"]);
+    expect(result.current.rows).toHaveLength(12);
+    // 10 rows per page
+    expect(ids(result.current.pageData)).toHaveLength(10);
+    expect(ids(result.current.pageData).slice(0, 3)).toEqual(["day12", "day11", "day10"]);
   });
 
   it("switches to the oldest first and back to the first page", () => {
@@ -34,7 +36,7 @@ describe("useTableData", () => {
 
     expect(result.current.direction).toBe("oldest");
     expect(result.current.page).toBe(1);
-    expect(ids(result.current.pageData)).toEqual(["day1", "day2", "day3", "day4"]);
+    expect(ids(result.current.pageData).slice(0, 3)).toEqual(["day1", "day2", "day3"]);
   });
 
   it("filters by status from the first page and keeps the order", () => {

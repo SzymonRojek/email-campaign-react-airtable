@@ -1,10 +1,11 @@
 import { Link } from "react-router";
 import { Plus } from "lucide-react";
 
+import { pluralize } from "helpers";
 import { useSubscribers } from "customHooks/queries";
 import { Error, Loader } from "components/DisplayMessage";
+import { PageHeader } from "components/PageHeader";
 import { StyledContainer } from "components/StyledContainer";
-import { StyledHeading } from "components/StyledHeading";
 import SubscribersTable from "components/subscribers/SubscribersTable";
 import { Button } from "@/components/ui/button";
 
@@ -17,20 +18,24 @@ const SubscribersPage = () => {
   if (isError || !subscribers)
     return <Error error="Cannot load the subscribers - please try again later." />;
 
+  const active = subscribers.filter(({ fields }) => fields.status === "active");
+
   return (
     <StyledContainer>
-      <StyledHeading label="all subscribers" />
-      <SubscribersTable
-        title="List"
-        subscribers={subscribers}
-        action={
-          <Button asChild variant="brand" size="sm">
+      <PageHeader
+        title="Subscribers"
+        description={`${pluralize(subscribers.length, "subscriber")} · ${active.length} active`}
+        actions={
+          <Button asChild variant="brand">
             <Link to="/subscribers/add">
               <Plus />
               Add subscriber
             </Link>
           </Button>
         }
+      />
+      <SubscribersTable
+        subscribers={subscribers}
         emptyMessage="There are no subscribers yet - add the first one."
       />
     </StyledContainer>

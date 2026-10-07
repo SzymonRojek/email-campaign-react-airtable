@@ -7,7 +7,7 @@ import { useRecipients } from "customHooks/useRecipients";
 import { toastMessage } from "helpers";
 import { Error, Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
-import { StyledHeading } from "components/StyledHeading";
+import { PageHeader } from "components/PageHeader";
 import CampaignForm from "components/campaigns/CampaignForm";
 import toastCampaignSaved from "components/campaigns/toastCampaignSaved";
 import { CampaignFields, CampaignStatus } from "types";
@@ -32,7 +32,11 @@ const UpdateEmailsPage = () => {
 
   return (
     <StyledContainer>
-      <StyledHeading label="update email" />
+      <PageHeader
+        title="Edit campaign"
+        description="Only drafts can be changed - sending makes the campaign final."
+        back={{ to: "/campaigns", label: "Campaigns" }}
+      />
       {/* the form gets the loaded data as its starting values */}
       <CampaignForm
         defaultValues={{

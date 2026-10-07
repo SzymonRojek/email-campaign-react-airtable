@@ -36,7 +36,6 @@ export const loginByApi = async (page: Page, request: APIRequestContext) => {
 
 export const loginByForm = async (page: Page, password = ADMIN_PASSWORD) => {
   await page.getByLabel("Password", { exact: true }).fill(password);
-  await page.getByLabel("Confirm password", { exact: true }).fill(password);
   await page.getByRole("button", { name: "Log in" }).click();
 };
 
@@ -44,7 +43,7 @@ export const loginByForm = async (page: Page, password = ADMIN_PASSWORD) => {
 export const listRow = (page: Page, text: string) =>
   page.getByRole("table").first().getByRole("row").filter({ hasText: text });
 
-// links of the main navigation in the header (desktop)
+// links of the main navigation in the sidebar (desktop)
 export const mainNavLink = (page: Page, name: string) =>
   page
     .getByRole("navigation", { name: "Main" })

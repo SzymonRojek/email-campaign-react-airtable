@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 
 import { getFilteredDataByStatus, sortByDate } from "helpers";
 import { SortDirection } from "helpers/sortByDate";
-import { PAGE_SIZES } from "components/DataTable/DataTablePagination";
+import { DEFAULT_PAGE_SIZE } from "components/DataTable/DataTablePagination";
 import { ALL_STATUSES } from "components/DataTable/StatusFilter";
 import { AirtableRecord } from "types";
 import { usePaginatedData } from "./usePaginatedData";
@@ -19,7 +19,7 @@ export const useTableData = <
     ALL_STATUSES
   );
   const [direction, setDirection] = useState<SortDirection>("newest");
-  const [pageSize, setPageSizeState] = useState(PAGE_SIZES[0]);
+  const [pageSize, setPageSizeState] = useState(DEFAULT_PAGE_SIZE);
 
   const rows = useMemo(
     () =>

@@ -3,7 +3,7 @@ import { Navigate, useRoutes } from "react-router";
 
 import "App.css";
 import { SectionLayout } from "components/Navigation";
-import { HomePage } from "pages/homePage";
+import { DashboardPage } from "pages/dashboard";
 import { NotFoundPage } from "pages/notFoundPage";
 
 // the subscribers and campaigns pages are loaded on demand - the home page does not need them
@@ -18,7 +18,7 @@ const UpdateEmailsPage = lazy(() => import("pages/campaigns/UpdateEmailsPage"));
 
 const Routing = () => {
   const routes = [
-    { path: "/", element: <HomePage /> },
+    { path: "/", element: <DashboardPage /> },
 
     {
       path: "subscribers",

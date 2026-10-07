@@ -5,15 +5,16 @@ import { Subscriber } from "types";
 // an active subscriber's name opens the details - others have no details page
 const SubscriberName = ({ subscriber }: { subscriber: Subscriber }) => {
   const { id, fields } = subscriber;
+  const fullName = `${fields.name} ${fields.surname}`;
 
-  if (fields.status !== "active") return <>{fields.name}</>;
+  if (fields.status !== "active") return <>{fullName}</>;
 
   return (
     <Link
       to={`/subscribers/details/${id}`}
-      className="underline-offset-4 hover:text-brand hover:underline"
+      className="underline-offset-4 hover:underline"
     >
-      {fields.name}
+      {fullName}
     </Link>
   );
 };

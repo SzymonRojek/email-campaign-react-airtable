@@ -9,7 +9,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export const PAGE_SIZES = [4, 6, 8, 10];
+export const PAGE_SIZES = [5, 10, 20, 50];
+
+// a desktop list shows 10 rows - fewer means clicking through pages for no reason
+export const DEFAULT_PAGE_SIZE = 10;
 
 interface DataTablePaginationProps {
   page: number;

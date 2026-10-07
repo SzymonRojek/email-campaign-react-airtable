@@ -146,7 +146,7 @@ test("shows cards with a sort button on a phone", async ({ page }) => {
 
   // no table on a phone - a list of cards, newest first
   await expect(page.getByRole("table")).toHaveCount(0);
-  const cards = page.getByRole("list", { name: "List" }).getByRole("listitem");
+  const cards = page.getByRole("list", { name: "Subscribers" }).getByRole("listitem");
   await expect(cards).toHaveCount(4);
   await expect(cards.first()).toContainText("Darek");
 
@@ -182,5 +182,5 @@ test("opens the list for the old status address", async ({ page }) => {
   await page.goto("/#/subscribers/status");
 
   await expect(page).toHaveURL(/#\/subscribers$/);
-  await expect(page.getByRole("heading", { name: "all subscribers" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Subscribers" })).toBeVisible();
 });

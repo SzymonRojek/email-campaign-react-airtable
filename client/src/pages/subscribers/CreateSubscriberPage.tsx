@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { createSubscriber } from "services";
 import { toastSuccess } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
-import { StyledHeading } from "components/StyledHeading";
+import { PageHeader } from "components/PageHeader";
 import SubscriberForm from "components/subscribers/SubscriberForm";
 import { SubscriberFields } from "types";
 
@@ -18,7 +18,11 @@ const CreateSubscriberPage = () => {
 
   return (
     <StyledContainer>
-      <StyledHeading label="new subscriber" />
+      <PageHeader
+        title="New subscriber"
+        description="Add a person to your mailing list."
+        back={{ to: "/subscribers", label: "Subscribers" }}
+      />
       <SubscriberForm
         submitLabel="Add subscriber"
         onSubmit={(data) => createSubscriber({ data, callback: handleCreated })}

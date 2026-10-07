@@ -3,32 +3,29 @@ import StatusBadge from "components/StatusBadge";
 import { Subscriber } from "types";
 import { TableCell, TableRow } from "@/components/ui/table";
 import SubscriberActions from "./SubscriberActions";
-import SubscriberName from "./SubscriberName";
+import SubscriberIdentity from "./SubscriberIdentity";
 
 interface SubscriberRowProps {
   subscriber: Subscriber;
-  number: number;
   withActions: boolean;
 }
 
-const SubscriberRow = ({ subscriber, number, withActions }: SubscriberRowProps) => {
+const SubscriberRow = ({ subscriber, withActions }: SubscriberRowProps) => {
   const { fields, createdTime } = subscriber;
 
   return (
     <TableRow>
-      <TableCell className="w-10 text-muted-foreground">{number}</TableCell>
-      <TableCell className="font-medium">
-        <SubscriberName subscriber={subscriber} />
+      <TableCell className="max-w-72 pl-4">
+        <SubscriberIdentity subscriber={subscriber} />
       </TableCell>
-      <TableCell>{fields.surname}</TableCell>
       <TableCell>
         <StatusBadge status={fields.status} />
       </TableCell>
-      <TableCell>
+      <TableCell className="text-muted-foreground">
         {formattedData.getFormattedDateTime(fields.date || createdTime)}
       </TableCell>
       {withActions && (
-        <TableCell>
+        <TableCell className="pr-4">
           <SubscriberActions subscriber={subscriber} />
         </TableCell>
       )}

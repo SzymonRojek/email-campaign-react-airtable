@@ -5,7 +5,7 @@ import { useSubscriber } from "customHooks/queries";
 import { toastSuccess } from "helpers";
 import { Error, Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
-import { StyledHeading } from "components/StyledHeading";
+import { PageHeader } from "components/PageHeader";
 import SubscriberForm from "components/subscribers/SubscriberForm";
 import { SubscriberFields } from "types";
 
@@ -29,7 +29,11 @@ const UpdateSubscriberPage = () => {
 
   return (
     <StyledContainer>
-      <StyledHeading label="update subscriber" />
+      <PageHeader
+        title="Edit subscriber"
+        description={`${fields.name} ${fields.surname}`}
+        back={{ to: "/subscribers", label: "Subscribers" }}
+      />
       {/* the form gets the loaded data as its starting values */}
       <SubscriberForm
         defaultValues={{
