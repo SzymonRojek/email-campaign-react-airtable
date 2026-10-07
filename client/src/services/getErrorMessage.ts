@@ -1,9 +1,11 @@
-import { AxiosError } from "axios";
+import HttpError from "./HttpError";
 
-// readable message from the server response ({ error }) or the axios error
+// readable message from the server response ({ error }) or the error itself
 const getErrorMessage = (error: unknown): string => {
-  const serverError = (error as AxiosError<{ error?: unknown }>).response?.data
-    ?.error;
+  const serverError =
+    error instanceof HttpError
+      ? (error.data as { error?: unknown } | undefined)?.error
+      : undefined;
 
   if (typeof serverError === "string") return serverError;
 
