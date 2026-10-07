@@ -64,12 +64,13 @@ describe("RecipientsDialog", () => {
   it("lists only active subscribers, all checked by default", () => {
     renderPopup();
 
-    const checkboxes = screen.getAllByRole("checkbox");
+    const checkboxes = screen.getAllByRole("checkbox", { name: /Nowak/ });
 
     expect(checkboxes).toHaveLength(2);
     checkboxes.forEach((checkbox) => expect(checkbox).toBeChecked());
+    expect(screen.getByRole("checkbox", { name: "Select all" })).toBeChecked();
     expect(screen.queryByText(/Bartek/)).not.toBeInTheDocument();
-    expect(screen.getByText("Checked subscribers: 2")).toBeInTheDocument();
+    expect(screen.getByText("2 of 2 selected")).toBeInTheDocument();
     expect(screen.getByTestId("selected")).toHaveTextContent("all");
   });
 
@@ -79,20 +80,49 @@ describe("RecipientsDialog", () => {
     await user.click(screen.getByLabelText(/Anna/));
 
     expect(screen.getByTestId("selected")).toHaveTextContent("3");
-    expect(screen.getByText("Checked subscribers: 1")).toBeInTheDocument();
+    expect(screen.getByText("1 of 2 selected")).toBeInTheDocument();
+    // some selected - "select all" shows a minus
+    expect(screen.getByRole("checkbox", { name: "Select all" })).toHaveAttribute(
+      "data-state",
+      "indeterminate"
+    );
   });
 
-  it("'uncheck all' selects nobody instead of everybody", async () => {
+  it("'select all' unchecks everybody, then checks everybody again", async () => {
     const { user } = renderPopup();
+    const selectAll = screen.getByRole("checkbox", { name: "Select all" });
 
-    await user.click(screen.getByRole("button", { name: "Uncheck all" }));
+    await user.click(selectAll);
 
     expect(screen.getByTestId("selected")).toHaveTextContent("none");
-    expect(screen.getByText("Please choose subscribers")).toBeInTheDocument();
+    expect(screen.getByText("Choose at least one subscriber")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Check all" }));
+    await user.click(selectAll);
 
     expect(screen.getByTestId("selected")).toHaveTextContent("1,3");
+  });
+
+  it("'select all' with some selected checks everybody", async () => {
+    const { user } = renderPopup();
+
+    await user.click(screen.getByLabelText(/Anna/));
+    await user.click(screen.getByRole("checkbox", { name: "Select all" }));
+
+    expect(screen.getByTestId("selected")).toHaveTextContent("1,3");
+  });
+
+  it("Cancel resets the selection, Done keeps it", async () => {
+    const { close, user } = renderPopup();
+
+    await user.click(screen.getByLabelText(/Anna/));
+    await user.click(screen.getByRole("button", { name: "Done" }));
+
+    expect(close).toHaveBeenCalledTimes(1);
+    expect(screen.getByTestId("selected")).toHaveTextContent("3");
+
+    await user.click(screen.getByRole("button", { name: "Cancel" }));
+
+    expect(screen.getByTestId("selected")).toHaveTextContent("all");
   });
 
   it("closing with X resets the selection to all active subscribers", async () => {

@@ -11,30 +11,34 @@ test("navigates with the main tabs", async ({ page }) => {
   await page.goto("/");
 
   await mainNavLink(page, "Subscribers").click();
-  await expect(page.getByRole("heading", { name: "all subscribers" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Subscribers" })).toBeVisible();
 
   await mainNavLink(page, "Campaigns").click();
-  await expect(page.getByRole("heading", { name: "all emails" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Campaigns" })).toBeVisible();
 
-  await mainNavLink(page, "Home").click();
-  await expect(page.getByRole("heading", { name: /Hello/ })).toBeVisible();
+  await mainNavLink(page, "Dashboard").click();
+  await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
 });
 
 test("keeps the page after a reload", async ({ page }) => {
   await page.goto("/#/campaigns/add");
   await page.reload();
 
-  await expect(page.getByRole("heading", { name: "new email" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "New campaign" })).toBeVisible();
 });
 
 test("opens the add forms from the lists", async ({ page }) => {
   await page.goto("/#/subscribers");
-  await page.getByRole("link", { name: "Add subscriber" }).click();
-  await expect(page.getByRole("heading", { name: "new subscriber" })).toBeVisible();
+  await page.getByRole("main").getByRole("link", { name: "Add subscriber" }).click();
+  await expect(page.getByRole("heading", { name: "New subscriber" })).toBeVisible();
+
+  // back to the list from the form
+  await page.getByRole("main").getByRole("link", { name: "Subscribers" }).click();
+  await expect(page.getByRole("heading", { name: "Subscribers" })).toBeVisible();
 
   await page.goto("/#/campaigns");
-  await page.getByRole("link", { name: "Add campaign" }).click();
-  await expect(page.getByRole("heading", { name: "new email" })).toBeVisible();
+  await page.getByRole("main").getByRole("link", { name: "New campaign" }).click();
+  await expect(page.getByRole("heading", { name: "New campaign" })).toBeVisible();
 });
 
 test("shows the not found page for an unknown address", async ({ page }) => {
@@ -58,8 +62,39 @@ test("navigates with the mobile menu", async ({ page }) => {
   await page.getByRole("button", { name: "open menu" }).click();
   await page
     .getByRole("navigation", { name: "Mobile" })
-    .getByRole("link", { name: "Add subscriber" })
+    .getByRole("link", { name: "Subscribers" })
     .click();
 
-  await expect(page.getByRole("heading", { name: "new subscriber" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Subscribers" })).toBeVisible();
+  // the menu closes after choosing a page
+  await expect(page.getByRole("navigation", { name: "Mobile" })).toHaveCount(0);
+});
+
+test("shows the numbers on the dashboard", async ({ page }) => {
+  await page.goto("/");
+
+  const stat = (label: string) =>
+    page.getByRole("main").getByRole("link").filter({ hasText: label });
+
+  // 4 subscribers (Anna, Celina active), 1 of 2 campaigns sent
+  await expect(stat("Active subscribers")).toContainText("2");
+  await expect(stat("Campaigns sent")).toContainText("1");
+  await expect(stat("Campaigns sent")).toContainText("1 draft waiting");
+  await expect(
+    page.getByRole("list", { name: "Newest subscribers" }).getByRole("listitem").first()
+  ).toContainText("Darek");
+});
+
+test("switches to dark mode and keeps it after a reload", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("radio", { name: "Dark" }).click();
+  await expect(page.locator("html")).toHaveClass(/dark/);
+
+  await page.reload();
+  await expect(page.locator("html")).toHaveClass(/dark/);
+  await expect(page.getByRole("radio", { name: "Dark" })).toHaveAttribute(
+    "aria-checked",
+    "true"
+  );
 });

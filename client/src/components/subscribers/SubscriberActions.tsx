@@ -16,7 +16,11 @@ const noDetailsReason = (name: string, status: string) =>
 const SubscriberActions = ({ subscriber }: { subscriber: Subscriber }) => {
   const navigate = useNavigate();
   const { id, fields } = subscriber;
-  const { handleConfirmModalData } = useRemoveItem("subscribers", fields.name, id);
+  const { handleConfirmModalData } = useRemoveItem(
+    "subscribers",
+    `${fields.name} ${fields.surname}`,
+    id
+  );
   const hasDetails = fields.status === "active";
 
   return (

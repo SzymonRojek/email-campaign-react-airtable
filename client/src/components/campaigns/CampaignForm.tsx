@@ -43,7 +43,7 @@ const CampaignForm = ({
     handleSubmit(action);
 
   return (
-    <Card className="mx-auto w-full max-w-2xl">
+    <Card className="w-full max-w-2xl">
       <CardContent>
         <form noValidate className="grid gap-5" onSubmit={(e) => e.preventDefault()}>
           <p className="text-sm text-muted-foreground">All fields are required.</p>

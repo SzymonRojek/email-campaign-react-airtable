@@ -13,9 +13,11 @@ const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
         <p className="font-medium">{fields.title}</p>
         <StatusBadge status={fields.status} />
       </div>
-      <p className="text-sm text-muted-foreground">{fields.description}</p>
+      <p className="line-clamp-2 text-sm text-muted-foreground">
+        {fields.description}
+      </p>
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
           {formattedData.getFormattedDateTime(fields.date || createdTime)}
         </p>
         <CampaignActions campaign={campaign} />

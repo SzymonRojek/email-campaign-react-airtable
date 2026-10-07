@@ -3,11 +3,11 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { ToastContainer } from "react-toastify";
 
 import { AppContainer } from "./AppContainer";
+import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import { toastMessage } from "./helpers";
 import { getErrorMessage, HttpError } from "./services";
 
@@ -39,24 +39,30 @@ const App = () => {
   },
   */
   return (
-    <div className="flex min-h-screen flex-col">
+    <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <AppContainer />
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-
-        <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-right" />
+        <ThemedToastContainer />
       </QueryClientProvider>
-    </div>
+    </ThemeProvider>
+  );
+};
+
+// the toasts follow the light / dark theme
+const ThemedToastContainer = () => {
+  const { resolvedTheme } = useTheme();
+
+  return (
+    <ToastContainer
+      position="top-right"
+      autoClose={5000}
+      newestOnTop={false}
+      closeOnClick
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme={resolvedTheme}
+    />
   );
 };
 

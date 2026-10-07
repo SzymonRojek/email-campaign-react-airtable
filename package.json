@@ -1,5 +1,5 @@
 {
-  "name": "email-campaign-react-airtable",
+  "name": "email-campaign-dashboard",
   "version": "1.0.0",
   "description": "",
   "main": "server/dist/index.js",

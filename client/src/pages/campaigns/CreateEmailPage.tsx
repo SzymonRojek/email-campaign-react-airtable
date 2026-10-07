@@ -5,7 +5,7 @@ import { sendEmailTo } from "sendEmail";
 import { useRecipients } from "customHooks/useRecipients";
 import { toastMessage } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
-import { StyledHeading } from "components/StyledHeading";
+import { PageHeader } from "components/PageHeader";
 import CampaignForm from "components/campaigns/CampaignForm";
 import toastCampaignSaved from "components/campaigns/toastCampaignSaved";
 import { CampaignFields, CampaignStatus } from "types";
@@ -22,7 +22,11 @@ const CreateEmailPage = () => {
 
   return (
     <StyledContainer>
-      <StyledHeading label="new email" />
+      <PageHeader
+        title="New campaign"
+        description="Write a message, then save it as a draft or send it."
+        back={{ to: "/campaigns", label: "Campaigns" }}
+      />
       <CampaignForm
         onDraft={(data) =>
           createEmail({ data, status: "draft", callback: handleSaved })

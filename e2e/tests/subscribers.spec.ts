@@ -85,8 +85,11 @@ test("removes a subscriber after confirmation", async ({ page, request }) => {
   await page.goto("/#/subscribers");
 
   await listRow(page, "Bartek").getByRole("button", { name: "delete" }).click();
-  await expect(page.getByText("Are you sure you want to remove")).toBeVisible();
-  await page.getByRole("button", { name: "YES" }).click();
+  const dialog = page.getByRole("alertdialog");
+  await expect(dialog).toContainText("Delete subscriber?");
+  // the full name, so it is clear who goes
+  await expect(dialog).toContainText("Bartek Kowalski will be removed permanently");
+  await dialog.getByRole("button", { name: "Delete", exact: true }).click();
 
   await expect(listRow(page, "Bartek")).toHaveCount(0);
   await expect
@@ -98,7 +101,7 @@ test("keeps the subscriber when the removal is cancelled", async ({ page }) => {
   await page.goto("/#/subscribers");
 
   await listRow(page, "Bartek").getByRole("button", { name: "delete" }).click();
-  await page.getByRole("button", { name: "NO" }).click();
+  await page.getByRole("button", { name: "Cancel" }).click();
 
   await expect(listRow(page, "Bartek")).toHaveCount(1);
 });
@@ -146,7 +149,7 @@ test("shows cards with a sort button on a phone", async ({ page }) => {
 
   // no table on a phone - a list of cards, newest first
   await expect(page.getByRole("table")).toHaveCount(0);
-  const cards = page.getByRole("list", { name: "List" }).getByRole("listitem");
+  const cards = page.getByRole("list", { name: "Subscribers" }).getByRole("listitem");
   await expect(cards).toHaveCount(4);
   await expect(cards.first()).toContainText("Darek");
 
@@ -182,5 +185,5 @@ test("opens the list for the old status address", async ({ page }) => {
   await page.goto("/#/subscribers/status");
 
   await expect(page).toHaveURL(/#\/subscribers$/);
-  await expect(page.getByRole("heading", { name: "all subscribers" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Subscribers" })).toBeVisible();
 });

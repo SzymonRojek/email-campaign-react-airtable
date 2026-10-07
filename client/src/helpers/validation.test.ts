@@ -64,21 +64,13 @@ describe("validationCampaign", () => {
 });
 
 describe("validationLogin", () => {
-  it("requires matching passwords", async () => {
-    expect(
-      await errorsOf(validationLogin, {
-        password: "secret",
-        confirmPassword: "other",
-      })
-    ).toEqual(["passwords don't match."]);
+  it("requires a password", async () => {
+    expect(await errorsOf(validationLogin, { password: "" })).toEqual([
+      "please enter your password",
+    ]);
   });
 
   it("does not check the password itself (the server does)", async () => {
-    expect(
-      await errorsOf(validationLogin, {
-        password: "anything",
-        confirmPassword: "anything",
-      })
-    ).toEqual([]);
+    expect(await errorsOf(validationLogin, { password: "anything" })).toEqual([]);
   });
 });

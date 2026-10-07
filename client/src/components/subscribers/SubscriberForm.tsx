@@ -47,7 +47,7 @@ const SubscriberForm = ({
   const submit = handleSubmit(onSubmit);
 
   return (
-    <Card className="mx-auto w-full max-w-2xl">
+    <Card className="w-full max-w-2xl">
       <CardContent>
         <form onSubmit={submit} noValidate className="grid gap-5">
           <p className="text-sm text-muted-foreground">All fields are required.</p>
