@@ -28,7 +28,7 @@ const UpdateEmailsPage = () => {
 
   if (isLoading) return <Loader />;
   if (isError || !campaign)
-    return <Error error="Email Campaign does not exist!" />;
+    return <Error error="Campaign does not exist!" />;
 
   return (
     <StyledContainer>

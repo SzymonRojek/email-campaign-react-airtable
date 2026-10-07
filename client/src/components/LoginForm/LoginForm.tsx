@@ -50,7 +50,7 @@ const LoginForm = () => {
 
       <div className="flex flex-1 flex-col items-center justify-center px-4 py-16">
         <LogoMark className="mb-6 size-12 rounded-xl" />
-        <h1 className="text-2xl font-semibold tracking-tight">Email Campaign</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Email Campaign Dashboard</h1>
         <p className="mt-1 mb-8 text-sm text-muted-foreground">
           Sign in to manage subscribers and send campaigns.
         </p>
@@ -92,7 +92,7 @@ const LoginForm = () => {
       <footer className="flex items-center justify-center gap-3 pb-6 text-xs text-muted-foreground">
         © {new Date().getFullYear()} Szymon Rojek
         <a
-          href="https://github.com/SzymonRojek/email-campaign-react-airtable"
+          href="https://github.com/SzymonRojek/email-campaign-dashboard"
           target="_blank"
           rel="noreferrer"
           aria-label="Source code on GitHub"

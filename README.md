@@ -1,6 +1,6 @@
-# Email Campaign App
+# Email Campaign Dashboard
 
-[![CI](https://github.com/SzymonRojek/email-campaign-react-airtable/actions/workflows/ci.yml/badge.svg)](https://github.com/SzymonRojek/email-campaign-react-airtable/actions/workflows/ci.yml)
+[![CI](https://github.com/SzymonRojek/email-campaign-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/SzymonRojek/email-campaign-dashboard/actions/workflows/ci.yml)
 
 A full-stack web app for running e-mail campaigns: manage subscribers, write campaigns and send them to the chosen active subscribers. Built with **React, TypeScript and Express**, data stored in **Airtable**, covered by **automated tests** and deployed automatically with **CI/CD**.
 

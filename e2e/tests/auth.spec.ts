@@ -16,7 +16,7 @@ test.describe("login", () => {
     await page.goto("/");
 
     await expect(
-      page.getByRole("heading", { name: "Email Campaign" })
+      page.getByRole("heading", { name: "Email Campaign Dashboard" })
     ).toBeVisible();
     await expect(page.getByText("the password is", { exact: false })).toContainText(
       "admin"
@@ -30,7 +30,7 @@ test.describe("login", () => {
 
     await expect(page.getByText("password is not correct")).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "Email Campaign" })
+      page.getByRole("heading", { name: "Email Campaign Dashboard" })
     ).toBeVisible();
   });
 
@@ -55,7 +55,7 @@ test.describe("login", () => {
     await page.getByRole("button", { name: "Log out" }).click();
 
     await expect(
-      page.getByRole("heading", { name: "Email Campaign" })
+      page.getByRole("heading", { name: "Email Campaign Dashboard" })
     ).toBeVisible({ timeout: 10_000 });
   });
 
@@ -72,7 +72,7 @@ test.describe("login", () => {
     await mainNavLink(page, "Campaigns").click();
 
     await expect(
-      page.getByRole("heading", { name: "Email Campaign" })
+      page.getByRole("heading", { name: "Email Campaign Dashboard" })
     ).toBeVisible();
   });
 });

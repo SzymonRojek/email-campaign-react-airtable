@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { Link } from "react-router";
 import { Menu } from "lucide-react";
 
@@ -11,23 +11,27 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import LogoMark from "components/LogoMark";
+import QueryDevtoolsDrawer from "components/QueryDevtoolsDrawer";
 import SidebarContent from "./SidebarContent";
 
 // the logged-in layout: a sidebar from tablets up, a top bar with a menu on a phone
 const AppShell = ({ children }: { children: ReactNode }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDevtoolsOpen, setIsDevtoolsOpen] = useState(false);
+  const toggleDevtools = useCallback(() => setIsDevtoolsOpen((open) => !open), []);
+  const closeDevtools = useCallback(() => setIsDevtoolsOpen(false), []);
 
   return (
     <div className="min-h-screen md:grid md:grid-cols-[15rem_1fr]">
       <aside className="sticky top-0 hidden h-screen border-r bg-sidebar text-sidebar-foreground md:block">
-        <SidebarContent navLabel="Main" />
+        <SidebarContent navLabel="Main" onOpenDevtools={toggleDevtools} />
       </aside>
 
       <div className="flex min-w-0 flex-col">
         <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b bg-background/80 px-4 backdrop-blur md:hidden">
           <Link to="/" className="flex items-center gap-2">
             <LogoMark className="size-7" />
-            <span className="font-semibold tracking-tight">Email Campaign</span>
+            <span className="font-semibold tracking-tight">Email Campaign Dashboard</span>
           </Link>
 
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
@@ -47,6 +51,7 @@ const AppShell = ({ children }: { children: ReactNode }) => {
               <SidebarContent
                 navLabel="Mobile"
                 onNavigate={() => setIsMenuOpen(false)}
+                onOpenDevtools={toggleDevtools}
               />
             </SheetContent>
           </Sheet>
@@ -54,6 +59,11 @@ const AppShell = ({ children }: { children: ReactNode }) => {
 
         <main className="flex flex-1 flex-col">{children}</main>
       </div>
+
+      {/* development only - not in the production build */}
+      {import.meta.env.DEV && (
+        <QueryDevtoolsDrawer isOpen={isDevtoolsOpen} onClose={closeDevtools} />
+      )}
     </div>
   );
 };

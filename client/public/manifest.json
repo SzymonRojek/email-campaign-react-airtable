@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Email Campaigns",
+  "short_name": "Campaigns",
+  "name": "Email Campaign Dashboard",
   "icons": [
     {
       "src": "icon192.png",

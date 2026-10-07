@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router";
 import { BsGithub } from "react-icons/bs";
-import { LogOut, Plus } from "lucide-react";
+import { DatabaseZap, LogOut, Plus } from "lucide-react";
 
 import { mainLinks } from "data/navigationLinks";
 import ThemeToggle from "components/ThemeToggle";
@@ -14,10 +14,16 @@ interface SidebarContentProps {
   navLabel: string;
   // e.g. close the phone menu after choosing a page
   onNavigate?: () => void;
+  // TanStack Query devtools - the button is shown only in development
+  onOpenDevtools?: () => void;
 }
 
 // logo, pages, theme and log out - the desktop sidebar and the phone menu
-const SidebarContent = ({ navLabel, onNavigate }: SidebarContentProps) => {
+const SidebarContent = ({
+  navLabel,
+  onNavigate,
+  onOpenDevtools,
+}: SidebarContentProps) => {
   const logOut = useLogOut();
 
   return (
@@ -28,7 +34,10 @@ const SidebarContent = ({ navLabel, onNavigate }: SidebarContentProps) => {
         className="flex items-center gap-2.5 rounded-md px-2 py-1"
       >
         <LogoMark />
-        <span className="font-semibold tracking-tight">Email Campaign</span>
+        <span className="leading-tight">
+          <span className="block font-semibold tracking-tight">Email Campaign</span>
+          <span className="block text-xs text-muted-foreground">Dashboard</span>
+        </span>
       </Link>
 
       <Button asChild variant="brand" className="h-9 justify-start">
@@ -71,6 +80,23 @@ const SidebarContent = ({ navLabel, onNavigate }: SidebarContentProps) => {
           <ThemeToggle />
         </div>
 
+        {import.meta.env.DEV && onOpenDevtools && (
+          <Button
+            variant="ghost"
+            onClick={() => {
+              onNavigate?.();
+              onOpenDevtools();
+            }}
+            className="justify-start text-muted-foreground"
+          >
+            <DatabaseZap />
+            Query devtools
+            <span className="ml-auto rounded border px-1 text-[10px] tracking-wide uppercase">
+              dev
+            </span>
+          </Button>
+        )}
+
         <Button
           variant="ghost"
           onClick={() => {
@@ -86,7 +112,7 @@ const SidebarContent = ({ navLabel, onNavigate }: SidebarContentProps) => {
         <div className="flex items-center justify-between border-t px-1 pt-3 text-xs text-muted-foreground">
           <span>© {new Date().getFullYear()} Szymon Rojek</span>
           <a
-            href="https://github.com/SzymonRojek/email-campaign-react-airtable"
+            href="https://github.com/SzymonRojek/email-campaign-dashboard"
             target="_blank"
             rel="noreferrer"
             aria-label="Source code on GitHub"

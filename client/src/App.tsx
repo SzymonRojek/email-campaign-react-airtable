@@ -3,7 +3,6 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { ToastContainer } from "react-toastify";
 
@@ -44,8 +43,6 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <AppContainer />
         <ThemedToastContainer />
-
-        <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-right" />
       </QueryClientProvider>
     </ThemeProvider>
   );

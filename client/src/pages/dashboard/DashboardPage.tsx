@@ -200,7 +200,7 @@ const DashboardPage = () => {
           <div className="flex flex-wrap gap-2">
             <Button asChild variant="outline" size="sm">
               <a
-                href="https://github.com/SzymonRojek/email-campaign-react-airtable"
+                href="https://github.com/SzymonRojek/email-campaign-dashboard"
                 target="_blank"
                 rel="noreferrer"
               >
