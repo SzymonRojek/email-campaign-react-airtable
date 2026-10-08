@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router";
 import { BsGithub } from "react-icons/bs";
-import { DatabaseZap, LogOut, Plus } from "lucide-react";
+import { LogOut, Plus } from "lucide-react";
 
 import { mainLinks, NavigationLink, projectLinks } from "data/navigationLinks";
 import ThemeToggle from "components/ThemeToggle";
@@ -41,15 +41,12 @@ interface SidebarContentProps {
   navLabel: string;
   // e.g. close the phone menu after choosing a page
   onNavigate?: () => void;
-  // TanStack Query devtools - the button is shown only in development
-  onOpenDevtools?: () => void;
 }
 
 // logo, pages, theme and log out - the desktop sidebar and the phone menu
 const SidebarContent = ({
   navLabel,
   onNavigate,
-  onOpenDevtools,
 }: SidebarContentProps) => {
   const logOut = useLogOut();
 
@@ -89,23 +86,6 @@ const SidebarContent = ({
           <span className="text-xs text-muted-foreground">Theme</span>
           <ThemeToggle />
         </div>
-
-        {import.meta.env.DEV && onOpenDevtools && (
-          <Button
-            variant="ghost"
-            onClick={() => {
-              onNavigate?.();
-              onOpenDevtools();
-            }}
-            className="justify-start text-muted-foreground"
-          >
-            <DatabaseZap />
-            Query devtools
-            <span className="ml-auto rounded border px-1 text-[10px] tracking-wide uppercase">
-              dev
-            </span>
-          </Button>
-        )}
 
         <Button
           variant="ghost"
