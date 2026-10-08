@@ -37,7 +37,10 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 **Campaigns**
 - write a campaign, save it as a draft or send it - to all active subscribers or only the chosen ones, after a confirmation with the number of recipients
-- a sent campaign shows who got it, and every e-mail opens exactly as its recipient got it ("Hello Anna", the message, the footer)
+- personalization: `{{name}}` and `{{surname}}` in the title and the message become each recipient's own (buttons insert them; a typo like `{{nmae}}` is pointed out in the form and refused by the server)
+- simple formatting: `**bold**`, `*italic*`, an empty line starts a paragraph, links work as they are (up to 500 characters)
+- a preview before sending, exactly as the chosen recipient will get it - built by the same server template as the e-mails themselves
+- a sent campaign shows who got it, and every e-mail opens exactly as its recipient got it, the way an inbox shows it
 - every e-mail has an **unsubscribe link** - a public page (no login) with a link that can not be guessed; the subscriber becomes `unsubscribed` and gets no more campaigns
 - edit drafts (click the row), duplicate any campaign as a new draft, search, filter, sort
 
@@ -51,7 +54,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 - **Full-stack TypeScript** - React client and Express server, strict mode
 - **Secure backend** - the Airtable token never reaches the browser; login with signed tokens and protection against password guessing
-- **Automated testing** - 102 server and 83 client unit tests, 54 end-to-end tests in a real browser (Playwright)
+- **Automated testing** - 111 server and 85 client unit tests, 56 end-to-end tests in a real browser (Playwright)
 - **CI/CD** - every pull request is checked by GitHub Actions; `dev` deploys to staging and `main` to production automatically
 - **Team-style Git workflow** - feature branches, pull requests, staging before production
 
@@ -91,6 +94,7 @@ All endpoints are under `/api`:
 | `GET`, `PATCH`, `DELETE` | `/api/subscribers/:id` | token |
 | `GET`, `POST` | `/api/campaigns` | token |
 | `GET`, `PATCH`, `DELETE` | `/api/campaigns/:id` | token |
+| `POST` | `/api/campaigns/preview` | token |
 | `POST` | `/api/campaigns/:id/send` | token |
 | `GET` | `/api/campaigns/:id/emails` | token |
 | `GET` | `/api/emails/:id/preview` | token |
@@ -194,7 +198,6 @@ Both services are defined in `render.yaml` (free plan).
 
 ## Roadmap
 
-- E-mail templates with personalization (`{{name}}`) and a preview before sending
 - A CSV export of the recipients of a sent campaign; the campaigns a subscriber got
 
 ## History

@@ -1,17 +1,43 @@
-// one campaign e-mail for one subscriber - the same HTML for "sending" and for the preview
+// one campaign e-mail for one subscriber - the same HTML for "sending" and for the previews
 
 export interface EmailInput {
   campaign: { title?: string; description?: string };
-  recipient: { name?: string; email?: string };
+  recipient: { name?: string; surname?: string; email?: string };
   unsubscribeUrl: string;
 }
 
 export interface BuiltEmail {
+  from: { name: string; address: string };
   to: string;
   subject: string;
   html: string;
   text: string;
 }
+
+export const SENDER = { name: "Email Campaign Dashboard", address: "campaigns@example.com" };
+
+// {{name}} and {{surname}} in the title and the text become the recipient's own data
+export const PLACEHOLDERS = ["name", "surname"] as const;
+type Placeholder = (typeof PLACEHOLDERS)[number];
+
+const placeholderPattern = /\{\{\s*([^{}]*?)\s*\}\}/g;
+
+const isPlaceholder = (key: string): key is Placeholder =>
+  (PLACEHOLDERS as readonly string[]).includes(key);
+
+// e.g. a typo: {{nmae}} - such a campaign is not sent
+export const unknownPlaceholders = (...texts: (string | undefined)[]) => [
+  ...new Set(
+    texts.flatMap((text = "") =>
+      [...text.matchAll(placeholderPattern)].map(([, key]) => key).filter((key) => !isPlaceholder(key))
+    )
+  ),
+];
+
+const fillIn = (text: string, values: Record<Placeholder, string>, encode = (value: string) => value) =>
+  text.replace(placeholderPattern, (match, key: string) =>
+    isPlaceholder(key) ? encode(values[key]) : match
+  );
 
 // the campaign text comes from the users - it must not become HTML
 const escapeHtml = (value = "") =>
@@ -22,49 +48,61 @@ const escapeHtml = (value = "") =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 
-// e-mail programs ignore <style> sheets - every style is inline
+// the simple formatting of the text (already escaped): **bold**, *italic*, links as they are
+const format = (escaped: string) =>
+  escaped
+    .replace(/\*\*(?=\S)(.+?)(?<=\S)\*\*/g, "<strong>$1</strong>")
+    .replace(/(^|[^*])\*(?=[^\s*])([^*\n]+?)(?<=\S)\*(?!\*)/g, "$1<em>$2</em>")
+    .replace(
+      /\bhttps?:\/\/[^\s<]*[^\s<.,;:!?)]/g,
+      (url) => `<a href="${url}" style="color:#1a73e8">${url}</a>`
+    );
+
+// an empty line starts a new paragraph, a single line break stays a line break
+const paragraphs = (escaped: string) =>
+  escaped
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+    .map((paragraph) => `<p style="margin:0 0 16px">${paragraph.replace(/\n/g, "<br>")}</p>`)
+    .join("\n      ");
+
+// plain like a personal message - e-mail programs ignore <style> sheets, so styles are inline
 export const buildEmail = ({ campaign, recipient, unsubscribeUrl }: EmailInput): BuiltEmail => {
-  const name = recipient.name?.trim() || "there";
-  const subject = campaign.title?.trim() || "(no subject)";
-  const body = escapeHtml(campaign.description).replace(/\n/g, "<br>");
+  const values = { name: recipient.name?.trim() ?? "", surname: recipient.surname?.trim() ?? "" };
+  const greeting = `Hello ${values.name || "there"},`;
+  const subject = fillIn(campaign.title?.trim() || "(no subject)", values);
+  const description = (campaign.description ?? "").replace(/\r\n/g, "\n");
+  // placeholders are filled in last, so a name never becomes formatting or HTML
+  const body = fillIn(paragraphs(format(escapeHtml(description))), values, escapeHtml);
 
   const html = `<!doctype html>
 <html lang="en">
-  <body style="margin:0;padding:24px;background:#f4f6f8;font-family:Arial,Helvetica,sans-serif;color:#142f43">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden">
-      <tr>
-        <td style="background:#142f43;color:#ffa500;padding:16px 24px;font-weight:bold;font-size:15px">Email Campaign Dashboard</td>
-      </tr>
-      <tr>
-        <td style="padding:28px 24px;font-size:16px;line-height:1.6">
-          <h1 style="margin:0 0 16px;font-size:22px">${escapeHtml(subject)}</h1>
-          <p style="margin:0 0 16px">Hello ${escapeHtml(name)},</p>
-          <p style="margin:0 0 24px">${body}</p>
-          <p style="margin:0">Best wishes,<br>Email Campaign Dashboard</p>
-        </td>
-      </tr>
-      <tr>
-        <td style="padding:16px 24px;border-top:1px solid #e5e7eb;font-size:12px;color:#6b7280">
-          You get this e-mail because you subscribed to our campaigns.
-          <a href="${escapeHtml(unsubscribeUrl)}" style="color:#6b7280">Unsubscribe</a>
-        </td>
-      </tr>
-    </table>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${escapeHtml(subject)}</title>
+  </head>
+  <body style="margin:0;padding:24px;background:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#202124">
+    <div style="max-width:600px">
+      <p style="margin:0 0 16px">${escapeHtml(greeting)}</p>
+      ${body}
+      <p style="margin:32px 0 0;padding-top:16px;border-top:1px solid #e8eaed;font-size:12px;line-height:1.5;color:#5f6368">
+        You get this e-mail because you subscribed to our campaigns.
+        <a href="${escapeHtml(unsubscribeUrl)}" style="color:#5f6368">Unsubscribe</a>
+      </p>
+    </div>
   </body>
 </html>`;
 
   const text = [
-    subject,
+    greeting,
     "",
-    `Hello ${name},`,
+    fillIn(description.trim(), values).replace(/\*\*(?=\S)(.+?)(?<=\S)\*\*/g, "$1"),
     "",
-    campaign.description ?? "",
-    "",
-    "Best wishes,",
-    "Email Campaign Dashboard",
-    "",
+    "--",
     `Unsubscribe: ${unsubscribeUrl}`,
   ].join("\n");
 
-  return { to: recipient.email ?? "", subject, html, text };
+  return { from: SENDER, to: recipient.email ?? "", subject, html, text };
 };

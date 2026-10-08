@@ -33,7 +33,8 @@ test("opens an e-mail as its recipient got it", async ({ page }) => {
   // the preview has an address of its own
   await expect(page).toHaveURL(/\?email=recEmailAnna0001$/);
   const panel = page.getByRole("dialog");
-  await expect(panel).toContainText("To anna@example.com");
+  await expect(panel).toContainText("to Anna Nowak <anna@example.com>");
+  await expect(panel).toContainText("Email Campaign Dashboard <campaigns@example.com>");
   const email = page.frameLocator('iframe[title="E-mail to anna@example.com"]');
   await expect(email.getByText("Hello Anna,")).toBeVisible();
   await expect(email.getByText("Hello new subscribers")).toBeVisible();
@@ -45,6 +46,52 @@ test("opens an e-mail as its recipient got it", async ({ page }) => {
   // "back" closes the preview
   await page.goBack();
   await expect(panel).toHaveCount(0);
+});
+
+test("personalizes a draft and previews it for each recipient before sending", async ({
+  page,
+}) => {
+  await page.goto("/#/campaigns/edit/recCampDraft0001");
+
+  await page.getByLabel("Title").fill("{{name}}, autumn sale");
+  const description = page.getByLabel("Description");
+  await description.fill("Dear ");
+  await page.getByRole("button", { name: "Insert the recipient's name" }).click();
+  await description.press("End");
+  await description.pressSequentially(", **30% off** for you.");
+  await expect(description).toHaveValue("Dear {{name}}, **30% off** for you.");
+
+  await page.getByRole("button", { name: "Preview" }).click();
+
+  const panel = page.getByRole("dialog");
+  await expect(panel.getByRole("heading", { name: "Anna, autumn sale" })).toBeVisible();
+  const toAnna = page.frameLocator('iframe[title="E-mail to anna@example.com"]');
+  await expect(toAnna.getByText("Dear Anna, 30% off for you.")).toBeVisible();
+  await expect(toAnna.locator("strong")).toHaveText("30% off");
+
+  // another recipient gets their own name
+  await page.getByLabel("Preview for").click();
+  await page.getByRole("option", { name: "Celina Wiśniewska" }).click();
+  await expect(panel.getByRole("heading", { name: "Celina, autumn sale" })).toBeVisible();
+  await expect(
+    page.frameLocator('iframe[title="E-mail to celina@example.com"]').getByText("Dear Celina,", { exact: false })
+  ).toBeVisible();
+
+  // nothing was saved or sent by the preview
+  await page.keyboard.press("Escape");
+  await expect(page).toHaveURL(/#\/campaigns\/edit\/recCampDraft0001$/);
+});
+
+test("points out a mistyped placeholder", async ({ page }) => {
+  await page.goto("/#/campaigns/edit/recCampDraft0001");
+
+  await page.getByLabel("Description").fill("Dear {{nmae}}");
+  await page.getByRole("button", { name: "Preview" }).click();
+
+  await expect(
+    page.getByText("unknown placeholder {{nmae}} - use {{name}} or {{surname}}")
+  ).toBeVisible();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
 });
 
 test("a sent campaign's menu leads to its recipients", async ({ page }) => {

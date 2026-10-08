@@ -92,6 +92,24 @@ describe("validationCampaign", () => {
 
     expect(errors).toEqual(["must not exceed 30 characters"]);
   });
+
+  it("allows a 500-character description, not longer", async () => {
+    const valid = { title: "Sale", description: "x".repeat(500) };
+
+    expect(await errorsOf(validationCampaign, valid)).toEqual([]);
+    expect(await errorsOf(validationCampaign, { ...valid, description: "x".repeat(501) })).toEqual([
+      "must not exceed 500 characters",
+    ]);
+  });
+
+  it("knows {{name}} and {{surname}} and points out a typo", async () => {
+    expect(
+      await errorsOf(validationCampaign, { title: "{{name}}, hi", description: "Dear {{ surname }}" })
+    ).toEqual([]);
+    expect(
+      await errorsOf(validationCampaign, { title: "Hello", description: "Dear {{nmae}}" })
+    ).toEqual(["unknown placeholder {{nmae}} - use {{name}} or {{surname}}"]);
+  });
 });
 
 describe("validationLogin", () => {

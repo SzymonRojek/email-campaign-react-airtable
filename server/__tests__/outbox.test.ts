@@ -2,7 +2,7 @@ import request from "supertest";
 
 import { axiosInstance } from "../controllers/axiosInstance";
 import { createToken } from "../helpers/authToken";
-import { buildEmail } from "../mail/buildEmail";
+import { buildEmail, unknownPlaceholders } from "../mail/buildEmail";
 import { createUnsubscribeToken, readUnsubscribeToken } from "../mail/unsubscribeToken";
 import { app } from "../app";
 
@@ -84,6 +84,49 @@ describe("buildEmail", () => {
   it("has the unsubscribe link", () => {
     expect(email.html).toContain('href="https://app.example.com/#/unsubscribe/abc.def"');
     expect(email.text).toContain("Unsubscribe: https://app.example.com/#/unsubscribe/abc.def");
+  });
+
+  it("is a plain message - no banner, no repeated title", () => {
+    expect(email.html).not.toContain("Email Campaign Dashboard");
+    expect(email.html).not.toContain("<h1");
+    expect(email.from).toEqual({ name: "Email Campaign Dashboard", address: "campaigns@example.com" });
+  });
+});
+
+describe("templates", () => {
+  const build = (title: string, description: string, recipient = { name: "Emma", surname: "Johnson" }) =>
+    buildEmail({ campaign: { title, description }, recipient, unsubscribeUrl: "https://app/#/u/x" });
+
+  it("fills in {{name}} and {{surname}} for every recipient", () => {
+    const email = build("{{name}}, your discount", "Dear {{ name }} {{surname}}, welcome!");
+
+    expect(email.subject).toBe("Emma, your discount");
+    expect(email.html).toContain("Dear Emma Johnson, welcome!");
+    expect(email.text).toContain("Dear Emma Johnson, welcome!");
+  });
+
+  it("never lets a name become HTML or formatting", () => {
+    const email = build("Hi", "**{{name}}**", { name: "<img src=x>*a*", surname: "" });
+
+    expect(email.html).toContain("<strong>&lt;img src=x&gt;*a*</strong>");
+    expect(email.html).not.toContain("<img");
+    expect(email.html).not.toContain("<em>");
+  });
+
+  it("formats paragraphs, bold, italic and links", () => {
+    const email = build("Hi", "First line\nsecond line\n\n**Big** *news* at https://example.com/sale?a=1&b=2.");
+
+    expect(email.html).toContain('<p style="margin:0 0 16px">First line<br>second line</p>');
+    expect(email.html).toContain("<strong>Big</strong> <em>news</em>");
+    expect(email.html).toContain(
+      '<a href="https://example.com/sale?a=1&amp;b=2" style="color:#1a73e8">https://example.com/sale?a=1&amp;b=2</a>.'
+    );
+    expect(email.text).toContain("Big *news* at https://example.com/sale?a=1&b=2.");
+  });
+
+  it("finds unknown placeholders", () => {
+    expect(unknownPlaceholders("{{nmae}} and {{name}}", "{{email}} {{nmae}}")).toEqual(["nmae", "email"]);
+    expect(unknownPlaceholders("{{name}} {{ surname }}", undefined)).toEqual([]);
   });
 });
 
@@ -177,6 +220,19 @@ describe("POST /api/campaigns/:id/send", () => {
     expect(airtable.post).not.toHaveBeenCalled();
   });
 
+  it("refuses a campaign with an unknown placeholder", async () => {
+    airtableData({
+      "/campaigns/recCampaign1": { ...draft, fields: { ...draft.fields, description: "Hi {{nmae}}" } },
+      "/subscribers": { records: subscribers },
+    });
+
+    const res = await send();
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe("Unknown placeholder: {{nmae}} - use {{name}} or {{surname}}");
+    expect(airtable.post).not.toHaveBeenCalled();
+  });
+
   it("saves the e-mails in batches of 10", async () => {
     airtableData({
       "/campaigns/recCampaign1": draft,
@@ -235,6 +291,7 @@ describe("the outbox of a campaign", () => {
     expect(res.body.to).toBe("anna@example.com");
     expect(res.body.subject).toBe("Autumn sale");
     expect(res.body.html).toContain("Hello Anna,");
+    expect(res.body.toName).toBe("Anna Nowak");
     expect(res.body.html).toMatch(/#\/unsubscribe\/recAnna\.[\w-]+/);
     expect(res.body.sentAt).toBe("2026-10-01T10:00:00.000Z");
   });
@@ -247,6 +304,39 @@ describe("the outbox of a campaign", () => {
     expect(res.status).toBe(200);
     expect(airtable.delete).toHaveBeenCalledWith("/campaigns/recCampaign1");
     expect(airtable.delete).toHaveBeenCalledWith("/emails", { params: { records: ["recE1", "recE2"] } });
+  });
+});
+
+describe("POST /api/campaigns/preview", () => {
+  const preview = (body: object) =>
+    request(app).post("/api/campaigns/preview").set(auth()).send(body);
+
+  beforeEach(() => airtableData({ "/subscribers/recAnna": subscribers[0] }));
+
+  it("shows a draft as the chosen subscriber would get it", async () => {
+    const res = await preview({ title: "For {{name}}", description: "Hi {{name}} {{surname}}", subscriberId: "recAnna" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.subject).toBe("For Anna");
+    expect(res.body.to).toBe("anna@example.com");
+    expect(res.body.toName).toBe("Anna Nowak");
+    expect(res.body.html).toContain("Hi Anna Nowak");
+    expect(airtable.post).not.toHaveBeenCalled();
+    expect(airtable.patch).not.toHaveBeenCalled();
+  });
+
+  it("explains an unknown placeholder", async () => {
+    const res = await preview({ title: "{{nme}}", description: "x", subscriberId: "recAnna" });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain("{{nme}}");
+  });
+
+  it("needs a real subscriber id", async () => {
+    const res = await preview({ title: "a", description: "b", subscriberId: "x' OR 1=1" });
+
+    expect(res.status).toBe(404);
+    expect(airtable.get).not.toHaveBeenCalled();
   });
 });
 
