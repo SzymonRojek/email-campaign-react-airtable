@@ -13,6 +13,7 @@ const EmailsPage = lazy(() => import("pages/campaigns/EmailsPage"));
 const CreateEmailPage = lazy(() => import("pages/campaigns/CreateEmailPage"));
 const UpdateEmailsPage = lazy(() => import("pages/campaigns/UpdateEmailsPage"));
 const CampaignDetailsPage = lazy(() => import("pages/campaigns/CampaignDetailsPage"));
+const FeedbackPage = lazy(() => import("pages/feedback/FeedbackPage"));
 
 // a subscriber is shown, added and edited in a panel over the list now -
 // the old addresses still work
@@ -56,6 +57,13 @@ export const appRoutes: RouteObject[] = [
       // a sent campaign: who got it and every e-mail
       { path: ":id", element: <CampaignDetailsPage /> },
     ],
+  },
+
+  // what the reviewers of the project think
+  {
+    path: "feedback",
+    element: <SectionLayout />,
+    children: [{ index: true, element: <FeedbackPage /> }],
   },
   { path: "*", element: <NotFoundPage /> },
 ];

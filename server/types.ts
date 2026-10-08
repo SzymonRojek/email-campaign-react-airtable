@@ -34,3 +34,12 @@ export interface EmailFields {
   campaignId?: string;
   sentAt?: string;
 }
+
+// a row of the "feedback" table - shown only when the owner approves it in Airtable
+export interface FeedbackFields {
+  name?: string;
+  role?: string;
+  message?: string;
+  approved?: boolean;
+  date?: string;
+}

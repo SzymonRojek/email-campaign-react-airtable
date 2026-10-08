@@ -204,6 +204,20 @@ describe("resetDemoData", () => {
     expect(created("/subscribers")).toHaveLength(seedSubscribers.length);
   });
 
+  it("never touches the feedback of the reviewers - only the three demo tables", async () => {
+    // a full reset: every old record is deleted and the examples are created again
+    untouched();
+
+    await reset({ force: true });
+
+    const touchedTables = (mock: jest.Mock) => new Set(mock.mock.calls.map(([path]) => path));
+    const demoTables = new Set(["/subscribers", "/campaigns", "/emails"]);
+    expect(airtable.delete).toHaveBeenCalled();
+    expect(touchedTables(airtable.get)).toEqual(demoTables);
+    expect(touchedTables(airtable.post)).toEqual(demoTables);
+    expect(touchedTables(airtable.delete)).toEqual(demoTables);
+  });
+
   it("fills empty tables", async () => {
     tables([], [], []);
 
