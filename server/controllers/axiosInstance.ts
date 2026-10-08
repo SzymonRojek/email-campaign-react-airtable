@@ -1,19 +1,20 @@
 import axios from "axios";
 import dotenv from "dotenv";
 
+import { airtableConfig } from "../helpers/airtableConfig";
+
 dotenv.config();
 
-const {
-  REACT_APP_DB_ID,
-  REACT_APP_API_KEY,
-  // only for tests - points the server at a fake Airtable
-  AIRTABLE_API_URL = "https://api.airtable.com/v0",
-} = process.env;
+const { apiUrl, baseId, token, oldNames } = airtableConfig();
+
+if (oldNames.length) {
+  console.warn(`Old environment variable names - please rename: ${oldNames.join(", ")}`);
+}
 
 export const axiosInstance = axios.create({
-  baseURL: `${AIRTABLE_API_URL}/${REACT_APP_DB_ID}`,
+  baseURL: `${apiUrl}/${baseId}`,
   headers: {
-    Authorization: `Bearer ${REACT_APP_API_KEY}`,
+    Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
   },
 });

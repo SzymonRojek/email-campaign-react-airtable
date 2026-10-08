@@ -3,6 +3,7 @@
  * so the tests never touch the real base and CI needs no secrets.
  *
  *   GET/POST          /v0/:base/:table   (POST: one record or a batch)
+ *   DELETE            /v0/:base/:table?records[]=...   (a batch)
  *   GET/PATCH/DELETE  /v0/:base/:table/:id
  *   POST              /__reset   restores the seed data (called before every test)
  *   GET               /__db      current records (assertions in tests)
@@ -56,7 +57,8 @@ const createRecord = (table: string, fields: Fields) => {
   const record: AirtableRecord = {
     id: `recE2E${String(nextId++).padStart(11, "0")}`,
     createdTime: new Date().toISOString(),
-    fields: { ...fields, date: new Date().toISOString() },
+    // like the real base: a given date stays, a new record gets "now"
+    fields: { date: new Date().toISOString(), ...fields },
   };
 
   (db[table] ??= []).push(record);
@@ -92,6 +94,15 @@ app.patch("/v0/:base/:table/:id", (req, res) => {
 
   Object.assign(record.fields, req.body.fields);
   res.json(record);
+});
+
+// a batch: DELETE /v0/:base/:table?records[]=rec1&records[]=rec2 (max 10, like the real API)
+app.delete("/v0/:base/:table", (req, res) => {
+  const ids = ([] as unknown[]).concat(req.query.records ?? []).map(String);
+  const table = req.params.table;
+
+  db[table] = (db[table] ?? []).filter((record) => !ids.includes(record.id));
+  res.json({ records: ids.map((id) => ({ id, deleted: true })) });
 });
 
 app.delete("/v0/:base/:table/:id", (req, res) => {
