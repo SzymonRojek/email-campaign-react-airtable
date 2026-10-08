@@ -16,12 +16,14 @@ services:
       # demo app - the password is shown on the login form
       - key: ADMIN_PASSWORD
         value: admin
+      # random secret that signs the login tokens - Render generates it
       - key: AUTH_SECRET
         generateValue: true
-      # Airtable - fill in on the Render dashboard (never commit them)
-      - key: REACT_APP_DB_ID
+      # Airtable - fill in on the Render dashboard (never commit them):
+      # the base ID ("app...") and a personal access token ("pat....") for that base
+      - key: AIRTABLE_BASE_ID
         sync: false
-      - key: REACT_APP_API_KEY
+      - key: AIRTABLE_TOKEN
         sync: false
       # daily demo data reset (.github/workflows/demo-reset.yml) - the same value as the
       # DEMO_RESET_KEY secret on GitHub; only production has it (staging uses the same base)
@@ -43,10 +45,12 @@ services:
       # demo app - the password is shown on the login form
       - key: ADMIN_PASSWORD
         value: admin
+      # random secret that signs the login tokens - Render generates it
       - key: AUTH_SECRET
         generateValue: true
-      # Airtable - fill in on the Render dashboard (never commit them)
-      - key: REACT_APP_DB_ID
+      # Airtable - fill in on the Render dashboard (never commit them):
+      # the base ID ("app...") and a personal access token ("pat....") for that base
+      - key: AIRTABLE_BASE_ID
         sync: false
-      - key: REACT_APP_API_KEY
+      - key: AIRTABLE_TOKEN
         sync: false
