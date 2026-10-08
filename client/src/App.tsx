@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import { createHashRouter, RouterProvider } from "react-router";
 
 import { AppContainer } from "./AppContainer";
+import RouteError from "./components/RouteError";
 import { appRoutes, publicRoutes } from "./Routing";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import { toastMessage } from "./helpers";
@@ -40,9 +41,10 @@ const queryClient = new QueryClient({
 
 // a data router (not <HashRouter>) - needed for useBlocker (unsaved changes);
 // the addresses keep the "#" like before
+// a page that fails to render shows RouteError (and is reported) instead of a blank screen
 const router = createHashRouter([
-  { element: <AppContainer />, children: appRoutes },
-  ...publicRoutes,
+  { element: <AppContainer />, children: appRoutes, errorElement: <RouteError /> },
+  ...publicRoutes.map((route) => ({ ...route, errorElement: <RouteError /> })),
 ]);
 
 const App = () => {

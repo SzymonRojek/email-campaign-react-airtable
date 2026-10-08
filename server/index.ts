@@ -1,3 +1,5 @@
+// error monitoring first - it has to wrap Express before the app is created
+import "./instrument";
 import { app } from "./app";
 
 const PORT = process.env.PORT || 5000;

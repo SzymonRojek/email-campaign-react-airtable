@@ -30,7 +30,8 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 
 - **Full-stack TypeScript** - React client and Express server, strict mode
 - **Secure backend** - the Airtable token never reaches the browser; login with signed tokens, protection against password guessing, signed unsubscribe links, user text always escaped in the e-mails
-- **Automated testing** - 133 server and 91 client unit tests, 63 end-to-end tests in a real browser (Playwright)
+- **Automated testing** - 137 server and 95 client unit tests, 63 end-to-end tests in a real browser (Playwright)
+- **Error monitoring** - Sentry on the client and the server, without personal data
 - **CI/CD** - every pull request is checked by GitHub Actions; `dev` deploys to staging and `main` to production automatically
 - **Team-style Git workflow** - feature branches, pull requests, staging before production
 - **Product thinking** - minimal UI feedback, no lost work, accessible components, works on phones
@@ -68,6 +69,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 | Frontend | React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui (Radix), React Router 7, TanStack Query, React Hook Form + Yup |
 | Backend | Node.js 24, Express, TypeScript, Airtable REST API |
 | Testing | Vitest, Jest, React Testing Library, supertest, Playwright |
+| Monitoring | Sentry (browser + Express) |
 | DevOps | GitHub Actions, Render (`render.yaml` Blueprint) |
 
 ## How it works
@@ -86,6 +88,8 @@ The React app never talks to Airtable directly. The Express server keeps the Air
 **Sending:** the server, not the browser, decides who gets a campaign (active subscribers only). It builds one e-mail per recipient from a template - fills in the name, escapes the text so it can not become HTML, adds a signed unsubscribe link - and saves it in the `emails` table (the outbox). The preview before sending uses the same template.
 
 **Feedback:** public endpoints with a hidden field against bots and a limit of 3 entries an hour per address. A new entry is always saved as not approved; the approved ones are kept in memory on the server for 30 seconds, so many visits at once do not use up the Airtable API limit.
+
+**Error monitoring:** Sentry reports the errors of the browser (a page that fails to render, an uncaught error) and of the server (an error no route caught - the visitor gets a short JSON answer). It is on only where `SENTRY_DSN` is set (production, staging) and collects no personal data: no IP addresses, headers, request bodies or clicks, and the token of the unsubscribe link is removed from every address.
 
 **Why an outbox:** the demo is public and the free hosting blocks outgoing SMTP. Where the e-mails go is one setting (`MAIL_TRANSPORT`): `outbox` on the demo, `ethereal` locally (a test SMTP server that catches every e-mail). A real e-mail service would be one more case.
 
@@ -126,7 +130,7 @@ To save Airtable API calls, the reset is **skipped when nobody changed anything*
 
 Every pull request runs in GitHub Actions: type checking, lint, unit tests, production build and end-to-end tests.
 
-- **Server** (Jest + supertest) - login and tokens, every endpoint, sending and the outbox, templates and escaping, unsubscribe links, the CSV import, feedback (moderation, limits), the demo reset; Airtable is mocked
+- **Server** (Jest + supertest) - login and tokens, error monitoring without personal data, every endpoint, sending and the outbox, templates and escaping, unsubscribe links, the CSV import, feedback (moderation, limits), the demo reset; Airtable is mocked
 - **Client** (Vitest + React Testing Library) - CSV reading and writing, search, sorting and filtering, form validation, the API client, choosing recipients, theme
 - **End-to-end** (Playwright) - real user flows on the production build: login, the subscriber panel, search, CSV import and export, drafting, previewing, sending and duplicating campaigns, opening sent e-mails, unsubscribing, leaving feedback, unsaved changes, dark mode, loading errors, phones. They run against a fake Airtable (`e2e/mock-airtable.ts`), so they never touch real data.
 
@@ -154,6 +158,8 @@ cd client && npm install && npm start         # app on http://localhost:3000
 | `ADMIN_PASSWORD` | `.env`, Render | the login password |
 | `AUTH_SECRET` | `.env`, Render | a random secret that signs the login tokens |
 | `MAIL_TRANSPORT` | `.env` (optional) | `outbox` (default) or `ethereal` |
+| `SENTRY_DSN` | Render (optional) | the Sentry project's DSN - turns on the error monitoring (the client reads it at build time) |
+| `SENTRY_ENVIRONMENT` | Render | `production` or `staging` - set in `render.yaml` |
 | `DEMO_RESET_KEY` | Render (production), GitHub secret | turns on the nightly reset - **production only**, it wipes the base |
 | `DEMO_APP_URL` | GitHub variable | the address the nightly reset calls |
 

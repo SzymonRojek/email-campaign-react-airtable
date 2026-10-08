@@ -22,6 +22,12 @@ const srcFolders = [
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  // error monitoring (src/monitoring.ts): only a build with SENTRY_DSN (Render) reports errors;
+  // the DSN only lets the app send errors to Sentry, never read them - it may be public
+  define: {
+    __SENTRY_DSN__: JSON.stringify(process.env.SENTRY_DSN ?? ""),
+    __SENTRY_ENVIRONMENT__: JSON.stringify(process.env.SENTRY_ENVIRONMENT || "production"),
+  },
   resolve: {
     alias: [
       // "@/..." - the alias shadcn/ui components use
