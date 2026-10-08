@@ -19,8 +19,8 @@ const FeedbackDialog = ({ isOpen, onClose }: FeedbackDialogProps) => (
       <DialogHeader>
         <DialogTitle>Leave feedback</DialogTitle>
         <DialogDescription>
-          Reviewing this project? I would love to know what you think. Your feedback is shown
-          only after a review.
+          Reviewing this project? I would love to know what you think. Your name, role and
+          feedback appear in the app after a review.
         </DialogDescription>
       </DialogHeader>
       {/* a new form every time the dialog opens */}

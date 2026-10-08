@@ -17,13 +17,12 @@ const entry = (id: string, fields: object, date: string) => ({
 });
 
 const records = [
-  entry("recOld", { approved: true, isPublic: true, name: "Old" }, "2026-10-01T10:00:00.000Z"),
-  entry("recNew", { approved: true, isPublic: true, name: "New" }, "2026-10-05T10:00:00.000Z"),
-  entry("recPrivate", { approved: true, isPublic: false }, "2026-10-06T10:00:00.000Z"),
-  entry("recWaiting", { approved: false, isPublic: true }, "2026-10-07T10:00:00.000Z"),
+  entry("recOld", { approved: true, name: "Old" }, "2026-10-01T10:00:00.000Z"),
+  entry("recNew", { approved: true, name: "New" }, "2026-10-05T10:00:00.000Z"),
+  entry("recWaiting", { approved: false }, "2026-10-07T10:00:00.000Z"),
 ];
 
-const valid = { name: "Anna", role: "Recruiter", message: "Clean code and great tests", isPublic: true };
+const valid = { name: "Anna", role: "Recruiter", message: "Clean code and great tests" };
 const send = (body: object) => request(app).post("/api/feedback").send(body);
 
 beforeEach(() => {
@@ -35,7 +34,7 @@ beforeEach(() => {
 afterEach(() => jest.restoreAllMocks());
 
 describe("GET /api/feedback", () => {
-  it("shows only the approved public feedback, newest first - without a login", async () => {
+  it("shows only the approved feedback, newest first - without a login", async () => {
     const res = await request(app).get("/api/feedback");
 
     expect(res.status).toBe(200);
@@ -44,7 +43,7 @@ describe("GET /api/feedback", () => {
       { id: "recOld", name: "Old", role: "Recruiter", message: "Great project", date: "2026-10-01T10:00:00.000Z" },
     ]);
     expect(airtable.get).toHaveBeenCalledWith("/feedback", {
-      params: { filterByFormula: "AND({approved}, {isPublic})", offset: undefined },
+      params: { filterByFormula: "{approved}", offset: undefined },
     });
   });
 
@@ -84,17 +83,10 @@ describe("POST /api/feedback", () => {
         name: "Anna",
         role: "Recruiter",
         message: "Clean code and great tests",
-        isPublic: true,
         approved: false,
         date: expect.any(String),
       },
     });
-  });
-
-  it("keeps the feedback private unless its author lets show it", async () => {
-    await send({ ...valid, isPublic: "yes" });
-
-    expect(airtable.post.mock.calls[0][1].fields.isPublic).toBe(false);
   });
 
   it.each([

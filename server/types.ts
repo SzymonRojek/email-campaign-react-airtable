@@ -35,12 +35,11 @@ export interface EmailFields {
   sentAt?: string;
 }
 
-// a row of the "feedback" table - shown only when approved (by the owner) and isPublic (by its author)
+// a row of the "feedback" table - shown only when the owner approves it in Airtable
 export interface FeedbackFields {
   name?: string;
   role?: string;
   message?: string;
-  isPublic?: boolean;
   approved?: boolean;
   date?: string;
 }

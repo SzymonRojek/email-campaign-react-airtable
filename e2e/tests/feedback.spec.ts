@@ -6,7 +6,7 @@ test.beforeEach(async ({ request }) => {
   await resetAirtable(request);
 });
 
-test("the login page shows what reviewers say - only the approved public feedback", async ({
+test("the login page shows what reviewers say - only the approved feedback", async ({
   page,
 }) => {
   await page.goto("/");
@@ -20,7 +20,6 @@ test("the login page shows what reviewers say - only the approved public feedbac
   await expect(quotes.nth(1)).toContainText("Backend Developer");
   await expect(quotes.nth(2)).toContainText("Nice UX, works on my phone.");
   await expect(section).not.toContainText("Marta Kowalska");
-  await expect(section).not.toContainText("Only for the owner.");
   await expect(section).not.toContainText("Waiting for a review.");
 });
 
@@ -37,7 +36,6 @@ test("anybody can leave feedback - it waits for a review", async ({ page, reques
   await dialog.getByLabel("Name", { exact: true }).fill("Ola");
   await dialog.getByLabel("Role (optional)").fill("QA Engineer");
   await dialog.getByLabel("Your feedback").fill("The e2e tests are impressive.");
-  await dialog.getByLabel("Show my name, role and feedback in the app").check();
   await dialog.getByRole("button", { name: "Send feedback" }).click();
 
   await expect(dialog.getByText("Thank you for your feedback!")).toBeVisible();
@@ -47,7 +45,6 @@ test("anybody can leave feedback - it waits for a review", async ({ page, reques
   expect(saved?.fields).toMatchObject({
     role: "QA Engineer",
     message: "The e2e tests are impressive.",
-    isPublic: true,
     approved: false,
   });
 
@@ -56,7 +53,7 @@ test("anybody can leave feedback - it waits for a review", async ({ page, reques
   await expect(page.getByText("The e2e tests are impressive.")).toHaveCount(0);
 });
 
-test("the Feedback page in the app lists all approved public feedback", async ({
+test("the Feedback page in the app lists all approved feedback", async ({
   page,
   request,
 }) => {
@@ -69,7 +66,6 @@ test("the Feedback page in the app lists all approved public feedback", async ({
   const list = page.getByRole("list", { name: "Feedback" }).getByRole("listitem");
   await expect(list).toHaveCount(4);
   await expect(page.getByText("4 reviews", { exact: false })).toBeVisible();
-  await expect(page.getByText("Only for the owner.")).toHaveCount(0);
 
   await page.getByRole("button", { name: "Leave feedback" }).click();
   await expect(page.getByRole("dialog", { name: "Leave feedback" })).toBeVisible();

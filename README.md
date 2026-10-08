@@ -28,7 +28,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 
 - **Full-stack TypeScript** - React client and Express server, strict mode
 - **Secure backend** - the Airtable token never reaches the browser; login with signed tokens, protection against password guessing, signed unsubscribe links, user text always escaped in the e-mails
-- **Automated testing** - 130 server and 87 client unit tests, 63 end-to-end tests in a real browser (Playwright)
+- **Automated testing** - 129 server and 87 client unit tests, 63 end-to-end tests in a real browser (Playwright)
 - **CI/CD** - every pull request is checked by GitHub Actions; `dev` deploys to staging and `main` to production automatically
 - **Team-style Git workflow** - feature branches, pull requests, staging before production
 - **Product thinking** - minimal UI feedback, no lost work, accessible components, works on phones
@@ -52,7 +52,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 
 **Feedback from reviewers**
 - anybody can leave feedback - also on the login page, without logging in
-- shown only after the owner approves it in Airtable and only if its author agreed; the login page shows the newest three, the Feedback page all of them
+- shown only after the owner approves it in Airtable; the login page shows the newest three, the Feedback page all of them
 - protected against bots and floods (a hidden field, 3 entries an hour per address); kept in memory on the server for 30 seconds, so many visits at once do not use up the Airtable API limit
 
 **Everywhere**
@@ -136,7 +136,7 @@ Needs **Node.js 24** and an Airtable base with four tables (all fields text, exc
 | `subscribers` | `name`, `surname`, `email`, `status` (single select), `profession`, `salary`, `telephone`, `date` |
 | `campaigns` | `title`, `description` (long text), `status` (single select), `date` |
 | `emails` | `email`, `name`, `subscriberId`, `campaignId`, `sentAt` |
-| `feedback` | `name`, `role`, `message` (long text), `isPublic` (checkbox), `approved` (checkbox), `date` |
+| `feedback` | `name`, `role`, `message` (long text), `approved` (checkbox), `date` |
 
 ```bash
 cp .env.example .env                          # fill in the values below

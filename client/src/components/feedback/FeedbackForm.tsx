@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CircleCheck } from "lucide-react";
 
@@ -9,7 +9,6 @@ import api from "services/api";
 import TextField from "components/form/TextField";
 import { FeedbackFormValues } from "types";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -28,7 +27,7 @@ const FeedbackForm = ({ onClose }: FeedbackFormProps) => {
     formState: { errors, isSubmitting },
   } = useForm<FeedbackFormValues>({
     resolver: yupResolver(validationFeedback),
-    defaultValues: { name: "", role: "", message: "", isPublic: false },
+    defaultValues: { name: "", role: "", message: "" },
   });
   const message = useWatch({ control, name: "message" }) ?? "";
   const [isSent, setIsSent] = useState(false);
@@ -101,24 +100,6 @@ const FeedbackForm = ({ onClose }: FeedbackFormProps) => {
             {message.length}/{FEEDBACK_MESSAGE_MAX}
           </p>
         )}
-      </div>
-
-      <div className="flex items-start gap-2">
-        <Controller
-          control={control}
-          name="isPublic"
-          render={({ field }) => (
-            <Checkbox
-              id="feedback-public"
-              checked={field.value}
-              onCheckedChange={(checked) => field.onChange(checked === true)}
-              className="mt-0.5"
-            />
-          )}
-        />
-        <Label htmlFor="feedback-public" className="leading-snug font-normal">
-          Show my name, role and feedback in the app
-        </Label>
       </div>
 
       {/* a trap for bots - people never see or fill it in */}

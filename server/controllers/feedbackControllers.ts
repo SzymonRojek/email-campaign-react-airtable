@@ -34,7 +34,7 @@ export const resetFeedbackState = () => {
   sentAt.clear();
 };
 
-// GET /api/feedback - the approved feedback its authors let show, newest first
+// GET /api/feedback - the approved feedback, newest first
 export const getFeedback = async (req: Request, res: Response) => {
   if (cache && Date.now() - cache.savedAt < CACHE_MS) {
     return res.status(200).json(cache.feedback);
@@ -42,11 +42,11 @@ export const getFeedback = async (req: Request, res: Response) => {
 
   try {
     const records = (await getAllRecords(endpoint, {
-      filterByFormula: "AND({approved}, {isPublic})",
+      filterByFormula: "{approved}",
     })) as AirtableRecord<FeedbackFields>[];
 
     const feedback = records
-      .filter(({ fields }) => fields.approved && fields.isPublic && fields.message)
+      .filter(({ fields }) => fields.approved && fields.message)
       .map(({ id, createdTime, fields }) => ({
         id,
         name: fields.name ?? "",
@@ -78,7 +78,7 @@ const validationError = ({ name, role, message }: Record<string, string>) => {
   return null;
 };
 
-// POST /api/feedback  { name, role?, message, isPublic, website? }
+// POST /api/feedback  { name, role?, message, website? }
 // saved for a review - never shown before the owner approves it
 export const createFeedback = async (req: Request, res: Response) => {
   const body = req.body ?? {};
@@ -103,7 +103,6 @@ export const createFeedback = async (req: Request, res: Response) => {
     await axiosInstance.post(endpoint, {
       fields: {
         ...fields,
-        isPublic: body.isPublic === true,
         approved: false,
         date: new Date().toISOString(),
       },

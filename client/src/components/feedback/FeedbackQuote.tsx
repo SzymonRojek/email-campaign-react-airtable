@@ -20,7 +20,8 @@ const FeedbackQuote = ({ feedback, isCompact, className }: FeedbackQuoteProps) =
   return (
     <figure
       className={cn(
-        "flex h-full flex-col rounded-xl border bg-card text-left shadow-xs",
+        // a soft highlight under the cursor - not a link, so no pointer
+        "flex h-full flex-col rounded-xl border bg-card text-left shadow-xs transition-[border-color,box-shadow] duration-200 hover:border-brand/40 hover:shadow-md",
         isCompact ? "p-4" : "p-6",
         className
       )}

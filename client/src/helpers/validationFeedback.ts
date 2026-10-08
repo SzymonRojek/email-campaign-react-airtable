@@ -14,7 +14,6 @@ const validationFeedback = Yup.object({
     .trim()
     .min(3, "must be at least 3 characters")
     .max(FEEDBACK_MESSAGE_MAX, `must not exceed ${FEEDBACK_MESSAGE_MAX} characters`),
-  isPublic: Yup.boolean().default(false),
 });
 
 export default validationFeedback;
