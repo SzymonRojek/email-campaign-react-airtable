@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 import { Navigate, RouteObject, useParams } from "react-router";
 
 import "App.css";
@@ -12,6 +12,7 @@ const SubscribersPage = lazy(() => import("pages/subscribers/SubscribersPage"));
 const EmailsPage = lazy(() => import("pages/campaigns/EmailsPage"));
 const CreateEmailPage = lazy(() => import("pages/campaigns/CreateEmailPage"));
 const UpdateEmailsPage = lazy(() => import("pages/campaigns/UpdateEmailsPage"));
+const CampaignDetailsPage = lazy(() => import("pages/campaigns/CampaignDetailsPage"));
 
 // a subscriber is shown, added and edited in a panel over the list now -
 // the old addresses still work
@@ -52,7 +53,23 @@ export const appRoutes: RouteObject[] = [
       { path: "status", element: <Navigate to="/campaigns" replace /> },
       { path: "add", element: <CreateEmailPage /> },
       { path: "edit/:id", element: <UpdateEmailsPage /> },
+      // a sent campaign: who got it and every e-mail
+      { path: ":id", element: <CampaignDetailsPage /> },
     ],
   },
   { path: "*", element: <NotFoundPage /> },
+];
+
+// public pages - outside the login (the link in every e-mail)
+const UnsubscribePage = lazy(() => import("pages/unsubscribe/UnsubscribePage"));
+
+export const publicRoutes: RouteObject[] = [
+  {
+    path: "/unsubscribe/:token",
+    element: (
+      <Suspense fallback={null}>
+        <UnsubscribePage />
+      </Suspense>
+    ),
+  },
 ];

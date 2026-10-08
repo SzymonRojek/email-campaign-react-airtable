@@ -22,20 +22,23 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 > Hosted on a free plan - after a break the first load can take up to a minute.
 >
-> **Demo mode:** the password is public, so sending real e-mails is turned off (anybody could send e-mails from my account). Sending marks the campaign as `sent` and the app says clearly that no e-mail really went out.
+> **Demo mode:** the password is public, so nobody really gets the e-mails (anybody could send e-mails from my account). Sending builds a real, personalized e-mail for every recipient and saves it in the campaign's outbox, where you can open each one.
 >
-> Feel free to add, edit and remove anything - the example data comes back every night.
+> Feel free to add, edit and remove anything - the example data comes back every night. Please use made-up data, not a real person's e-mail or phone number: the demo is public.
 
 ## Features
 
 **Subscribers**
-- list with search (name or e-mail, no Polish letters needed), status filter (active / pending / blocked) and sorting by date
+- list with search (name or e-mail, no Polish letters needed), status filter (active / pending / blocked / unsubscribed) and sorting by date
+- only the name, the surname and the e-mail are required (profession, salary and phone are optional)
 - details, adding and editing in a side panel over the list - the list keeps its search and filter, the panel has a link of its own
 - one e-mail = one subscriber (checked in the form and on the server)
-- CSV export of what the list shows; CSV import with a preview that checks every row like the form and imports only the valid ones
+- CSV export of what the list shows (a report, with the status); CSV import with a preview that checks every row like the form and imports only the valid ones - the file brings only the person's data, the status (`pending` or `active`, the latter only with a confirmed permission to e-mail them) is chosen once for the whole import, and existing e-mails are never overwritten
 
 **Campaigns**
 - write a campaign, save it as a draft or send it - to all active subscribers or only the chosen ones, after a confirmation with the number of recipients
+- a sent campaign shows who got it, and every e-mail opens exactly as its recipient got it ("Hello Anna", the message, the footer)
+- every e-mail has an **unsubscribe link** - a public page (no login) with a link that can not be guessed; the subscriber becomes `unsubscribed` and gets no more campaigns
 - edit drafts (click the row), duplicate any campaign as a new draft, search, filter, sort
 
 **Everywhere**
@@ -48,7 +51,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 - **Full-stack TypeScript** - React client and Express server, strict mode
 - **Secure backend** - the Airtable token never reaches the browser; login with signed tokens and protection against password guessing
-- **Automated testing** - 73 server and 80 client unit tests, 47 end-to-end tests in a real browser (Playwright)
+- **Automated testing** - 102 server and 83 client unit tests, 54 end-to-end tests in a real browser (Playwright)
 - **CI/CD** - every pull request is checked by GitHub Actions; `dev` deploys to staging and `main` to production automatically
 - **Team-style Git workflow** - feature branches, pull requests, staging before production
 
@@ -88,6 +91,10 @@ All endpoints are under `/api`:
 | `GET`, `PATCH`, `DELETE` | `/api/subscribers/:id` | token |
 | `GET`, `POST` | `/api/campaigns` | token |
 | `GET`, `PATCH`, `DELETE` | `/api/campaigns/:id` | token |
+| `POST` | `/api/campaigns/:id/send` | token |
+| `GET` | `/api/campaigns/:id/emails` | token |
+| `GET` | `/api/emails/:id/preview` | token |
+| `GET`, `POST` | `/api/unsubscribe/:token` | - (the signed link from the e-mail) |
 | `POST` | `/api/demo/reset` | reset key (only production) |
 
 The server sends the Airtable token in the `Authorization: Bearer` header (a personal access token - Airtable retired the old API keys), never as a query parameter:
@@ -97,9 +104,20 @@ The server sends the Airtable token in the `Authorization: Bearer` header (a per
 </details>
 
 <details>
+<summary>Sending: the outbox and the unsubscribe link</summary>
+
+`POST /api/campaigns/:id/send` - the server, not the browser, decides who gets the campaign (only active subscribers), builds one e-mail per recipient from a template (the campaign text is escaped, so it can not become HTML) and saves a row for each in the `emails` table - the **outbox**. Only then the campaign becomes `sent`.
+
+Why an outbox and not a real e-mail service: the demo is public, and the free Render plan blocks outgoing SMTP. Where the e-mails go is one setting (`MAIL_TRANSPORT`): `outbox` on the demo, `ethereal` locally - a test SMTP server that catches every e-mail and gives a preview link; a real e-mail API would be one more case.
+
+The unsubscribe link is `/#/unsubscribe/<subscriber id>.<signature>` - signed with the server secret, so it can not be guessed or changed to another subscriber.
+
+</details>
+
+<details>
 <summary>Daily reset of the demo data</summary>
 
-The login password is public, so visitors change the data. Every night a scheduled GitHub Action (`.github/workflows/demo-reset.yml`) wakes the server up and calls `POST /api/demo/reset` with a secret key. The server creates the examples from `server/demo/seedData.ts` again and only then deletes the old records (so an error never leaves an empty table) - the dates of the examples are counted back from the day of the reset, so they never look old.
+The login password is public, so visitors change the data. Every night a scheduled GitHub Action (`.github/workflows/demo-reset.yml`) wakes the server up and calls `POST /api/demo/reset` with a secret key. The server creates the examples from `server/demo/seedData.ts` again (subscribers, campaigns and the outbox of the sent ones) and only then deletes the old records (so an error never leaves an empty table) - the dates of the examples are counted back from the day of the reset, so they never look old.
 
 To save Airtable API calls (the free plan has a monthly limit), the server first compares both tables with the examples and **skips the reset when nobody changed anything** - unless the examples are older than 7 days. The endpoint exists only where `DEMO_RESET_KEY` is set (production), and two resets never run at the same time.
 
@@ -115,7 +133,7 @@ Every pull request runs in GitHub Actions: type checking, lint, unit tests, prod
 
 ## Running locally
 
-Needs **Node.js 24** and an Airtable base with the tables `subscribers` and `campaigns`.
+Needs **Node.js 24** and an Airtable base with the tables `subscribers`, `campaigns` and `emails` (the outbox: `email`, `name`, `subscriberId`, `campaignId`, `sentAt` - single line text).
 
 1. Copy the example settings and fill them in:
 
@@ -139,9 +157,10 @@ Needs **Node.js 24** and an Airtable base with the tables `subscribers` and `cam
 | `ADMIN_PASSWORD` | `.env`, Render | the password of the login form (`admin` in the demo) |
 | `AUTH_SECRET` | `.env`, Render | a random secret that signs the login tokens (Render generates it) |
 | `DEMO_RESET_KEY` | Render (production), GitHub secret | the key of the nightly reset - **only on production**, it turns on `POST /api/demo/reset`, which wipes the base |
+| `MAIL_TRANSPORT` | `.env` (optional) | `outbox` (default) or `ethereal` - locally also sends to a test SMTP server and logs the preview links |
 | `DEMO_APP_URL` | GitHub variable | the production address the nightly reset calls |
 
-Only the server reads these - none of them ends up in the browser. The old names `REACT_APP_DB_ID` / `REACT_APP_API_KEY` still work, but the server asks in its log to rename them.
+Only the server reads these - none of them ends up in the browser. When an Airtable variable is missing, the server says so in its log at start.
 
 ### Running the tests
 
@@ -175,14 +194,12 @@ Both services are defined in `render.yaml` (free plan).
 
 ## Roadmap
 
-- Sending to a test inbox (Ethereal) with previews of the sent e-mails
 - E-mail templates with personalization (`{{name}}`) and a preview before sending
-- Campaign details and history (recipients, sent date) with a CSV export of the recipients
-- An unsubscribe link in every e-mail
+- A CSV export of the recipients of a sent campaign; the campaigns a subscriber got
 
 ## History
 
-The project started in 2021 as a CRUD app (Create, Read, Update, Delete over a REST API) connected to [EmailJS](https://www.emailjs.com/), which sent a personalized e-mail with one click to all chosen active subscribers. Since the demo became public, real sending is turned off; it will come back as sending to a test inbox (see the roadmap).
+The project started in 2021 as a CRUD app (Create, Read, Update, Delete over a REST API) connected to [EmailJS](https://www.emailjs.com/), which sent a personalized e-mail with one click to all chosen active subscribers. Since the demo became public, nobody really gets the e-mails - they go to the app's outbox, where each one can be opened.
 
 <details>
 <summary>The e-mails sent with EmailJS</summary>

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { Copy, Pencil, Trash2 } from "lucide-react";
+import { Copy, Mail, Pencil, Trash2 } from "lucide-react";
 
 import { useRemoveItem } from "customHooks/useRemoveItem";
 import RowActionsTrigger from "components/DataTable/RowActionsTrigger";
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDuplicateCampaign } from "./useDuplicateCampaign";
 
-// a draft: Edit / Duplicate / Delete; a sent campaign: Duplicate / Delete
+// a draft: Edit / Duplicate / Delete; a sent campaign: View recipients / Duplicate / Delete
 // (the "Sent" badge already says it can not be changed)
 const CampaignActions = ({ campaign }: { campaign: Campaign }) => {
   const navigate = useNavigate();
@@ -25,10 +25,15 @@ const CampaignActions = ({ campaign }: { campaign: Campaign }) => {
       <DropdownMenu>
         <RowActionsTrigger label={`Actions for ${fields.title}`} />
         <DropdownMenuContent align="end">
-          {fields.status === "draft" && (
+          {fields.status === "draft" ? (
             <DropdownMenuItem onSelect={() => navigate(`/campaigns/edit/${id}`)}>
               <Pencil />
               Edit
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem onSelect={() => navigate(`/campaigns/${id}`)}>
+              <Mail />
+              View recipients
             </DropdownMenuItem>
           )}
           <DropdownMenuItem onSelect={() => duplicate(campaign)}>

@@ -97,6 +97,8 @@ test("imports the valid rows of a CSV file", async ({ page, request }) => {
   });
 
   await expect(dialog.getByText("1 ready")).toBeVisible();
+  // the file has a status column - the status is chosen in the dialog instead
+  await expect(dialog.getByText("The file has a status column - it is not used")).toBeVisible();
   await expect(dialog.getByText("2 with errors")).toBeVisible();
   await expect(dialog.getByText("email: already on the list")).toBeVisible();
 
@@ -115,4 +117,30 @@ test("imports the valid rows of a CSV file", async ({ page, request }) => {
     "darek@example.com",
     "ola@example.com",
   ]);
+});
+
+test("imports as active only with the permission to e-mail them", async ({ page, request }) => {
+  await page.goto("/#/subscribers");
+  await page.getByRole("button", { name: "Import CSV" }).click();
+
+  const dialog = page.getByRole("dialog");
+  await dialog.getByLabel("CSV file").setInputFiles({
+    name: "subscribers.csv",
+    mimeType: "text/csv",
+    // only the required columns
+    buffer: Buffer.from("name,surname,email\nOliver,Wilson,oliver@example.com"),
+  });
+
+  await dialog.getByLabel(/Active/).check();
+  const importButton = dialog.getByRole("button", { name: "Import 1 subscriber" });
+  await expect(importButton).toBeDisabled();
+
+  await dialog.getByLabel("I have permission to e-mail these people").check();
+  await importButton.click();
+
+  await expect(listRow(page, "Oliver Wilson")).toContainText("active");
+  const oliver = (await getAirtable(request)).subscribers.find(
+    ({ fields }) => fields.email === "oliver@example.com"
+  );
+  expect(oliver?.fields.status).toBe("active");
 });

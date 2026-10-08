@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Send, Users } from "lucide-react";
 
 import { pluralize, validationCampaign } from "helpers";
-import { DEMO_EMAIL_NOTICE } from "sendEmail";
+import { DEMO_EMAIL_NOTICE } from "./demoNotice";
 import { useLeaveGuard } from "customHooks/useLeaveGuard";
 import { useRecipients } from "customHooks/useRecipients";
 import DiscardChangesDialog from "components/DiscardChangesDialog";

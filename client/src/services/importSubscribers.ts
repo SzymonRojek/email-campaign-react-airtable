@@ -1,5 +1,5 @@
 import api from "./api";
-import { SubscriberFormValues } from "types";
+import { ImportFields, ImportStatus } from "components/subscribers/subscribersCsv";
 
 export interface ImportResult {
   created: number;
@@ -7,7 +7,8 @@ export interface ImportResult {
   skipped: { row: number; email: string; reason: string }[];
 }
 
-const importSubscribers = (subscribers: SubscriberFormValues[]) =>
-  api.post<ImportResult>("/subscribers/import", { subscribers });
+// the status is one for the whole import - the rows bring only the person's data
+const importSubscribers = (subscribers: ImportFields[], status: ImportStatus) =>
+  api.post<ImportResult>("/subscribers/import", { subscribers, status });
 
 export default importSubscribers;

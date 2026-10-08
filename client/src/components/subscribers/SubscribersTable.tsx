@@ -25,7 +25,7 @@ import SubscriberCard from "./SubscriberCard";
 import SubscriberRow from "./SubscriberRow";
 import { subscribersToCsv } from "./subscribersCsv";
 
-const statuses: SubscriberStatus[] = ["active", "pending", "blocked"];
+const statuses: SubscriberStatus[] = ["active", "pending", "blocked", "unsubscribed"];
 
 interface SubscribersTableProps {
   subscribers: Subscriber[];

@@ -4,7 +4,7 @@ import type validationSubscriber from "helpers/validationSubscriber";
 import type validationCampaign from "helpers/validationCampaign";
 import type validationLogin from "helpers/validationLogin";
 
-export type SubscriberStatus = "active" | "pending" | "blocked";
+export type SubscriberStatus = "active" | "pending" | "blocked" | "unsubscribed";
 export type CampaignStatus = "sent" | "draft";
 
 export interface AirtableRecord<Fields> {
@@ -44,3 +44,23 @@ export interface SelectOption {
   label: string;
 }
 
+
+// a row of the outbox - one e-mail of a sent campaign
+export interface EmailFields {
+  email: string;
+  // the name and surname when the e-mail went out
+  name: string;
+  subscriberId: string;
+  campaignId: string;
+  sentAt: string;
+}
+
+export type Email = AirtableRecord<EmailFields>;
+
+// GET /api/emails/:id/preview
+export interface EmailPreview {
+  to: string;
+  subject: string;
+  html: string;
+  sentAt: string;
+}
