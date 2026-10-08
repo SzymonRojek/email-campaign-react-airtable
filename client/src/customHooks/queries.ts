@@ -2,7 +2,14 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { fetchData, fetchDataById } from "services";
 import api from "services/api";
-import { Campaign, CampaignFormValues, Email, EmailPreview, Subscriber } from "types";
+import {
+  Campaign,
+  CampaignFormValues,
+  Email,
+  EmailPreview,
+  ReceivedEmail,
+  Subscriber,
+} from "types";
 
 // typed react-query hooks - one place for the query keys and the data types
 
@@ -42,6 +49,14 @@ export const useCampaignEmails = (id?: string) =>
   useQuery({
     queryKey: ["/campaigns", { id }, "emails"],
     queryFn: () => api.get<Email[]>(`/campaigns/${id}/emails`),
+    enabled: Boolean(id),
+  });
+
+// the campaigns a subscriber got
+export const useSubscriberEmails = (id?: string) =>
+  useQuery({
+    queryKey: ["/subscribers", { id }, "emails"],
+    queryFn: () => api.get<ReceivedEmail[]>(`/subscribers/${id}/emails`),
     enabled: Boolean(id),
   });
 

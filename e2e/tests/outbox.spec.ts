@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import { expect, test } from "@playwright/test";
 
 import { getAirtable, listRow, loginByApi, resetAirtable, rowAction } from "./helpers";
@@ -92,6 +93,42 @@ test("points out a mistyped placeholder", async ({ page }) => {
     page.getByText("unknown placeholder {{nmae}} - use {{name}} or {{surname}}")
   ).toBeVisible();
   await expect(page.getByRole("dialog")).toHaveCount(0);
+});
+
+test("exports who got a sent campaign as CSV", async ({ page }) => {
+  await openWelcome(page);
+
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export CSV" }).click();
+  const file = await download;
+
+  expect(file.suggestedFilename()).toMatch(/^welcome-recipients-\d{4}-\d{2}-\d{2}\.csv$/);
+  const lines = fs.readFileSync(await file.path(), "utf8").trim().split(/\r?\n/);
+  expect(lines).toEqual([
+    "name,email,sentAt",
+    "Anna Nowak,anna@example.com,2022-09-06T10:00:00.000Z",
+    "Celina Wiśniewska,celina@example.com,2022-09-06T10:00:00.000Z",
+  ]);
+});
+
+test("a subscriber's panel lists the campaigns they got", async ({ page }) => {
+  await page.goto("/#/subscribers?view=recSubAnna000001");
+
+  const received = page.getByRole("list", { name: "Campaigns received" });
+  await expect(received.getByRole("link")).toHaveCount(1);
+  await received.getByRole("link", { name: /Welcome/ }).click();
+
+  // the e-mail she got opens at once
+  await expect(page).toHaveURL(/#\/campaigns\/recCampSent00002\?email=recEmailAnna0001$/);
+  await expect(
+    page.frameLocator('iframe[title="E-mail to anna@example.com"]').getByText("Hello Anna,")
+  ).toBeVisible();
+});
+
+test("a subscriber who got nothing yet", async ({ page }) => {
+  await page.goto("/#/subscribers?view=recSubDarek00004");
+
+  await expect(page.getByRole("dialog").getByText("No campaigns yet.")).toBeVisible();
 });
 
 test("a sent campaign's menu leads to its recipients", async ({ page }) => {

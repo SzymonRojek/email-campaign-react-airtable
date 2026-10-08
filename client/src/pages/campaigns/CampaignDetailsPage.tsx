@@ -1,7 +1,8 @@
 import { Navigate, useParams, useSearchParams } from "react-router";
-import { Copy, Mail } from "lucide-react";
+import { Copy, Download, Mail } from "lucide-react";
 
 import { formattedData, pluralize } from "helpers";
+import { downloadCsv, toCsv } from "helpers/csv";
 import { useCampaign, useCampaignEmails } from "customHooks/queries";
 import { Error, Loader } from "components/DisplayMessage";
 import { PageHeader } from "components/PageHeader";
@@ -16,6 +17,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // the e-mail preview lives in the address too: /campaigns/<id>?email=<email id>
 const EMAIL_PARAM = "email";
+
+// "Autumn sale!" -> "autumn-sale"
+const toFileName = (title = "") =>
+  title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "campaign";
 
 // a sent campaign: its message and who got it, with every e-mail to open
 const CampaignDetailsPage = () => {
@@ -63,10 +68,28 @@ const CampaignDetailsPage = () => {
         }
         back={{ to: "/campaigns", label: "Campaigns" }}
         actions={
-          <Button variant="outline" onClick={() => duplicate(campaign)}>
-            <Copy />
-            Duplicate
-          </Button>
+          <>
+            <Button
+              variant="outline"
+              disabled={!emails?.length}
+              onClick={() =>
+                downloadCsv(
+                  `${toFileName(fields.title)}-recipients-${new Date().toISOString().slice(0, 10)}.csv`,
+                  toCsv([
+                    ["name", "email", "sentAt"],
+                    ...(emails ?? []).map(({ fields: email }) => [email.name, email.email, email.sentAt]),
+                  ])
+                )
+              }
+            >
+              <Download />
+              Export CSV
+            </Button>
+            <Button variant="outline" onClick={() => duplicate(campaign)}>
+              <Copy />
+              Duplicate
+            </Button>
+          </>
         }
       />
 

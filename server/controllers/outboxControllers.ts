@@ -127,6 +127,40 @@ export const getCampaignEmails = async (req: Request, res: Response) => {
   }
 };
 
+// GET /api/subscribers/:id/emails - the campaigns a subscriber got, newest first
+export const getSubscriberEmails = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  if (!isRecordId(id)) return res.status(200).json([]);
+
+  try {
+    const [emails, campaigns] = await Promise.all([
+      getAllRecords(emailsEndpoint, { filterByFormula: `{subscriberId}='${id}'` }),
+      getAllRecords("/campaigns"),
+    ]);
+    const titles = new Map(
+      (campaigns as AirtableRecord<CampaignFields>[]).map(({ id: campaignId, fields }) => [
+        campaignId,
+        fields.title ?? "",
+      ])
+    );
+
+    const received = (emails as AirtableRecord<EmailFields>[])
+      .filter(({ fields }) => fields.subscriberId === id && titles.has(fields.campaignId ?? ""))
+      .map(({ id: emailId, fields }) => ({
+        id: emailId,
+        campaignId: fields.campaignId,
+        title: titles.get(fields.campaignId ?? ""),
+        sentAt: fields.sentAt,
+      }))
+      .sort((a, b) => (b.sentAt ?? "").localeCompare(a.sentAt ?? ""));
+
+    res.status(200).json(received);
+  } catch (error) {
+    res.status(400).json({ status: "fail", error: getErrorMessage(error) });
+  }
+};
+
 // GET /api/emails/:id/preview - the e-mail exactly as its recipient got it
 export const getEmailPreview = async (req: Request, res: Response) => {
   const { id } = req.params;

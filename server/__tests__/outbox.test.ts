@@ -296,6 +296,40 @@ describe("the outbox of a campaign", () => {
     expect(res.body.sentAt).toBe("2026-10-01T10:00:00.000Z");
   });
 
+  it("lists the campaigns a subscriber got, newest first", async () => {
+    const older = emailRow("recE1", "Anna");
+    const newer = { ...emailRow("recE2", "Anna", "recCampaign2"), fields: { ...emailRow("recE2", "Anna", "recCampaign2").fields, sentAt: "2026-10-05T10:00:00.000Z" } };
+    airtableData({
+      "/emails": { records: [older, newer, emailRow("recE3", "Bartek")] },
+      "/campaigns": {
+        records: [
+          { ...draft, fields: { ...draft.fields, status: "sent" } },
+          { ...draft, id: "recCampaign2", fields: { ...draft.fields, title: "Winter", status: "sent" } },
+        ],
+      },
+    });
+
+    const res = await request(app).get("/api/subscribers/recAnna/emails").set(auth());
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual([
+      { id: "recE2", campaignId: "recCampaign2", title: "Winter", sentAt: "2026-10-05T10:00:00.000Z" },
+      { id: "recE1", campaignId: "recCampaign1", title: "Autumn sale", sentAt: "2026-10-01T10:00:00.000Z" },
+    ]);
+    expect(airtable.get).toHaveBeenCalledWith("/emails", {
+      params: { filterByFormula: "{subscriberId}='recAnna'", offset: undefined },
+    });
+  });
+
+  it("does not put anything else than a subscriber id into the formula", async () => {
+    const res = await request(app)
+      .get(`/api/subscribers/${encodeURIComponent("x' OR 1=1")}/emails`)
+      .set(auth());
+
+    expect(res.body).toEqual([]);
+    expect(airtable.get).not.toHaveBeenCalled();
+  });
+
   it("empties the outbox when the campaign is deleted", async () => {
     airtableData({ "/emails": { records: [emailRow("recE1", "Anna"), emailRow("recE2", "Bartek")] } });
 

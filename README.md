@@ -40,7 +40,8 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 - personalization: `{{name}}` and `{{surname}}` in the title and the message become each recipient's own (buttons insert them; a typo like `{{nmae}}` is pointed out in the form and refused by the server)
 - simple formatting: `**bold**`, `*italic*`, an empty line starts a paragraph, links work as they are (up to 500 characters)
 - a preview before sending, exactly as the chosen recipient will get it - built by the same server template as the e-mails themselves
-- a sent campaign shows who got it, and every e-mail opens exactly as its recipient got it, the way an inbox shows it
+- a sent campaign shows who got it, and every e-mail opens exactly as its recipient got it, the way an inbox shows it; the list of recipients exports to CSV (name, e-mail, sent date)
+- a subscriber's panel lists the campaigns they got - each one opens the e-mail itself
 - every e-mail has an **unsubscribe link** - a public page (no login) with a link that can not be guessed; the subscriber becomes `unsubscribed` and gets no more campaigns
 - edit drafts (click the row), duplicate any campaign as a new draft, search, filter, sort
 
@@ -54,7 +55,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 - **Full-stack TypeScript** - React client and Express server, strict mode
 - **Secure backend** - the Airtable token never reaches the browser; login with signed tokens and protection against password guessing
-- **Automated testing** - 111 server and 85 client unit tests, 56 end-to-end tests in a real browser (Playwright)
+- **Automated testing** - 113 server and 85 client unit tests, 59 end-to-end tests in a real browser (Playwright)
 - **CI/CD** - every pull request is checked by GitHub Actions; `dev` deploys to staging and `main` to production automatically
 - **Team-style Git workflow** - feature branches, pull requests, staging before production
 
@@ -91,6 +92,7 @@ All endpoints are under `/api`:
 | `POST` | `/api/auth/login` | - |
 | `GET`, `POST` | `/api/subscribers` | token |
 | `POST` | `/api/subscribers/import` | token |
+| `GET` | `/api/subscribers/:id/emails` | token |
 | `GET`, `PATCH`, `DELETE` | `/api/subscribers/:id` | token |
 | `GET`, `POST` | `/api/campaigns` | token |
 | `GET`, `PATCH`, `DELETE` | `/api/campaigns/:id` | token |
@@ -195,10 +197,6 @@ On macOS 12 (no Playwright Chromium) run the e2e tests on the installed Chrome: 
 3. Right after that, pull request `main -> dev` (merge commit) - otherwise staging would run a different version than production and new work on `dev` could conflict with the fix.
 
 Both services are defined in `render.yaml` (free plan).
-
-## Roadmap
-
-- A CSV export of the recipients of a sent campaign; the campaigns a subscriber got
 
 ## History
 

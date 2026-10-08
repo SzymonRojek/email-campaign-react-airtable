@@ -1,8 +1,9 @@
+import { Link } from "react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CircleAlert, Pencil, Trash2, UserCheck } from "lucide-react";
+import { ChevronRight, CircleAlert, Pencil, Trash2, UserCheck } from "lucide-react";
 
 import { formatMobileNumber, formattedData, toastMessage } from "helpers";
-import { subscribersKey, useSubscribers } from "customHooks/queries";
+import { subscribersKey, useSubscriberEmails, useSubscribers } from "customHooks/queries";
 import { useRemoveItem } from "customHooks/useRemoveItem";
 import { useSubscriberPanel } from "customHooks/useSubscriberPanel";
 import { createSubscriber, getErrorMessage, updateSubscriber } from "services";
@@ -35,6 +36,48 @@ const notices = {
     text: "Unsubscribed with the link in an e-mail - does not get campaigns any more.",
     className: "bg-muted text-muted-foreground",
   },
+};
+
+// the campaigns the subscriber got - each one opens the e-mail itself
+const ReceivedCampaigns = ({ subscriberId }: { subscriberId: string }) => {
+  const { data: emails, isLoading, isError } = useSubscriberEmails(subscriberId);
+
+  return (
+    <section aria-labelledby="received-heading" className="grid gap-2">
+      <h3
+        id="received-heading"
+        className="text-xs font-medium tracking-wide text-muted-foreground uppercase"
+      >
+        Campaigns received
+      </h3>
+      {isLoading ? (
+        <p className="text-sm text-muted-foreground">Loading...</p>
+      ) : isError ? (
+        <p className="text-sm text-muted-foreground">The campaigns could not be loaded.</p>
+      ) : !emails?.length ? (
+        <p className="text-sm text-muted-foreground">No campaigns yet.</p>
+      ) : (
+        <ul aria-label="Campaigns received" className="-mx-2 grid">
+          {emails.map(({ id, campaignId, title, sentAt }) => (
+            <li key={id}>
+              <Link
+                to={`/campaigns/${campaignId}?email=${id}`}
+                className="flex items-center justify-between gap-3 rounded-md px-2 py-2 text-sm hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+              >
+                <span className="min-w-0">
+                  <span className="block truncate font-medium">{title}</span>
+                  <span className="block text-xs text-muted-foreground">
+                    {formattedData.getFormattedDateTime(sentAt)}
+                  </span>
+                </span>
+                <ChevronRight className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
 };
 
 interface DetailsProps {
@@ -113,6 +156,8 @@ const Details = ({ subscriber, onEdit, onRemoved }: DetailsProps) => {
             </div>
           ))}
         </dl>
+
+        <ReceivedCampaigns subscriberId={id} />
       </div>
 
       <SheetFooter className="flex-row border-t">
