@@ -30,7 +30,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 
 - **Full-stack TypeScript** - React client and Express server, strict mode
 - **Secure backend** - the Airtable token never reaches the browser; login with signed tokens, protection against password guessing, signed unsubscribe links, user text always escaped in the e-mails
-- **Automated testing** - 137 server and 97 client unit tests, 63 end-to-end tests in a real browser (Playwright)
+- **Automated testing** - 137 server and 97 client unit tests, 63 end-to-end tests in a real browser (Playwright), a Postman collection of API tests (Newman in CI) and a read-only check of the live demo every night
 - **Error monitoring and visit statistics** - Sentry on the client and the server, Umami for anonymous, cookie-free visit statistics; no personal data
 - **CI/CD** - every pull request is checked by GitHub Actions; `dev` deploys to staging and `main` to production automatically
 - **Team-style Git workflow** - feature branches, pull requests, staging before production
@@ -68,7 +68,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 | --- | --- |
 | Frontend | React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui (Radix), React Router 7, TanStack Query, React Hook Form + Yup |
 | Backend | Node.js 24, Express, TypeScript, Airtable REST API |
-| Testing | Vitest, Jest, React Testing Library, supertest, Playwright |
+| Testing | Vitest, Jest, React Testing Library, supertest, Playwright, Postman + Newman |
 | Monitoring | Sentry (browser + Express), Umami Cloud (visit statistics) |
 | DevOps | GitHub Actions, Render (`render.yaml` Blueprint) |
 
@@ -130,11 +130,15 @@ To save Airtable API calls, the reset is **skipped when nobody changed anything*
 
 ## Testing
 
-Every pull request runs in GitHub Actions: type checking, lint, unit tests, production build and end-to-end tests.
+Every pull request runs in GitHub Actions: type checking, lint, unit tests, production build, end-to-end tests and API tests.
 
 - **Server** (Jest + supertest) - login and tokens, error monitoring without personal data, every endpoint, sending and the outbox, templates and escaping, unsubscribe links, the CSV import, feedback (moderation, limits), the demo reset; Airtable is mocked
 - **Client** (Vitest + React Testing Library) - CSV reading and writing, search, sorting and filtering, form validation, the API client, choosing recipients, theme
 - **End-to-end** (Playwright) - real user flows on the production build: login, the subscriber panel, search, CSV import and export, drafting, previewing, sending and duplicating campaigns, opening sent e-mails, unsubscribing, leaving feedback, unsaved changes, dark mode, loading errors, phones. They run against a fake Airtable (`e2e/mock-airtable.ts`), so they never touch real data.
+- **API tests** (Postman, run by Newman) - the collection in [`postman/`](postman/) tests every endpoint from the outside: the login and its refusals (401, 400, broken tokens), a subscriber (duplicate e-mail = 409), a campaign from draft to preview, sending (once only - 409), the outbox, feedback, and the clean-up. In CI it runs against the server build and the fake Airtable.
+- **Live demo check** - after the nightly reset, the read-only "Smoke" folder of the same collection runs against production (health, login, the lists). On the demo the collection skips every request that would change data, so even a full run there is safe.
+
+To use the collection in Postman: import `postman/email-campaign-dashboard.postman_collection.json` and an environment from `postman/` (`Local` - fill in your password, or `Demo (read-only)`).
 
 ## Running locally
 
@@ -173,6 +177,7 @@ Only the server reads these - none of them reaches the browser.
 | `npm run typecheck` | TypeScript (server + client) |
 | `npm install --prefix server && npm test` | server unit tests |
 | `cd client && npm test` | client unit tests |
+| `npm run build:server && npm install --prefix e2e && npm run test:api` | API tests (Postman collection, Newman) |
 | `npm run build && npm install --prefix e2e && npm run test:e2e` | end-to-end tests (on the production build) |
 
 ## Git workflow and deployment
