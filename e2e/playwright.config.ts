@@ -60,8 +60,8 @@ export default defineConfig({
         AUTH_SECRET: "e2e-auth-secret",
         // never the real Airtable - these override the values from .env
         AIRTABLE_API_URL: `http://localhost:${AIRTABLE_PORT}/v0`,
-        REACT_APP_DB_ID: "appE2E",
-        REACT_APP_API_KEY: API_KEY,
+        AIRTABLE_BASE_ID: "appE2E",
+        AIRTABLE_TOKEN: API_KEY,
       },
     },
   ],
