@@ -1,4 +1,5 @@
 import express from "express";
+import * as Sentry from "@sentry/node";
 import path from "path";
 import dotenv from "dotenv";
 
@@ -49,3 +50,22 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.join(clientBuild, "index.html"));
   });
 }
+
+// an error no route caught: reported to Sentry (when it is on); the visitor gets a short
+// JSON answer instead of Express's HTML page (e.g. 400 for a broken JSON body)
+Sentry.setupExpressErrorHandler(app);
+app.use(
+  (
+    error: { status?: number; statusCode?: number },
+    req: express.Request,
+    res: express.Response,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    next: express.NextFunction
+  ) => {
+    const status = error.status ?? error.statusCode ?? 500;
+    res.status(status).json({
+      status: "fail",
+      error: status < 500 ? "The request is not valid" : "Something went wrong on the server",
+    });
+  }
+);

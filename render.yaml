@@ -29,6 +29,11 @@ services:
       # DEMO_RESET_KEY secret on GitHub; only production has it (staging uses the same base)
       - key: DEMO_RESET_KEY
         sync: false
+      # error monitoring (Sentry) - the project's DSN from sentry.io; empty = off
+      - key: SENTRY_DSN
+        sync: false
+      - key: SENTRY_ENVIRONMENT
+        value: production
 
   # staging - to check the changes before the PR dev -> main
   - type: web
@@ -54,3 +59,8 @@ services:
         sync: false
       - key: AIRTABLE_TOKEN
         sync: false
+      # error monitoring (Sentry) - the same DSN as production; the events are marked "staging"
+      - key: SENTRY_DSN
+        sync: false
+      - key: SENTRY_ENVIRONMENT
+        value: staging
