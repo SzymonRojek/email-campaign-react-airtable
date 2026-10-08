@@ -17,7 +17,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 
 | | link | password |
 | --- | --- | --- |
-| **Production** | [email-campaign-dashboard-app.onrender.com](https://email-campaign-dashboard-app.onrender.com/?utm_source=github) | `admin` |
+| **Production** | [email-campaign-dashboard-app.onrender.com](https://email-campaign-dashboard-app.onrender.com/) | `admin` |
 | Staging (newest changes) | [email-campaign-dashboard-staging.onrender.com](https://email-campaign-dashboard-staging.onrender.com/) | `admin` |
 
 > Free hosting - after a break the first load can take up to a minute.
@@ -30,8 +30,8 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 
 - **Full-stack TypeScript** - React client and Express server, strict mode
 - **Secure backend** - the Airtable token never reaches the browser; login with signed tokens, protection against password guessing, signed unsubscribe links, user text always escaped in the e-mails
-- **Automated testing** - 137 server and 97 client unit tests, 63 end-to-end tests in a real browser (Playwright), a Postman collection of API tests (Newman in CI) and a read-only check of the live demo every night
-- **Error monitoring and visit statistics** - Sentry on the client and the server, Umami for anonymous, cookie-free visit statistics; no personal data
+- **Automated testing** - 137 server and 95 client unit tests, 63 end-to-end tests in a real browser (Playwright), a Postman collection of API tests (Newman in CI) and a read-only check of the live demo every night
+- **Error monitoring** - Sentry on the client and the server, without personal data
 - **CI/CD** - every pull request is checked by GitHub Actions; `dev` deploys to staging and `main` to production automatically
 - **Team-style Git workflow** - feature branches, pull requests, staging before production
 - **Product thinking** - minimal UI feedback, no lost work, accessible components, works on phones
@@ -69,7 +69,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 | Frontend | React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui (Radix), React Router 7, TanStack Query, React Hook Form + Yup |
 | Backend | Node.js 24, Express, TypeScript, Airtable REST API |
 | Testing | Vitest, Jest, React Testing Library, supertest, Playwright, Postman + Newman |
-| Monitoring | Sentry (browser + Express), Umami Cloud (visit statistics) |
+| Monitoring | Sentry (browser + Express) |
 | DevOps | GitHub Actions, Render (`render.yaml` Blueprint) |
 
 ## How it works
@@ -90,8 +90,6 @@ The React app never talks to Airtable directly. The Express server keeps the Air
 **Feedback:** public endpoints with a hidden field against bots and a limit of 3 entries an hour per address. A new entry is always saved as not approved; the approved ones are kept in memory on the server for 30 seconds, so many visits at once do not use up the Airtable API limit.
 
 **Error monitoring:** Sentry reports the errors of the browser (a page that fails to render, an uncaught error) and of the server (an error no route caught - the visitor gets a short JSON answer). It is on only where `SENTRY_DSN` is set (production, staging) and collects no personal data: no IP addresses, headers, request bodies or clicks, and the token of the unsubscribe link is removed from every address.
-
-**Visit statistics:** Umami Cloud counts the visits of the production demo - anonymous and without cookies (no consent banner needed), and it respects "Do Not Track". The app sends page patterns like `/campaigns/:id` (no record ids, no tokens) and four events: login, campaign sent, subscribers imported, feedback sent.
 
 **Why an outbox:** the demo is public and the free hosting blocks outgoing SMTP. Where the e-mails go is one setting (`MAIL_TRANSPORT`): `outbox` on the demo, `ethereal` locally (a test SMTP server that catches every e-mail). A real e-mail service would be one more case.
 
@@ -166,7 +164,6 @@ cd client && npm install && npm start         # app on http://localhost:3000
 | `MAIL_TRANSPORT` | `.env` (optional) | `outbox` (default) or `ethereal` |
 | `SENTRY_DSN` | Render (optional) | the Sentry project's DSN - turns on the error monitoring (the client reads it at build time) |
 | `SENTRY_ENVIRONMENT` | Render | `production` or `staging` - set in `render.yaml` |
-| `UMAMI_WEBSITE_ID` | Render, production (optional) | the Umami website ID - turns on the visit statistics (read at build time) |
 | `DEMO_RESET_KEY` | Render (production), GitHub secret | turns on the nightly reset - **production only**, it wipes the base |
 | `DEMO_APP_URL` | GitHub variable | the address the nightly reset calls |
 

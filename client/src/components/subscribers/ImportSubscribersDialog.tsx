@@ -6,7 +6,6 @@ import { normalizeText, pluralize, toastMessage, toastSuccess } from "helpers";
 import { downloadCsv, parseCsv } from "helpers/csv";
 import { subscribersKey, useSubscribers } from "customHooks/queries";
 import { getErrorMessage, importSubscribers } from "services";
-import { trackEvent } from "../../analytics";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -101,7 +100,6 @@ const ImportSubscribersDialog = ({ isOpen, onOpenChange }: ImportSubscribersDial
         importStatus
       );
 
-      trackEvent("subscribers-imported");
       toastSuccess(
         `${pluralize(created, "subscriber")} imported` +
           (skipped.length ? ` - ${skipped.length} skipped (${skipped[0].reason})` : "")

@@ -8,7 +8,6 @@ import { ToastContainer } from "react-toastify";
 import { createHashRouter, RouterProvider } from "react-router";
 
 import { AppContainer } from "./AppContainer";
-import { trackPage } from "./analytics";
 import RouteError from "./components/RouteError";
 import { appRoutes, publicRoutes } from "./Routing";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
@@ -47,15 +46,6 @@ const router = createHashRouter([
   { element: <AppContainer />, children: appRoutes, errorElement: <RouteError /> },
   ...publicRoutes.map((route) => ({ ...route, errorElement: <RouteError /> })),
 ]);
-
-// visit statistics: one page view for every new page (not for "?view=..." panels)
-let trackedPath = router.state.location.pathname;
-trackPage(trackedPath);
-router.subscribe(({ location }) => {
-  if (location.pathname === trackedPath) return;
-  trackedPath = location.pathname;
-  trackPage(trackedPath);
-});
 
 const App = () => {
   return (

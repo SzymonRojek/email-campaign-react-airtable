@@ -231,10 +231,6 @@ const DashboardPage = () => {
               Feel free to add, edit and remove anything - the example data
               comes back every night.
             </li>
-            <li>
-              Anonymous, cookie-free visit statistics (Umami) - no personal
-              data.
-            </li>
           </ul>
         </CardContent>
       </Card>
