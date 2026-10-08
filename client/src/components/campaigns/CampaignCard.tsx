@@ -1,27 +1,22 @@
 import { formattedData } from "helpers";
-import { useOpenDraft } from "customHooks/useOpenDraft";
-import { cn } from "@/lib/utils";
+import { useOpenCampaign } from "customHooks/useOpenCampaign";
 import StatusBadge from "components/StatusBadge";
 import { Campaign } from "types";
 import CampaignActions from "./CampaignActions";
-import CampaignTitle from "./CampaignTitle";
 
 // a list row on a phone - the table is too wide there
 const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
   const { fields, createdTime } = campaign;
-  const { isDraft, onClick } = useOpenDraft(campaign);
+  const onClick = useOpenCampaign(campaign);
 
   return (
     <li
       onClick={onClick}
-      className={cn(
-        "grid gap-2 px-4 py-3",
-        isDraft && "cursor-pointer transition-colors hover:bg-muted/50"
-      )}
+      className="grid cursor-pointer gap-2 px-4 py-3 transition-colors hover:bg-muted/50"
     >
       <div className="flex items-start justify-between gap-3">
         <p className="font-medium">
-          <CampaignTitle campaign={campaign} />
+          {fields.title}
         </p>
         <StatusBadge status={fields.status} />
       </div>

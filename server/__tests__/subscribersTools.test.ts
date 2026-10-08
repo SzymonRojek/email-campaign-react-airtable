@@ -99,8 +99,8 @@ describe("duplicate e-mails", () => {
 });
 
 describe("POST /api/subscribers/import", () => {
-  const importRows = (subscribers: unknown) =>
-    request(app).post("/api/subscribers/import").set(auth()).send({ subscribers });
+  const importRows = (subscribers: unknown, status?: string) =>
+    request(app).post("/api/subscribers/import").set(auth()).send({ subscribers, status });
 
   it("needs a token", async () => {
     const res = await request(app)
@@ -116,7 +116,6 @@ describe("POST /api/subscribers/import", () => {
       valid("ANNA@example.com"),
       valid("ewa@example.com", { name: "Second" }),
       valid("not-an-email"),
-      valid("jan@example.com", { status: "vip" }),
       valid("ola@example.com", { surname: "" }),
     ]);
 
@@ -126,11 +125,10 @@ describe("POST /api/subscribers/import", () => {
       { row: 2, email: "ANNA@example.com", reason: "the e-mail already exists" },
       { row: 3, email: "ewa@example.com", reason: "the e-mail already exists" },
       { row: 4, email: "not-an-email", reason: "the e-mail is invalid" },
-      { row: 5, email: "jan@example.com", reason: "the status is invalid" },
-      { row: 6, email: "ola@example.com", reason: "name and surname are required" },
+      { row: 5, email: "ola@example.com", reason: "name and surname are required" },
     ]);
     expect(airtable.post).toHaveBeenCalledWith("/subscribers", {
-      records: [{ fields: valid("ewa@example.com") }],
+      records: [{ fields: valid("ewa@example.com", { status: "pending" }) }],
     });
   });
 
@@ -138,8 +136,34 @@ describe("POST /api/subscribers/import", () => {
     await importRows([valid(" ewa@example.com ", { isAdmin: true, name: " Ewa " })]);
 
     expect(airtable.post.mock.calls[0][1].records[0].fields).toEqual(
-      valid("ewa@example.com")
+      valid("ewa@example.com", { status: "pending" })
     );
+  });
+
+  it("gives every row the status chosen for the import - not the row's own", async () => {
+    await importRows(
+      [valid("ewa@example.com", { status: "blocked" }), valid("ola@example.com", { status: "vip" })],
+      "active"
+    );
+
+    const statuses = airtable.post.mock.calls[0][1].records.map(
+      ({ fields }: { fields: { status: string } }) => fields.status
+    );
+    expect(statuses).toEqual(["active", "active"]);
+  });
+
+  it("needs only the name, the surname and the e-mail", async () => {
+    const res = await importRows([{ name: "Ewa", surname: "Nowak", email: "ewa@example.com" }]);
+
+    expect(res.body.created).toBe(1);
+  });
+
+  it.each(["blocked", "unsubscribed", "vip"])("refuses to import as %s", async (status) => {
+    const res = await importRows([valid("ewa@example.com")], status);
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe("Imported subscribers can only be pending or active");
+    expect(airtable.post).not.toHaveBeenCalled();
   });
 
   it("creates the records in batches of 10 (the Airtable limit)", async () => {

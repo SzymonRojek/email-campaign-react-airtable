@@ -31,6 +31,10 @@ const notices = {
     text: "Blocked - this subscriber does not get any campaigns.",
     className: "bg-red-500/10 text-red-800 dark:text-red-200",
   },
+  unsubscribed: {
+    text: "Unsubscribed with the link in an e-mail - does not get campaigns any more.",
+    className: "bg-muted text-muted-foreground",
+  },
 };
 
 interface DetailsProps {
@@ -83,16 +87,19 @@ const Details = ({ subscriber, onEdit, onRemoved }: DetailsProps) => {
               <CircleAlert className="mt-0.5 size-4 shrink-0" aria-hidden />
               {notice.text}
             </p>
-            <Button
-              variant="outline"
-              size="sm"
-              className="justify-self-start"
-              disabled={activate.isPending}
-              onClick={() => activate.mutate()}
-            >
-              <UserCheck />
-              {activate.isPending ? "Activating..." : "Activate"}
-            </Button>
+            {/* someone who left on their own is not signed up again with one click */}
+            {fields.status !== "unsubscribed" && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="justify-self-start"
+                disabled={activate.isPending}
+                onClick={() => activate.mutate()}
+              >
+                <UserCheck />
+                {activate.isPending ? "Activating..." : "Activate"}
+              </Button>
+            )}
           </div>
         )}
 
@@ -248,7 +255,7 @@ const SubscriberDetailsPanel = () => {
     <Sheet open={panel.isOpen} onOpenChange={(isOpen) => !isOpen && panel.close()}>
       <SheetContent
         side="right"
-        className="gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:max-w-md"
+        className="gap-0 p-0 outline-none data-[side=right]:w-full sm:data-[side=right]:max-w-md"
         // focus the panel itself - not the first button (it could be "Delete")
         onOpenAutoFocus={(event) => {
           event.preventDefault();

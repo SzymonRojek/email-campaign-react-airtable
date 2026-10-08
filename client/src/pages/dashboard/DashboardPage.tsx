@@ -2,7 +2,14 @@ import { ReactNode } from "react";
 import { Link } from "react-router";
 import { BsGithub } from "react-icons/bs";
 import { SiAirtable } from "react-icons/si";
-import { ArrowRight, Plus, Send, UserCheck, Users, type LucideIcon } from "lucide-react";
+import {
+  ArrowRight,
+  Plus,
+  Send,
+  UserCheck,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 
 import { formattedData, pluralize, sortByDate } from "helpers";
 import { useCampaigns, useSubscribers } from "customHooks/queries";
@@ -38,7 +45,9 @@ const StatCard = ({ label, value, hint, icon: Icon, to }: StatCardProps) => (
         <Icon className="size-4 text-muted-foreground" aria-hidden />
       </CardHeader>
       <CardContent>
-        <p className="text-2xl font-semibold tracking-tight sm:text-3xl">{value}</p>
+        <p className="text-2xl font-semibold tracking-tight sm:text-3xl">
+          {value}
+        </p>
         <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
       </CardContent>
     </Card>
@@ -128,7 +137,14 @@ const DashboardPage = () => {
         <StatCard
           label="Subscribers"
           value={subscribers.length}
-          hint={`${count("pending", subscribers)} pending · ${count("blocked", subscribers)} blocked`}
+          hint={[
+            `${count("pending", subscribers)} pending`,
+            `${count("blocked", subscribers)} blocked`,
+            count("unsubscribed", subscribers) &&
+              `${count("unsubscribed", subscribers)} unsubscribed`,
+          ]
+            .filter(Boolean)
+            .join(" · ")}
           icon={Users}
           to="/subscribers"
         />
@@ -156,17 +172,28 @@ const DashboardPage = () => {
         >
           {sortByDate(campaigns, "newest")
             .slice(0, RECENT_COUNT)
-            .map(({ id, fields, createdTime }) => (
-              <li key={id} className="flex items-center justify-between gap-3 px-6 py-3">
-                <div className="min-w-0">
-                  <p className="truncate font-medium">{fields.title}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {formattedData.getFormattedDateTime(fields.date || createdTime)}
-                  </p>
-                </div>
-                <StatusBadge status={fields.status} />
-              </li>
-            ))}
+            .map((campaign) => {
+              const { id, fields, createdTime } = campaign;
+
+              return (
+                <li
+                  key={id}
+                  className="flex items-center justify-between gap-3 px-6 py-3"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate font-medium">
+                      {fields.title}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {formattedData.getFormattedDateTime(
+                        fields.date || createdTime,
+                      )}
+                    </p>
+                  </div>
+                  <StatusBadge status={fields.status} />
+                </li>
+              );
+            })}
         </ListCard>
 
         <ListCard
@@ -195,16 +222,16 @@ const DashboardPage = () => {
         <CardContent className="grid gap-4 text-sm text-muted-foreground md:grid-cols-[1fr_auto] md:items-end">
           <ul className="grid list-disc gap-1.5 pl-5">
             <li>
-              React 19 + TypeScript app with an Express API in front of Airtable -
-              the Airtable key never reaches the browser.
+              React 19 + TypeScript app with an Express API in front of Airtable
+              - the Airtable token never reaches the browser.
             </li>
             <li>
-              Demo mode: e-mails are not really sent, a campaign is only marked as
-              sent.
+              Demo mode: nobody really gets the e-mails - each one is saved in
+              the campaign&apos;s outbox, where you can open it.
             </li>
             <li>
-              Feel free to add, edit and remove anything - the example data comes
-              back every night.
+              Feel free to add, edit and remove anything - the example data
+              comes back every night.
             </li>
           </ul>
           <div className="flex flex-wrap gap-2">

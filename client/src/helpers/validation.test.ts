@@ -45,6 +45,37 @@ describe("validationSubscriber", () => {
   });
 });
 
+describe("validationSubscriber - optional fields", () => {
+  it("needs only the name, the surname, the e-mail and the status", async () => {
+    expect(
+      await errorsOf(validationSubscriber, {
+        name: "Emma",
+        surname: "Johnson",
+        email: "emma@example.com",
+        status: "pending",
+        profession: "",
+        salary: "",
+        telephone: "",
+      })
+    ).toEqual([]);
+  });
+
+  it("still checks an optional field when it is filled in", async () => {
+    const errors = await errorsOf(validationSubscriber, {
+      ...validSubscriber,
+      profession: "QA2",
+      salary: "12",
+      telephone: "123",
+    });
+
+    expect(errors).toEqual([
+      "only letters are required",
+      "must be at least 3 numbers",
+      "type only 10 digits",
+    ]);
+  });
+});
+
 describe("validationCampaign", () => {
   it("requires a title and a description", async () => {
     expect(await errorsOf(validationCampaign, {})).toEqual([

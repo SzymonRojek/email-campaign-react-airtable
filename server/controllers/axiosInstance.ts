@@ -5,10 +5,11 @@ import { airtableConfig } from "../helpers/airtableConfig";
 
 dotenv.config();
 
-const { apiUrl, baseId, token, oldNames } = airtableConfig();
+const { apiUrl, baseId, token, missing } = airtableConfig();
 
-if (oldNames.length) {
-  console.warn(`Old environment variable names - please rename: ${oldNames.join(", ")}`);
+// the server starts anyway (e.g. the health check), but no data can be loaded
+if (missing.length && process.env.NODE_ENV !== "test") {
+  console.error(`Missing environment variables: ${missing.join(", ")} - see .env.example`);
 }
 
 export const axiosInstance = axios.create({

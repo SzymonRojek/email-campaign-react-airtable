@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router";
 
 import { createEmail } from "services";
-import { sendEmailTo } from "sendEmail";
-import { useRecipients } from "customHooks/useRecipients";
-import { toastMessage, toastSuccess } from "helpers";
+import { useSendCampaign } from "customHooks/useSendCampaign";
+import { toastSuccess } from "helpers";
 import { StyledContainer } from "components/StyledContainer";
 import { PageHeader } from "components/PageHeader";
 import CampaignForm from "components/campaigns/CampaignForm";
@@ -11,7 +10,7 @@ import { CampaignFields, CampaignStatus } from "types";
 
 const CreateEmailPage = () => {
   const navigate = useNavigate();
-  const { receivers } = useRecipients();
+  const send = useSendCampaign();
 
   // back to the list - the new campaign is at the top (newest first)
   const handleSaved = (saved: CampaignFields, status: CampaignStatus) => {
@@ -32,16 +31,7 @@ const CreateEmailPage = () => {
         onDraft={(data) =>
           createEmail({ data, status: "draft", callback: handleSaved })
         }
-        onSend={async (data) => {
-          if (!receivers.length) {
-            toastMessage("Please choose at least one subscriber");
-            return;
-          }
-
-          await sendEmailTo(data, receivers, () =>
-            createEmail({ data, status: "sent", callback: handleSaved })
-          );
-        }}
+        onSend={send}
       />
     </StyledContainer>
   );

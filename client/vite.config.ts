@@ -34,8 +34,10 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    // the Express API runs on 5000 in development
-    proxy: { "/api": "http://localhost:5000" },
+    // the Express API runs on 5000 in development; changeOrigin: false keeps the
+    // app's address (localhost:3000) in the requests, so the links the server
+    // builds (e.g. "Unsubscribe" in an e-mail) lead to the app, not to the API
+    proxy: { "/api": { target: "http://localhost:5000", changeOrigin: false } },
   },
   // the server (production) and the e2e tests serve client/build
   build: { outDir: "build" },

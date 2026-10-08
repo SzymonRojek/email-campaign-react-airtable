@@ -28,7 +28,7 @@ export const useTableData = <
     const words = normalizeText(query).split(/\s+/).filter(Boolean);
     const byStatus =
       status === ALL_STATUSES ? items : getFilteredDataByStatus(items, status);
-    // every word must match - "anna now" finds Anna Nowak
+    // every word must match - "emma john" finds Emma Johnson
     const found = words.length
       ? byStatus.filter((item) => {
           const text = normalizeText(searchText(item));

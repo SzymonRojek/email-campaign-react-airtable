@@ -7,6 +7,7 @@ import subscribersRouter from "./routes/subscribersRoutes";
 import campaignsRouter from "./routes/campaignsRoutes";
 import authRouter from "./routes/authRoutes";
 import demoRouter from "./routes/demoRoutes";
+import { emailsRouter, unsubscribeRouter } from "./routes/outboxRoutes";
 import { requireAuth } from "./middleware/requireAuth";
 
 dotenv.config();
@@ -27,8 +28,10 @@ app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
 app.use("/api/auth", authRouter);
 app.use("/api/demo", demoRouter);
+app.use("/api/unsubscribe", unsubscribeRouter);
 app.use("/api/subscribers", requireAuth, subscribersRouter);
 app.use("/api/campaigns", requireAuth, campaignsRouter);
+app.use("/api/emails", requireAuth, emailsRouter);
 
 // unknown api endpoint - answer with json instead of the react index.html
 app.use("/api", (req, res) =>

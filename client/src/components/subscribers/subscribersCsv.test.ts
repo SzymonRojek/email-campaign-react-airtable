@@ -7,9 +7,8 @@ import {
   templateCsv,
 } from "./subscribersCsv";
 
-const header = "name,surname,email,status,profession,salary,telephone";
-const row = (email: string, extra = "active") =>
-  `Ewa,Nowak,${email},${extra},tester,5000,3432342344`;
+const header = "name,surname,email,profession,salary,telephone";
+const row = (email: string) => `Ewa,Nowak,${email},tester,5000,3432342344`;
 
 const read = (csv: string, existing: string[] = []) =>
   readSubscribersCsv(parseCsv(csv), new Set(existing));
@@ -27,7 +26,6 @@ describe("readSubscribersCsv", () => {
           name: "Ewa",
           surname: "Nowak",
           email: "ewa@example.com",
-          status: "active",
           profession: "tester",
           salary: "5000",
           telephone: "3432342344",
@@ -56,17 +54,25 @@ describe("readSubscribersCsv", () => {
     ]);
   });
 
-  it("uses 'pending' when the status column is empty or missing", () => {
-    const result = read("name,surname,email,profession,salary,telephone\nEwa,Nowak,ewa@example.com,tester,5000,3432342344");
+  it("needs only the name, the surname and the e-mail", () => {
+    const result = read("name,surname,email\nEwa,Nowak,ewa@example.com");
 
-    expect(result.rows[0].fields.status).toBe("pending");
     expect(result.rows[0].errors).toEqual([]);
+    expect(result.rows[0].fields).toMatchObject({ profession: "", salary: "", telephone: "" });
+  });
+
+  it("does not use a status column - and says so", () => {
+    const result = read("name,surname,email,status\nEwa,Nowak,ewa@example.com,blocked");
+
+    expect(result.ignoresStatus).toBe(true);
+    expect(result.rows[0].fields).not.toHaveProperty("status");
+    expect(read(`${header}\n${row("ewa@example.com")}`).ignoresStatus).toBe(false);
   });
 
   it("reads the columns in any order and letter case", () => {
-    const result = read("EMAIL,Surname,Name,Status,Profession,Salary,Telephone\newa@example.com,Nowak,Ewa,blocked,tester,5000,3432342344");
+    const result = read("EMAIL,Surname,Name,Profession,Salary,Telephone\newa@example.com,Nowak,Ewa,tester,5000,3432342344");
 
-    expect(result.rows[0].fields).toMatchObject({ name: "Ewa", email: "ewa@example.com", status: "blocked" });
+    expect(result.rows[0].fields).toMatchObject({ name: "Ewa", surname: "Nowak", email: "ewa@example.com" });
   });
 
   it.each([
@@ -93,17 +99,23 @@ describe("export and template", () => {
     };
     const rows = parseCsv(subscribersToCsv([subscriber]));
 
+    // the export is a report: it has the status and the date
     expect(rows).toEqual([
-      [...header.split(","), "date"],
+      ["name", "surname", "email", "status", "profession", "salary", "telephone", "date"],
       ["Łucja", "Zając", "lucja@example.com", "active", "analyst", "4500", "3432342399", "2022/09/06, 9:05 pm"],
     ]);
-    expect(readSubscribersCsv(rows, new Set()).rows[0].errors).toEqual([]);
+    // ... and imports again (the status column is not used)
+    const again = readSubscribersCsv(rows, new Set());
+    expect(again.rows[0].errors).toEqual([]);
+    expect(again.ignoresStatus).toBe(true);
   });
 
   it("gives a template that passes the import", () => {
     const result = readSubscribersCsv(parseCsv(templateCsv()), new Set());
 
-    expect(result.rows).toHaveLength(1);
-    expect(result.rows[0].errors).toEqual([]);
+    // a full row and one with only the required fields - no status column
+    expect(result.rows).toHaveLength(2);
+    expect(result.rows.map(({ errors }) => errors)).toEqual([[], []]);
+    expect(result.ignoresStatus).toBe(false);
   });
 });

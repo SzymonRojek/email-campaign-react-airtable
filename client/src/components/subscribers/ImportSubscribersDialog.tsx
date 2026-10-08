@@ -7,6 +7,8 @@ import { downloadCsv, parseCsv } from "helpers/csv";
 import { subscribersKey, useSubscribers } from "customHooks/queries";
 import { getErrorMessage, importSubscribers } from "services";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -16,13 +18,20 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { PUBLIC_DEMO_NOTICE } from "./publicDemoNotice";
 import {
+  IMPORT_COLUMNS,
   ImportRow,
+  ImportStatus,
   MAX_IMPORT_ROWS,
   readSubscribersCsv,
-  SUBSCRIBER_COLUMNS,
   templateCsv,
 } from "./subscribersCsv";
+
+const statusChoices: { value: ImportStatus; label: string; hint: string }[] = [
+  { value: "pending", label: "Pending", hint: "they get no campaigns until you activate them" },
+  { value: "active", label: "Active", hint: "they get the next campaign" },
+];
 
 interface ImportSubscribersDialogProps {
   isOpen: boolean;
@@ -36,19 +45,30 @@ const ImportSubscribersDialog = ({ isOpen, onOpenChange }: ImportSubscribersDial
   const [fileName, setFileName] = useState("");
   const [rows, setRows] = useState<ImportRow[]>([]);
   const [fileError, setFileError] = useState("");
+  const [ignoresStatus, setIgnoresStatus] = useState(false);
+  const [importStatus, setImportStatus] = useState<ImportStatus>("pending");
+  // active subscribers get e-mails - only with their permission
+  const [hasPermission, setHasPermission] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
 
   const ready = rows.filter(({ errors }) => errors.length === 0);
   const withErrors = rows.length - ready.length;
+  const canImport =
+    ready.length > 0 && !isImporting && (importStatus === "pending" || hasPermission);
 
   const reset = () => {
     setFileName("");
     setRows([]);
     setFileError("");
+    setIgnoresStatus(false);
   };
 
   const close = (open: boolean) => {
-    if (!open) reset();
+    if (!open) {
+      reset();
+      setImportStatus("pending");
+      setHasPermission(false);
+    }
     onOpenChange(open);
   };
 
@@ -65,14 +85,20 @@ const ImportSubscribersDialog = ({ isOpen, onOpenChange }: ImportSubscribersDial
     const result = readSubscribersCsv(parseCsv(await file.text()), existing);
 
     if (result.error) setFileError(result.error);
-    else setRows(result.rows);
+    else {
+      setRows(result.rows);
+      setIgnoresStatus(result.ignoresStatus);
+    }
   };
 
   const save = async () => {
     setIsImporting(true);
 
     try {
-      const { created, skipped } = await importSubscribers(ready.map(({ fields }) => fields));
+      const { created, skipped } = await importSubscribers(
+        ready.map(({ fields }) => fields),
+        importStatus
+      );
 
       toastSuccess(
         `${pluralize(created, "subscriber")} imported` +
@@ -93,8 +119,8 @@ const ImportSubscribersDialog = ({ isOpen, onOpenChange }: ImportSubscribersDial
         <DialogHeader>
           <DialogTitle>Import subscribers</DialogTitle>
           <DialogDescription>
-            A CSV file with the columns {SUBSCRIBER_COLUMNS.join(", ")} - at most{" "}
-            {MAX_IMPORT_ROWS} rows. An empty status means pending.
+            A CSV file with the columns {IMPORT_COLUMNS.join(", ")} - name, surname and
+            e-mail are required, at most {MAX_IMPORT_ROWS} rows.
           </DialogDescription>
         </DialogHeader>
 
@@ -132,10 +158,53 @@ const ImportSubscribersDialog = ({ isOpen, onOpenChange }: ImportSubscribersDial
           </Button>
         </div>
 
+        <p className="rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground">
+          {PUBLIC_DEMO_NOTICE}
+        </p>
+
         {fileError && (
           <p role="alert" className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
             {fileError}
           </p>
+        )}
+
+        {rows.length > 0 && (
+          <fieldset className="grid gap-2">
+            <legend className="mb-2 text-sm font-medium">Add the new subscribers as</legend>
+            {statusChoices.map(({ value, label, hint }) => (
+              <label key={value} className="flex items-start gap-2 text-sm">
+                <input
+                  type="radio"
+                  name="import-status"
+                  value={value}
+                  checked={importStatus === value}
+                  onChange={() => setImportStatus(value)}
+                  className="mt-1 accent-[var(--brand)]"
+                />
+                <span>
+                  <span className="font-medium">{label}</span>
+                  <span className="text-muted-foreground"> - {hint}</span>
+                </span>
+              </label>
+            ))}
+            {importStatus === "active" && (
+              <div className="mt-1 flex items-center gap-2 pl-5">
+                <Checkbox
+                  id="import-permission"
+                  checked={hasPermission}
+                  onCheckedChange={(checked) => setHasPermission(checked === true)}
+                />
+                <Label htmlFor="import-permission" className="font-normal">
+                  I have permission to e-mail these people
+                </Label>
+              </div>
+            )}
+            {ignoresStatus && (
+              <p className="text-xs text-muted-foreground">
+                The file has a status column - it is not used, the status is chosen here.
+              </p>
+            )}
+          </fieldset>
         )}
 
         {rows.length > 0 && (
@@ -158,7 +227,7 @@ const ImportSubscribersDialog = ({ isOpen, onOpenChange }: ImportSubscribersDial
                       {[fields.name, fields.surname].filter(Boolean).join(" ") || "-"}
                     </span>
                     <span className="block truncate text-xs text-muted-foreground">
-                      {fields.email || "no e-mail"} · {fields.status}
+                      {fields.email || "no e-mail"}
                     </span>
                     {errors.length > 0 && (
                       <span className="mt-0.5 block text-xs text-destructive">{errors.join(" · ")}</span>
@@ -177,7 +246,7 @@ const ImportSubscribersDialog = ({ isOpen, onOpenChange }: ImportSubscribersDial
           <Button
             variant="brand"
             onClick={save}
-            disabled={ready.length === 0 || isImporting}
+            disabled={!canImport}
           >
             {isImporting
               ? "Importing..."
