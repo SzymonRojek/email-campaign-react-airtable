@@ -105,23 +105,24 @@ describe("templates", () => {
     expect(email.text).toContain("Dear Emma Johnson, welcome!");
   });
 
-  it("never lets a name become HTML or formatting", () => {
-    const email = build("Hi", "**{{name}}**", { name: "<img src=x>*a*", surname: "" });
+  it("never lets a name become HTML or a link", () => {
+    const email = build("Hi", "Dear {{name}}", { name: "<img src=x> https://evil.example", surname: "" });
 
-    expect(email.html).toContain("<strong>&lt;img src=x&gt;*a*</strong>");
+    expect(email.html).toContain("Dear &lt;img src=x&gt; https://evil.example");
     expect(email.html).not.toContain("<img");
-    expect(email.html).not.toContain("<em>");
+    expect(email.html).not.toContain("evil.example\"");
   });
 
-  it("formats paragraphs, bold, italic and links", () => {
+  it("keeps the text as written: paragraphs, line breaks, links", () => {
     const email = build("Hi", "First line\nsecond line\n\n**Big** *news* at https://example.com/sale?a=1&b=2.");
 
     expect(email.html).toContain('<p style="margin:0 0 16px">First line<br>second line</p>');
-    expect(email.html).toContain("<strong>Big</strong> <em>news</em>");
+    expect(email.html).toContain("**Big** *news* at");
+    expect(email.html).not.toContain("<strong>");
     expect(email.html).toContain(
       '<a href="https://example.com/sale?a=1&amp;b=2" style="color:#1a73e8">https://example.com/sale?a=1&amp;b=2</a>.'
     );
-    expect(email.text).toContain("Big *news* at https://example.com/sale?a=1&b=2.");
+    expect(email.text).toContain("**Big** *news* at https://example.com/sale?a=1&b=2.");
   });
 
   it("finds unknown placeholders", () => {

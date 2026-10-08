@@ -37,8 +37,8 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 **Campaigns**
 - write a campaign, save it as a draft or send it - to all active subscribers or only the chosen ones, after a confirmation with the number of recipients
-- personalization: `{{name}}` and `{{surname}}` in the title and the message become each recipient's own (buttons insert them; a typo like `{{nmae}}` is pointed out in the form and refused by the server)
-- simple formatting: `**bold**`, `*italic*`, an empty line starts a paragraph, links work as they are (up to 500 characters)
+- personalization: `{{name}}` and `{{surname}}` in the title and the message become each recipient's own (a typo like `{{nmae}}` is pointed out in the form and refused by the server)
+- the message is free text, up to 500 characters - it keeps its line breaks and paragraphs, web addresses become links
 - a preview before sending, exactly as the chosen recipient will get it - built by the same server template as the e-mails themselves
 - a sent campaign shows who got it, and every e-mail opens exactly as its recipient got it, the way an inbox shows it; the list of recipients exports to CSV (name, e-mail, sent date)
 - a subscriber's panel lists the campaigns they got - each one opens the e-mail itself

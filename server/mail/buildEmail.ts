@@ -48,15 +48,12 @@ const escapeHtml = (value = "") =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 
-// the simple formatting of the text (already escaped): **bold**, *italic*, links as they are
-const format = (escaped: string) =>
-  escaped
-    .replace(/\*\*(?=\S)(.+?)(?<=\S)\*\*/g, "<strong>$1</strong>")
-    .replace(/(^|[^*])\*(?=[^\s*])([^*\n]+?)(?<=\S)\*(?!\*)/g, "$1<em>$2</em>")
-    .replace(
-      /\bhttps?:\/\/[^\s<]*[^\s<.,;:!?)]/g,
-      (url) => `<a href="${url}" style="color:#1a73e8">${url}</a>`
-    );
+// the text stays as written - only the addresses in it (already escaped) become links
+const linkify = (escaped: string) =>
+  escaped.replace(
+    /\bhttps?:\/\/[^\s<]*[^\s<.,;:!?)]/g,
+    (url) => `<a href="${url}" style="color:#1a73e8">${url}</a>`
+  );
 
 // an empty line starts a new paragraph, a single line break stays a line break
 const paragraphs = (escaped: string) =>
@@ -73,8 +70,8 @@ export const buildEmail = ({ campaign, recipient, unsubscribeUrl }: EmailInput):
   const greeting = `Hello ${values.name || "there"},`;
   const subject = fillIn(campaign.title?.trim() || "(no subject)", values);
   const description = (campaign.description ?? "").replace(/\r\n/g, "\n");
-  // placeholders are filled in last, so a name never becomes formatting or HTML
-  const body = fillIn(paragraphs(format(escapeHtml(description))), values, escapeHtml);
+  // placeholders are filled in last, so a name never becomes a link or HTML
+  const body = fillIn(paragraphs(linkify(escapeHtml(description))), values, escapeHtml);
 
   const html = `<!doctype html>
 <html lang="en">
@@ -98,7 +95,7 @@ export const buildEmail = ({ campaign, recipient, unsubscribeUrl }: EmailInput):
   const text = [
     greeting,
     "",
-    fillIn(description.trim(), values).replace(/\*\*(?=\S)(.+?)(?<=\S)\*\*/g, "$1"),
+    fillIn(description.trim(), values),
     "",
     "--",
     `Unsubscribe: ${unsubscribeUrl}`,

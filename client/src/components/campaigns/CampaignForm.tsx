@@ -1,10 +1,9 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Eye, Send, Users } from "lucide-react";
 
 import { pluralize, validationCampaign } from "helpers";
-import { PLACEHOLDERS } from "helpers/placeholders";
 import { DESCRIPTION_MAX } from "helpers/validationCampaign";
 import { DEMO_EMAIL_NOTICE } from "./demoNotice";
 import { useLeaveGuard } from "customHooks/useLeaveGuard";
@@ -49,7 +48,6 @@ const CampaignForm = ({
   const [toSend, setToSend] = useState<CampaignFormValues | null>(null);
   // the form values shown in the preview panel
   const [toPreview, setToPreview] = useState<CampaignFormValues | null>(null);
-  const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
   const { activeSubscribers, receivers, hasNoActiveSubscribers, label } =
     useRecipients();
 
@@ -57,33 +55,13 @@ const CampaignForm = ({
     register,
     handleSubmit,
     control,
-    getValues,
-    setValue,
-    formState: { errors, isSubmitting, isDirty, isSubmitted },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<CampaignFormValues>({
     resolver: yupResolver(validationCampaign),
     defaultValues,
   });
   const description = useWatch({ control, name: "description" }) ?? "";
-  const descriptionField = register("description");
 
-  // {{name}} goes where the cursor is (or replaces the selected text)
-  const insertPlaceholder = (key: string) => {
-    const textarea = descriptionRef.current;
-    const value = getValues("description") ?? "";
-    const start = textarea?.selectionStart ?? value.length;
-    const end = textarea?.selectionEnd ?? value.length;
-    const placeholder = `{{${key}}}`;
-
-    setValue("description", value.slice(0, start) + placeholder + value.slice(end), {
-      shouldDirty: true,
-      shouldValidate: isSubmitted,
-    });
-    requestAnimationFrame(() => {
-      textarea?.focus();
-      textarea?.setSelectionRange(start + placeholder.length, start + placeholder.length);
-    });
-  };
 
   const { blocker, whileSaving, discard, restoreFocus, formProps } =
     useLeaveGuard(isDirty);
@@ -120,48 +98,26 @@ const CampaignForm = ({
               id="description"
               rows={8}
               aria-invalid={Boolean(errors.description)}
-              aria-describedby={cn(errors.description && "description-error", "description-hint")}
-              {...descriptionField}
-              ref={(element) => {
-                descriptionField.ref(element);
-                descriptionRef.current = element;
-              }}
+              placeholder="Hi {{name}}, ..."
+              aria-describedby={errors.description ? "description-error" : undefined}
+              {...register("description")}
             />
             {errors.description && (
               <p id="description-error" className="text-sm text-destructive">
                 {errors.description.message}
               </p>
             )}
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs text-muted-foreground">Insert</span>
-                {PLACEHOLDERS.map((key) => (
-                  <Button
-                    key={key}
-                    type="button"
-                    variant="outline"
-                    size="xs"
-                    className="font-mono"
-                    aria-label={`Insert the recipient's ${key}`}
-                    onClick={() => insertPlaceholder(key)}
-                  >
-                    {`{{${key}}}`}
-                  </Button>
-                ))}
-              </div>
-              <span
+            {/* the counter shows up only near the limit */}
+            {description.length > DESCRIPTION_MAX - 100 && (
+              <p
                 className={cn(
-                  "text-xs tabular-nums text-muted-foreground",
+                  "text-right text-xs tabular-nums text-muted-foreground",
                   description.length > DESCRIPTION_MAX && "text-destructive"
                 )}
               >
                 {description.length}/{DESCRIPTION_MAX}
-              </span>
-            </div>
-            <p id="description-hint" className="text-xs text-muted-foreground">
-              {"{{name}} and {{surname}} become each recipient's own - in the title too. "}
-              **bold**, *italic*, an empty line starts a new paragraph, links work as they are.
-            </p>
+              </p>
+            )}
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-muted px-4 py-3">
