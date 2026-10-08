@@ -19,7 +19,7 @@ test("shows who got a sent campaign", async ({ page }) => {
   await openWelcome(page);
 
   await expect(page.getByRole("heading", { name: /Welcome/ })).toBeVisible();
-  await expect(page.getByText("to 2 subscribers", { exact: false })).toBeVisible();
+  await expect(page.getByText("2 subscribers", { exact: true })).toBeVisible();
   const recipients = page.getByRole("list", { name: "Recipients" }).getByRole("listitem");
   await expect(recipients).toHaveCount(2);
   await expect(recipients.nth(0)).toContainText("anna@example.com");
