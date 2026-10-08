@@ -57,10 +57,27 @@ export interface EmailFields {
 
 export type Email = AirtableRecord<EmailFields>;
 
-// GET /api/emails/:id/preview
+// GET /api/subscribers/:id/emails - a campaign the subscriber got
+export interface ReceivedEmail {
+  id: string;
+  campaignId: string;
+  title: string;
+  sentAt: string;
+}
+
+// GET /api/emails - one e-mail of the outbox with its campaign's title
+export interface SentEmail extends ReceivedEmail {
+  name: string;
+  email: string;
+}
+
+// GET /api/emails/:id/preview (a sent e-mail), POST /api/campaigns/preview (a draft)
 export interface EmailPreview {
+  from: { name: string; address: string };
   to: string;
+  toName: string;
   subject: string;
   html: string;
-  sentAt: string;
+  // only a sent e-mail has it
+  sentAt?: string;
 }

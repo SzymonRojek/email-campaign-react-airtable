@@ -1,7 +1,9 @@
 import { Navigate, useParams, useSearchParams } from "react-router";
-import { Copy, Mail } from "lucide-react";
+import { Copy, Download, Mail } from "lucide-react";
 
 import { formattedData, pluralize } from "helpers";
+import { downloadCsv } from "helpers/csv";
+import { emailsToCsv, recipientsFileName } from "components/campaigns/emailsCsv";
 import { useCampaign, useCampaignEmails } from "customHooks/queries";
 import { Error, Loader } from "components/DisplayMessage";
 import { PageHeader } from "components/PageHeader";
@@ -82,8 +84,24 @@ const CampaignDetailsPage = () => {
         </Card>
 
         <Card className="gap-0 py-0">
-          <CardHeader className="border-b py-4">
+          <CardHeader className="flex items-center justify-between border-b py-4">
             <CardTitle className="text-base">Recipients</CardTitle>
+            {Boolean(emails?.length) && (
+              <Button
+                variant="outline"
+                size="sm"
+                title="Download the recipients of this campaign"
+                onClick={() =>
+                  downloadCsv(
+                    recipientsFileName(fields.title),
+                    emailsToCsv((emails ?? []).map(({ fields: email }) => email))
+                  )
+                }
+              >
+                <Download />
+                Export CSV
+              </Button>
+            )}
           </CardHeader>
           {isLoadingEmails ? (
             <Loader title="Loading the recipients..." />

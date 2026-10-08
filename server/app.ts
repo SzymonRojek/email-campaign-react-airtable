@@ -1,6 +1,5 @@
 import express from "express";
 import path from "path";
-import cors from "cors";
 import dotenv from "dotenv";
 
 import subscribersRouter from "./routes/subscribersRoutes";
@@ -14,12 +13,13 @@ dotenv.config();
 
 export const app = express();
 
-// Heroku runs behind a proxy - needed for the real client ip in req.ip
+// Render runs behind a proxy - needed for the real client ip in req.ip
 app.set("trust proxy", 1);
+// do not tell everybody which server this is
+app.disable("x-powered-by");
 
-// middleware
-
-app.use(cors());
+// middleware - no CORS: the app and the API share one address (in development
+// the Vite proxy forwards /api), so other websites can not call the API from a browser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

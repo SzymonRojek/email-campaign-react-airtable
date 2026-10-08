@@ -22,11 +22,12 @@ export const seedSubscribers: SeedRecord<SubscriberFields>[] = [
   { daysAgo: 1, time: "15:25", fields: { name: "Lucas", surname: "Taylor", email: "lucas.taylor@example.com", status: "blocked", profession: "nurse", salary: "5900", telephone: "5012345680" } },
 ];
 
+// {{name}} / {{surname}} become each recipient's own data
 export const seedCampaigns: SeedRecord<CampaignFields>[] = [
-  { daysAgo: 24, time: "10:00", fields: { title: "Welcome", description: "Hello and thank you for joining our newsletter", status: "sent" } },
-  { daysAgo: 7, time: "12:30", fields: { title: "Autumn sale", description: "Up to 30% off on all courses until the end of the month", status: "sent" } },
-  { daysAgo: 2, time: "09:45", fields: { title: "Product update", description: "New features in our app: dark mode and faster search", status: "draft" } },
-  { daysAgo: 0, time: "07:00", fields: { title: "Winter webinar", description: "Join our free online webinar about testing in December", status: "draft" } },
+  { daysAgo: 24, time: "10:00", fields: { title: "Welcome", description: "Thank you for joining our newsletter, {{name}}!\n\nOnce a month you will get our best tips, news about new courses and offers only for subscribers.\n\nSee you soon,\nThe Email Campaign Dashboard team", status: "sent" } },
+  { daysAgo: 7, time: "12:30", fields: { title: "Autumn sale", description: "Up to 30% off on all courses until the end of the month.\n\nPick a course you have been waiting for: https://example.com/courses\n\nHappy learning,\nThe Email Campaign Dashboard team", status: "sent" } },
+  { daysAgo: 2, time: "09:45", fields: { title: "Product update", description: "Good news, {{name}}! Our app has two new features:\n\nDark mode - easy on the eyes in the evening.\nFaster search - results while you type.\n\nThe Email Campaign Dashboard team", status: "draft" } },
+  { daysAgo: 0, time: "07:00", fields: { title: "Winter webinar", description: "Join our free online webinar about testing in December, {{name}}.\n\nSave your seat: https://example.com/webinar\n\nThe Email Campaign Dashboard team", status: "draft" } },
 ];
 
 // the fields Airtable gets - date counted back from now

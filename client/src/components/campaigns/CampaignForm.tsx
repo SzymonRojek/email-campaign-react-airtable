@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Send, Users } from "lucide-react";
+import { Eye, Send, Users } from "lucide-react";
 
 import { pluralize, validationCampaign } from "helpers";
+import { DESCRIPTION_MAX } from "helpers/validationCampaign";
 import { DEMO_EMAIL_NOTICE } from "./demoNotice";
 import { useLeaveGuard } from "customHooks/useLeaveGuard";
 import { useRecipients } from "customHooks/useRecipients";
@@ -25,6 +26,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import CampaignPreviewPanel from "./CampaignPreviewPanel";
 import RecipientsDialog from "./RecipientsDialog";
 
 const emptyValues: CampaignFormValues = { title: "", description: "" };
@@ -43,17 +46,22 @@ const CampaignForm = ({
   const [isRecipientsOpen, setIsRecipientsOpen] = useState(false);
   // the form values waiting for "Send" in the confirmation
   const [toSend, setToSend] = useState<CampaignFormValues | null>(null);
+  // the form values shown in the preview panel
+  const [toPreview, setToPreview] = useState<CampaignFormValues | null>(null);
   const { activeSubscribers, receivers, hasNoActiveSubscribers, label } =
     useRecipients();
 
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting, isDirty },
   } = useForm<CampaignFormValues>({
     resolver: yupResolver(validationCampaign),
     defaultValues,
   });
+  const description = useWatch({ control, name: "description" }) ?? "";
+
 
   const { blocker, whileSaving, discard, restoreFocus, formProps } =
     useLeaveGuard(isDirty);
@@ -88,14 +96,26 @@ const CampaignForm = ({
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
-              rows={5}
+              rows={8}
               aria-invalid={Boolean(errors.description)}
+              placeholder="Hi {{name}}, ..."
               aria-describedby={errors.description ? "description-error" : undefined}
               {...register("description")}
             />
             {errors.description && (
               <p id="description-error" className="text-sm text-destructive">
                 {errors.description.message}
+              </p>
+            )}
+            {/* the counter shows up only near the limit */}
+            {description.length > DESCRIPTION_MAX - 100 && (
+              <p
+                className={cn(
+                  "text-right text-xs tabular-nums text-muted-foreground",
+                  description.length > DESCRIPTION_MAX && "text-destructive"
+                )}
+              >
+                {description.length}/{DESCRIPTION_MAX}
               </p>
             )}
           </div>
@@ -118,6 +138,16 @@ const CampaignForm = ({
           <div className="flex flex-wrap justify-end gap-3">
             <Button
               type="button"
+              variant="ghost"
+              className="h-10 sm:mr-auto"
+              disabled={isSubmitting}
+              onClick={handleSubmit(setToPreview)}
+            >
+              <Eye />
+              Preview
+            </Button>
+            <Button
+              type="button"
               variant="outline"
               className="h-10"
               disabled={isSubmitting}
@@ -138,6 +168,12 @@ const CampaignForm = ({
           </div>
         </form>
       </CardContent>
+
+      <CampaignPreviewPanel
+        values={toPreview}
+        recipients={hasNoActiveSubscribers ? [] : receivers}
+        onClose={() => setToPreview(null)}
+      />
 
       <RecipientsDialog
         isOpen={isRecipientsOpen}
