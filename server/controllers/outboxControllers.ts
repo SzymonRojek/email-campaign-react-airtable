@@ -4,7 +4,7 @@ import { axiosInstance } from "./axiosInstance";
 import { chunks, wait } from "../helpers/batches";
 import { getAllRecords } from "../helpers/getAllRecords";
 import { getErrorMessage } from "../helpers/getErrorMessage";
-import { buildEmail } from "../mail/buildEmail";
+import { buildEmail, unknownPlaceholders } from "../mail/buildEmail";
 import { deliver } from "../mail/deliver";
 import { readUnsubscribeToken, unsubscribeUrl } from "../mail/unsubscribeToken";
 import { AirtableRecord, CampaignFields, EmailFields, SubscriberFields } from "../types";
@@ -21,6 +21,15 @@ const appOrigin = (req: Request) => `${req.protocol}://${req.get("host")}`;
 
 const fullName = ({ name = "", surname = "" }: SubscriberFields) =>
   `${name} ${surname}`.trim();
+
+// e.g. "Unknown placeholder: {{nmae}}" - or null when the texts are fine
+const placeholderError = ({ title, description }: CampaignFields) => {
+  const unknown = unknownPlaceholders(title, description);
+  if (unknown.length === 0) return null;
+
+  const list = unknown.map((key) => `{{${key}}}`).join(", ");
+  return `Unknown placeholder${unknown.length > 1 ? "s" : ""}: ${list} - use {{name}} or {{surname}}`;
+};
 
 const emailsOf = async (campaignId: string) =>
   (
@@ -48,6 +57,9 @@ export const sendCampaign = async (req: Request, res: Response) => {
       return res.status(409).json({ status: "fail", error: "This campaign has already been sent" });
     }
 
+    const invalidText = placeholderError(campaign.fields);
+    if (invalidText) return res.status(400).json({ status: "fail", error: invalidText });
+
     const chosen = Array.isArray(recipientIds) ? new Set(recipientIds.map(String)) : null;
     const recipients = (
       (await getAllRecords("/subscribers")) as AirtableRecord<SubscriberFields>[]
@@ -67,7 +79,7 @@ export const sendCampaign = async (req: Request, res: Response) => {
       recipients.map(({ id: subscriberId, fields }) =>
         buildEmail({
           campaign: campaign.fields,
-          recipient: { name: fields.name, email: fields.email },
+          recipient: { name: fields.name, surname: fields.surname, email: fields.email },
           unsubscribeUrl: unsubscribeUrl(origin, subscriberId),
         })
       )
@@ -115,6 +127,73 @@ export const getCampaignEmails = async (req: Request, res: Response) => {
   }
 };
 
+// GET /api/emails - every e-mail of the outbox with its campaign's title, newest first
+export const getAllEmails = async (req: Request, res: Response) => {
+  try {
+    const [emails, campaigns] = await Promise.all([
+      getAllRecords(emailsEndpoint),
+      getAllRecords("/campaigns"),
+    ]);
+    const titles = new Map(
+      (campaigns as AirtableRecord<CampaignFields>[]).map(({ id, fields }) => [id, fields.title ?? ""])
+    );
+
+    const sent = (emails as AirtableRecord<EmailFields>[])
+      .filter(({ fields }) => titles.has(fields.campaignId ?? ""))
+      .map(({ id, fields }) => ({
+        id,
+        campaignId: fields.campaignId,
+        title: titles.get(fields.campaignId ?? ""),
+        name: fields.name,
+        email: fields.email,
+        sentAt: fields.sentAt,
+      }))
+      .sort(
+        (a, b) =>
+          (b.sentAt ?? "").localeCompare(a.sentAt ?? "") ||
+          (a.name ?? "").localeCompare(b.name ?? "", "pl")
+      );
+
+    res.status(200).json(sent);
+  } catch (error) {
+    res.status(400).json({ status: "fail", error: getErrorMessage(error) });
+  }
+};
+
+// GET /api/subscribers/:id/emails - the campaigns a subscriber got, newest first
+export const getSubscriberEmails = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  if (!isRecordId(id)) return res.status(200).json([]);
+
+  try {
+    const [emails, campaigns] = await Promise.all([
+      getAllRecords(emailsEndpoint, { filterByFormula: `{subscriberId}='${id}'` }),
+      getAllRecords("/campaigns"),
+    ]);
+    const titles = new Map(
+      (campaigns as AirtableRecord<CampaignFields>[]).map(({ id: campaignId, fields }) => [
+        campaignId,
+        fields.title ?? "",
+      ])
+    );
+
+    const received = (emails as AirtableRecord<EmailFields>[])
+      .filter(({ fields }) => fields.subscriberId === id && titles.has(fields.campaignId ?? ""))
+      .map(({ id: emailId, fields }) => ({
+        id: emailId,
+        campaignId: fields.campaignId,
+        title: titles.get(fields.campaignId ?? ""),
+        sentAt: fields.sentAt,
+      }))
+      .sort((a, b) => (b.sentAt ?? "").localeCompare(a.sentAt ?? ""));
+
+    res.status(200).json(received);
+  } catch (error) {
+    res.status(400).json({ status: "fail", error: getErrorMessage(error) });
+  }
+};
+
 // GET /api/emails/:id/preview - the e-mail exactly as its recipient got it
 export const getEmailPreview = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -128,16 +207,47 @@ export const getEmailPreview = async (req: Request, res: Response) => {
       `/campaigns/${campaignId}`
     );
 
-    // the greeting uses the first name the subscriber had when the e-mail went out
+    // the e-mail uses the name the subscriber had when it went out
+    const [firstName, ...surname] = (name ?? "").split(" ");
     const built = buildEmail({
       campaign: campaign.fields,
-      recipient: { name: name?.split(" ")[0], email: email.fields.email },
+      recipient: { name: firstName, surname: surname.join(" "), email: email.fields.email },
       unsubscribeUrl: unsubscribeUrl(appOrigin(req), subscriberId),
     });
 
-    res.status(200).json({ ...built, sentAt });
+    res.status(200).json({ ...built, toName: name ?? "", sentAt });
   } catch (error) {
     res.status(404).json({ status: "fail", error: "E-mail does not exist" });
+  }
+};
+
+// POST /api/campaigns/preview  { title, description, subscriberId }
+// a campaign that is being written, as this subscriber would get it
+export const previewCampaign = async (req: Request, res: Response) => {
+  const { title = "", description = "", subscriberId } = req.body ?? {};
+  const campaign = { title: String(title), description: String(description) };
+
+  const invalidText = placeholderError(campaign);
+  if (invalidText) return res.status(400).json({ status: "fail", error: invalidText });
+
+  if (!isRecordId(subscriberId)) {
+    return res.status(404).json({ status: "fail", error: "Subscriber does not exist" });
+  }
+
+  try {
+    const { data: subscriber } = await axiosInstance.get<AirtableRecord<SubscriberFields>>(
+      `/subscribers/${subscriberId}`
+    );
+    const { name, surname, email } = subscriber.fields;
+    const built = buildEmail({
+      campaign,
+      recipient: { name, surname, email },
+      unsubscribeUrl: unsubscribeUrl(appOrigin(req), subscriberId),
+    });
+
+    res.status(200).json({ ...built, toName: fullName(subscriber.fields) });
+  } catch (error) {
+    res.status(404).json({ status: "fail", error: "Subscriber does not exist" });
   }
 };
 

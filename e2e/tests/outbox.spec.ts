@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import { expect, test } from "@playwright/test";
 
 import { getAirtable, listRow, loginByApi, resetAirtable, rowAction } from "./helpers";
@@ -33,7 +34,8 @@ test("opens an e-mail as its recipient got it", async ({ page }) => {
   // the preview has an address of its own
   await expect(page).toHaveURL(/\?email=recEmailAnna0001$/);
   const panel = page.getByRole("dialog");
-  await expect(panel).toContainText("To anna@example.com");
+  await expect(panel).toContainText("to Anna Nowak <anna@example.com>");
+  await expect(panel).toContainText("Email Campaign Dashboard <campaigns@example.com>");
   const email = page.frameLocator('iframe[title="E-mail to anna@example.com"]');
   await expect(email.getByText("Hello Anna,")).toBeVisible();
   await expect(email.getByText("Hello new subscribers")).toBeVisible();
@@ -45,6 +47,103 @@ test("opens an e-mail as its recipient got it", async ({ page }) => {
   // "back" closes the preview
   await page.goBack();
   await expect(panel).toHaveCount(0);
+});
+
+test("personalizes a draft and previews it for each recipient before sending", async ({
+  page,
+}) => {
+  await page.goto("/#/campaigns/edit/recCampDraft0001");
+
+  await page.getByLabel("Title").fill("{{name}}, autumn sale");
+  await page.getByLabel("Description").fill("Dear {{name}}, 30% off for you.");
+
+  await page.getByRole("button", { name: "Preview" }).click();
+
+  const panel = page.getByRole("dialog");
+  await expect(panel.getByRole("heading", { name: "Anna, autumn sale" })).toBeVisible();
+  const toAnna = page.frameLocator('iframe[title="E-mail to anna@example.com"]');
+  await expect(toAnna.getByText("Dear Anna, 30% off for you.")).toBeVisible();
+
+  // another recipient gets their own name
+  await page.getByLabel("Preview for").click();
+  await page.getByRole("option", { name: "Celina Wiśniewska" }).click();
+  await expect(panel.getByRole("heading", { name: "Celina, autumn sale" })).toBeVisible();
+  await expect(
+    page.frameLocator('iframe[title="E-mail to celina@example.com"]').getByText("Dear Celina,", { exact: false })
+  ).toBeVisible();
+
+  // nothing was saved or sent by the preview
+  await page.keyboard.press("Escape");
+  await expect(page).toHaveURL(/#\/campaigns\/edit\/recCampDraft0001$/);
+});
+
+test("points out a mistyped placeholder", async ({ page }) => {
+  await page.goto("/#/campaigns/edit/recCampDraft0001");
+
+  await page.getByLabel("Description").fill("Dear {{nmae}}");
+  await page.getByRole("button", { name: "Preview" }).click();
+
+  await expect(
+    page.getByText("unknown placeholder {{nmae}} - use {{name}} or {{surname}}")
+  ).toBeVisible();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+});
+
+test("exports who got a sent campaign as CSV", async ({ page }) => {
+  await openWelcome(page);
+
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export CSV" }).click();
+  const file = await download;
+
+  expect(file.suggestedFilename()).toMatch(/^welcome-recipients-\d{4}-\d{2}-\d{2}\.csv$/);
+  const lines = fs.readFileSync(await file.path(), "utf8").trim().split(/\r?\n/);
+  expect(lines).toEqual([
+    "name,email,sentAt",
+    "Anna Nowak,anna@example.com,2022-09-06T10:00:00.000Z",
+    "Celina Wiśniewska,celina@example.com,2022-09-06T10:00:00.000Z",
+  ]);
+});
+
+test("exports every e-mail of the sent campaigns shown in the list", async ({ page }) => {
+  await page.goto("/#/campaigns");
+
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export CSV" }).click();
+  const file = await download;
+
+  expect(file.suggestedFilename()).toMatch(/^sent-emails-\d{4}-\d{2}-\d{2}\.csv$/);
+  const lines = fs.readFileSync(await file.path(), "utf8").trim().split(/\r?\n/);
+  expect(lines).toEqual([
+    "campaign,name,email,sentAt",
+    "Welcome,Anna Nowak,anna@example.com,2022-09-06T10:00:00.000Z",
+    "Welcome,Celina Wiśniewska,celina@example.com,2022-09-06T10:00:00.000Z",
+  ]);
+
+  // only drafts in the list - nothing to export
+  await page.locator("#status-filter").click();
+  await page.getByRole("option", { name: "draft" }).click();
+  await expect(page.getByRole("button", { name: "Export CSV" })).toBeDisabled();
+});
+
+test("a subscriber's panel lists the campaigns they got", async ({ page }) => {
+  await page.goto("/#/subscribers?view=recSubAnna000001");
+
+  const received = page.getByRole("list", { name: "Campaigns received" });
+  await expect(received.getByRole("link")).toHaveCount(1);
+  await received.getByRole("link", { name: /Welcome/ }).click();
+
+  // the e-mail she got opens at once
+  await expect(page).toHaveURL(/#\/campaigns\/recCampSent00002\?email=recEmailAnna0001$/);
+  await expect(
+    page.frameLocator('iframe[title="E-mail to anna@example.com"]').getByText("Hello Anna,")
+  ).toBeVisible();
+});
+
+test("a subscriber who got nothing yet", async ({ page }) => {
+  await page.goto("/#/subscribers?view=recSubDarek00004");
+
+  await expect(page.getByRole("dialog").getByText("No campaigns yet.")).toBeVisible();
 });
 
 test("a sent campaign's menu leads to its recipients", async ({ page }) => {

@@ -2,7 +2,7 @@ import request from "supertest";
 
 import { axiosInstance } from "../controllers/axiosInstance";
 import { createToken } from "../helpers/authToken";
-import { buildEmail } from "../mail/buildEmail";
+import { buildEmail, unknownPlaceholders } from "../mail/buildEmail";
 import { createUnsubscribeToken, readUnsubscribeToken } from "../mail/unsubscribeToken";
 import { app } from "../app";
 
@@ -84,6 +84,50 @@ describe("buildEmail", () => {
   it("has the unsubscribe link", () => {
     expect(email.html).toContain('href="https://app.example.com/#/unsubscribe/abc.def"');
     expect(email.text).toContain("Unsubscribe: https://app.example.com/#/unsubscribe/abc.def");
+  });
+
+  it("is a plain message - no banner, no repeated title", () => {
+    expect(email.html).not.toContain("Email Campaign Dashboard");
+    expect(email.html).not.toContain("<h1");
+    expect(email.from).toEqual({ name: "Email Campaign Dashboard", address: "campaigns@example.com" });
+  });
+});
+
+describe("templates", () => {
+  const build = (title: string, description: string, recipient = { name: "Emma", surname: "Johnson" }) =>
+    buildEmail({ campaign: { title, description }, recipient, unsubscribeUrl: "https://app/#/u/x" });
+
+  it("fills in {{name}} and {{surname}} for every recipient", () => {
+    const email = build("{{name}}, your discount", "Dear {{ name }} {{surname}}, welcome!");
+
+    expect(email.subject).toBe("Emma, your discount");
+    expect(email.html).toContain("Dear Emma Johnson, welcome!");
+    expect(email.text).toContain("Dear Emma Johnson, welcome!");
+  });
+
+  it("never lets a name become HTML or a link", () => {
+    const email = build("Hi", "Dear {{name}}", { name: "<img src=x> https://evil.example", surname: "" });
+
+    expect(email.html).toContain("Dear &lt;img src=x&gt; https://evil.example");
+    expect(email.html).not.toContain("<img");
+    expect(email.html).not.toContain("evil.example\"");
+  });
+
+  it("keeps the text as written: paragraphs, line breaks, links", () => {
+    const email = build("Hi", "First line\nsecond line\n\n**Big** *news* at https://example.com/sale?a=1&b=2.");
+
+    expect(email.html).toContain('<p style="margin:0 0 16px">First line<br>second line</p>');
+    expect(email.html).toContain("**Big** *news* at");
+    expect(email.html).not.toContain("<strong>");
+    expect(email.html).toContain(
+      '<a href="https://example.com/sale?a=1&amp;b=2" style="color:#1a73e8">https://example.com/sale?a=1&amp;b=2</a>.'
+    );
+    expect(email.text).toContain("**Big** *news* at https://example.com/sale?a=1&b=2.");
+  });
+
+  it("finds unknown placeholders", () => {
+    expect(unknownPlaceholders("{{nmae}} and {{name}}", "{{email}} {{nmae}}")).toEqual(["nmae", "email"]);
+    expect(unknownPlaceholders("{{name}} {{ surname }}", undefined)).toEqual([]);
   });
 });
 
@@ -177,6 +221,19 @@ describe("POST /api/campaigns/:id/send", () => {
     expect(airtable.post).not.toHaveBeenCalled();
   });
 
+  it("refuses a campaign with an unknown placeholder", async () => {
+    airtableData({
+      "/campaigns/recCampaign1": { ...draft, fields: { ...draft.fields, description: "Hi {{nmae}}" } },
+      "/subscribers": { records: subscribers },
+    });
+
+    const res = await send();
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe("Unknown placeholder: {{nmae}} - use {{name}} or {{surname}}");
+    expect(airtable.post).not.toHaveBeenCalled();
+  });
+
   it("saves the e-mails in batches of 10", async () => {
     airtableData({
       "/campaigns/recCampaign1": draft,
@@ -235,8 +292,69 @@ describe("the outbox of a campaign", () => {
     expect(res.body.to).toBe("anna@example.com");
     expect(res.body.subject).toBe("Autumn sale");
     expect(res.body.html).toContain("Hello Anna,");
+    expect(res.body.toName).toBe("Anna Nowak");
     expect(res.body.html).toMatch(/#\/unsubscribe\/recAnna\.[\w-]+/);
     expect(res.body.sentAt).toBe("2026-10-01T10:00:00.000Z");
+  });
+
+  it("lists the campaigns a subscriber got, newest first", async () => {
+    const older = emailRow("recE1", "Anna");
+    const newer = { ...emailRow("recE2", "Anna", "recCampaign2"), fields: { ...emailRow("recE2", "Anna", "recCampaign2").fields, sentAt: "2026-10-05T10:00:00.000Z" } };
+    airtableData({
+      "/emails": { records: [older, newer, emailRow("recE3", "Bartek")] },
+      "/campaigns": {
+        records: [
+          { ...draft, fields: { ...draft.fields, status: "sent" } },
+          { ...draft, id: "recCampaign2", fields: { ...draft.fields, title: "Winter", status: "sent" } },
+        ],
+      },
+    });
+
+    const res = await request(app).get("/api/subscribers/recAnna/emails").set(auth());
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual([
+      { id: "recE2", campaignId: "recCampaign2", title: "Winter", sentAt: "2026-10-05T10:00:00.000Z" },
+      { id: "recE1", campaignId: "recCampaign1", title: "Autumn sale", sentAt: "2026-10-01T10:00:00.000Z" },
+    ]);
+    expect(airtable.get).toHaveBeenCalledWith("/emails", {
+      params: { filterByFormula: "{subscriberId}='recAnna'", offset: undefined },
+    });
+  });
+
+  it("lists every sent e-mail with its campaign, newest first", async () => {
+    const newer = emailRow("recE2", "Bartek", "recCampaign2");
+    newer.fields.sentAt = "2026-10-05T10:00:00.000Z";
+    airtableData({
+      "/emails": { records: [emailRow("recE1", "Anna"), newer, emailRow("recE3", "Gone", "recDeleted")] },
+      "/campaigns": {
+        records: [draft, { ...draft, id: "recCampaign2", fields: { ...draft.fields, title: "Winter" } }],
+      },
+    });
+
+    const res = await request(app).get("/api/emails").set(auth());
+
+    expect(res.status).toBe(200);
+    expect(res.body.map(({ id, title }: { id: string; title: string }) => [id, title])).toEqual([
+      ["recE2", "Winter"],
+      ["recE1", "Autumn sale"],
+    ]);
+    expect(res.body[1]).toEqual(
+      expect.objectContaining({ name: "Anna Nowak", email: "anna@example.com", campaignId: "recCampaign1" })
+    );
+  });
+
+  it("needs the login token for the list of e-mails", async () => {
+    expect((await request(app).get("/api/emails")).status).toBe(401);
+  });
+
+  it("does not put anything else than a subscriber id into the formula", async () => {
+    const res = await request(app)
+      .get(`/api/subscribers/${encodeURIComponent("x' OR 1=1")}/emails`)
+      .set(auth());
+
+    expect(res.body).toEqual([]);
+    expect(airtable.get).not.toHaveBeenCalled();
   });
 
   it("empties the outbox when the campaign is deleted", async () => {
@@ -247,6 +365,39 @@ describe("the outbox of a campaign", () => {
     expect(res.status).toBe(200);
     expect(airtable.delete).toHaveBeenCalledWith("/campaigns/recCampaign1");
     expect(airtable.delete).toHaveBeenCalledWith("/emails", { params: { records: ["recE1", "recE2"] } });
+  });
+});
+
+describe("POST /api/campaigns/preview", () => {
+  const preview = (body: object) =>
+    request(app).post("/api/campaigns/preview").set(auth()).send(body);
+
+  beforeEach(() => airtableData({ "/subscribers/recAnna": subscribers[0] }));
+
+  it("shows a draft as the chosen subscriber would get it", async () => {
+    const res = await preview({ title: "For {{name}}", description: "Hi {{name}} {{surname}}", subscriberId: "recAnna" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.subject).toBe("For Anna");
+    expect(res.body.to).toBe("anna@example.com");
+    expect(res.body.toName).toBe("Anna Nowak");
+    expect(res.body.html).toContain("Hi Anna Nowak");
+    expect(airtable.post).not.toHaveBeenCalled();
+    expect(airtable.patch).not.toHaveBeenCalled();
+  });
+
+  it("explains an unknown placeholder", async () => {
+    const res = await preview({ title: "{{nme}}", description: "x", subscriberId: "recAnna" });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain("{{nme}}");
+  });
+
+  it("needs a real subscriber id", async () => {
+    const res = await preview({ title: "a", description: "b", subscriberId: "x' OR 1=1" });
+
+    expect(res.status).toBe(404);
+    expect(airtable.get).not.toHaveBeenCalled();
   });
 });
 

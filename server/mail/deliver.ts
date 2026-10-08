@@ -23,10 +23,8 @@ export const deliver = async (emails: BuiltEmail[]) => {
   });
 
   for (const email of emails) {
-    const info = await transporter.sendMail({
-      from: '"Email Campaign Dashboard" <campaigns@example.com>',
-      ...email,
-    });
+    const { from, to, subject, html, text } = email;
+    const info = await transporter.sendMail({ from, to, subject, html, text });
     console.log(`Ethereal preview for ${email.to}: ${nodemailer.getTestMessageUrl(info)}`);
   }
 };

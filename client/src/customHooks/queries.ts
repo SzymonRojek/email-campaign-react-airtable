@@ -1,8 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { fetchData, fetchDataById } from "services";
 import api from "services/api";
-import { Campaign, Email, EmailPreview, Subscriber } from "types";
+import {
+  Campaign,
+  CampaignFormValues,
+  Email,
+  EmailPreview,
+  ReceivedEmail,
+  Subscriber,
+} from "types";
 
 // typed react-query hooks - one place for the query keys and the data types
 
@@ -45,6 +52,14 @@ export const useCampaignEmails = (id?: string) =>
     enabled: Boolean(id),
   });
 
+// the campaigns a subscriber got
+export const useSubscriberEmails = (id?: string) =>
+  useQuery({
+    queryKey: ["/subscribers", { id }, "emails"],
+    queryFn: () => api.get<ReceivedEmail[]>(`/subscribers/${id}/emails`),
+    enabled: Boolean(id),
+  });
+
 // one e-mail as its recipient got it
 export const useEmailPreview = (id: string | null) =>
   useQuery({
@@ -52,5 +67,17 @@ export const useEmailPreview = (id: string | null) =>
     queryFn: () => api.get<EmailPreview>(`/emails/${id}/preview`),
     enabled: Boolean(id),
     // a sent e-mail never changes
+    staleTime: Infinity,
+  });
+
+// a campaign that is being written, as one subscriber would get it
+// (its own key - refreshing the campaigns list does not load it again)
+export const useCampaignPreview = (values: CampaignFormValues | null, subscriberId?: string) =>
+  useQuery({
+    queryKey: ["campaign-preview", values, subscriberId],
+    queryFn: () => api.post<EmailPreview>("/campaigns/preview", { ...values, subscriberId }),
+    enabled: Boolean(values && subscriberId),
+    // switching the recipient keeps the last e-mail on screen until the next one is ready
+    placeholderData: keepPreviousData,
     staleTime: Infinity,
   });
