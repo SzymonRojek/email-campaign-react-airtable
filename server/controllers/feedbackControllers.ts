@@ -12,9 +12,9 @@ const endpoint = "/feedback";
 export const FEEDBACK_LIMITS = { name: 40, role: 40, message: 500 };
 const MAX_PER_HOUR = 3;
 const HOUR_MS = 60 * 60 * 1000;
-// every visit of the login page asks for it - the free Airtable plan has a monthly
-// limit of API calls, so the approved feedback is kept in memory for a while
-const CACHE_MS = 10 * 60 * 1000;
+// every visit of the login page asks for it - a short memory protects the Airtable API
+// limit from bursts (e.g. many refreshes), and an approved entry still shows up at once
+const CACHE_MS = 30 * 1000;
 
 interface PublicFeedback {
   id: string;

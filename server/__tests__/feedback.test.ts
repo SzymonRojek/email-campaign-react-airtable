@@ -48,15 +48,15 @@ describe("GET /api/feedback", () => {
     });
   });
 
-  it("asks Airtable at most once in 10 minutes", async () => {
+  it("asks Airtable at most once in 30 seconds", async () => {
     const now = jest.spyOn(Date, "now").mockReturnValue(1_000_000);
 
     await request(app).get("/api/feedback");
-    now.mockReturnValue(1_000_000 + 9 * 60 * 1000);
+    now.mockReturnValue(1_000_000 + 29 * 1000);
     await request(app).get("/api/feedback");
     expect(airtable.get).toHaveBeenCalledTimes(1);
 
-    now.mockReturnValue(1_000_000 + 11 * 60 * 1000);
+    now.mockReturnValue(1_000_000 + 31 * 1000);
     await request(app).get("/api/feedback");
     expect(airtable.get).toHaveBeenCalledTimes(2);
   });
@@ -65,7 +65,7 @@ describe("GET /api/feedback", () => {
     const now = jest.spyOn(Date, "now").mockReturnValue(1_000_000);
     await request(app).get("/api/feedback");
 
-    now.mockReturnValue(1_000_000 + 11 * 60 * 1000);
+    now.mockReturnValue(1_000_000 + 31 * 1000);
     airtable.get.mockRejectedValue(new Error("Airtable is down"));
     const res = await request(app).get("/api/feedback");
 

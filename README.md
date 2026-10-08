@@ -53,7 +53,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 **Feedback from reviewers**
 - anybody can leave feedback - also on the login page, without logging in
 - shown only after the owner approves it in Airtable and only if its author agreed; the login page shows the newest two
-- protected against bots and floods (a hidden field, 3 entries an hour per address); kept in memory on the server for 10 minutes, so visits do not use up the Airtable API limit
+- protected against bots and floods (a hidden field, 3 entries an hour per address); kept in memory on the server for 30 seconds, so many visits at once do not use up the Airtable API limit
 
 **Everywhere**
 - dashboard with the key numbers, recent campaigns and newest subscribers

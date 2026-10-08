@@ -88,6 +88,6 @@ export const useFeedback = () =>
   useQuery({
     queryKey: ["/feedback"],
     queryFn: () => api.get<Feedback[]>("/feedback"),
-    staleTime: 5 * 60 * 1000,
+    // loaded again on every visit - an approved entry shows up at once
     meta: { silent: true },
   });
