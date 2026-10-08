@@ -28,7 +28,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 
 - **Full-stack TypeScript** - React client and Express server, strict mode
 - **Secure backend** - the Airtable token never reaches the browser; login with signed tokens, protection against password guessing, signed unsubscribe links, user text always escaped in the e-mails
-- **Automated testing** - 114 server and 85 client unit tests, 59 end-to-end tests in a real browser (Playwright)
+- **Automated testing** - 116 server and 85 client unit tests, 60 end-to-end tests in a real browser (Playwright)
 - **CI/CD** - every pull request is checked by GitHub Actions; `dev` deploys to staging and `main` to production automatically
 - **Team-style Git workflow** - feature branches, pull requests, staging before production
 - **Product thinking** - minimal UI feedback, no lost work, accessible components, works on phones
@@ -45,7 +45,8 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 - write a campaign, save it as a draft or send it to all active subscribers or only the chosen ones
 - personalization with `{{name}}` and `{{surname}}` in the title and the message; a mistyped placeholder is caught before sending
 - preview before sending - exactly as the chosen recipient will get it
-- a sent campaign shows its recipients, opens each e-mail the way an inbox shows it and exports the list to CSV
+- a sent campaign shows its recipients and opens each e-mail the way an inbox shows it
+- CSV export of the recipients of one campaign, or of all e-mails of the campaigns shown in the list
 - every e-mail has an **unsubscribe link** to a public page; the subscriber then gets no more campaigns
 - duplicate any campaign as a new draft
 
@@ -96,6 +97,7 @@ The React app never talks to Airtable directly. The Express server keeps the Air
 | `GET`, `PATCH`, `DELETE` | `/api/campaigns/:id` | token |
 | `POST` | `/api/campaigns/:id/send` | token |
 | `GET` | `/api/campaigns/:id/emails` | token |
+| `GET` | `/api/emails` | token |
 | `GET` | `/api/emails/:id/preview` | token |
 | `GET`, `POST` | `/api/unsubscribe/:token` | the signed link from the e-mail |
 | `POST` | `/api/demo/reset` | reset key (production only) |

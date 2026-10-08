@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
+import { Download } from "lucide-react";
 
 import { useTableData } from "customHooks/useTableData";
 import DataTablePagination, {
@@ -9,7 +10,12 @@ import SortableDateHead, {
 } from "components/DataTable/SortableDateHead";
 import SearchInput from "components/DataTable/SearchInput";
 import StatusFilter from "components/DataTable/StatusFilter";
-import { Campaign, CampaignStatus } from "types";
+import { downloadCsv } from "helpers/csv";
+import { toastMessage } from "helpers";
+import { getErrorMessage } from "services";
+import api from "services/api";
+import { Campaign, CampaignStatus, SentEmail } from "types";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -20,6 +26,7 @@ import {
 } from "@/components/ui/table";
 import CampaignCard from "./CampaignCard";
 import CampaignRow from "./CampaignRow";
+import { emailsToCsv, sentEmailsFileName } from "./emailsCsv";
 
 const statuses: CampaignStatus[] = ["sent", "draft"];
 
@@ -37,6 +44,25 @@ const CampaignsTable = ({
     campaigns,
     ({ fields }) => `${fields.title} ${fields.description}`
   );
+  const [isExporting, setIsExporting] = useState(false);
+  // what the list shows - only the sent campaigns have e-mails
+  const shownSent = table.rows.filter(({ fields }) => fields.status === "sent");
+
+  // every e-mail of the sent campaigns the list shows (after the search and the filter)
+  const exportEmails = async () => {
+    setIsExporting(true);
+    try {
+      const ids = new Set(shownSent.map(({ id }) => id));
+      const emails = (await api.get<SentEmail[]>("/emails")).filter(({ campaignId }) =>
+        ids.has(campaignId)
+      );
+      downloadCsv(sentEmailsFileName(), emailsToCsv(emails, true));
+    } catch (error) {
+      toastMessage(`The e-mails have not been exported: ${getErrorMessage(error)}`);
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   if (campaigns.length === 0) {
     return (
@@ -61,14 +87,26 @@ const CampaignsTable = ({
           value={table.status}
           onChange={table.setStatus}
         />
-        {/* phones have no "Date" header to click */}
-        {table.rows.length > 1 && (
-          <SortDirectionButton
-            direction={table.direction}
-            onToggle={table.toggleDirection}
-            className="ml-auto md:hidden"
-          />
-        )}
+        <div className="ml-auto flex items-center gap-2">
+          {/* phones have no "Date" header to click */}
+          {table.rows.length > 1 && (
+            <SortDirectionButton
+              direction={table.direction}
+              onToggle={table.toggleDirection}
+              className="md:hidden"
+            />
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={exportEmails}
+            disabled={shownSent.length === 0 || isExporting}
+            title="Download every e-mail of the sent campaigns shown in the list"
+          >
+            <Download />
+            {isExporting ? "Exporting..." : "Export CSV"}
+          </Button>
+        </div>
       </div>
 
       {table.rows.length === 0 ? (

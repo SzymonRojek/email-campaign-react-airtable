@@ -322,6 +322,32 @@ describe("the outbox of a campaign", () => {
     });
   });
 
+  it("lists every sent e-mail with its campaign, newest first", async () => {
+    const newer = emailRow("recE2", "Bartek", "recCampaign2");
+    newer.fields.sentAt = "2026-10-05T10:00:00.000Z";
+    airtableData({
+      "/emails": { records: [emailRow("recE1", "Anna"), newer, emailRow("recE3", "Gone", "recDeleted")] },
+      "/campaigns": {
+        records: [draft, { ...draft, id: "recCampaign2", fields: { ...draft.fields, title: "Winter" } }],
+      },
+    });
+
+    const res = await request(app).get("/api/emails").set(auth());
+
+    expect(res.status).toBe(200);
+    expect(res.body.map(({ id, title }: { id: string; title: string }) => [id, title])).toEqual([
+      ["recE2", "Winter"],
+      ["recE1", "Autumn sale"],
+    ]);
+    expect(res.body[1]).toEqual(
+      expect.objectContaining({ name: "Anna Nowak", email: "anna@example.com", campaignId: "recCampaign1" })
+    );
+  });
+
+  it("needs the login token for the list of e-mails", async () => {
+    expect((await request(app).get("/api/emails")).status).toBe(401);
+  });
+
   it("does not put anything else than a subscriber id into the formula", async () => {
     const res = await request(app)
       .get(`/api/subscribers/${encodeURIComponent("x' OR 1=1")}/emails`)

@@ -2,7 +2,8 @@ import { Navigate, useParams, useSearchParams } from "react-router";
 import { Copy, Download, Mail } from "lucide-react";
 
 import { formattedData, pluralize } from "helpers";
-import { downloadCsv, toCsv } from "helpers/csv";
+import { downloadCsv } from "helpers/csv";
+import { emailsToCsv, recipientsFileName } from "components/campaigns/emailsCsv";
 import { useCampaign, useCampaignEmails } from "customHooks/queries";
 import { Error, Loader } from "components/DisplayMessage";
 import { PageHeader } from "components/PageHeader";
@@ -17,10 +18,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // the e-mail preview lives in the address too: /campaigns/<id>?email=<email id>
 const EMAIL_PARAM = "email";
-
-// "Autumn sale!" -> "autumn-sale"
-const toFileName = (title = "") =>
-  title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "campaign";
 
 // a sent campaign: its message and who got it, with every e-mail to open
 const CampaignDetailsPage = () => {
@@ -68,28 +65,10 @@ const CampaignDetailsPage = () => {
         }
         back={{ to: "/campaigns", label: "Campaigns" }}
         actions={
-          <>
-            <Button
-              variant="outline"
-              disabled={!emails?.length}
-              onClick={() =>
-                downloadCsv(
-                  `${toFileName(fields.title)}-recipients-${new Date().toISOString().slice(0, 10)}.csv`,
-                  toCsv([
-                    ["name", "email", "sentAt"],
-                    ...(emails ?? []).map(({ fields: email }) => [email.name, email.email, email.sentAt]),
-                  ])
-                )
-              }
-            >
-              <Download />
-              Export CSV
-            </Button>
-            <Button variant="outline" onClick={() => duplicate(campaign)}>
-              <Copy />
-              Duplicate
-            </Button>
-          </>
+          <Button variant="outline" onClick={() => duplicate(campaign)}>
+            <Copy />
+            Duplicate
+          </Button>
         }
       />
 
@@ -105,8 +84,24 @@ const CampaignDetailsPage = () => {
         </Card>
 
         <Card className="gap-0 py-0">
-          <CardHeader className="border-b py-4">
+          <CardHeader className="flex items-center justify-between border-b py-4">
             <CardTitle className="text-base">Recipients</CardTitle>
+            {Boolean(emails?.length) && (
+              <Button
+                variant="outline"
+                size="sm"
+                title="Download the recipients of this campaign"
+                onClick={() =>
+                  downloadCsv(
+                    recipientsFileName(fields.title),
+                    emailsToCsv((emails ?? []).map(({ fields: email }) => email))
+                  )
+                }
+              >
+                <Download />
+                Export CSV
+              </Button>
+            )}
           </CardHeader>
           {isLoadingEmails ? (
             <Loader title="Loading the recipients..." />

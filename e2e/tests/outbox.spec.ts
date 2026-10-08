@@ -105,6 +105,27 @@ test("exports who got a sent campaign as CSV", async ({ page }) => {
   ]);
 });
 
+test("exports every e-mail of the sent campaigns shown in the list", async ({ page }) => {
+  await page.goto("/#/campaigns");
+
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export CSV" }).click();
+  const file = await download;
+
+  expect(file.suggestedFilename()).toMatch(/^sent-emails-\d{4}-\d{2}-\d{2}\.csv$/);
+  const lines = fs.readFileSync(await file.path(), "utf8").trim().split(/\r?\n/);
+  expect(lines).toEqual([
+    "campaign,name,email,sentAt",
+    "Welcome,Anna Nowak,anna@example.com,2022-09-06T10:00:00.000Z",
+    "Welcome,Celina Wiśniewska,celina@example.com,2022-09-06T10:00:00.000Z",
+  ]);
+
+  // only drafts in the list - nothing to export
+  await page.locator("#status-filter").click();
+  await page.getByRole("option", { name: "draft" }).click();
+  await expect(page.getByRole("button", { name: "Export CSV" })).toBeDisabled();
+});
+
 test("a subscriber's panel lists the campaigns they got", async ({ page }) => {
   await page.goto("/#/subscribers?view=recSubAnna000001");
 
