@@ -141,7 +141,7 @@ Needs **Node.js 24** and an Airtable base with the tables `subscribers` and `cam
 | `DEMO_RESET_KEY` | Render (production), GitHub secret | the key of the nightly reset - **only on production**, it turns on `POST /api/demo/reset`, which wipes the base |
 | `DEMO_APP_URL` | GitHub variable | the production address the nightly reset calls |
 
-Only the server reads these - none of them ends up in the browser. The old names `REACT_APP_DB_ID` / `REACT_APP_API_KEY` still work, but the server asks in its log to rename them.
+Only the server reads these - none of them ends up in the browser. When an Airtable variable is missing, the server says so in its log at start.
 
 ### Running the tests
 

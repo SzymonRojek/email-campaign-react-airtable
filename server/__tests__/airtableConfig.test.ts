@@ -8,29 +8,21 @@ describe("airtableConfig", () => {
       apiUrl: "https://api.airtable.com/v0",
       baseId: "appBase",
       token: "patToken",
-      oldNames: [],
+      missing: [],
     });
   });
 
-  it("still accepts the old names and says which ones to rename", () => {
-    const config = airtableConfig({ REACT_APP_DB_ID: "appOld", REACT_APP_API_KEY: "patOld" });
-
-    expect(config).toMatchObject({ baseId: "appOld", token: "patOld" });
-    expect(config.oldNames).toEqual([
-      "REACT_APP_DB_ID -> AIRTABLE_BASE_ID",
-      "REACT_APP_API_KEY -> AIRTABLE_TOKEN",
+  it("says which variables are missing", () => {
+    expect(airtableConfig({}).missing).toEqual(["AIRTABLE_BASE_ID", "AIRTABLE_TOKEN"]);
+    expect(airtableConfig({ AIRTABLE_BASE_ID: "appBase" }).missing).toEqual([
+      "AIRTABLE_TOKEN",
     ]);
   });
 
-  it("prefers the new names when both are set", () => {
+  it("does not read the old names any more", () => {
     expect(
-      airtableConfig({
-        AIRTABLE_BASE_ID: "appNew",
-        REACT_APP_DB_ID: "appOld",
-        AIRTABLE_TOKEN: "patNew",
-        REACT_APP_API_KEY: "patOld",
-      })
-    ).toMatchObject({ baseId: "appNew", token: "patNew", oldNames: [] });
+      airtableConfig({ REACT_APP_DB_ID: "appOld", REACT_APP_API_KEY: "patOld" })
+    ).toMatchObject({ baseId: undefined, token: undefined });
   });
 
   it("uses the fake Airtable address in tests", () => {
