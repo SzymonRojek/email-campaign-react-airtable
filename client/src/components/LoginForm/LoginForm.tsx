@@ -8,6 +8,7 @@ import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 import { validationLogin } from "helpers";
 import api from "services/api";
 import { setToken } from "services/authToken";
+import { trackEvent } from "../../analytics";
 import { getErrorMessage } from "services";
 import ThemeToggle from "components/ThemeToggle";
 import LoginFeedback from "components/feedback/LoginFeedback";
@@ -36,6 +37,7 @@ const LoginForm = () => {
       });
 
       setToken(token);
+      trackEvent("login");
       setIsLogIn(true);
       navigate("/");
     } catch (error) {
