@@ -27,6 +27,8 @@ jobs:
       DEMO_RESET_KEY: ${{ secrets.DEMO_RESET_KEY }}
       FORCE: ${{ inputs.force || false }}
     steps:
+      - uses: actions/checkout@v7
+
       - name: Check the settings
         run: |
           if [ -z "$APP_URL" ] || [ -z "$DEMO_RESET_KEY" ]; then
@@ -49,3 +51,12 @@ jobs:
             -H "Content-Type: application/json" \
             -d "{\"force\": $FORCE}"
           echo
+
+      # is the demo still fine after the reset? only reads (the Smoke folder of the Postman
+      # collection) - a failure here fails the run, and GitHub sends an e-mail
+      - name: Check the demo (read-only API tests)
+        run: >
+          npx --yes newman@6 run postman/email-campaign-dashboard.postman_collection.json
+          -e postman/demo.postman_environment.json
+          --env-var "baseUrl=$APP_URL"
+          --folder "Smoke (read-only)"
