@@ -23,6 +23,8 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 > Free hosting - after a break the first load can take up to a minute.
 >
 > **Demo mode:** nobody really gets the e-mails. Sending builds a real, personalized e-mail for every recipient and saves it in the campaign's outbox, where each one can be opened. Feel free to change anything - the example data comes back every night. Please use made-up data: the demo is public.
+>
+> **Reviewing the project?** I would love your feedback - use "Leave feedback" on the login page or in the app.
 
 ## Highlights
 
@@ -51,9 +53,8 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 - duplicate any campaign as a new draft
 
 **Feedback from reviewers**
-- anybody can leave feedback - also on the login page, without logging in
-- shown only after the owner approves it in Airtable; the login page shows the newest three, the Feedback page all of them
-- protected against bots and floods (a hidden field, 3 entries an hour per address); kept in memory on the server for 30 seconds, so many visits at once do not use up the Airtable API limit
+- anybody can leave feedback, also on the login page without logging in
+- shown only after I approve it; the login page shows the newest three, the Feedback page all of them
 
 **Everywhere**
 - dashboard with the key numbers, recent campaigns and newest subscribers
@@ -83,6 +84,8 @@ The React app never talks to Airtable directly. The Express server keeps the Air
 **Login:** `POST /api/auth/login` checks the password and returns a signed token valid for 8 hours. Every data endpoint requires it in the `Authorization: Bearer <token>` header; after 5 wrong passwords the IP is blocked for 15 minutes.
 
 **Sending:** the server, not the browser, decides who gets a campaign (active subscribers only). It builds one e-mail per recipient from a template - fills in the name, escapes the text so it can not become HTML, adds a signed unsubscribe link - and saves it in the `emails` table (the outbox). The preview before sending uses the same template.
+
+**Feedback:** public endpoints with a hidden field against bots and a limit of 3 entries an hour per address. A new entry is always saved as not approved; the approved ones are kept in memory on the server for 30 seconds, so many visits at once do not use up the Airtable API limit.
 
 **Why an outbox:** the demo is public and the free hosting blocks outgoing SMTP. Where the e-mails go is one setting (`MAIL_TRANSPORT`): `outbox` on the demo, `ethereal` locally (a test SMTP server that catches every e-mail). A real e-mail service would be one more case.
 
@@ -123,7 +126,7 @@ To save Airtable API calls, the reset is **skipped when nobody changed anything*
 
 Every pull request runs in GitHub Actions: type checking, lint, unit tests, production build and end-to-end tests.
 
-- **Server** (Jest + supertest) - login and tokens, every endpoint, sending and the outbox, templates and escaping, unsubscribe links, the CSV import, the demo reset; Airtable is mocked
+- **Server** (Jest + supertest) - login and tokens, every endpoint, sending and the outbox, templates and escaping, unsubscribe links, the CSV import, feedback (moderation, limits), the demo reset; Airtable is mocked
 - **Client** (Vitest + React Testing Library) - CSV reading and writing, search, sorting and filtering, form validation, the API client, choosing recipients, theme
 - **End-to-end** (Playwright) - real user flows on the production build: login, the subscriber panel, search, CSV import and export, drafting, previewing, sending and duplicating campaigns, opening sent e-mails, unsubscribing, leaving feedback, unsaved changes, dark mode, loading errors, phones. They run against a fake Airtable (`e2e/mock-airtable.ts`), so they never touch real data.
 
@@ -171,8 +174,8 @@ Only the server reads these - none of them reaches the browser.
 | `dev`  | staging |
 
 1. Every change starts on a short-lived branch off `dev` (`feature/...`, `fix/...`, `chore/...`).
-2. Pull request into `dev` - CI must pass, then a review and a **squash merge**; Render deploys staging.
-3. After checking staging - pull request `dev -> main` merged with a **merge commit**; Render deploys production.
+2. Pull request into `dev` - CI must pass and there must be no conflicts, then a review and a merge; Render deploys staging.
+3. After checking staging - a release pull request `dev -> main`, merged with a **merge commit** (so both branches keep the same history); Render deploys production.
 
 **Hotfix:** a `hotfix/...` branch off `main`, pull request into `main`, then right away `main -> dev`, so both environments run the same code.
 

@@ -1,7 +1,5 @@
 import { ReactNode } from "react";
 import { Link } from "react-router";
-import { BsGithub } from "react-icons/bs";
-import { SiAirtable } from "react-icons/si";
 import {
   ArrowRight,
   Plus,
@@ -219,7 +217,7 @@ const DashboardPage = () => {
         <CardHeader>
           <CardTitle className="text-base">About this demo</CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-4 text-sm text-muted-foreground md:grid-cols-[1fr_auto] md:items-end">
+        <CardContent className="text-sm text-muted-foreground">
           <ul className="grid list-disc gap-1.5 pl-5">
             <li>
               React 19 + TypeScript app with an Express API in front of Airtable
@@ -234,24 +232,6 @@ const DashboardPage = () => {
               comes back every night.
             </li>
           </ul>
-          <div className="flex flex-wrap gap-2">
-            <Button asChild variant="outline" size="sm">
-              <a
-                href="https://github.com/SzymonRojek/email-campaign-dashboard"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <BsGithub />
-                README
-              </a>
-            </Button>
-            <Button asChild variant="outline" size="sm">
-              <a href="https://airtable.com/" target="_blank" rel="noreferrer">
-                <SiAirtable />
-                Airtable
-              </a>
-            </Button>
-          </div>
         </CardContent>
       </Card>
     </StyledContainer>
