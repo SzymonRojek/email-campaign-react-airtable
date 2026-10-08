@@ -6,6 +6,7 @@ import subscribersRouter from "./routes/subscribersRoutes";
 import campaignsRouter from "./routes/campaignsRoutes";
 import authRouter from "./routes/authRoutes";
 import demoRouter from "./routes/demoRoutes";
+import feedbackRouter from "./routes/feedbackRoutes";
 import { emailsRouter, unsubscribeRouter } from "./routes/outboxRoutes";
 import { requireAuth } from "./middleware/requireAuth";
 
@@ -29,6 +30,7 @@ app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 app.use("/api/auth", authRouter);
 app.use("/api/demo", demoRouter);
 app.use("/api/unsubscribe", unsubscribeRouter);
+app.use("/api/feedback", feedbackRouter);
 app.use("/api/subscribers", requireAuth, subscribersRouter);
 app.use("/api/campaigns", requireAuth, campaignsRouter);
 app.use("/api/emails", requireAuth, emailsRouter);

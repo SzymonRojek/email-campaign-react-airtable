@@ -34,3 +34,13 @@ export interface EmailFields {
   campaignId?: string;
   sentAt?: string;
 }
+
+// a row of the "feedback" table - shown only when approved (by the owner) and isPublic (by its author)
+export interface FeedbackFields {
+  name?: string;
+  role?: string;
+  message?: string;
+  isPublic?: boolean;
+  approved?: boolean;
+  date?: string;
+}

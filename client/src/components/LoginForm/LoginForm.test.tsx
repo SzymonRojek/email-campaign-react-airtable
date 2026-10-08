@@ -2,6 +2,7 @@ import type { Mock } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import LoginForm from "./LoginForm";
 import api from "services/api";
@@ -14,7 +15,8 @@ import {
 } from "contexts/GlobalStoreContextProvider";
 
 vi.mock("services/api", () => ({
-  default: { post: vi.fn() },
+  // the login page also asks for the feedback of the reviewers - none here
+  default: { post: vi.fn(), get: vi.fn(() => Promise.resolve([])) },
 }));
 
 const mockedPost = api.post as Mock;
@@ -27,14 +29,16 @@ const LoginState = () => {
 
 const renderLoginForm = () =>
   render(
-    <ThemeProvider>
-      <MemoryRouter>
-        <GlobalStoreContextProvider>
-          <LoginForm />
-          <LoginState />
-        </GlobalStoreContextProvider>
-      </MemoryRouter>
-    </ThemeProvider>
+    <QueryClientProvider client={new QueryClient()}>
+      <ThemeProvider>
+        <MemoryRouter>
+          <GlobalStoreContextProvider>
+            <LoginForm />
+            <LoginState />
+          </GlobalStoreContextProvider>
+        </MemoryRouter>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 
 const logIn = async (password?: string) => {

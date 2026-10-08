@@ -10,6 +10,7 @@ import api from "services/api";
 import { setToken } from "services/authToken";
 import { getErrorMessage } from "services";
 import ThemeToggle from "components/ThemeToggle";
+import LoginFeedback from "components/feedback/LoginFeedback";
 import { LoginFormValues } from "types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -85,6 +86,8 @@ const LoginForm = () => {
             <strong className="text-foreground">admin</strong>
           </span>
         </p>
+
+        <LoginFeedback />
       </div>
 
       <footer className="flex items-center justify-center gap-3 pb-6 text-xs text-muted-foreground">

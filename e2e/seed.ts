@@ -79,4 +79,33 @@ export const seed = {
       sentAt: "2022-09-06T10:00:00.000Z",
     }),
   ],
+  // the reviewers' feedback - only approved + isPublic is shown
+  feedback: [
+    record("recFeedback00001", 1, {
+      name: "Marta Kowalska",
+      role: "Frontend Developer",
+      message: "Clean code and great tests.",
+      isPublic: true,
+      approved: true,
+    }),
+    record("recFeedback00002", 2, {
+      name: "Tom",
+      role: "Recruiter",
+      message: "Nice UX, works on my phone.",
+      isPublic: true,
+      approved: true,
+    }),
+    record("recFeedback00003", 3, {
+      name: "Private Person",
+      message: "Only for the owner.",
+      isPublic: false,
+      approved: true,
+    }),
+    record("recFeedback00004", 4, {
+      name: "Not Approved",
+      message: "Waiting for a review.",
+      isPublic: true,
+      approved: false,
+    }),
+  ],
 };

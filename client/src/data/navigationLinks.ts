@@ -1,4 +1,4 @@
-import { LayoutDashboard, Mail, Users, type LucideIcon } from "lucide-react";
+import { LayoutDashboard, Mail, MessageSquareQuote, Users, type LucideIcon } from "lucide-react";
 
 export interface NavigationLink {
   to: string;
@@ -13,4 +13,9 @@ export const mainLinks: NavigationLink[] = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/subscribers", label: "Subscribers", icon: Users },
   { to: "/campaigns", label: "Campaigns", icon: Mail },
+];
+
+// about the project, not a part of it - below a line
+export const projectLinks: NavigationLink[] = [
+  { to: "/feedback", label: "Feedback", icon: MessageSquareQuote },
 ];

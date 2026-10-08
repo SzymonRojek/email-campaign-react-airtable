@@ -204,6 +204,15 @@ describe("resetDemoData", () => {
     expect(created("/subscribers")).toHaveLength(seedSubscribers.length);
   });
 
+  it("never touches the feedback of the reviewers", async () => {
+    tables([], []);
+
+    await reset({ force: true });
+
+    const touched = [...airtable.get.mock.calls, ...airtable.post.mock.calls, ...airtable.delete.mock.calls];
+    expect(touched.some(([path]) => String(path).startsWith("/feedback"))).toBe(false);
+  });
+
   it("fills empty tables", async () => {
     tables([], [], []);
 
