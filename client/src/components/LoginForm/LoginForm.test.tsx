@@ -101,4 +101,13 @@ describe("LoginForm", () => {
     expect(screen.getByLabelText("Password")).toBeInTheDocument();
     expect(screen.queryByLabelText("Confirm password")).not.toBeInTheDocument();
   });
+
+  it("does not let a phone keyboard change the password", () => {
+    renderLoginForm();
+    const password = screen.getByLabelText("Password");
+
+    expect(password).toHaveAttribute("autocapitalize", "none");
+    expect(password).toHaveAttribute("autocorrect", "off");
+    expect(password).toHaveAttribute("spellcheck", "false");
+  });
 });
