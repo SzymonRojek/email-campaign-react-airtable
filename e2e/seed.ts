@@ -79,4 +79,36 @@ export const seed = {
       sentAt: "2022-09-06T10:00:00.000Z",
     }),
   ],
+  // the reviewers' feedback - only the approved one is shown
+  feedback: [
+    record("recFeedback00001", 1, {
+      name: "Marta Kowalska",
+      role: "Frontend Developer",
+      message: "Clean code and great tests.",
+      approved: true,
+    }),
+    record("recFeedback00002", 2, {
+      name: "Tom",
+      role: "Recruiter",
+      message: "Nice UX, works on my phone.",
+      approved: true,
+    }),
+    record("recFeedback00005", 5, {
+      name: "Jan Nowak",
+      role: "Backend Developer",
+      message:
+        "The server never lets the Airtable token reach the browser, and the outbox is a smart way to show real e-mails on a free plan.",
+      approved: true,
+    }),
+    record("recFeedback00006", 6, {
+      name: "Ewa",
+      message: "Easy to use.",
+      approved: true,
+    }),
+    record("recFeedback00004", 4, {
+      name: "Not Approved",
+      message: "Waiting for a review.",
+      approved: false,
+    }),
+  ],
 };

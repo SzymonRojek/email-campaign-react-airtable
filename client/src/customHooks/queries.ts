@@ -7,6 +7,7 @@ import {
   CampaignFormValues,
   Email,
   EmailPreview,
+  Feedback,
   ReceivedEmail,
   Subscriber,
 } from "types";
@@ -80,4 +81,13 @@ export const useCampaignPreview = (values: CampaignFormValues | null, subscriber
     // switching the recipient keeps the last e-mail on screen until the next one is ready
     placeholderData: keepPreviousData,
     staleTime: Infinity,
+  });
+
+// public: the approved feedback (the login page shows it too) - an extra, so no toast
+export const useFeedback = () =>
+  useQuery({
+    queryKey: ["/feedback"],
+    queryFn: () => api.get<Feedback[]>("/feedback"),
+    // loaded again on every visit - an approved entry shows up at once
+    meta: { silent: true },
   });

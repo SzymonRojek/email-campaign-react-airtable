@@ -1,4 +1,5 @@
 import { validationCampaign, validationLogin, validationSubscriber } from "helpers";
+import validationFeedback from "helpers/validationFeedback";
 
 const validSubscriber = {
   name: "Łukasz",
@@ -121,5 +122,29 @@ describe("validationLogin", () => {
 
   it("does not check the password itself (the server does)", async () => {
     expect(await errorsOf(validationLogin, { password: "anything" })).toEqual([]);
+  });
+});
+
+describe("validationFeedback", () => {
+  it("needs a name and the feedback - the role is optional", async () => {
+    expect(await errorsOf(validationFeedback, {})).toEqual([
+      "name is required",
+      "feedback is required",
+    ]);
+    expect(await errorsOf(validationFeedback, { name: "Anna", message: "Nice work" })).toEqual([]);
+  });
+
+  it("limits the length like the server", async () => {
+    expect(
+      await errorsOf(validationFeedback, {
+        name: "x".repeat(41),
+        role: "x".repeat(41),
+        message: "x".repeat(501),
+      })
+    ).toEqual([
+      "must not exceed 40 characters",
+      "must not exceed 40 characters",
+      "must not exceed 500 characters",
+    ]);
   });
 });

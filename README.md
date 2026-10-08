@@ -28,7 +28,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 
 - **Full-stack TypeScript** - React client and Express server, strict mode
 - **Secure backend** - the Airtable token never reaches the browser; login with signed tokens, protection against password guessing, signed unsubscribe links, user text always escaped in the e-mails
-- **Automated testing** - 116 server and 85 client unit tests, 60 end-to-end tests in a real browser (Playwright)
+- **Automated testing** - 129 server and 87 client unit tests, 63 end-to-end tests in a real browser (Playwright)
 - **CI/CD** - every pull request is checked by GitHub Actions; `dev` deploys to staging and `main` to production automatically
 - **Team-style Git workflow** - feature branches, pull requests, staging before production
 - **Product thinking** - minimal UI feedback, no lost work, accessible components, works on phones
@@ -50,6 +50,11 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 - every e-mail has an **unsubscribe link** to a public page; the subscriber then gets no more campaigns
 - duplicate any campaign as a new draft
 
+**Feedback from reviewers**
+- anybody can leave feedback - also on the login page, without logging in
+- shown only after the owner approves it in Airtable; the login page shows the newest three, the Feedback page all of them
+- protected against bots and floods (a hidden field, 3 entries an hour per address); kept in memory on the server for 30 seconds, so many visits at once do not use up the Airtable API limit
+
 **Everywhere**
 - dashboard with the key numbers, recent campaigns and newest subscribers
 - leaving a form with unsaved changes asks first
@@ -69,7 +74,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 ```mermaid
 flowchart LR
   B["Browser<br/>React app"] -- "/api + login token" --> S["Express server<br/>login, e-mail templates"]
-  S -- "Airtable token<br/>(only on the server)" --> A[("Airtable<br/>subscribers, campaigns,<br/>emails (outbox)")]
+  S -- "Airtable token<br/>(only on the server)" --> A[("Airtable<br/>subscribers, campaigns,<br/>emails (outbox), feedback")]
   G["GitHub Actions<br/>every night"] -- "POST /api/demo/reset<br/>+ reset key" --> S
 ```
 
@@ -100,6 +105,7 @@ The React app never talks to Airtable directly. The Express server keeps the Air
 | `GET` | `/api/emails` | token |
 | `GET` | `/api/emails/:id/preview` | token |
 | `GET`, `POST` | `/api/unsubscribe/:token` | the signed link from the e-mail |
+| `GET`, `POST` | `/api/feedback` | - (public; only approved feedback is listed) |
 | `POST` | `/api/demo/reset` | reset key (production only) |
 
 </details>
@@ -109,7 +115,7 @@ The React app never talks to Airtable directly. The Express server keeps the Air
 
 The password is public, so visitors change the data. Every night a scheduled GitHub Action (`.github/workflows/demo-reset.yml`) calls `POST /api/demo/reset` with a secret key. The server creates the examples from `server/demo/seedData.ts` (with dates counted back from today) and only then deletes the old records, so an error never leaves an empty table.
 
-To save Airtable API calls, the reset is **skipped when nobody changed anything** - unless the examples are older than 7 days. The endpoint exists only where `DEMO_RESET_KEY` is set (production).
+To save Airtable API calls, the reset is **skipped when nobody changed anything** - unless the examples are older than 7 days. The endpoint exists only where `DEMO_RESET_KEY` is set (production). The reviewers' feedback is never reset.
 
 </details>
 
@@ -119,17 +125,18 @@ Every pull request runs in GitHub Actions: type checking, lint, unit tests, prod
 
 - **Server** (Jest + supertest) - login and tokens, every endpoint, sending and the outbox, templates and escaping, unsubscribe links, the CSV import, the demo reset; Airtable is mocked
 - **Client** (Vitest + React Testing Library) - CSV reading and writing, search, sorting and filtering, form validation, the API client, choosing recipients, theme
-- **End-to-end** (Playwright) - real user flows on the production build: login, the subscriber panel, search, CSV import and export, drafting, previewing, sending and duplicating campaigns, opening sent e-mails, unsubscribing, unsaved changes, dark mode, loading errors, phones. They run against a fake Airtable (`e2e/mock-airtable.ts`), so they never touch real data.
+- **End-to-end** (Playwright) - real user flows on the production build: login, the subscriber panel, search, CSV import and export, drafting, previewing, sending and duplicating campaigns, opening sent e-mails, unsubscribing, leaving feedback, unsaved changes, dark mode, loading errors, phones. They run against a fake Airtable (`e2e/mock-airtable.ts`), so they never touch real data.
 
 ## Running locally
 
-Needs **Node.js 24** and an Airtable base with three tables (all fields text, except where noted):
+Needs **Node.js 24** and an Airtable base with four tables (all fields text, except where noted):
 
 | table | fields |
 | --- | --- |
 | `subscribers` | `name`, `surname`, `email`, `status` (single select), `profession`, `salary`, `telephone`, `date` |
 | `campaigns` | `title`, `description` (long text), `status` (single select), `date` |
 | `emails` | `email`, `name`, `subscriberId`, `campaignId`, `sentAt` |
+| `feedback` | `name`, `role`, `message` (long text), `approved` (checkbox), `date` |
 
 ```bash
 cp .env.example .env                          # fill in the values below

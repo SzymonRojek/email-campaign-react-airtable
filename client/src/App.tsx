@@ -27,7 +27,8 @@ const queryClient = new QueryClient({
     // a toast only when a refresh in the background failed (old data on the screen),
     // and one toast for all queries (the dashboard loads two at once)
     onError: (error, query) => {
-      if (query.state.data === undefined) return;
+      // a query with meta.silent is a nice extra (e.g. the feedback) - no toast for it
+      if (query.state.data === undefined || query.meta?.silent) return;
 
       toastMessage(
         `Could not refresh the data: ${getErrorMessage(error)}`,

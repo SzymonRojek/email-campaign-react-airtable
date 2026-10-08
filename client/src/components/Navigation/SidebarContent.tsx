@@ -1,28 +1,52 @@
 import { Link, NavLink } from "react-router";
 import { BsGithub } from "react-icons/bs";
-import { DatabaseZap, LogOut, Plus } from "lucide-react";
+import { LogOut, Plus } from "lucide-react";
 
-import { mainLinks } from "data/navigationLinks";
+import { mainLinks, NavigationLink, projectLinks } from "data/navigationLinks";
 import ThemeToggle from "components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import LogoMark from "components/LogoMark";
 import { useLogOut } from "./useLogOut";
 
+const NavItem = ({
+  link: { to, label, icon: Icon, end },
+  onNavigate,
+}: {
+  link: NavigationLink;
+  onNavigate?: () => void;
+}) => (
+  <NavLink
+    to={to}
+    end={end}
+    onClick={onNavigate}
+    className={({ isActive }) =>
+      cn(
+        "group flex items-center gap-3 rounded-md px-2.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground",
+        isActive && "bg-sidebar-accent text-sidebar-foreground"
+      )
+    }
+  >
+    {({ isActive }) => (
+      <>
+        <Icon className={cn("size-4", isActive && "text-brand")} aria-hidden />
+        {label}
+      </>
+    )}
+  </NavLink>
+);
+
 interface SidebarContentProps {
   // "Main" in the desktop sidebar, "Mobile" in the phone menu
   navLabel: string;
   // e.g. close the phone menu after choosing a page
   onNavigate?: () => void;
-  // TanStack Query devtools - the button is shown only in development
-  onOpenDevtools?: () => void;
 }
 
 // logo, pages, theme and log out - the desktop sidebar and the phone menu
 const SidebarContent = ({
   navLabel,
   onNavigate,
-  onOpenDevtools,
 }: SidebarContentProps) => {
   const logOut = useLogOut();
 
@@ -48,29 +72,12 @@ const SidebarContent = ({
       </Button>
 
       <nav aria-label={navLabel} className="grid gap-1">
-        {mainLinks.map(({ to, label, icon: Icon, end }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={end}
-            onClick={onNavigate}
-            className={({ isActive }) =>
-              cn(
-                "group flex items-center gap-3 rounded-md px-2.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground",
-                isActive && "bg-sidebar-accent text-sidebar-foreground"
-              )
-            }
-          >
-            {({ isActive }) => (
-              <>
-                <Icon
-                  className={cn("size-4", isActive && "text-brand")}
-                  aria-hidden
-                />
-                {label}
-              </>
-            )}
-          </NavLink>
+        {mainLinks.map((link) => (
+          <NavItem key={link.to} link={link} onNavigate={onNavigate} />
+        ))}
+        <div role="separator" className="my-2 border-t" />
+        {projectLinks.map((link) => (
+          <NavItem key={link.to} link={link} onNavigate={onNavigate} />
         ))}
       </nav>
 
@@ -79,23 +86,6 @@ const SidebarContent = ({
           <span className="text-xs text-muted-foreground">Theme</span>
           <ThemeToggle />
         </div>
-
-        {import.meta.env.DEV && onOpenDevtools && (
-          <Button
-            variant="ghost"
-            onClick={() => {
-              onNavigate?.();
-              onOpenDevtools();
-            }}
-            className="justify-start text-muted-foreground"
-          >
-            <DatabaseZap />
-            Query devtools
-            <span className="ml-auto rounded border px-1 text-[10px] tracking-wide uppercase">
-              dev
-            </span>
-          </Button>
-        )}
 
         <Button
           variant="ghost"
