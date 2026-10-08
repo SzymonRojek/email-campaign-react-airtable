@@ -255,7 +255,7 @@ const SubscriberDetailsPanel = () => {
     <Sheet open={panel.isOpen} onOpenChange={(isOpen) => !isOpen && panel.close()}>
       <SheetContent
         side="right"
-        className="gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:max-w-md"
+        className="gap-0 p-0 outline-none data-[side=right]:w-full sm:data-[side=right]:max-w-md"
         // focus the panel itself - not the first button (it could be "Delete")
         onOpenAutoFocus={(event) => {
           event.preventDefault();

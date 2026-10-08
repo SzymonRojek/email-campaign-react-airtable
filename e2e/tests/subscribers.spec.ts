@@ -51,6 +51,24 @@ test("adds a subscriber in the panel", async ({ page, request }) => {
   expect(db.subscribers.map(({ fields }) => fields.name)).toContain("Łucja");
 });
 
+test("adds a subscriber with only the required fields", async ({ page, request }) => {
+  await page.goto("/#/subscribers");
+  await page.getByRole("button", { name: "Add subscriber" }).click();
+
+  await page.locator("#name").fill("Emma");
+  await page.locator("#surname").fill("Johnson");
+  await page.locator("#email").fill("emma@example.com");
+  await page.locator("#status-id").click();
+  await page.getByRole("option", { name: "pending" }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Add subscriber" }).click();
+
+  await expect(page.getByRole("dialog")).toContainText("Emma Johnson");
+  const emma = (await getAirtable(request)).subscribers.find(
+    ({ fields }) => fields.email === "emma@example.com"
+  );
+  expect(emma?.fields).toMatchObject({ name: "Emma", surname: "Johnson", status: "pending" });
+});
+
 test("shows validation errors and does not save", async ({ page, request }) => {
   await page.goto("/#/subscribers/add");
 
@@ -156,7 +174,8 @@ test("shows the details in a panel over the list", async ({ page }) => {
   await page.goto("/#/subscribers");
   await page.getByLabel("Search subscribers").fill("anna");
 
-  await page.getByRole("link", { name: "Anna Nowak" }).click();
+  // a click in the row (the names are not links)
+  await listRow(page, "Anna Nowak").getByRole("cell").nth(2).click();
 
   // the address opens the same panel later
   await expect(page).toHaveURL(/#\/subscribers\?view=recSubAnna000001$/);

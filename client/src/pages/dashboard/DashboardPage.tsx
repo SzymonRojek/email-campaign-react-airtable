@@ -18,7 +18,6 @@ import { Error, Loader } from "components/DisplayMessage";
 import { PageHeader } from "components/PageHeader";
 import { StyledContainer } from "components/StyledContainer";
 import StatusBadge from "components/StatusBadge";
-import CampaignTitle from "components/campaigns/CampaignTitle";
 import SubscriberIdentity from "components/subscribers/SubscriberIdentity";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -183,7 +182,7 @@ const DashboardPage = () => {
                 >
                   <div className="min-w-0">
                     <p className="truncate font-medium">
-                      <CampaignTitle campaign={campaign} />
+                      {fields.title}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {formattedData.getFormattedDateTime(

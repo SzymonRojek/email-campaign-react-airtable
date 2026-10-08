@@ -24,15 +24,16 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 >
 > **Demo mode:** the password is public, so nobody really gets the e-mails (anybody could send e-mails from my account). Sending builds a real, personalized e-mail for every recipient and saves it in the campaign's outbox, where you can open each one.
 >
-> Feel free to add, edit and remove anything - the example data comes back every night.
+> Feel free to add, edit and remove anything - the example data comes back every night. Please use made-up data, not a real person's e-mail or phone number: the demo is public.
 
 ## Features
 
 **Subscribers**
 - list with search (name or e-mail, no Polish letters needed), status filter (active / pending / blocked / unsubscribed) and sorting by date
+- only the name, the surname and the e-mail are required (profession, salary and phone are optional)
 - details, adding and editing in a side panel over the list - the list keeps its search and filter, the panel has a link of its own
 - one e-mail = one subscriber (checked in the form and on the server)
-- CSV export of what the list shows; CSV import with a preview that checks every row like the form and imports only the valid ones
+- CSV export of what the list shows (a report, with the status); CSV import with a preview that checks every row like the form and imports only the valid ones - the file brings only the person's data, the status (`pending` or `active`, the latter only with a confirmed permission to e-mail them) is chosen once for the whole import, and existing e-mails are never overwritten
 
 **Campaigns**
 - write a campaign, save it as a draft or send it - to all active subscribers or only the chosen ones, after a confirmation with the number of recipients
@@ -50,7 +51,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write cam
 
 - **Full-stack TypeScript** - React client and Express server, strict mode
 - **Secure backend** - the Airtable token never reaches the browser; login with signed tokens and protection against password guessing
-- **Automated testing** - 97 server and 80 client unit tests, 52 end-to-end tests in a real browser (Playwright)
+- **Automated testing** - 102 server and 83 client unit tests, 54 end-to-end tests in a real browser (Playwright)
 - **CI/CD** - every pull request is checked by GitHub Actions; `dev` deploys to staging and `main` to production automatically
 - **Team-style Git workflow** - feature branches, pull requests, staging before production
 

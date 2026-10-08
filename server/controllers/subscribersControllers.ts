@@ -125,7 +125,9 @@ export const deleteSubscriber = async (req: Request, res: Response) => {
 
 export const MAX_IMPORT_ROWS = 100;
 
-const statuses = ["active", "pending", "blocked", "unsubscribed"];
+// what an import can make of the new subscribers - "blocked" / "unsubscribed" never
+// come from a file (a CSV column can not say who agreed to get e-mails)
+const importStatuses = ["pending", "active"];
 // the same rule as the client form
 const emailPattern = /^([^.@]+)(\.[^.@]+)*@([^.@]+\.)+([^.@]+)$/;
 
@@ -135,13 +137,20 @@ const text = (value: unknown) => (value === undefined || value === null ? "" : S
 const invalidReason = (fields: SubscriberFields) => {
   if (!text(fields.name) || !text(fields.surname)) return "name and surname are required";
   if (!emailPattern.test(text(fields.email))) return "the e-mail is invalid";
-  if (!statuses.includes(text(fields.status))) return "the status is invalid";
   return null;
 };
 
-// POST /api/subscribers/import  { subscribers: [...] } - many subscribers from a CSV file
+// POST /api/subscribers/import  { subscribers: [...], status: "pending" | "active" }
+// many subscribers from a CSV file - one status for all of them, the rows' own status is ignored
 export const importSubscribers = async (req: Request, res: Response) => {
   const rows: SubscriberFields[] = req.body?.subscribers;
+  const status = req.body?.status ?? "pending";
+
+  if (!importStatuses.includes(status)) {
+    return res
+      .status(400)
+      .json({ status: "fail", error: "Imported subscribers can only be pending or active" });
+  }
 
   if (!Array.isArray(rows) || rows.length === 0) {
     return res.status(400).json({ status: "fail", error: "There is nothing to import" });
@@ -176,7 +185,7 @@ export const importSubscribers = async (req: Request, res: Response) => {
         name: text(fields.name),
         surname: text(fields.surname),
         email: text(fields.email),
-        status: text(fields.status),
+        status,
         profession: text(fields.profession),
         salary: text(fields.salary),
         telephone: text(fields.telephone),

@@ -3,7 +3,6 @@ import { useOpenCampaign } from "customHooks/useOpenCampaign";
 import StatusBadge from "components/StatusBadge";
 import { Campaign } from "types";
 import CampaignActions from "./CampaignActions";
-import CampaignTitle from "./CampaignTitle";
 
 // a list row on a phone - the table is too wide there
 const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
@@ -17,7 +16,7 @@ const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
     >
       <div className="flex items-start justify-between gap-3">
         <p className="font-medium">
-          <CampaignTitle campaign={campaign} />
+          {fields.title}
         </p>
         <StatusBadge status={fields.status} />
       </div>

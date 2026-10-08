@@ -174,10 +174,10 @@ describe("resetDemoData", () => {
     const emails = created("/emails");
 
     expect(emails).toHaveLength(seedOutbox().length);
-    // Anna got the first sent example ("Welcome")
+    // Emma got the first sent example ("Welcome")
     expect(emails[0]).toMatchObject({
-      email: "anna.nowak@example.com",
-      name: "Anna Nowak",
+      email: "emma.johnson@example.com",
+      name: "Emma Johnson",
       subscriberId: "new/subscribers0",
       campaignId: `new/campaigns${seedSubscribers.length}`,
     });
@@ -220,12 +220,12 @@ describe("seedOutbox", () => {
     ]);
 
     expect(outbox).toEqual([
-      ["Welcome", "Anna"],
-      ["Autumn sale", "Anna"],
-      ["Autumn sale", "Bartek"],
-      ["Autumn sale", "Celina"],
-      ["Autumn sale", "Ewa"],
-      ["Autumn sale", "Gosia"],
+      ["Welcome", "Emma"],
+      ["Autumn sale", "Emma"],
+      ["Autumn sale", "Liam"],
+      ["Autumn sale", "Olivia"],
+      ["Autumn sale", "Ava"],
+      ["Autumn sale", "Sophia"],
     ]);
   });
 });

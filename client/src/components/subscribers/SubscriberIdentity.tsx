@@ -1,6 +1,5 @@
 import Avatar from "components/Avatar";
 import { Subscriber } from "types";
-import SubscriberName from "./SubscriberName";
 
 // avatar, name and e-mail - the first column of the list and the top of a card
 const SubscriberIdentity = ({ subscriber }: { subscriber: Subscriber }) => {
@@ -11,7 +10,7 @@ const SubscriberIdentity = ({ subscriber }: { subscriber: Subscriber }) => {
       <Avatar name={fields.name} surname={fields.surname} />
       <div className="min-w-0">
         <p className="truncate font-medium">
-          <SubscriberName subscriber={subscriber} />
+          {fields.name} {fields.surname}
         </p>
         <p className="truncate text-xs text-muted-foreground">{fields.email}</p>
       </div>

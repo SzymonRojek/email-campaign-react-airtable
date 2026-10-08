@@ -24,24 +24,22 @@ const validationSubscriber = Yup.object({
   status: Yup.mixed<SubscriberStatus>()
     .required("status is required")
     .oneOf(status, "status is required"),
+  // optional - checked only when filled in
   profession: Yup.string()
-    .required("profession is required")
     .trim()
-    .matches(/^[\p{L}\s]+$/u, "only letters are required")
-    .min(3, "must be at least 3 characters")
-    .max(10, "must not exceed 10 characters"),
+    .matches(/^[\p{L}\s]+$/u, { message: "only letters are required", excludeEmptyString: true })
+    .test("min", "must be at least 3 characters", (value) => !value || value.length >= 3)
+    .test("max", "must not exceed 10 characters", (value) => !value || value.length <= 10),
   salary: Yup.string()
     .trim()
-    .required("salary is required")
-    .matches(/^\d+$/, "only numbers are required")
-    .min(3, "must be at least 3 numbers"),
+    .matches(/^\d+$/, { message: "only numbers are required", excludeEmptyString: true })
+    .test("min", "must be at least 3 numbers", (value) => !value || value.length >= 3),
   telephone: Yup.string()
     .trim()
-    .required("telephone is required")
-    .matches(
-      /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
-      "type only 10 digits"
-    ),
+    .matches(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/, {
+      message: "type only 10 digits",
+      excludeEmptyString: true,
+    }),
 });
 
 export default validationSubscriber;

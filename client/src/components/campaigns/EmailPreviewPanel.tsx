@@ -26,7 +26,7 @@ const EmailPreviewPanel = ({ emailId, onClose }: EmailPreviewPanelProps) => {
     <Sheet open={Boolean(emailId)} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <SheetContent
         side="right"
-        className="gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:max-w-2xl"
+        className="gap-0 p-0 outline-none data-[side=right]:w-full sm:data-[side=right]:max-w-2xl"
       >
         <SheetHeader className="border-b p-6">
           <SheetTitle className="pr-8 text-lg">{email?.subject ?? "E-mail"}</SheetTitle>

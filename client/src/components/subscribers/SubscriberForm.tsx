@@ -8,6 +8,7 @@ import DiscardChangesDialog from "components/DiscardChangesDialog";
 import TextField from "components/form/TextField";
 import SelectField from "components/form/SelectField";
 import { SelectOption, SubscriberFormValues } from "types";
+import { PUBLIC_DEMO_NOTICE } from "./publicDemoNotice";
 import { Button } from "@/components/ui/button";
 
 const statusOptions: SelectOption[] = [
@@ -81,7 +82,12 @@ const SubscriberForm = ({
   return (
     <form {...formProps} onSubmit={submit} noValidate className="flex min-h-0 flex-1 flex-col">
       <div className="grid gap-5 overflow-y-auto p-6">
-        <p className="text-sm text-muted-foreground">All fields are required.</p>
+        <p className="rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground">
+          {PUBLIC_DEMO_NOTICE}
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Name, surname, e-mail and status are required.
+        </p>
 
         <div className="grid gap-5 sm:grid-cols-2">
           <TextField
@@ -121,7 +127,7 @@ const SubscriberForm = ({
 
         <TextField
           id="profession"
-          label="Profession"
+          label="Profession (optional)"
           registration={register("profession")}
           error={errors.profession?.message}
         />
@@ -129,13 +135,13 @@ const SubscriberForm = ({
         <div className="grid gap-5 sm:grid-cols-2">
           <TextField
             id="salary"
-            label="Salary"
+            label="Salary (optional)"
             registration={register("salary")}
             error={errors.salary?.message}
           />
           <TextField
             id="telephone"
-            label="Telephone (+44)"
+            label="Telephone (optional, +44)"
             type="tel"
             autoComplete="tel-national"
             registration={register("telephone")}

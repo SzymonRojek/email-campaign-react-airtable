@@ -10,7 +10,7 @@ type Item = AirtableRecord<unknown>;
 
 export const useRemoveItem = (
   query: "subscribers" | "campaigns",
-  // shown in the question, e.g. "Anna Nowak" or the campaign title
+  // shown in the question, e.g. "Emma Johnson" or the campaign title
   name: string | undefined,
   id: string,
   // e.g. close the details panel of the removed subscriber
