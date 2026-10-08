@@ -99,6 +99,13 @@ describe("GET /api/health", () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ status: "ok" });
   });
+
+  it("does not say which server it is, nor let other websites call it", async () => {
+    const res = await request(app).get("/api/health").set("Origin", "https://other-site.example");
+
+    expect(res.headers["x-powered-by"]).toBeUndefined();
+    expect(res.headers["access-control-allow-origin"]).toBeUndefined();
+  });
 });
 
 describe("protected endpoints", () => {
