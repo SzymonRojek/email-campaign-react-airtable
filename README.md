@@ -30,7 +30,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 
 - **Full-stack TypeScript** - React client and Express server, strict mode
 - **Secure backend** - the Airtable token never reaches the browser; login with signed tokens, protection against password guessing, signed unsubscribe links, user text always escaped in the e-mails
-- **Automated testing** - 129 server and 87 client unit tests, 63 end-to-end tests in a real browser (Playwright)
+- **Automated testing** - 133 server and 91 client unit tests, 63 end-to-end tests in a real browser (Playwright)
 - **CI/CD** - every pull request is checked by GitHub Actions; `dev` deploys to staging and `main` to production automatically
 - **Team-style Git workflow** - feature branches, pull requests, staging before production
 - **Product thinking** - minimal UI feedback, no lost work, accessible components, works on phones

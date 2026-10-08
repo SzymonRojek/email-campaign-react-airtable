@@ -66,6 +66,33 @@ describe("POST /api/auth/login", () => {
     expect(res.body.error).toBe("password is not correct");
   });
 
+  it("accepts the password with spaces around it (a phone keyboard adds them)", async () => {
+    const res = await request(app)
+      .post("/api/auth/login")
+      .send({ password: "  secret-password " });
+
+    expect(res.status).toBe(200);
+  });
+
+  it("does not accept another letter case", async () => {
+    const res = await request(app)
+      .post("/api/auth/login")
+      .send({ password: "Secret-password" });
+
+    expect(res.status).toBe(401);
+  });
+
+  it("blocks only the visitor who made the mistakes - by Cloudflare's address header", async () => {
+    const login = (ip: string, password: string) =>
+      request(app).post("/api/auth/login").set("CF-Connecting-IP", ip).send({ password });
+
+    for (let i = 0; i < 5; i++) await login("203.0.113.1", "wrong");
+
+    expect((await login("203.0.113.1", "secret-password")).status).toBe(429);
+    // another visitor behind the same Cloudflare server still gets in
+    expect((await login("203.0.113.2", "secret-password")).status).toBe(200);
+  });
+
   it("blocks the ip after 5 failed attempts", async () => {
     for (let i = 0; i < 5; i++) {
       await request(app).post("/api/auth/login").send({ password: "wrong" });

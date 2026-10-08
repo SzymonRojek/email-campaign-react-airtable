@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 
 import { axiosInstance } from "./axiosInstance";
 import { getAllRecords } from "../helpers/getAllRecords";
+import { clientIp } from "../helpers/clientIp";
 import { getErrorMessage } from "../helpers/getErrorMessage";
 import { AirtableRecord, FeedbackFields } from "../types";
 
@@ -90,7 +91,7 @@ export const createFeedback = async (req: Request, res: Response) => {
   const error = validationError(fields);
   if (error) return res.status(400).json({ status: "fail", error });
 
-  const ip = req.ip ?? "";
+  const ip = clientIp(req);
   const recent = (sentAt.get(ip) ?? []).filter((time) => Date.now() - time < HOUR_MS);
   if (recent.length >= MAX_PER_HOUR) {
     return res.status(429).json({

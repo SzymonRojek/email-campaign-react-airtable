@@ -122,4 +122,14 @@ describe("POST /api/feedback", () => {
     now.mockReturnValue(1_000_000 + 61 * 60 * 1000);
     expect((await send(valid)).status).toBe(201);
   });
+
+  it("counts every visitor on their own behind Cloudflare", async () => {
+    const sendFrom = (ip: string) =>
+      request(app).post("/api/feedback").set("CF-Connecting-IP", ip).send(valid);
+
+    for (let i = 0; i < 3; i++) await sendFrom("203.0.113.1");
+
+    expect((await sendFrom("203.0.113.1")).status).toBe(429);
+    expect((await sendFrom("203.0.113.2")).status).toBe(201);
+  });
 });
