@@ -45,3 +45,18 @@ export const toAirtableFields = <Fields>(
 
   return { ...fields, date: date.toISOString() };
 };
+
+// the outbox of the sent example campaigns: every active subscriber who had
+// already joined when the campaign went out - pairs of indexes into the seeds above
+export const seedOutbox = () =>
+  seedCampaigns.flatMap((campaign, campaignIndex) =>
+    campaign.fields.status !== "sent"
+      ? []
+      : seedSubscribers
+          .map((subscriber, subscriberIndex) => ({ subscriber, subscriberIndex }))
+          .filter(
+            ({ subscriber }) =>
+              subscriber.fields.status === "active" && subscriber.daysAgo > campaign.daysAgo
+          )
+          .map(({ subscriberIndex }) => ({ campaignIndex, subscriberIndex }))
+  );

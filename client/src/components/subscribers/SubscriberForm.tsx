@@ -14,6 +14,7 @@ const statusOptions: SelectOption[] = [
   { value: "active", label: "active" },
   { value: "pending", label: "pending" },
   { value: "blocked", label: "blocked" },
+  { value: "unsubscribed", label: "unsubscribed" },
 ];
 
 const emptyValues = {

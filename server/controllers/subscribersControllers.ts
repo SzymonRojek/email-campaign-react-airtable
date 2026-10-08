@@ -125,7 +125,7 @@ export const deleteSubscriber = async (req: Request, res: Response) => {
 
 export const MAX_IMPORT_ROWS = 100;
 
-const statuses = ["active", "pending", "blocked"];
+const statuses = ["active", "pending", "blocked", "unsubscribed"];
 // the same rule as the client form
 const emailPattern = /^([^.@]+)(\.[^.@]+)*@([^.@]+\.)+([^.@]+)$/;
 

@@ -6,6 +6,7 @@ import { capitalizeFirstLetter } from "../helpers/capitalizeFirstLetter";
 import { getAllRecords } from "../helpers/getAllRecords";
 import { getErrorMessage } from "../helpers/getErrorMessage";
 import { CampaignFields } from "../types";
+import { deleteCampaignEmails } from "./outboxControllers";
 
 const endpoint = "/campaigns";
 
@@ -76,6 +77,9 @@ export const deleteCampaign = async (req: Request, res: Response) => {
 
   try {
     const { data } = await axiosInstance.delete(`${endpoint}/${id}`);
+
+    // its e-mails go too - an outbox without the campaign makes no sense
+    await deleteCampaignEmails(id);
 
     res.status(200).json(data);
   } catch (error) {

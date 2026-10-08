@@ -62,4 +62,21 @@ export const seed = {
       status: "sent",
     }),
   ],
+  // the outbox of "Welcome" - the active subscribers when it went out
+  emails: [
+    record("recEmailAnna0001", 6, {
+      email: "anna@example.com",
+      name: "Anna Nowak",
+      subscriberId: "recSubAnna000001",
+      campaignId: "recCampSent00002",
+      sentAt: "2022-09-06T10:00:00.000Z",
+    }),
+    record("recEmailCeli0002", 6, {
+      email: "celina@example.com",
+      name: "Celina Wiśniewska",
+      subscriberId: "recSubCelina0003",
+      campaignId: "recCampSent00002",
+      sentAt: "2022-09-06T10:00:00.000Z",
+    }),
+  ],
 };

@@ -1,6 +1,11 @@
 import { axiosInstance } from "../controllers/axiosInstance";
 import { resetDemoData } from "../demo/resetDemoData";
-import { seedCampaigns, seedSubscribers, toAirtableFields } from "../demo/seedData";
+import {
+  seedCampaigns,
+  seedOutbox,
+  seedSubscribers,
+  toAirtableFields,
+} from "../demo/seedData";
 
 jest.mock("../controllers/axiosInstance", () => ({
   axiosInstance: { get: jest.fn(), post: jest.fn(), delete: jest.fn() },
@@ -20,28 +25,59 @@ const asRecords = (seed: { fields: object }[], prefix: string, createdTime = day
     fields: { ...record.fields, date: "2026-01-01T00:00:00.000Z" } as Record<string, unknown>,
   }));
 
-const tables = (subscribers: unknown[], campaigns: unknown[]) =>
+// an outbox as big as the seed's (the content does not matter for the check)
+const outboxRecords = (count = seedOutbox().length) =>
+  Array.from({ length: count }, (_, i) => ({
+    id: `recE${i}`,
+    createdTime: daysBefore(1),
+    fields: { email: `e${i}@example.com` },
+  }));
+
+const tables = (
+  subscribers: unknown[],
+  campaigns: unknown[],
+  emails: unknown[] = outboxRecords()
+) =>
   airtable.get.mockImplementation((endpoint: string) =>
     Promise.resolve({
-      data: { records: endpoint === "/subscribers" ? subscribers : campaigns },
+      data: {
+        records:
+          endpoint === "/subscribers" ? subscribers : endpoint === "/campaigns" ? campaigns : emails,
+      },
     })
   );
 
+const untouched = () => tables(asRecords(seedSubscribers, "recS"), asRecords(seedCampaigns, "recC"));
+
 const reset = (options = {}) => resetDemoData({ now, pauseMs: 0, ...options });
+
+// what was created in a table, in order
+const created = (endpoint: string) =>
+  airtable.post.mock.calls
+    .filter(([path]) => path === endpoint)
+    .flatMap(([, body]) => body.records.map(({ fields }: { fields: object }) => fields));
 
 describe("resetDemoData", () => {
   beforeEach(() => {
     Object.values(airtable).forEach((mock) => mock.mockReset());
-    airtable.post.mockResolvedValue({ data: {} });
+    // like Airtable: the new records, with ids, in the order they were sent
+    let nextId = 0;
+    airtable.post.mockImplementation((endpoint: string, body: { records: object[] }) =>
+      Promise.resolve({
+        data: {
+          records: body.records.map((record) => ({ ...record, id: `new${endpoint}${nextId++}` })),
+        },
+      })
+    );
     airtable.delete.mockResolvedValue({ data: {} });
   });
 
   it("skips the reset when nobody changed the data", async () => {
-    tables(asRecords(seedSubscribers, "recS"), asRecords(seedCampaigns, "recC"));
+    untouched();
 
     await expect(reset()).resolves.toBe("skipped");
 
-    expect(airtable.get).toHaveBeenCalledTimes(2);
+    expect(airtable.get).toHaveBeenCalledTimes(3);
     expect(airtable.delete).not.toHaveBeenCalled();
     expect(airtable.post).not.toHaveBeenCalled();
   });
@@ -76,14 +112,24 @@ describe("resetDemoData", () => {
     await expect(reset()).resolves.toBe("reset");
   });
 
+  it("resets when the outbox changed (e.g. a campaign was sent)", async () => {
+    tables(
+      asRecords(seedSubscribers, "recS"),
+      asRecords(seedCampaigns, "recC"),
+      outboxRecords(seedOutbox().length + 3)
+    );
+
+    await expect(reset()).resolves.toBe("reset");
+  });
+
   it("creates the new records before it deletes the old ones", async () => {
     tables([{ id: "recOld", createdTime: daysBefore(0), fields: { name: "Tomek" } }], []);
 
     await reset();
 
-    const [firstCreate] = airtable.post.mock.invocationCallOrder;
+    const lastCreate = Math.max(...airtable.post.mock.invocationCallOrder);
     const [firstDelete] = airtable.delete.mock.invocationCallOrder;
-    expect(firstCreate).toBeLessThan(firstDelete);
+    expect(lastCreate).toBeLessThan(firstDelete);
   });
 
   it("keeps the old records when Airtable refuses the new ones", async () => {
@@ -104,31 +150,42 @@ describe("resetDemoData", () => {
 
     await expect(reset()).resolves.toBe("reset");
 
-    // 11 subscribers = 2 delete requests (max 10 records each), 4 campaigns = 1
-    expect(airtable.delete).toHaveBeenCalledTimes(3);
-    expect(airtable.delete.mock.calls[0]).toEqual([
-      "/subscribers",
-      { params: { records: subscribers.slice(0, 10).map((record) => record.id) } },
-    ]);
-    expect(airtable.delete.mock.calls[1]).toEqual([
-      "/subscribers",
-      { params: { records: ["recNew"] } },
-    ]);
-
-    // 10 subscribers + 4 campaigns = 2 create requests
-    expect(airtable.post).toHaveBeenCalledTimes(2);
-    expect(airtable.post.mock.calls[0][0]).toBe("/subscribers");
-    expect(airtable.post.mock.calls[0][1].records).toEqual(
-      seedSubscribers.map((record) => ({ fields: toAirtableFields(record, now) }))
+    // the examples, with their dates counted back from now
+    expect(created("/subscribers")).toEqual(
+      seedSubscribers.map((record) => toAirtableFields(record, now))
     );
-    expect(airtable.post.mock.calls[1][0]).toBe("/campaigns");
-    expect(airtable.post.mock.calls[1][1].records).toHaveLength(seedCampaigns.length);
+    expect(created("/campaigns")).toHaveLength(seedCampaigns.length);
+
+    // 11 subscribers = 2 delete requests (max 10 records each), 4 campaigns and the outbox 1 each
+    const deleted = (endpoint: string) =>
+      airtable.delete.mock.calls
+        .filter(([path]) => path === endpoint)
+        .flatMap(([, { params }]) => params.records);
+    expect(deleted("/subscribers")).toEqual([...subscribers.map(({ id }) => id), "recNew"]);
+    expect(deleted("/campaigns")).toHaveLength(seedCampaigns.length);
+    expect(deleted("/emails")).toHaveLength(seedOutbox().length);
   });
 
-  it("resets when a record was removed", async () => {
-    tables(asRecords(seedSubscribers, "recS").slice(1), asRecords(seedCampaigns, "recC"));
+  it("fills the outbox of the sent examples with the new ids", async () => {
+    tables([], [], []);
 
-    await expect(reset()).resolves.toBe("reset");
+    await reset();
+
+    const emails = created("/emails");
+
+    expect(emails).toHaveLength(seedOutbox().length);
+    // Anna got the first sent example ("Welcome")
+    expect(emails[0]).toMatchObject({
+      email: "anna.nowak@example.com",
+      name: "Anna Nowak",
+      subscriberId: "new/subscribers0",
+      campaignId: `new/campaigns${seedSubscribers.length}`,
+    });
+    // only ids of the records created now
+    emails.forEach(({ subscriberId, campaignId }: Record<string, string>) => {
+      expect(subscriberId).toMatch(/^new\/subscribers/);
+      expect(campaignId).toMatch(/^new\/campaigns/);
+    });
   });
 
   it("resets untouched examples older than 7 days (fresh dates)", async () => {
@@ -141,18 +198,35 @@ describe("resetDemoData", () => {
   });
 
   it("resets untouched data when forced", async () => {
-    tables(asRecords(seedSubscribers, "recS"), asRecords(seedCampaigns, "recC"));
+    untouched();
 
     await expect(reset({ force: true })).resolves.toBe("reset");
-    expect(airtable.post).toHaveBeenCalledTimes(2);
+    expect(created("/subscribers")).toHaveLength(seedSubscribers.length);
   });
 
   it("fills empty tables", async () => {
-    tables([], []);
+    tables([], [], []);
 
     await expect(reset()).resolves.toBe("reset");
     expect(airtable.delete).not.toHaveBeenCalled();
-    expect(airtable.post).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe("seedOutbox", () => {
+  it("sends the examples only to active subscribers who had joined before", () => {
+    const outbox = seedOutbox().map(({ campaignIndex, subscriberIndex }) => [
+      seedCampaigns[campaignIndex].fields.title,
+      seedSubscribers[subscriberIndex].fields.name,
+    ]);
+
+    expect(outbox).toEqual([
+      ["Welcome", "Anna"],
+      ["Autumn sale", "Anna"],
+      ["Autumn sale", "Bartek"],
+      ["Autumn sale", "Celina"],
+      ["Autumn sale", "Ewa"],
+      ["Autumn sale", "Gosia"],
+    ]);
   });
 });
 

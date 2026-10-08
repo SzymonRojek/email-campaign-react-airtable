@@ -8,7 +8,7 @@ dotenv.config();
 const { apiUrl, baseId, token, missing } = airtableConfig();
 
 // the server starts anyway (e.g. the health check), but no data can be loaded
-if (missing.length) {
+if (missing.length && process.env.NODE_ENV !== "test") {
   console.error(`Missing environment variables: ${missing.join(", ")} - see .env.example`);
 }
 

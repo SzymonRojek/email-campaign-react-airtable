@@ -61,7 +61,7 @@ test("sends a campaign to all active subscribers", async ({ page, request }) => 
 
   await expect(page.getByText("active subscribers - 2")).toBeVisible();
   await expect(
-    page.getByText("Demo mode - emails are not really sent", { exact: false })
+    page.getByText("Demo mode - nobody really gets these e-mails", { exact: false })
   ).toBeVisible();
   await fillCampaign(page, "Newsletter");
   await page.getByRole("button", { name: "send" }).click();
@@ -72,13 +72,23 @@ test("sends a campaign to all active subscribers", async ({ page, request }) => 
   await expect(confirm).toContainText("all 2 active subscribers");
   await confirm.getByRole("button", { name: "Send", exact: true }).click();
 
-  // back on the list - no toast, the campaign shows as sent
-  await expect(page).toHaveURL(/#\/campaigns$/);
-  await expect(listRow(page, "Newsletter")).toContainText("sent");
+  // the campaign's page shows who got it - no toast
+  await expect(page).toHaveURL(/#\/campaigns\/recE2E\d+$/);
+  const recipients = page.getByRole("list", { name: "Recipients" }).getByRole("listitem");
+  await expect(recipients).toHaveCount(2);
+  await expect(recipients.first()).toContainText("Anna Nowak");
   await expect(page.locator(".Toastify__toast")).toHaveCount(0);
-  expect((await campaignByTitle(request, "Newsletter"))?.fields.status).toBe(
-    "sent"
+
+  // the outbox has one e-mail for each active subscriber
+  const newsletter = await campaignByTitle(request, "Newsletter");
+  expect(newsletter?.fields.status).toBe("sent");
+  const outbox = (await getAirtable(request)).emails.filter(
+    ({ fields }) => fields.campaignId === newsletter?.id
   );
+  expect(outbox.map(({ fields }) => fields.email).sort()).toEqual([
+    "anna@example.com",
+    "celina@example.com",
+  ]);
 });
 
 test("sends a campaign to the chosen subscribers", async ({ page }) => {
@@ -131,7 +141,7 @@ test("edits and sends a draft", async ({ page, request }) => {
   await page.getByRole("alertdialog").getByRole("button", { name: "Send", exact: true }).click();
 
   await expect(page.locator(".Toastify__toast")).toHaveCount(0);
-  await expect(page).toHaveURL(/#\/campaigns$/);
+  await expect(page).toHaveURL(/#\/campaigns\/recCampDraft0001$/);
   const db = await getAirtable(request);
   expect(db.campaigns.find(({ id }) => id === "recCampDraft0001")?.fields).toMatchObject({
     title: "Autumn sale 2",
@@ -150,6 +160,8 @@ test("removes a campaign", async ({ page, request }) => {
   await expect
     .poll(async () => (await getAirtable(request)).campaigns.length)
     .toBe(1);
+  // its outbox goes too
+  await expect.poll(async () => (await getAirtable(request)).emails.length).toBe(0);
 });
 
 test("lists the campaigns newest first and filters them by status", async ({
@@ -208,10 +220,6 @@ test("asks before leaving a campaign with unsaved changes", async ({ page }) => 
 
 test("duplicates a sent campaign as a new draft", async ({ page, request }) => {
   await page.goto("/#/campaigns");
-
-  // a sent campaign's row does not open anything
-  await listRow(page, "Welcome").getByRole("cell").nth(2).click();
-  await expect(page).toHaveURL(/#\/campaigns$/);
 
   await rowAction(page, "Welcome", "Duplicate");
 

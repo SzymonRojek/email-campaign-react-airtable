@@ -2,7 +2,7 @@ import * as Yup from "yup";
 
 import { SubscriberStatus } from "types";
 
-const status: SubscriberStatus[] = ["pending", "blocked", "active"];
+const status: SubscriberStatus[] = ["pending", "blocked", "active", "unsubscribed"];
 
 const validationSubscriber = Yup.object({
   name: Yup.string()

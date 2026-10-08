@@ -21,6 +21,8 @@ const toneOf: Record<string, keyof typeof tones> = {
   pending: "amber",
   draft: "amber",
   blocked: "red",
+  // left by themselves - grey, not an error like "blocked"
+  unsubscribed: "grey",
 };
 
 const StatusBadge = ({ status }: { status: string }) => {

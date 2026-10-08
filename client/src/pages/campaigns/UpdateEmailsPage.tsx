@@ -1,10 +1,8 @@
-import { useNavigate, useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
 
 import { updateEmail } from "services";
-import { sendEmailTo } from "sendEmail";
 import { useCampaign } from "customHooks/queries";
-import { useRecipients } from "customHooks/useRecipients";
-import { toastMessage } from "helpers";
+import { useSendCampaign } from "customHooks/useSendCampaign";
 import { Error, Loader } from "components/DisplayMessage";
 import { StyledContainer } from "components/StyledContainer";
 import { PageHeader } from "components/PageHeader";
@@ -13,18 +11,21 @@ import CampaignForm from "components/campaigns/CampaignForm";
 const UpdateEmailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { receivers } = useRecipients();
+  const send = useSendCampaign(id);
   const { data: campaign, isLoading, isError } = useCampaign(
     id,
     "Campaign does not exist! "
   );
 
-  // back to the list - the saved draft / the sent campaign is there, no toast needed
+  // back to the list - the saved draft is there, no toast needed
   const handleSaved = () => navigate("/campaigns");
 
   if (isLoading) return <Loader />;
   if (isError || !campaign)
     return <Error error="Campaign does not exist!" />;
+
+  // a sent campaign is final - its page shows who got it
+  if (campaign.fields.status === "sent") return <Navigate to={`/campaigns/${id}`} replace />;
 
   return (
     <StyledContainer>
@@ -42,16 +43,7 @@ const UpdateEmailsPage = () => {
         onDraft={(data) =>
           updateEmail({ data, status: "draft", id, callback: handleSaved })
         }
-        onSend={async (data) => {
-          if (!receivers.length) {
-            toastMessage("Please choose at least one subscriber");
-            return;
-          }
-
-          await sendEmailTo(data, receivers, () =>
-            updateEmail({ data, status: "sent", id, callback: handleSaved })
-          );
-        }}
+        onSend={send}
       />
     </StyledContainer>
   );
