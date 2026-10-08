@@ -1,3 +1,5 @@
+import { Quote } from "lucide-react";
+
 import Avatar from "components/Avatar";
 import { Feedback } from "types";
 import { cn } from "@/lib/utils";
@@ -6,27 +8,43 @@ const monthYear = new Intl.DateTimeFormat("en-GB", { month: "short", year: "nume
 
 interface FeedbackQuoteProps {
   feedback: Feedback;
-  // the login page shows only the beginning of a long one
-  isShort?: boolean;
+  // the login page: smaller, only the beginning of a long one
+  isCompact?: boolean;
   className?: string;
 }
 
-const FeedbackQuote = ({ feedback, isShort, className }: FeedbackQuoteProps) => {
+// one testimonial: the quote, then who wrote it and when
+const FeedbackQuote = ({ feedback, isCompact, className }: FeedbackQuoteProps) => {
   const [name, surname = ""] = feedback.name.split(" ");
 
   return (
-    <figure className={cn("flex flex-col gap-3 rounded-xl border bg-card p-4 text-left", className)}>
-      <blockquote className={cn("text-sm whitespace-pre-line", isShort && "line-clamp-3")}>
-        “{feedback.message}”
+    <figure
+      className={cn(
+        "flex h-full flex-col rounded-xl border bg-card text-left shadow-xs",
+        isCompact ? "p-4" : "p-6",
+        className
+      )}
+    >
+      <Quote className="size-5 shrink-0 fill-brand/15 text-brand" aria-hidden />
+      <blockquote
+        className={cn(
+          "mt-3 flex-1 whitespace-pre-line text-foreground/90",
+          isCompact ? "line-clamp-4 text-sm leading-relaxed" : "text-[15px] leading-relaxed"
+        )}
+      >
+        {feedback.message}
       </blockquote>
-      <figcaption className="mt-auto flex items-center gap-2.5">
-        <Avatar name={name} surname={surname} />
-        <span className="min-w-0 text-xs">
-          <span className="block truncate font-medium">{feedback.name}</span>
-          <span className="block truncate text-muted-foreground">
-            {[feedback.role, monthYear.format(new Date(feedback.date))].filter(Boolean).join(" · ")}
-          </span>
+      <figcaption className={cn("flex items-center gap-3 border-t", isCompact ? "mt-4 pt-3" : "mt-5 pt-4")}>
+        <Avatar name={name} surname={surname} className={isCompact ? undefined : "size-9"} />
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-sm font-medium">{feedback.name}</span>
+          {feedback.role && (
+            <span className="block truncate text-xs text-muted-foreground">{feedback.role}</span>
+          )}
         </span>
+        <time dateTime={feedback.date} className="shrink-0 text-xs text-muted-foreground">
+          {monthYear.format(new Date(feedback.date))}
+        </time>
       </figcaption>
     </figure>
   );

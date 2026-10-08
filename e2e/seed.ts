@@ -101,6 +101,20 @@ export const seed = {
       isPublic: false,
       approved: true,
     }),
+    record("recFeedback00005", 5, {
+      name: "Jan Nowak",
+      role: "Backend Developer",
+      message:
+        "The server never lets the Airtable token reach the browser, and the outbox is a smart way to show real e-mails on a free plan.",
+      isPublic: true,
+      approved: true,
+    }),
+    record("recFeedback00006", 6, {
+      name: "Ewa",
+      message: "Easy to use.",
+      isPublic: true,
+      approved: true,
+    }),
     record("recFeedback00004", 4, {
       name: "Not Approved",
       message: "Waiting for a review.",

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { MessageSquarePlus } from "lucide-react";
 
+import { pluralize } from "helpers";
 import { useFeedback } from "customHooks/queries";
 import { Loader } from "components/DisplayMessage";
 import { PageHeader } from "components/PageHeader";
@@ -10,9 +11,13 @@ import FeedbackQuote from "components/feedback/FeedbackQuote";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
+// the first ones, then "Show more" - a long wall of cards is hard to read
+const PAGE = 9;
+
 // what the people who reviewed the project think - approved in Airtable before it shows
 const FeedbackPage = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [shownCount, setShownCount] = useState(PAGE);
   const { data: feedback, isLoading, isError } = useFeedback();
 
   const leaveFeedback = (
@@ -26,7 +31,11 @@ const FeedbackPage = () => {
     <StyledContainer>
       <PageHeader
         title="Feedback"
-        description="What do the people who reviewed this project think?"
+        description={
+          feedback?.length
+            ? `What the people who reviewed this project think · ${pluralize(feedback.length, "review")}`
+            : "What the people who reviewed this project think"
+        }
         actions={leaveFeedback}
       />
 
@@ -37,13 +46,23 @@ const FeedbackPage = () => {
           {isError ? "The feedback could not be loaded." : "No feedback yet - be the first!"}
         </Card>
       ) : (
-        <ul aria-label="Feedback" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {feedback.map((item) => (
-            <li key={item.id} className="grid">
-              <FeedbackQuote feedback={item} />
-            </li>
-          ))}
-        </ul>
+        <>
+          {/* columns of cards of their own height - short and long feedback both look good */}
+          <ul aria-label="Feedback" className="gap-4 sm:columns-2 xl:columns-3">
+            {feedback.slice(0, shownCount).map((item) => (
+              <li key={item.id} className="mb-4 break-inside-avoid">
+                <FeedbackQuote feedback={item} />
+              </li>
+            ))}
+          </ul>
+          {feedback.length > shownCount && (
+            <div className="flex justify-center">
+              <Button variant="outline" onClick={() => setShownCount((count) => count + PAGE)}>
+                Show more
+              </Button>
+            </div>
+          )}
+        </>
       )}
 
       <FeedbackDialog isOpen={isOpen} onClose={() => setIsOpen(false)} />

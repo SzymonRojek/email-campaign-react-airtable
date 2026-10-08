@@ -11,12 +11,15 @@ test("the login page shows what reviewers say - only the approved public feedbac
 }) => {
   await page.goto("/");
 
-  const section = page.getByRole("region", { name: "Feedback from reviewers" });
-  // newest first, two of them
-  await expect(section.getByRole("figure")).toHaveCount(2);
-  await expect(section.getByRole("figure").nth(0)).toContainText("Nice UX, works on my phone.");
-  await expect(section.getByRole("figure").nth(0)).toContainText("Tom");
-  await expect(section.getByRole("figure").nth(1)).toContainText("Marta Kowalska");
+  const section = page.getByRole("region", { name: "What reviewers say" });
+  // the newest three of the four
+  const quotes = section.getByRole("figure");
+  await expect(quotes).toHaveCount(3);
+  await expect(quotes.nth(0)).toContainText("Easy to use.");
+  await expect(quotes.nth(1)).toContainText("Jan Nowak");
+  await expect(quotes.nth(1)).toContainText("Backend Developer");
+  await expect(quotes.nth(2)).toContainText("Nice UX, works on my phone.");
+  await expect(section).not.toContainText("Marta Kowalska");
   await expect(section).not.toContainText("Only for the owner.");
   await expect(section).not.toContainText("Waiting for a review.");
 });
@@ -64,7 +67,8 @@ test("the Feedback page in the app lists all approved public feedback", async ({
 
   await expect(page).toHaveURL(/#\/feedback$/);
   const list = page.getByRole("list", { name: "Feedback" }).getByRole("listitem");
-  await expect(list).toHaveCount(2);
+  await expect(list).toHaveCount(4);
+  await expect(page.getByText("4 reviews", { exact: false })).toBeVisible();
   await expect(page.getByText("Only for the owner.")).toHaveCount(0);
 
   await page.getByRole("button", { name: "Leave feedback" }).click();
