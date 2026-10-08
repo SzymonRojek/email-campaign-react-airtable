@@ -29,7 +29,7 @@ test("shows who got a sent campaign", async ({ page }) => {
 test("opens an e-mail as its recipient got it", async ({ page }) => {
   await openWelcome(page);
 
-  await page.getByRole("button", { name: "View the e-mail to Anna Nowak" }).click();
+  await page.getByRole("button", { name: "View e-mail to Anna Nowak" }).click();
 
   // the preview has an address of its own
   await expect(page).toHaveURL(/\?email=recEmailAnna0001$/);
@@ -160,7 +160,7 @@ test("unsubscribes with the link from an e-mail - without logging in", async ({
   request,
 }) => {
   await openWelcome(page);
-  await page.getByRole("button", { name: "View the e-mail to Anna Nowak" }).click();
+  await page.getByRole("button", { name: "View e-mail to Anna Nowak" }).click();
   const link = await page
     .frameLocator('iframe[title="E-mail to anna@example.com"]')
     .getByRole("link", { name: "Unsubscribe" })

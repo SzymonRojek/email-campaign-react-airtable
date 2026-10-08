@@ -132,7 +132,8 @@ const CampaignDetailsPage = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => showEmail(rowId)}
-                      aria-label={`View the e-mail to ${email.name}`}
+                      // starts with the visible text, so voice control ("click View e-mail") finds it
+                      aria-label={`View e-mail to ${email.name}`}
                     >
                       <Mail />
                       View e-mail
