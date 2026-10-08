@@ -24,6 +24,11 @@ const PasswordField = ({ id, label, registration, error }: PasswordFieldProps) =
           id={id}
           type={isVisible ? "text" : "password"}
           autoComplete="current-password"
+          // phone keyboards must not change it - "Admin" or "admin " is another password
+          // (a shown password is a normal text field)
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? errorId : undefined}
           className="h-10 pr-10"

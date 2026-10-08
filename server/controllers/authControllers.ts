@@ -5,6 +5,7 @@ import {
   isPasswordCorrect,
   createToken,
 } from "../helpers/authToken";
+import { clientIp } from "../helpers/clientIp";
 
 const MAX_FAILED_ATTEMPTS = 5;
 const BLOCK_TIME_MS = 15 * 60 * 1000; // 15 minutes
@@ -23,7 +24,7 @@ export const login = (req: Request, res: Response) => {
     });
   }
 
-  const ip = req.ip;
+  const ip = clientIp(req);
   const attempts = failedAttempts.get(ip) || { count: 0, blockedUntil: 0 };
 
   if (attempts.blockedUntil > Date.now()) {
@@ -33,7 +34,9 @@ export const login = (req: Request, res: Response) => {
     });
   }
 
-  const { password } = req.body;
+  // phones may add a space after a word suggestion (or paste one) - "admin " is "admin"
+  const password =
+    typeof req.body?.password === "string" ? req.body.password.trim() : req.body?.password;
 
   if (!password || !isPasswordCorrect(password)) {
     attempts.count += 1;
