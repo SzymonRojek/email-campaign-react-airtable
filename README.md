@@ -17,7 +17,7 @@ A full-stack web app for running e-mail campaigns: manage subscribers, write per
 
 | | link | password |
 | --- | --- | --- |
-| **Production** | [email-campaign-dashboard-app.onrender.com](https://email-campaign-dashboard-app.onrender.com/) | `admin` |
+| **Production** | [email-campaign-dashboard-app.onrender.com](https://email-campaign-dashboard-app.onrender.com/?utm_source=github) | `admin` |
 | Staging (newest changes) | [email-campaign-dashboard-staging.onrender.com](https://email-campaign-dashboard-staging.onrender.com/) | `admin` |
 
 > Free hosting - after a break the first load can take up to a minute.
