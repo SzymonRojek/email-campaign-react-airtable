@@ -3,11 +3,11 @@ import { Navigate, RouteObject, useParams } from "react-router";
 
 import "App.css";
 import { SectionLayout } from "components/Navigation";
-import { DashboardPage } from "pages/dashboard";
 import { NotFoundPage } from "pages/notFoundPage";
 
 // the subscribers and campaigns pages are loaded on demand - the home page does not need them
 // (the Suspense boundary is in SectionLayout)
+const DashboardPage = lazy(() => import("pages/dashboard/DashboardPage"));
 const SubscribersPage = lazy(() => import("pages/subscribers/SubscribersPage"));
 const EmailsPage = lazy(() => import("pages/campaigns/EmailsPage"));
 const CreateEmailPage = lazy(() => import("pages/campaigns/CreateEmailPage"));
@@ -30,7 +30,11 @@ const SubscriberPanelRedirect = ({ mode }: { mode?: "edit" }) => {
 
 // the pages inside the logged-in layout (see AppContainer)
 export const appRoutes: RouteObject[] = [
-  { path: "/", element: <DashboardPage /> },
+  {
+    path: "/",
+    element: <SectionLayout />,
+    children: [{ index: true, element: <DashboardPage /> }],
+  },
 
   {
     path: "subscribers",

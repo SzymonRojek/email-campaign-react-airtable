@@ -58,11 +58,8 @@ const CampaignDetailsPage = () => {
             <StatusBadge status={fields.status} />
           </span>
         }
-        description={
-          emails
-            ? `Sent ${sentAt} to ${pluralize(emails.length, "subscriber")}`
-            : `Sent ${sentAt}`
-        }
+        // known at once - the number of recipients is in their card (no jump when it loads)
+        description={`Sent ${sentAt}`}
         back={{ to: "/campaigns", label: "Campaigns" }}
         actions={
           <Button variant="outline" onClick={() => duplicate(campaign)}>
@@ -85,7 +82,14 @@ const CampaignDetailsPage = () => {
 
         <Card className="gap-0 py-0">
           <CardHeader className="flex items-center justify-between border-b py-4">
-            <CardTitle className="text-base">Recipients</CardTitle>
+            <CardTitle className="text-base">
+              Recipients
+              {emails && (
+                <span className="ml-2 font-normal text-muted-foreground">
+                  {pluralize(emails.length, "subscriber")}
+                </span>
+              )}
+            </CardTitle>
             {Boolean(emails?.length) && (
               <Button
                 variant="outline"
@@ -128,7 +132,8 @@ const CampaignDetailsPage = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => showEmail(rowId)}
-                      aria-label={`View the e-mail to ${email.name}`}
+                      // starts with the visible text, so voice control ("click View e-mail") finds it
+                      aria-label={`View e-mail to ${email.name}`}
                     >
                       <Mail />
                       View e-mail

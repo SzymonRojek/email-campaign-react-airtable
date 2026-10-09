@@ -25,7 +25,7 @@ describe("error monitoring", () => {
   it("drops clicks and typing (they may name a subscriber) and hides tokens in addresses", () => {
     const { beforeBreadcrumb } = options;
 
-    expect(beforeBreadcrumb!({ category: "ui.click", message: "View the e-mail to Emma" })).toBeNull();
+    expect(beforeBreadcrumb!({ category: "ui.click", message: "View e-mail to Emma" })).toBeNull();
     expect(
       beforeBreadcrumb!({ category: "navigation", data: { from: "/", to: "/#/unsubscribe/recA.sig" } })
     ).toMatchObject({ data: { from: "/", to: "/#/unsubscribe/[token]" } });

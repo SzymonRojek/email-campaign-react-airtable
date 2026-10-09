@@ -72,13 +72,13 @@ const UnsubscribePage = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-16">
+    <main className="relative flex min-h-screen flex-col items-center justify-center px-4 py-16">
       <ThemeToggle className="absolute top-4 right-4" />
       <p className="mb-6 text-sm font-medium text-muted-foreground">Email Campaign Dashboard</p>
       <Card className="w-full max-w-sm">
         <CardContent>{content()}</CardContent>
       </Card>
-    </div>
+    </main>
   );
 };
 

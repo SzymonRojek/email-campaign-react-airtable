@@ -8,7 +8,6 @@ import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
 import { validationLogin } from "helpers";
 import api from "services/api";
 import { setToken } from "services/authToken";
-import { trackEvent } from "../../analytics";
 import { getErrorMessage } from "services";
 import ThemeToggle from "components/ThemeToggle";
 import LoginFeedback from "components/feedback/LoginFeedback";
@@ -37,7 +36,6 @@ const LoginForm = () => {
       });
 
       setToken(token);
-      trackEvent("login");
       setIsLogIn(true);
       navigate("/");
     } catch (error) {
@@ -50,7 +48,8 @@ const LoginForm = () => {
     <div className="relative flex min-h-screen flex-col bg-[radial-gradient(60rem_28rem_at_50%_-8rem,color-mix(in_oklch,var(--brand)_16%,transparent),transparent)]">
       <ThemeToggle className="absolute top-4 right-4" />
 
-      <div className="flex flex-1 flex-col items-center justify-center px-4 py-16">
+      {/* not centred vertically: the feedback that loads below must not move the form */}
+      <main className="flex flex-1 flex-col items-center px-4 pt-[14vh] pb-16">
         <h1 className="text-2xl font-semibold tracking-tight">Email Campaign Dashboard</h1>
         <p className="mt-1 mb-8 text-sm text-muted-foreground">
           Sign in to manage subscribers and send campaigns.
@@ -90,7 +89,7 @@ const LoginForm = () => {
         </p>
 
         <LoginFeedback />
-      </div>
+      </main>
 
       <footer className="flex items-center justify-center gap-3 pb-6 text-xs text-muted-foreground">
         © {new Date().getFullYear()} Szymon Rojek

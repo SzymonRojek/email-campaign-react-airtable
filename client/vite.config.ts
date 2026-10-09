@@ -27,8 +27,6 @@ export default defineConfig({
   define: {
     __SENTRY_DSN__: JSON.stringify(process.env.SENTRY_DSN ?? ""),
     __SENTRY_ENVIRONMENT__: JSON.stringify(process.env.SENTRY_ENVIRONMENT || "production"),
-    // visit statistics (src/analytics.ts): only a build with UMAMI_WEBSITE_ID (production)
-    __UMAMI_WEBSITE_ID__: JSON.stringify(process.env.UMAMI_WEBSITE_ID ?? ""),
   },
   resolve: {
     alias: [
