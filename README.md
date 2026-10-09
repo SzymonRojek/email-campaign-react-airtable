@@ -4,7 +4,7 @@
 
 **A full-stack app for running e-mail campaigns - subscribers, personalized campaigns, a preview before sending and an outbox of every e-mail sent.**
 
-[![CI](https://github.com/SzymonRojek/email-campaign-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/SzymonRojek/email-campaign-dashboard/actions/workflows/ci.yml)
+[![CI](https://github.com/SzymonRojek/email-campaign-dashboard/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/SzymonRojek/email-campaign-dashboard/actions/workflows/ci.yml)
 [![Live demo](https://img.shields.io/badge/demo-live-ffa500?logo=render&logoColor=white)](https://email-campaign-dashboard-app.onrender.com/)
 [![Lighthouse](https://img.shields.io/badge/Lighthouse-accessibility%20100-0cce6b?logo=lighthouse&logoColor=white)](#testing-and-quality)
 [![Postman](https://img.shields.io/badge/API%20tests-Postman%20%2B%20Newman-ff6c37?logo=postman&logoColor=white)](postman/)
@@ -170,7 +170,7 @@ Right after the reset, the read-only "Smoke" folder of the Postman collection ch
 
 ## Testing and quality
 
-Every pull request runs all of it in GitHub Actions: type checking, lint, unit tests, the production build, end-to-end tests, API tests and a Lighthouse audit.
+Every pull request runs all of it in GitHub Actions: type checking, lint, unit tests, the production build, end-to-end tests, API tests and a Lighthouse audit - both the change on its own (into `dev`) and the release (`dev -> main`).
 
 | layer | tools | what | scale |
 | --- | --- | --- | --- |
@@ -256,7 +256,7 @@ render.yaml      production and staging on Render
 
 1. Every change starts on a short-lived branch off `dev` (`feature/...`, `fix/...`, `chore/...`).
 2. Pull request into `dev` - CI must pass and there must be no conflicts, then a review and a merge; Render deploys staging.
-3. After checking staging - a release pull request `dev -> main`, merged with a merge commit; Render deploys production.
+3. After checking staging - a release pull request `dev -> main`: CI runs again on all the changes from `dev` together (they passed one by one, but not yet as a whole), then a merge commit; Render deploys production. There is no extra run after the merge - it would test the same code twice.
 
 **Hotfix:** a `hotfix/...` branch off `main`, a pull request into `main`, then right away `main -> dev`, so both environments run the same code.
 

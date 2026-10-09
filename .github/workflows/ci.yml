@@ -1,12 +1,11 @@
 name: CI
 
 on:
-  # every PR is checked before the human merges it (feature -> dev, dev -> main);
-  # main is checked again after the merge - it is what Render deploys
+  # every PR is checked before the human merges it: feature -> dev (the change on its
+  # own) and dev -> main (the release - all changes on dev together). No extra run after
+  # the merge into main: it would test exactly the code the release PR has just tested
   pull_request:
     branches: [dev, main]
-  push:
-    branches: [main]
 
 # a new commit in the same PR cancels the older, now pointless run
 concurrency:
