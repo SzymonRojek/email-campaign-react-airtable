@@ -30,7 +30,7 @@ export const monitoringOptions = (dsn: string, environment: string): BrowserOpti
   },
   beforeSend: cleanEvent,
   beforeBreadcrumb: (breadcrumb) => {
-    // clicks and typing may name a subscriber (e.g. "View the e-mail to Emma Johnson")
+    // clicks and typing may name a subscriber (e.g. "View e-mail to Emma Johnson")
     if (breadcrumb.category?.startsWith("ui.")) return null;
     if (breadcrumb.message) breadcrumb.message = hideSecrets(breadcrumb.message);
     for (const key of ["url", "from", "to"]) {

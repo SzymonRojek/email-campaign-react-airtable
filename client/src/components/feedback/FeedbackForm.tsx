@@ -5,7 +5,6 @@ import { CircleCheck } from "lucide-react";
 
 import validationFeedback, { FEEDBACK_MESSAGE_MAX } from "helpers/validationFeedback";
 import { getErrorMessage } from "services";
-import { trackEvent } from "../../analytics";
 import api from "services/api";
 import TextField from "components/form/TextField";
 import { FeedbackFormValues } from "types";
@@ -38,7 +37,6 @@ const FeedbackForm = ({ onClose }: FeedbackFormProps) => {
     try {
       await api.post("/feedback", { ...values, website: trapRef.current?.value });
       setIsSent(true);
-      trackEvent("feedback-sent");
     } catch (error) {
       setError("root", { message: getErrorMessage(error) });
     }

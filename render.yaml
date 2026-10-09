@@ -34,9 +34,6 @@ services:
         sync: false
       - key: SENTRY_ENVIRONMENT
         value: production
-      # visit statistics (Umami Cloud) - the website ID from umami.is; production only
-      - key: UMAMI_WEBSITE_ID
-        sync: false
 
   # staging - to check the changes before the PR dev -> main
   - type: web
