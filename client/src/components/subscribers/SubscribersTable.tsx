@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Download } from "lucide-react";
 
+import { useLastContacted } from "customHooks/useLastContacted";
 import { useTableData } from "customHooks/useTableData";
 import DataTablePagination, {
   PAGE_SIZES,
@@ -10,6 +11,7 @@ import SortableDateHead, {
 } from "components/DataTable/SortableDateHead";
 import SearchInput from "components/DataTable/SearchInput";
 import StatusFilter from "components/DataTable/StatusFilter";
+import { statusLabel } from "helpers";
 import { downloadCsv } from "helpers/csv";
 import { Subscriber, SubscriberStatus } from "types";
 import { Button } from "@/components/ui/button";
@@ -37,17 +39,18 @@ interface SubscribersTableProps {
 const SubscribersTable = ({
   subscribers,
   withActions = true,
-  emptyMessage = "There are no subscribers yet.",
+  emptyMessage = "There are no candidates yet.",
 }: SubscribersTableProps) => {
+  const lastContacted = useLastContacted();
   const table = useTableData(
     subscribers,
-    ({ fields }) => `${fields.name} ${fields.surname} ${fields.email}`
+    ({ fields }) => `${fields.name} ${fields.surname} ${fields.email} ${fields.profession ?? ""}`
   );
 
   // what the list shows - after the search, the filter and the order
   const exportCsv = () =>
     downloadCsv(
-      `subscribers-${new Date().toISOString().slice(0, 10)}.csv`,
+      `candidates-${new Date().toISOString().slice(0, 10)}.csv`,
       subscribersToCsv(table.rows)
     );
 
@@ -65,8 +68,8 @@ const SubscribersTable = ({
         <SearchInput
           value={table.query}
           onChange={table.setQuery}
-          label="Search subscribers"
-          placeholder="Search name or e-mail"
+          label="Search candidates"
+          placeholder="Search name, e-mail or role"
           className="w-full sm:w-64"
         />
         <StatusFilter
@@ -75,12 +78,12 @@ const SubscribersTable = ({
           onChange={table.setStatus}
         />
         <div className="ml-auto flex items-center gap-2">
-          {/* phones have no "Date" header to click */}
+          {/* phones (and tablets) have no "Added" header to click */}
           {table.rows.length > 1 && (
             <SortDirectionButton
               direction={table.direction}
               onToggle={table.toggleDirection}
-              className="md:hidden"
+              className="lg:hidden"
             />
           )}
           <Button
@@ -88,7 +91,7 @@ const SubscribersTable = ({
             size="sm"
             onClick={exportCsv}
             disabled={table.rows.length === 0}
-            title="Download the subscribers shown in the list"
+            title="Download the candidates shown in the list"
           >
             <Download />
             Export CSV
@@ -99,8 +102,8 @@ const SubscribersTable = ({
       {table.rows.length === 0 ? (
         <p className="px-6 py-12 text-center text-sm text-muted-foreground">
           {table.query
-            ? `No subscribers match "${table.query}"${table.status === "all" ? "" : ` with the status ${table.status}`}.`
-            : `There are no subscribers with the status ${table.status}.`}
+            ? `No candidates match "${table.query}"${table.status === "all" ? "" : ` with the status "${statusLabel(table.status)}"`}.`
+            : `There are no candidates with the status "${statusLabel(table.status)}".`}
         </p>
       ) : (
         <>
@@ -109,9 +112,13 @@ const SubscribersTable = ({
             <Table>
               <TableHeader className="bg-muted/50">
                 <TableRow>
-                  <TableHead className="pl-4">Subscriber</TableHead>
+                  <TableHead className="pl-4">Candidate</TableHead>
+                  <TableHead>Role</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Last contacted</TableHead>
                   <SortableDateHead
+                    label="Added"
+                    className="hidden lg:table-cell"
                     direction={table.direction}
                     onToggle={table.toggleDirection}
                   />
@@ -126,17 +133,19 @@ const SubscribersTable = ({
                     key={subscriber.id}
                     subscriber={subscriber}
                     withActions={withActions}
+                    lastContacted={lastContacted.get(subscriber.id)}
                   />
                 ))}
               </TableBody>
             </Table>
           </div>
-          <ul aria-label="Subscribers" className="divide-y md:hidden">
+          <ul aria-label="Candidates" className="divide-y md:hidden">
             {table.pageData.map((subscriber) => (
               <SubscriberCard
                 key={subscriber.id}
                 subscriber={subscriber}
                 withActions={withActions}
+                lastContacted={lastContacted.get(subscriber.id)}
               />
             ))}
           </ul>

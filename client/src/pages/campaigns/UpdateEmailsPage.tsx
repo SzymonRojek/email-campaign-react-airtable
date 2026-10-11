@@ -14,7 +14,7 @@ const UpdateEmailsPage = () => {
   const send = useSendCampaign(id);
   const { data: campaign, isLoading, isError } = useCampaign(
     id,
-    "Campaign does not exist! "
+    "Job offer does not exist! "
   );
 
   // back to the list - the saved draft is there, no toast needed
@@ -22,7 +22,7 @@ const UpdateEmailsPage = () => {
 
   if (isLoading) return <Loader />;
   if (isError || !campaign)
-    return <Error error="Campaign does not exist!" />;
+    return <Error error="Job offer does not exist!" />;
 
   // a sent campaign is final - its page shows who got it
   if (campaign.fields.status === "sent") return <Navigate to={`/campaigns/${id}`} replace />;
@@ -30,9 +30,9 @@ const UpdateEmailsPage = () => {
   return (
     <StyledContainer>
       <PageHeader
-        title="Edit campaign"
-        description="Only drafts can be changed - sending makes the campaign final."
-        back={{ to: "/campaigns", label: "Campaigns" }}
+        title="Edit job offer"
+        description="Only drafts can be changed - sending makes the offer final."
+        back={{ to: "/campaigns", label: "Job offers" }}
       />
       {/* the form gets the loaded data as its starting values */}
       <CampaignForm

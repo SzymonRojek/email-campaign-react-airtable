@@ -3,15 +3,18 @@ import { useSubscriberPanel } from "customHooks/useSubscriberPanel";
 import StatusBadge from "components/StatusBadge";
 import { Subscriber } from "types";
 import { TableCell, TableRow } from "@/components/ui/table";
+import CandidateRole from "./CandidateRole";
+import LastContacted from "./LastContacted";
 import SubscriberActions from "./SubscriberActions";
 import SubscriberIdentity from "./SubscriberIdentity";
 
 interface SubscriberRowProps {
   subscriber: Subscriber;
   withActions: boolean;
+  lastContacted?: string;
 }
 
-const SubscriberRow = ({ subscriber, withActions }: SubscriberRowProps) => {
+const SubscriberRow = ({ subscriber, withActions, lastContacted }: SubscriberRowProps) => {
   const { id, fields, createdTime } = subscriber;
   const { open } = useSubscriberPanel();
 
@@ -24,10 +27,16 @@ const SubscriberRow = ({ subscriber, withActions }: SubscriberRowProps) => {
       <TableCell className="max-w-72 pl-4">
         <SubscriberIdentity subscriber={subscriber} />
       </TableCell>
+      <TableCell className="max-w-48">
+        <CandidateRole subscriber={subscriber} />
+      </TableCell>
       <TableCell>
         <StatusBadge status={fields.status} />
       </TableCell>
-      <TableCell className="text-muted-foreground">
+      <TableCell>
+        <LastContacted date={lastContacted} />
+      </TableCell>
+      <TableCell className="hidden text-muted-foreground lg:table-cell">
         {formattedData.getFormattedDateTime(fields.date || createdTime)}
       </TableCell>
       {withActions && (

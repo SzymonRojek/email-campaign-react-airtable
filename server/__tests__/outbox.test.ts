@@ -105,6 +105,19 @@ describe("templates", () => {
     expect(email.text).toContain("Dear Emma Johnson, welcome!");
   });
 
+  it("fills in {{role}} with the candidate's role - empty when there is none", () => {
+    const withRole = buildEmail({
+      campaign: { title: "An offer for a {{role}}", description: "Your experience as a {{ role }}" },
+      recipient: { name: "Emma", role: "Frontend Developer" },
+      unsubscribeUrl: "https://app/#/u/x",
+    });
+    const withoutRole = build("Hi", "as a {{role}}.");
+
+    expect(withRole.subject).toBe("An offer for a Frontend Developer");
+    expect(withRole.html).toContain("Your experience as a Frontend Developer");
+    expect(withoutRole.text).toContain("as a .");
+  });
+
   it("never lets a name become HTML or a link", () => {
     const email = build("Hi", "Dear {{name}}", { name: "<img src=x> https://evil.example", surname: "" });
 
@@ -230,7 +243,7 @@ describe("POST /api/campaigns/:id/send", () => {
     const res = await send();
 
     expect(res.status).toBe(400);
-    expect(res.body.error).toBe("Unknown placeholder: {{nmae}} - use {{name}} or {{surname}}");
+    expect(res.body.error).toBe("Unknown placeholder: {{nmae}} - use {{name}}, {{surname}} or {{role}}");
     expect(airtable.post).not.toHaveBeenCalled();
   });
 
@@ -297,6 +310,26 @@ describe("the outbox of a campaign", () => {
     expect(res.body.sentAt).toBe("2026-10-01T10:00:00.000Z");
   });
 
+  it("fills in {{role}} of a sent e-mail with the candidate's current role", async () => {
+    const offer = { ...draft, fields: { ...draft.fields, description: "As a {{role}}", status: "sent" } };
+    const anna = subscriber("recAnna", "Anna");
+
+    airtableData({
+      "/emails/recE1": emailRow("recE1", "Anna"),
+      "/campaigns/recCampaign1": offer,
+      "/subscribers/recAnna": { ...anna, fields: { ...anna.fields, profession: "QA Engineer" } },
+    });
+    expect((await request(app).get("/api/emails/recE1/preview").set(auth())).body.html).toContain(
+      "As a QA Engineer"
+    );
+
+    // the candidate has been deleted - the e-mail still opens, without the role
+    airtableData({ "/emails/recE1": emailRow("recE1", "Anna"), "/campaigns/recCampaign1": offer });
+    const res = await request(app).get("/api/emails/recE1/preview").set(auth());
+    expect(res.status).toBe(200);
+    expect(res.body.html).toContain("As a ");
+  });
+
   it("lists the campaigns a subscriber got, newest first", async () => {
     const older = emailRow("recE1", "Anna");
     const newer = { ...emailRow("recE2", "Anna", "recCampaign2"), fields: { ...emailRow("recE2", "Anna", "recCampaign2").fields, sentAt: "2026-10-05T10:00:00.000Z" } };
@@ -340,7 +373,13 @@ describe("the outbox of a campaign", () => {
       ["recE1", "Autumn sale"],
     ]);
     expect(res.body[1]).toEqual(
-      expect.objectContaining({ name: "Anna Nowak", email: "anna@example.com", campaignId: "recCampaign1" })
+      expect.objectContaining({
+        name: "Anna Nowak",
+        email: "anna@example.com",
+        campaignId: "recCampaign1",
+        // the client counts "last contacted" of every candidate from it
+        subscriberId: "recAnna",
+      })
     );
   });
 

@@ -2,7 +2,8 @@
 
 export interface EmailInput {
   campaign: { title?: string; description?: string };
-  recipient: { name?: string; surname?: string; email?: string };
+  // role = the candidate's profession, e.g. "Frontend Developer"
+  recipient: { name?: string; surname?: string; email?: string; role?: string };
   unsubscribeUrl: string;
 }
 
@@ -16,8 +17,8 @@ export interface BuiltEmail {
 
 export const SENDER = { name: "Email Campaign Dashboard", address: "campaigns@example.com" };
 
-// {{name}} and {{surname}} in the title and the text become the recipient's own data
-export const PLACEHOLDERS = ["name", "surname"] as const;
+// {{name}}, {{surname}} and {{role}} in the title and the text become the recipient's own data
+export const PLACEHOLDERS = ["name", "surname", "role"] as const;
 type Placeholder = (typeof PLACEHOLDERS)[number];
 
 const placeholderPattern = /\{\{\s*([^{}]*?)\s*\}\}/g;
@@ -66,7 +67,11 @@ const paragraphs = (escaped: string) =>
 
 // plain like a personal message - e-mail programs ignore <style> sheets, so styles are inline
 export const buildEmail = ({ campaign, recipient, unsubscribeUrl }: EmailInput): BuiltEmail => {
-  const values = { name: recipient.name?.trim() ?? "", surname: recipient.surname?.trim() ?? "" };
+  const values = {
+    name: recipient.name?.trim() ?? "",
+    surname: recipient.surname?.trim() ?? "",
+    role: recipient.role?.trim() ?? "",
+  };
   const greeting = `Hello ${values.name || "there"},`;
   const subject = fillIn(campaign.title?.trim() || "(no subject)", values);
   const description = (campaign.description ?? "").replace(/\r\n/g, "\n");
@@ -85,7 +90,7 @@ export const buildEmail = ({ campaign, recipient, unsubscribeUrl }: EmailInput):
       <p style="margin:0 0 16px">${escapeHtml(greeting)}</p>
       ${body}
       <p style="margin:32px 0 0;padding-top:16px;border-top:1px solid #e8eaed;font-size:12px;line-height:1.5;color:#5f6368">
-        You get this e-mail because you subscribed to our campaigns.
+        You get this e-mail because you joined our talent pool.
         <a href="${escapeHtml(unsubscribeUrl)}" style="color:#5f6368">Unsubscribe</a>
       </p>
     </div>

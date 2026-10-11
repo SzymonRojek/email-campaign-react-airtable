@@ -82,7 +82,7 @@ export const readSubscribersCsv = (
   existingEmails: Set<string>
 ): ReadCsvResult => {
   if (rows.length < 2) {
-    return { rows: [], ignoresStatus: false, error: "The file has no subscribers - only a header or nothing." };
+    return { rows: [], ignoresStatus: false, error: "The file has no candidates - only a header or nothing." };
   }
 
   const header = rows[0].map(normalizeText);
@@ -98,7 +98,7 @@ export const readSubscribersCsv = (
     return {
       rows: [],
       ignoresStatus: false,
-      error: `At most ${MAX_IMPORT_ROWS} subscribers at once - the file has ${dataRows.length}.`,
+      error: `At most ${MAX_IMPORT_ROWS} candidates at once - the file has ${dataRows.length}.`,
     };
   }
 

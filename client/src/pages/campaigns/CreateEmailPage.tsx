@@ -16,16 +16,16 @@ const CreateEmailPage = () => {
   const handleSaved = (saved: CampaignFields, status: CampaignStatus) => {
     // a sent campaign is visible on the list (the demo note was in the confirmation) -
     // a draft gets a word, it is easy to miss that it was not sent
-    if (status === "draft") toastSuccess(`Campaign "${saved.title}" has been saved as a draft`);
+    if (status === "draft") toastSuccess(`Job offer "${saved.title}" has been saved as a draft`);
     navigate("/campaigns");
   };
 
   return (
     <StyledContainer>
       <PageHeader
-        title="New campaign"
+        title="New job offer"
         description="Write a message, then save it as a draft or send it."
-        back={{ to: "/campaigns", label: "Campaigns" }}
+        back={{ to: "/campaigns", label: "Job offers" }}
       />
       <CampaignForm
         onDraft={(data) =>

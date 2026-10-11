@@ -9,6 +9,11 @@ interface SortProps {
   onToggle: () => void;
 }
 
+interface SortableDateHeadProps extends SortProps {
+  label?: string;
+  className?: string;
+}
+
 const label = (direction: SortDirection) =>
   direction === "newest" ? "Newest first" : "Oldest first";
 
@@ -19,15 +24,15 @@ const DirectionIcon = ({ direction }: { direction: SortDirection }) => {
 };
 
 // "Date" column header - click to switch between newest and oldest first
-const SortableDateHead = ({ direction, onToggle }: SortProps) => (
-  <TableHead aria-sort={direction === "newest" ? "descending" : "ascending"}>
+const SortableDateHead = ({ direction, onToggle, label: text = "Date", className }: SortableDateHeadProps) => (
+  <TableHead aria-sort={direction === "newest" ? "descending" : "ascending"} className={className}>
     <button
       type="button"
       onClick={onToggle}
       className="inline-flex items-center gap-1 rounded-sm font-medium hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
       title={label(direction)}
     >
-      Date
+      {text}
       <DirectionIcon direction={direction} />
       <span className="sr-only">, {label(direction).toLowerCase()}</span>
     </button>

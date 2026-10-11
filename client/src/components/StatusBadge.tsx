@@ -1,3 +1,4 @@
+import { statusLabel } from "helpers";
 import { cn } from "@/lib/utils";
 
 // soft colours with a dot - readable in both themes without shouting
@@ -31,12 +32,12 @@ const StatusBadge = ({ status }: { status: string }) => {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium capitalize ring-1 ring-inset",
+        "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap ring-1 ring-inset",
         tones[tone]
       )}
     >
       <span className={cn("size-1.5 rounded-full", dots[tone])} aria-hidden />
-      {status}
+      {statusLabel(status)}
     </span>
   );
 };

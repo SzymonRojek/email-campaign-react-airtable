@@ -2,7 +2,9 @@
 
 # Email Campaign Dashboard
 
-**A full-stack app for running e-mail campaigns - subscribers, personalized campaigns, a preview before sending and an outbox of every e-mail sent.**
+**Send job offers to the right candidates in your talent pool - by role and budget, personalized, and never too often.**
+
+A side project from 2021, rebuilt in 2026 to production standard: full-stack TypeScript, tests on every level, CI/CD, staging and production.
 
 [![CI](https://github.com/SzymonRojek/email-campaign-dashboard/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/SzymonRojek/email-campaign-dashboard/actions/workflows/ci.yml)
 [![Live demo](https://img.shields.io/badge/demo-live-ffa500?logo=render&logoColor=white)](https://email-campaign-dashboard-app.onrender.com/)
@@ -18,7 +20,7 @@
 ![Playwright](https://img.shields.io/badge/Playwright-e2e-2ead33)
 ![Sentry](https://img.shields.io/badge/Sentry-362d59?logo=sentry&logoColor=white)
 
-[**Live demo**](https://email-campaign-dashboard-app.onrender.com/) · password `admin`
+[**Live demo**](https://email-campaign-dashboard-app.onrender.com/) · one click on **Try the demo**, no password needed
 
 </div>
 
@@ -48,7 +50,7 @@
 
 ## Live demo
 
-| environment | link | password |
+| environment | link | API password (Postman) |
 | --- | --- | --- |
 | **Production** | [email-campaign-dashboard-app.onrender.com](https://email-campaign-dashboard-app.onrender.com/) | `admin` |
 | Staging (newest changes) | [email-campaign-dashboard-staging.onrender.com](https://email-campaign-dashboard-staging.onrender.com/) | `admin` |
@@ -59,13 +61,26 @@
 > Free hosting: after a break, the first load can take up to a minute.
 
 > [!TIP]
-> **Reviewing the project?** I would love your feedback - use "Leave feedback" on the login page or in the app.
+> **Reviewing the project?** I would love your feedback - use "Leave feedback" on the start page or in the app.
+
+## The problem it solves
+
+A small recruitment agency or a freelance recruiter keeps candidates in a spreadsheet. Sending a new job offer means: filter the sheet by role and salary, copy the addresses into Gmail, write "Dear candidate" to everyone, and hope that nobody gets the same kind of offer twice in a week. Put the addresses in CC instead of BCC by mistake, and everybody sees everybody else's e-mail - a data leak.
+
+| step | spreadsheet + Gmail | this app |
+| --- | --- | --- |
+| who gets the offer | filter the sheet by hand, copy the addresses | pick a **role** and a **budget** - the matching candidates are found |
+| the message | "Dear candidate" for everyone | `{{name}}` and `{{role}}` - every candidate gets their own e-mail |
+| too many offers | nobody remembers who got what | candidates **contacted in the last 14 days are skipped** by default; the list shows **last contacted** |
+| consent (GDPR) | a column nobody updates | only **open to offers** candidates get offers; an **opt-out link** in every e-mail updates the status by itself |
+| other people's addresses | CC by mistake = a leak | one e-mail per candidate - nobody sees the others |
+| what was sent | the Sent folder | an outbox per offer: who got it and every e-mail exactly as it was sent |
 
 ## Highlights
 
 - **Full-stack TypeScript** - React client and Express server, strict mode on both sides
 - **Secure by design** - the Airtable token never reaches the browser; signed login tokens, protection against password guessing, signed unsubscribe links, user text always escaped in the e-mails
-- **Tested on every level** - 137 server and 95 client unit tests, 63 end-to-end tests in a real browser, a Postman collection of API tests and a Lighthouse audit - all in CI on every pull request
+- **Tested on every level** - 144 server and 102 client unit tests, 63 end-to-end tests in a real browser, a Postman collection of API tests and a Lighthouse audit - all in CI on every pull request
 - **Production-ready** - staging and production with automatic deploys, error monitoring (Sentry) without personal data, a nightly demo reset followed by a read-only check of the live app
 - **Product thinking** - a preview before every send, no lost work, minimal noise in the UI, accessible (Lighthouse accessibility 100), works on phones
 
@@ -73,27 +88,30 @@
 
 <table>
   <tr>
-    <th align="left" width="33%">Subscribers</th>
-    <th align="left" width="33%">Campaigns</th>
+    <th align="left" width="33%">Candidates</th>
+    <th align="left" width="33%">Job offers</th>
     <th align="left" width="34%">Everywhere</th>
   </tr>
   <tr valign="top">
     <td>
       <ul>
-        <li>search (also without accents), status filter, sorting</li>
+        <li>role, expected salary and <b>last contacted</b> in the list</li>
+        <li>statuses: open to offers, awaiting consent, do not contact, opted out</li>
+        <li>search (also without accents and by role), status filter, sorting</li>
         <li>details, adding and editing in a side panel over the list</li>
-        <li>each subscriber's panel lists the campaigns they got</li>
-        <li>one e-mail address = one subscriber, checked on both sides</li>
+        <li>each candidate's panel lists the job offers they got</li>
+        <li>one e-mail address = one candidate, checked on both sides</li>
         <li>CSV import with a preview that validates every row; CSV export</li>
       </ul>
     </td>
     <td>
       <ul>
-        <li>drafts, sending to all active subscribers or the chosen ones</li>
-        <li><code>{{name}}</code> / <code>{{surname}}</code> personalization; a mistyped placeholder is caught</li>
+        <li>recipients by <b>role</b> and <b>budget</b>; the ones contacted in the last 14 days are skipped; fine-tuning by hand</li>
+        <li><code>{{name}}</code> / <code>{{surname}}</code> / <code>{{role}}</code> personalization; a mistyped placeholder is caught</li>
+        <li>drafts</li>
         <li>preview before sending, for any recipient</li>
         <li>outbox: who got it, every e-mail as it was sent; CSV export</li>
-        <li>an unsubscribe link in every e-mail (a public page)</li>
+        <li>an opt-out link in every e-mail (a public page)</li>
       </ul>
     </td>
     <td>
@@ -129,8 +147,10 @@ flowchart LR
 ```
 
 - **The server is the only way to the data.** The React app never talks to Airtable; the Express server keeps the token in environment variables and returns only the data.
-- **Login** - `POST /api/auth/login` returns a signed token valid for 8 hours, required by every data endpoint. After 5 wrong passwords the visitor's address (the real one, behind Cloudflare) is blocked for 15 minutes.
-- **Sending** - the server, not the browser, decides who gets a campaign (active subscribers only), builds one e-mail per recipient from a template (fills in the name, escapes the text, adds a signed unsubscribe link) and saves it in the outbox. The preview uses the same template.
+- **Login** - every data endpoint needs a signed token valid for 8 hours. In the browser, "Try the demo" gets it from `POST /api/auth/demo` with one click - the endpoint exists only with `DEMO_LOGIN=true`, so no other server has a door without a password. API clients (Postman) get the same token from `POST /api/auth/login` with the password; after 5 wrong passwords the visitor's address (the real one, behind Cloudflare) is blocked for 15 minutes.
+- **Recruiter words, stable data** - the screens say candidates, job offers and "open to offers"; Airtable keeps its tables (`subscribers`, `campaigns`) and status values (`active`, `pending`...), so nothing had to be migrated.
+- **Choosing the recipients** - the browser finds them: the role and the budget filter the candidates open to offers, and "last contacted" comes from the outbox (`GET /api/emails`), so the ones who got an offer in the last 14 days are skipped by default.
+- **Sending** - the server still has the last word: it sends only to candidates open to offers, builds one e-mail per recipient from a template (fills in the name and the role, escapes the text, adds a signed opt-out link) and saves it in the outbox. The preview uses the same template.
 - **Why an outbox** - the demo is public and the free hosting blocks outgoing SMTP. Where the e-mails go is one setting (`MAIL_TRANSPORT`): `outbox` on the demo, `ethereal` locally (a test SMTP server). A real e-mail service would be one more case.
 - **Feedback** - public endpoints with a bot trap and a limit of 3 entries an hour per visitor; a new entry is never shown before it is approved in Airtable.
 - **Error monitoring** - Sentry on both sides, only where `SENTRY_DSN` is set; no IP addresses, headers, bodies or clicks, and the unsubscribe token is removed from every address.
@@ -142,6 +162,7 @@ flowchart LR
 | ------ | -------- | ---- |
 | `GET` | `/api/health` | - |
 | `POST` | `/api/auth/login` | - |
+| `POST` | `/api/auth/demo` | - (only with `DEMO_LOGIN=true`) |
 | `GET`, `POST` | `/api/subscribers` | token |
 | `POST` | `/api/subscribers/import` | token |
 | `GET`, `PATCH`, `DELETE` | `/api/subscribers/:id` | token |
@@ -174,9 +195,9 @@ Every pull request runs all of it in GitHub Actions: type checking, lint, unit t
 
 | layer | tools | what | scale |
 | --- | --- | --- | --- |
-| **Server unit** | Jest, supertest | every endpoint, login and limits, sending and templates, unsubscribe links, CSV import, feedback, demo reset, monitoring privacy | 137 tests |
-| **Client unit** | Vitest, React Testing Library | validation, CSV, search / sort / filter, API client, login token storage, recipients, theme | 95 tests |
-| **End-to-end** | Playwright | real user flows in a browser on the production build: subscribers, campaigns from draft to outbox, unsubscribing, feedback, unsaved changes, dark mode, phones | 63 tests |
+| **Server unit** | Jest, supertest | every endpoint, login and limits, sending and templates, unsubscribe links, CSV import, feedback, demo reset, monitoring privacy | 144 tests |
+| **Client unit** | Vitest, React Testing Library | validation, CSV, search / sort / filter, API client, login token storage, recipients by role / budget / last contacted, theme | 102 tests |
+| **End-to-end** | Playwright | real user flows in a browser on the production build: candidates, job offers from draft to outbox, recipients by role and budget, unsubscribing, feedback, unsaved changes, dark mode, phones | 63 tests |
 | **API** | Postman, Newman | the collection in [`postman/`](postman/): login and refusals (401, 400), duplicate e-mail (409), draft → preview → send → second send (409) → outbox, feedback, clean-up | 30 requests, 56 assertions |
 | **Lighthouse** | Lighthouse | 7 screens, logged out and in, desktop and phone; accessibility, best practices and SEO must stay at 100 | every PR |
 | **Live demo** | Newman | read-only check of production after the nightly reset | every night |
@@ -191,8 +212,8 @@ Needs **Node.js 24** and an Airtable base with four tables (all fields text, exc
 
 | table | fields |
 | --- | --- |
-| `subscribers` | `name`, `surname`, `email`, `status` (single select), `profession`, `salary`, `telephone`, `date` |
-| `campaigns` | `title`, `description` (long text), `status` (single select), `date` |
+| `subscribers` (the candidates) | `name`, `surname`, `email`, `status` (single select), `profession` (the role), `salary` (expected, per month), `telephone`, `date` |
+| `campaigns` (the job offers) | `title` (the subject), `description` (long text, the message), `status` (single select), `date` |
 | `emails` | `email`, `name`, `subscriberId`, `campaignId`, `sentAt` |
 | `feedback` | `name`, `role`, `message` (long text), `approved` (checkbox), `date` |
 
@@ -209,8 +230,9 @@ cd client && npm install && npm start         # app on http://localhost:3000
 | --- | --- | --- |
 | `AIRTABLE_BASE_ID` | `.env`, Render | the Airtable base ID (`app...`) |
 | `AIRTABLE_TOKEN` | `.env`, Render | an Airtable personal access token with `data.records:read` / `write` for that base |
-| `ADMIN_PASSWORD` | `.env`, Render | the login password |
+| `ADMIN_PASSWORD` | `.env`, Render | the password for `POST /api/auth/login` (API, Postman) |
 | `AUTH_SECRET` | `.env`, Render | a random secret that signs the login tokens |
+| `DEMO_LOGIN` | `.env`, Render | `true` - the "Try the demo" button logs in without the password; without it the app works only through the API |
 | `MAIL_TRANSPORT` | `.env` (optional) | `outbox` (default) or `ethereal` |
 | `SENTRY_DSN` | Render (optional) | the Sentry project's DSN - turns on error monitoring (the client reads it at build time) |
 | `SENTRY_ENVIRONMENT` | Render | `production` or `staging` - set in `render.yaml` |

@@ -1,6 +1,6 @@
-// {{name}} and {{surname}} in a campaign become each recipient's own data
+// {{name}}, {{surname}} and {{role}} in a job offer become each candidate's own data
 // (the server fills them in - the same list lives in server/mail/buildEmail.ts)
-export const PLACEHOLDERS = ["name", "surname"] as const;
+export const PLACEHOLDERS = ["name", "surname", "role"] as const;
 
 const placeholderPattern = /\{\{\s*([^{}]*?)\s*\}\}/g;
 

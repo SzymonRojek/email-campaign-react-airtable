@@ -1,45 +1,37 @@
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { useNavigate } from "react-router";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { BsGithub } from "react-icons/bs";
-import { Info } from "lucide-react";
+import { Play } from "lucide-react";
 
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
-import { validationLogin } from "helpers";
 import api from "services/api";
 import { setToken } from "services/authToken";
 import { getErrorMessage } from "services";
 import ThemeToggle from "components/ThemeToggle";
 import LoginFeedback from "components/feedback/LoginFeedback";
-import { LoginFormValues } from "types";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import PasswordField from "./PasswordField";
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const { setIsLogIn } = useGlobalStoreContext();
 
-  const {
-    handleSubmit,
-    register,
-    setError,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginFormValues>({
-    resolver: yupResolver(validationLogin),
-  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const onSubmit = async ({ password }: LoginFormValues) => {
+  // the public demo - in with one click, no password to type
+  const tryDemo = async () => {
+    setIsLoading(true);
+    setError("");
+
     try {
-      const { token } = await api.post<{ token: string }>("/auth/login", {
-        password,
-      });
+      const { token } = await api.post<{ token: string }>("/auth/demo", {});
 
       setToken(token);
       setIsLogIn(true);
       navigate("/");
     } catch (error) {
-      setError("password", { message: getErrorMessage(error) });
+      setError(getErrorMessage(error));
+      setIsLoading(false);
     }
   };
 
@@ -48,45 +40,31 @@ const LoginForm = () => {
     <div className="relative flex min-h-screen flex-col bg-[radial-gradient(60rem_28rem_at_50%_-8rem,color-mix(in_oklch,var(--brand)_16%,transparent),transparent)]">
       <ThemeToggle className="absolute top-4 right-4" />
 
-      {/* not centred vertically: the feedback that loads below must not move the form */}
+      {/* not centred vertically: the feedback that loads below must not move the button */}
       <main className="flex flex-1 flex-col items-center px-4 pt-[14vh] pb-16">
         <h1 className="text-2xl font-semibold tracking-tight">Email Campaign Dashboard</h1>
-        <p className="mt-1 mb-8 text-sm text-muted-foreground">
-          Sign in to manage subscribers and send campaigns.
+        <p className="mt-1 mb-8 max-w-sm text-center text-sm text-muted-foreground">
+          Send job offers to the right candidates in your talent pool - by role and
+          budget, personalized, and never too often.
         </p>
 
-        <Card className="w-full max-w-sm">
-          <CardContent>
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              noValidate
-              className="grid gap-4"
-            >
-              <PasswordField
-                id="password"
-                label="Password"
-                registration={register("password")}
-                error={errors.password?.message}
-              />
-              <Button
-                type="submit"
-                variant="brand"
-                className="h-10"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Logging in..." : "Log in"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-
-        <p className="mt-4 flex max-w-sm items-center gap-2 rounded-lg border bg-card/60 px-3 py-2 text-xs text-muted-foreground">
-          <Info className="size-4 shrink-0 text-brand" aria-hidden />
-          <span>
-            Demo app - the password is{" "}
-            <strong className="text-foreground">admin</strong>
-          </span>
-        </p>
+        <div className="grid w-full max-w-xs gap-2">
+          <Button
+            type="button"
+            variant="brand"
+            className="h-11 text-base"
+            disabled={isLoading}
+            onClick={tryDemo}
+          >
+            <Play aria-hidden />
+            {isLoading ? "Opening the demo..." : "Try the demo"}
+          </Button>
+          {error && (
+            <p role="alert" className="text-center text-sm text-destructive">
+              {error}
+            </p>
+          )}
+        </div>
 
         <LoginFeedback />
       </main>

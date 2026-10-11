@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Eye, Send, Users } from "lucide-react";
+import { Eye, Send } from "lucide-react";
 
 import { pluralize, validationCampaign } from "helpers";
 import { DESCRIPTION_MAX } from "helpers/validationCampaign";
@@ -28,7 +28,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import CampaignPreviewPanel from "./CampaignPreviewPanel";
-import RecipientsDialog from "./RecipientsDialog";
+import RecipientsPicker from "./RecipientsPicker";
 
 const emptyValues: CampaignFormValues = { title: "", description: "" };
 
@@ -43,13 +43,11 @@ const CampaignForm = ({
   onDraft,
   onSend,
 }: CampaignFormProps) => {
-  const [isRecipientsOpen, setIsRecipientsOpen] = useState(false);
   // the form values waiting for "Send" in the confirmation
   const [toSend, setToSend] = useState<CampaignFormValues | null>(null);
   // the form values shown in the preview panel
   const [toPreview, setToPreview] = useState<CampaignFormValues | null>(null);
-  const { activeSubscribers, receivers, hasNoActiveSubscribers, label } =
-    useRecipients();
+  const { receivers, hasNoActiveSubscribers } = useRecipients();
 
   const {
     register,
@@ -74,10 +72,7 @@ const CampaignForm = ({
     receivers.length ? setToSend(values) : whileSaving(() => onSend(values))
   );
 
-  const recipientsText =
-    receivers.length === activeSubscribers.length
-      ? `all ${pluralize(receivers.length, "active subscriber")}`
-      : `${receivers.length} of ${pluralize(activeSubscribers.length, "active subscriber")}`;
+  const recipientsText = pluralize(receivers.length, "candidate");
 
   return (
     <Card className="w-full max-w-2xl">
@@ -87,18 +82,18 @@ const CampaignForm = ({
 
           <TextField
             id="title"
-            label="Title"
+            label="Subject"
             registration={register("title")}
             error={errors.title?.message}
           />
 
           <div className="grid gap-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">Message</Label>
             <Textarea
               id="description"
               rows={8}
               aria-invalid={Boolean(errors.description)}
-              placeholder="Hi {{name}}, ..."
+              placeholder="I have an offer that could fit you as a {{role}}..."
               aria-describedby={errors.description ? "description-error" : undefined}
               {...register("description")}
             />
@@ -107,6 +102,9 @@ const CampaignForm = ({
                 {errors.description.message}
               </p>
             )}
+            <p className="text-xs text-muted-foreground">
+              {"{{name}}, {{surname}} and {{role}} become each candidate's own data."}
+            </p>
             {/* the counter shows up only near the limit */}
             {description.length > DESCRIPTION_MAX - 100 && (
               <p
@@ -120,18 +118,7 @@ const CampaignForm = ({
             )}
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-muted px-4 py-3">
-            <p className="text-sm font-medium">{label}</p>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={hasNoActiveSubscribers}
-              onClick={() => setIsRecipientsOpen(true)}
-            >
-              <Users />
-              Choose recipients
-            </Button>
-          </div>
+          <RecipientsPicker />
 
           <p className="text-sm text-muted-foreground italic">{DEMO_EMAIL_NOTICE}</p>
 
@@ -175,11 +162,6 @@ const CampaignForm = ({
         onClose={() => setToPreview(null)}
       />
 
-      <RecipientsDialog
-        isOpen={isRecipientsOpen}
-        onClose={() => setIsRecipientsOpen(false)}
-      />
-
       <AlertDialog open={Boolean(toSend)} onOpenChange={(isOpen) => !isOpen && setToSend(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -188,7 +170,7 @@ const CampaignForm = ({
             </AlertDialogMedia>
             <AlertDialogTitle>Send "{toSend?.title}"?</AlertDialogTitle>
             <AlertDialogDescription>
-              It goes to {recipientsText}. A sent campaign can not be changed or
+              It goes to {recipientsText}. A sent offer can not be changed or
               sent back. {DEMO_EMAIL_NOTICE}
             </AlertDialogDescription>
           </AlertDialogHeader>

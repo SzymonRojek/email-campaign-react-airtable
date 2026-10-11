@@ -9,6 +9,7 @@ import {
   EmailPreview,
   Feedback,
   ReceivedEmail,
+  SentEmail,
   Subscriber,
 } from "types";
 
@@ -16,6 +17,7 @@ import {
 
 export const subscribersKey = ["/subscribers"] as [string];
 export const campaignsKey = ["/campaigns"] as [string];
+export const outboxKey = ["/emails"];
 
 export const useSubscribers = (errorMessage?: string) =>
   useQuery({
@@ -51,6 +53,14 @@ export const useCampaignEmails = (id?: string) =>
     queryKey: ["/campaigns", { id }, "emails"],
     queryFn: () => api.get<Email[]>(`/campaigns/${id}/emails`),
     enabled: Boolean(id),
+  });
+
+// every e-mail of every sent job offer - "last contacted" of the candidates
+export const useOutbox = () =>
+  useQuery({
+    queryKey: outboxKey,
+    queryFn: () => api.get<SentEmail[]>("/emails"),
+    meta: { myMessage: "Cannot get the sent e-mails." },
   });
 
 // the campaigns a subscriber got

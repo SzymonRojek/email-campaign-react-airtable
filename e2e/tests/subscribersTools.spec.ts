@@ -13,7 +13,7 @@ const rows = (page: import("@playwright/test").Page) =>
 
 test("searches the subscribers by name or e-mail", async ({ page }) => {
   await page.goto("/#/subscribers");
-  const search = page.getByLabel("Search subscribers");
+  const search = page.getByLabel("Search candidates");
 
   // no Polish letters needed - "wisniewska" finds "Wiśniewska"
   await search.fill("wisniewska");
@@ -24,7 +24,7 @@ test("searches the subscribers by name or e-mail", async ({ page }) => {
   await expect(rows(page).nth(1)).toContainText("Bartek");
 
   await search.fill("nobody");
-  await expect(page.getByText('No subscribers match "nobody".')).toBeVisible();
+  await expect(page.getByText('No candidates match "nobody".')).toBeVisible();
 
   await page.getByRole("button", { name: "Clear the search" }).click();
   await expect(rows(page)).toHaveCount(5);
@@ -41,11 +41,11 @@ test("does not add a subscriber with an e-mail that is already used", async ({
   // another letter case - still the same address
   await page.locator("#email").fill("ANNA@example.com");
   await page.locator("#status-id").click();
-  await page.getByRole("option", { name: "active" }).click();
+  await page.getByRole("option", { name: "Open to offers" }).click();
   await page.locator("#profession").fill("tester");
   await page.locator("#salary").fill("4500");
   await page.locator("#telephone").fill("3432342399");
-  await page.getByRole("button", { name: "Add subscriber" }).click();
+  await page.getByRole("button", { name: "Add candidate" }).click();
 
   await expect(page.getByText("this e-mail is already used by Anna Nowak")).toBeVisible();
   expect((await getAirtable(request)).subscribers).toHaveLength(4);
@@ -63,13 +63,13 @@ test("the server refuses a duplicate e-mail too", async ({ request }) => {
 test("exports the subscribers shown in the list", async ({ page }) => {
   await page.goto("/#/subscribers");
   await page.locator("#status-filter").click();
-  await page.getByRole("option", { name: "active" }).click();
+  await page.getByRole("option", { name: "Open to offers" }).click();
 
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Export CSV" }).click();
   const file = await download;
 
-  expect(file.suggestedFilename()).toMatch(/^subscribers-\d{4}-\d{2}-\d{2}\.csv$/);
+  expect(file.suggestedFilename()).toMatch(/^candidates-\d{4}-\d{2}-\d{2}\.csv$/);
   const lines = fs.readFileSync(await file.path(), "utf8").trim().split(/\r?\n/);
 
   // header + the 2 active subscribers, newest first
@@ -102,12 +102,12 @@ test("imports the valid rows of a CSV file", async ({ page, request }) => {
   await expect(dialog.getByText("2 with errors")).toBeVisible();
   await expect(dialog.getByText("email: already on the list")).toBeVisible();
 
-  await dialog.getByRole("button", { name: "Import 1 subscriber" }).click();
+  await dialog.getByRole("button", { name: "Import 1 candidate" }).click();
 
-  await expect(page.getByText("1 subscriber imported")).toBeVisible();
+  await expect(page.getByText("1 candidate imported")).toBeVisible();
   await expect(dialog).toHaveCount(0);
   // no status in the file - pending
-  await expect(listRow(page, "Ola Kowalczyk")).toContainText("pending");
+  await expect(listRow(page, "Ola Kowalczyk")).toContainText("Awaiting consent");
 
   const db = await getAirtable(request);
   expect(db.subscribers.map(({ fields }) => fields.email)).toEqual([
@@ -131,14 +131,14 @@ test("imports as active only with the permission to e-mail them", async ({ page,
     buffer: Buffer.from("name,surname,email\nOliver,Wilson,oliver@example.com"),
   });
 
-  await dialog.getByLabel(/Active/).check();
-  const importButton = dialog.getByRole("button", { name: "Import 1 subscriber" });
+  await dialog.getByLabel(/Open to offers/).check();
+  const importButton = dialog.getByRole("button", { name: "Import 1 candidate" });
   await expect(importButton).toBeDisabled();
 
-  await dialog.getByLabel("I have permission to e-mail these people").check();
+  await dialog.getByLabel("They agreed to get job offers from me").check();
   await importButton.click();
 
-  await expect(listRow(page, "Oliver Wilson")).toContainText("active");
+  await expect(listRow(page, "Oliver Wilson")).toContainText("Open to offers");
   const oliver = (await getAirtable(request)).subscribers.find(
     ({ fields }) => fields.email === "oliver@example.com"
   );
