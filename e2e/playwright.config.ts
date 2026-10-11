@@ -58,6 +58,7 @@ export default defineConfig({
         PORT: String(APP_PORT),
         ADMIN_PASSWORD,
         AUTH_SECRET: "e2e-auth-secret",
+        DEMO_LOGIN: "true",
         // never the real Airtable - these override the values from .env
         AIRTABLE_API_URL: `http://localhost:${AIRTABLE_PORT}/v0`,
         AIRTABLE_BASE_ID: "appE2E",

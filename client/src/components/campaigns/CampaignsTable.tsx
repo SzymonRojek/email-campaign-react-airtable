@@ -11,7 +11,7 @@ import SortableDateHead, {
 import SearchInput from "components/DataTable/SearchInput";
 import StatusFilter from "components/DataTable/StatusFilter";
 import { downloadCsv } from "helpers/csv";
-import { toastMessage } from "helpers";
+import { statusLabel, toastMessage } from "helpers";
 import { getErrorMessage } from "services";
 import api from "services/api";
 import { Campaign, CampaignStatus, SentEmail } from "types";
@@ -38,7 +38,7 @@ interface CampaignsTableProps {
 
 const CampaignsTable = ({
   campaigns,
-  emptyMessage = "There are no campaigns yet.",
+  emptyMessage = "There are no job offers yet.",
 }: CampaignsTableProps) => {
   const table = useTableData(
     campaigns,
@@ -78,7 +78,7 @@ const CampaignsTable = ({
         <SearchInput
           value={table.query}
           onChange={table.setQuery}
-          label="Search campaigns"
+          label="Search job offers"
           placeholder="Search title or description"
           className="w-full sm:w-64"
         />
@@ -101,7 +101,7 @@ const CampaignsTable = ({
             size="sm"
             onClick={exportEmails}
             disabled={shownSent.length === 0 || isExporting}
-            title="Download every e-mail of the sent campaigns shown in the list"
+            title="Download every e-mail of the sent offers shown in the list"
           >
             <Download />
             {isExporting ? "Exporting..." : "Export CSV"}
@@ -112,8 +112,8 @@ const CampaignsTable = ({
       {table.rows.length === 0 ? (
         <p className="px-6 py-12 text-center text-sm text-muted-foreground">
           {table.query
-            ? `No campaigns match "${table.query}"${table.status === "all" ? "" : ` with the status ${table.status}`}.`
-            : `There are no campaigns with the status ${table.status}.`}
+            ? `No job offers match "${table.query}"${table.status === "all" ? "" : ` with the status "${statusLabel(table.status)}"`}.`
+            : `There are no job offers with the status "${statusLabel(table.status)}".`}
         </p>
       ) : (
         <>
@@ -122,7 +122,7 @@ const CampaignsTable = ({
             <Table>
               <TableHeader className="bg-muted/50">
                 <TableRow>
-                  <TableHead className="pl-4">Campaign</TableHead>
+                  <TableHead className="pl-4">Job offer</TableHead>
                   <TableHead>Status</TableHead>
                   <SortableDateHead
                     direction={table.direction}
@@ -138,7 +138,7 @@ const CampaignsTable = ({
               </TableBody>
             </Table>
           </div>
-          <ul aria-label="Campaigns" className="divide-y md:hidden">
+          <ul aria-label="Job offers" className="divide-y md:hidden">
             {table.pageData.map((campaign) => (
               <CampaignCard key={campaign.id} campaign={campaign} />
             ))}

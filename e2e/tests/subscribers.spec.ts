@@ -18,7 +18,7 @@ test("lists the subscribers, newest first", async ({ page }) => {
   await expect(rows.nth(4)).toContainText("Anna");
   await expect(listRow(page, "Celina")).toContainText("2022/09/03");
 
-  await page.getByRole("button", { name: /^Date/ }).click();
+  await page.getByRole("button", { name: /^Added/ }).click();
 
   await expect(rows.nth(1)).toContainText("Anna");
   await expect(rows.nth(4)).toContainText("Darek");
@@ -26,18 +26,18 @@ test("lists the subscribers, newest first", async ({ page }) => {
 
 test("adds a subscriber in the panel", async ({ page, request }) => {
   await page.goto("/#/subscribers");
-  await page.getByRole("button", { name: "Add subscriber" }).click();
-  await expect(page.getByRole("dialog")).toContainText("New subscriber");
+  await page.getByRole("button", { name: "Add candidate" }).click();
+  await expect(page.getByRole("dialog")).toContainText("New candidate");
 
   await page.locator("#name").fill("Łucja");
   await page.locator("#surname").fill("Zając");
   await page.locator("#email").fill("lucja@example.com");
   await page.locator("#status-id").click();
-  await page.getByRole("option", { name: "active" }).click();
+  await page.getByRole("option", { name: "Open to offers" }).click();
   await page.locator("#profession").fill("analyst");
   await page.locator("#salary").fill("4500");
   await page.locator("#telephone").fill("3432342399");
-  await page.getByRole("button", { name: "Add subscriber" }).click();
+  await page.getByRole("button", { name: "Add candidate" }).click();
 
   // the panel shows the new subscriber at once
   await expect(page).toHaveURL(/#\/subscribers\?view=recE2E\d+$/);
@@ -45,7 +45,7 @@ test("adds a subscriber in the panel", async ({ page, request }) => {
 
   await page.keyboard.press("Escape");
   // newest first - the new subscriber is on the first page
-  await expect(listRow(page, "Łucja")).toContainText("active");
+  await expect(listRow(page, "Łucja")).toContainText("Open to offers");
 
   const db = await getAirtable(request);
   expect(db.subscribers.map(({ fields }) => fields.name)).toContain("Łucja");
@@ -53,14 +53,14 @@ test("adds a subscriber in the panel", async ({ page, request }) => {
 
 test("adds a subscriber with only the required fields", async ({ page, request }) => {
   await page.goto("/#/subscribers");
-  await page.getByRole("button", { name: "Add subscriber" }).click();
+  await page.getByRole("button", { name: "Add candidate" }).click();
 
   await page.locator("#name").fill("Emma");
   await page.locator("#surname").fill("Johnson");
   await page.locator("#email").fill("emma@example.com");
   await page.locator("#status-id").click();
-  await page.getByRole("option", { name: "pending" }).click();
-  await page.getByRole("dialog").getByRole("button", { name: "Add subscriber" }).click();
+  await page.getByRole("option", { name: "Awaiting consent" }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Add candidate" }).click();
 
   await expect(page.getByRole("dialog")).toContainText("Emma Johnson");
   const emma = (await getAirtable(request)).subscribers.find(
@@ -74,7 +74,7 @@ test("shows validation errors and does not save", async ({ page, request }) => {
 
   await page.locator("#name").fill("Jo");
   await page.locator("#email").fill("not-an-email");
-  await page.getByRole("button", { name: "Add subscriber" }).click();
+  await page.getByRole("button", { name: "Add candidate" }).click();
 
   await expect(page.getByText("must be at least 3 characters")).toBeVisible();
   await expect(page.getByText("email is invalid")).toBeVisible();
@@ -150,7 +150,7 @@ test("removes a subscriber after confirmation", async ({ page, request }) => {
 
   await rowAction(page, "Bartek Kowalski", "Delete");
   const dialog = page.getByRole("alertdialog");
-  await expect(dialog).toContainText("Delete subscriber?");
+  await expect(dialog).toContainText("Delete candidate?");
   // the full name, so it is clear who goes
   await expect(dialog).toContainText("Bartek Kowalski will be removed permanently");
   await dialog.getByRole("button", { name: "Delete", exact: true }).click();
@@ -172,7 +172,7 @@ test("keeps the subscriber when the removal is cancelled", async ({ page }) => {
 
 test("shows the details in a panel over the list", async ({ page }) => {
   await page.goto("/#/subscribers");
-  await page.getByLabel("Search subscribers").fill("anna");
+  await page.getByLabel("Search candidates").fill("anna");
 
   // a click in the row (the names are not links)
   await listRow(page, "Anna Nowak").getByRole("cell").nth(2).click();
@@ -186,7 +186,7 @@ test("shows the details in a panel over the list", async ({ page }) => {
   // "back" closes the panel - the list keeps its search
   await page.goBack();
   await expect(panel).toHaveCount(0);
-  await expect(page.getByLabel("Search subscribers")).toHaveValue("anna");
+  await expect(page.getByLabel("Search candidates")).toHaveValue("anna");
 });
 
 test("opens the details by clicking anywhere in the row", async ({ page }) => {
@@ -205,13 +205,13 @@ test("shows the details of a pending subscriber and activates them", async ({
   await rowAction(page, "Darek Lis", "View details");
 
   const panel = page.getByRole("dialog");
-  await expect(panel).toContainText("Waiting for a confirmation");
+  await expect(panel).toContainText("Awaiting consent - the candidate gets no job offers");
 
   await panel.getByRole("button", { name: "Activate" }).click();
 
   // the badge and the notice are the confirmation - no toast
-  await expect(panel).not.toContainText("Waiting for a confirmation");
-  await expect(panel).toContainText("active");
+  await expect(panel).not.toContainText("Awaiting consent - the candidate gets no job offers");
+  await expect(panel).toContainText("Open to offers");
   await expect(page.locator(".Toastify__toast")).toHaveCount(0);
   await expect
     .poll(async () =>
@@ -239,7 +239,7 @@ test("shows cards with a sort button on a phone", async ({ page }) => {
 
   // no table on a phone - a list of cards, newest first
   await expect(page.getByRole("table")).toHaveCount(0);
-  const cards = page.getByRole("list", { name: "Subscribers" }).getByRole("listitem");
+  const cards = page.getByRole("list", { name: "Candidates" }).getByRole("listitem");
   await expect(cards).toHaveCount(4);
   await expect(cards.first()).toContainText("Darek");
 
@@ -258,14 +258,14 @@ test("filters the subscribers by status", async ({ page }) => {
   await expect(rows).toHaveCount(5);
 
   await page.locator("#status-filter").click();
-  await page.getByRole("option", { name: "active" }).click();
+  await page.getByRole("option", { name: "Open to offers" }).click();
 
   // header + Celina, Anna
   await expect(rows).toHaveCount(3);
   await expect(rows.nth(1)).toContainText("Celina");
 
   await page.locator("#status-filter").click();
-  await page.getByRole("option", { name: "pending" }).click();
+  await page.getByRole("option", { name: "Awaiting consent" }).click();
 
   await expect(rows).toHaveCount(2);
   await expect(rows.nth(1)).toContainText("Darek");
@@ -275,5 +275,5 @@ test("opens the list for the old status address", async ({ page }) => {
   await page.goto("/#/subscribers/status");
 
   await expect(page).toHaveURL(/#\/subscribers$/);
-  await expect(page.getByRole("heading", { name: "Subscribers" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Candidates" })).toBeVisible();
 });

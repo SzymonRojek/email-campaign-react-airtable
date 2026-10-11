@@ -46,7 +46,11 @@ export const useRemoveItem = (
 
       toastMessage(`Item has not been removed: ${getErrorMessage(error)}`);
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey }),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
+      // a deleted job offer takes its e-mails along - "last contacted" changes
+      if (query === "campaigns") queryClient.invalidateQueries({ queryKey: ["/emails"] });
+    },
   });
 
   const confirmModalProps = {
@@ -63,7 +67,7 @@ export const useRemoveItem = (
       isOpenConfirmModal: true,
     });
     setConfirmModalText({
-      title: `Delete ${query === "subscribers" ? "subscriber" : "campaign"}?`,
+      title: `Delete ${query === "subscribers" ? "candidate" : "job offer"}?`,
       description: (
         <>
           <strong className="font-medium text-foreground">{name}</strong> will be

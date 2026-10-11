@@ -24,12 +24,15 @@ const validationSubscriber = Yup.object({
   status: Yup.mixed<SubscriberStatus>()
     .required("status is required")
     .oneOf(status, "status is required"),
-  // optional - checked only when filled in
+  // optional - checked only when filled in; the candidate's role, e.g. "Frontend Developer", "C++ Developer"
   profession: Yup.string()
     .trim()
-    .matches(/^[\p{L}\s]+$/u, { message: "only letters are required", excludeEmptyString: true })
-    .test("min", "must be at least 3 characters", (value) => !value || value.length >= 3)
-    .test("max", "must not exceed 10 characters", (value) => !value || value.length <= 10),
+    .matches(/^[\p{L}\d\s\-+/.#&]+$/u, {
+      message: "use letters, digits and - + / . # &",
+      excludeEmptyString: true,
+    })
+    .test("min", "must be at least 2 characters", (value) => !value || value.length >= 2)
+    .test("max", "must not exceed 30 characters", (value) => !value || value.length <= 30),
   salary: Yup.string()
     .trim()
     .matches(/^\d+$/, { message: "only numbers are required", excludeEmptyString: true })

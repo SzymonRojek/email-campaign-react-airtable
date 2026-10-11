@@ -2,16 +2,19 @@ import { formattedData, isInteractiveClick } from "helpers";
 import { useSubscriberPanel } from "customHooks/useSubscriberPanel";
 import StatusBadge from "components/StatusBadge";
 import { Subscriber } from "types";
+import CandidateRole from "./CandidateRole";
+import LastContacted from "./LastContacted";
 import SubscriberActions from "./SubscriberActions";
 import SubscriberIdentity from "./SubscriberIdentity";
 
 interface SubscriberCardProps {
   subscriber: Subscriber;
   withActions: boolean;
+  lastContacted?: string;
 }
 
 // a list row on a phone - the table is too wide there
-const SubscriberCard = ({ subscriber, withActions }: SubscriberCardProps) => {
+const SubscriberCard = ({ subscriber, withActions, lastContacted }: SubscriberCardProps) => {
   const { id, fields, createdTime } = subscriber;
   const { open } = useSubscriberPanel();
 
@@ -24,9 +27,20 @@ const SubscriberCard = ({ subscriber, withActions }: SubscriberCardProps) => {
         <SubscriberIdentity subscriber={subscriber} />
         <StatusBadge status={fields.status} />
       </div>
+      <div className="pl-11 text-sm">
+        <CandidateRole subscriber={subscriber} />
+      </div>
       <div className="flex items-center justify-between gap-3">
         <p className="text-xs text-muted-foreground">
-          {formattedData.getFormattedDateTime(fields.date || createdTime)}
+          {lastContacted ? (
+            <>
+              Contacted <LastContacted date={lastContacted} />
+            </>
+          ) : (
+            "Never contacted"
+          )}{" "}
+          · added{" "}
+          {formattedData.getFormattedDate(fields.date || createdTime)}
         </p>
         {withActions && <SubscriberActions subscriber={subscriber} />}
       </div>

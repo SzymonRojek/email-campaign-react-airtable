@@ -227,20 +227,31 @@ describe("resetDemoData", () => {
 });
 
 describe("seedOutbox", () => {
-  it("sends the examples only to active subscribers who had joined before", () => {
+  it("sends the examples only to active candidates in the offer's roles who had joined before", () => {
     const outbox = seedOutbox().map(({ campaignIndex, subscriberIndex }) => [
       seedCampaigns[campaignIndex].fields.title,
       seedSubscribers[subscriberIndex].fields.name,
     ]);
 
     expect(outbox).toEqual([
-      ["Welcome", "Emma"],
-      ["Autumn sale", "Emma"],
-      ["Autumn sale", "Liam"],
-      ["Autumn sale", "Olivia"],
-      ["Autumn sale", "Ava"],
-      ["Autumn sale", "Sophia"],
+      // no roles - every active candidate
+      ["Welcome to our talent pool", "Emma"],
+      ["Welcome to our talent pool", "Liam"],
+      ["Welcome to our talent pool", "Olivia"],
+      ["Welcome to our talent pool", "Ava"],
+      ["QA Engineer - hybrid, Krakow", "Ava"],
+      ["QA Engineer - hybrid, Krakow", "Isabella"],
+      // Mia joined after it went out - a new frontend offer can reach her
+      ["Frontend Developer - fintech, remote", "Emma"],
+      ["Frontend Developer - fintech, remote", "Sophia"],
     ]);
+  });
+
+  it("keeps the example texts within the limits of the form", () => {
+    for (const { fields } of seedCampaigns) {
+      expect((fields.title ?? "").length).toBeLessThanOrEqual(60);
+      expect((fields.description ?? "").length).toBeLessThanOrEqual(500);
+    }
   });
 });
 

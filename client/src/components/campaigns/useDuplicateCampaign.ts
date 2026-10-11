@@ -31,7 +31,7 @@ export const useDuplicateCampaign = () => {
       navigate(`/campaigns/edit/${copy.id}`);
     },
     onError: (error) =>
-      toastMessage(`The campaign has not been duplicated: ${getErrorMessage(error)}`),
+      toastMessage(`The job offer has not been duplicated: ${getErrorMessage(error)}`),
   });
 
   return mutate;

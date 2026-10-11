@@ -35,7 +35,7 @@ const updateSubscriber = async ({
     callback(response.fields);
   } catch (error) {
     toastMessage(
-      `The subscriber has not been saved: ${getErrorMessage(error)}`
+      `The candidate has not been saved: ${getErrorMessage(error)}`
     );
   }
 };

@@ -45,7 +45,7 @@ const UnsubscribePage = () => {
           title="You are unsubscribed"
         >
           <strong className="text-foreground">{info.data.email}</strong> will not get any more
-          campaigns.
+          job offers.
         </Result>
       );
     }
@@ -53,7 +53,7 @@ const UnsubscribePage = () => {
     return (
       <Result icon={<MailMinus className="size-6 text-brand" aria-hidden />} title="Unsubscribe?">
         <strong className="text-foreground">{info.data.email}</strong> will not get any more
-        campaigns from Email Campaign Dashboard.
+        job offers from us.
         {unsubscribe.isError && (
           <span role="alert" className="mt-3 block text-destructive">
             {getErrorMessage(unsubscribe.error)}

@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { normalizeText, validationSubscriber } from "helpers";
+import { normalizeText, statusLabel, validationSubscriber } from "helpers";
 import { useSubscribers } from "customHooks/queries";
 import { useLeaveGuard } from "customHooks/useLeaveGuard";
 import DiscardChangesDialog from "components/DiscardChangesDialog";
@@ -11,12 +11,9 @@ import { SelectOption, SubscriberFormValues } from "types";
 import { PUBLIC_DEMO_NOTICE } from "./publicDemoNotice";
 import { Button } from "@/components/ui/button";
 
-const statusOptions: SelectOption[] = [
-  { value: "active", label: "active" },
-  { value: "pending", label: "pending" },
-  { value: "blocked", label: "blocked" },
-  { value: "unsubscribed", label: "unsubscribed" },
-];
+const statusOptions: SelectOption[] = (
+  ["active", "pending", "blocked", "unsubscribed"] as const
+).map((status) => ({ value: status, label: statusLabel(status) }));
 
 const emptyValues = {
   name: "",
@@ -127,7 +124,7 @@ const SubscriberForm = ({
 
         <TextField
           id="profession"
-          label="Profession (optional)"
+          label="Role (optional)"
           registration={register("profession")}
           error={errors.profession?.message}
         />
@@ -135,7 +132,7 @@ const SubscriberForm = ({
         <div className="grid gap-5 sm:grid-cols-2">
           <TextField
             id="salary"
-            label="Salary (optional)"
+            label="Expected salary per month (optional)"
             registration={register("salary")}
             error={errors.salary?.message}
           />

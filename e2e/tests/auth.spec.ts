@@ -1,52 +1,17 @@
 import { expect, test } from "@playwright/test";
 
-import {
-  loginByApi,
-  loginByForm,
-  mainNavLink,
-  resetAirtable,
-} from "./helpers";
+import { loginByApi, mainNavLink, resetAirtable } from "./helpers";
 
 test.beforeEach(async ({ request }) => {
   await resetAirtable(request);
 });
 
 test.describe("login", () => {
-  test("shows the login form with the demo password hint", async ({ page }) => {
+  test("opens the demo with one click - no password - and logs out", async ({ page }) => {
     await page.goto("/");
 
-    await expect(
-      page.getByRole("heading", { name: "Email Campaign Dashboard" })
-    ).toBeVisible();
-    await expect(page.getByText("the password is", { exact: false })).toContainText(
-      "admin"
-    );
-  });
-
-  test("rejects a wrong password", async ({ page }) => {
-    await page.goto("/");
-
-    await loginByForm(page, "wrong-password");
-
-    await expect(page.getByText("password is not correct")).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "Email Campaign Dashboard" })
-    ).toBeVisible();
-  });
-
-  test("asks only for the password", async ({ page }) => {
-    await page.goto("/");
-
-    await expect(page.getByLabel("Confirm password")).toHaveCount(0);
-    await page.getByRole("button", { name: "Log in" }).click();
-
-    await expect(page.getByText("please enter your password")).toBeVisible();
-  });
-
-  test("logs in and out", async ({ page }) => {
-    await page.goto("/");
-
-    await loginByForm(page);
+    await expect(page.getByLabel(/password/i)).toHaveCount(0);
+    await page.getByRole("button", { name: "Try the demo" }).click();
 
     await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible({
       timeout: 10_000,
@@ -59,17 +24,17 @@ test.describe("login", () => {
     ).toBeVisible({ timeout: 10_000 });
   });
 
-  test("goes back to the login form when the token is no longer valid", async ({
+  test("goes back to the start page when the token is no longer valid", async ({
     page,
     request,
   }) => {
     await loginByApi(page, request);
     await page.goto("/#/subscribers");
-    await expect(page.getByRole("heading", { name: "Subscribers" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Candidates" })).toBeVisible();
 
     // e.g. the token expired or the server secret changed
     await page.evaluate(() => localStorage.setItem("authToken", "invalid.token"));
-    await mainNavLink(page, "Campaigns").click();
+    await mainNavLink(page, "Job offers").click();
 
     await expect(
       page.getByRole("heading", { name: "Email Campaign Dashboard" })

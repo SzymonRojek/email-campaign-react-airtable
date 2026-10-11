@@ -28,7 +28,7 @@ const placeholderError = ({ title, description }: CampaignFields) => {
   if (unknown.length === 0) return null;
 
   const list = unknown.map((key) => `{{${key}}}`).join(", ");
-  return `Unknown placeholder${unknown.length > 1 ? "s" : ""}: ${list} - use {{name}} or {{surname}}`;
+  return `Unknown placeholder${unknown.length > 1 ? "s" : ""}: ${list} - use {{name}}, {{surname}} or {{role}}`;
 };
 
 const emailsOf = async (campaignId: string) =>
@@ -79,7 +79,12 @@ export const sendCampaign = async (req: Request, res: Response) => {
       recipients.map(({ id: subscriberId, fields }) =>
         buildEmail({
           campaign: campaign.fields,
-          recipient: { name: fields.name, surname: fields.surname, email: fields.email },
+          recipient: {
+            name: fields.name,
+            surname: fields.surname,
+            email: fields.email,
+            role: fields.profession,
+          },
           unsubscribeUrl: unsubscribeUrl(origin, subscriberId),
         })
       )
@@ -128,6 +133,7 @@ export const getCampaignEmails = async (req: Request, res: Response) => {
 };
 
 // GET /api/emails - every e-mail of the outbox with its campaign's title, newest first
+// (the client counts "last contacted" of every candidate from it)
 export const getAllEmails = async (req: Request, res: Response) => {
   try {
     const [emails, campaigns] = await Promise.all([
@@ -143,6 +149,7 @@ export const getAllEmails = async (req: Request, res: Response) => {
       .map(({ id, fields }) => ({
         id,
         campaignId: fields.campaignId,
+        subscriberId: fields.subscriberId,
         title: titles.get(fields.campaignId ?? ""),
         name: fields.name,
         email: fields.email,
@@ -207,11 +214,17 @@ export const getEmailPreview = async (req: Request, res: Response) => {
       `/campaigns/${campaignId}`
     );
 
-    // the e-mail uses the name the subscriber had when it went out
+    // the e-mail uses the name the subscriber had when it went out; the outbox keeps no
+    // role, so it is the candidate's current one (none when they have been deleted)
     const [firstName, ...surname] = (name ?? "").split(" ");
+    const role = isRecordId(subscriberId)
+      ? await axiosInstance
+          .get<AirtableRecord<SubscriberFields>>(`/subscribers/${subscriberId}`)
+          .then(({ data }) => data.fields.profession ?? "", () => "")
+      : "";
     const built = buildEmail({
       campaign: campaign.fields,
-      recipient: { name: firstName, surname: surname.join(" "), email: email.fields.email },
+      recipient: { name: firstName, surname: surname.join(" "), email: email.fields.email, role },
       unsubscribeUrl: unsubscribeUrl(appOrigin(req), subscriberId),
     });
 
@@ -238,10 +251,10 @@ export const previewCampaign = async (req: Request, res: Response) => {
     const { data: subscriber } = await axiosInstance.get<AirtableRecord<SubscriberFields>>(
       `/subscribers/${subscriberId}`
     );
-    const { name, surname, email } = subscriber.fields;
+    const { name, surname, email, profession } = subscriber.fields;
     const built = buildEmail({
       campaign,
-      recipient: { name, surname, email },
+      recipient: { name, surname, email, role: profession },
       unsubscribeUrl: unsubscribeUrl(appOrigin(req), subscriberId),
     });
 

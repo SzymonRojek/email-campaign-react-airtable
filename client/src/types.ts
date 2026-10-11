@@ -2,7 +2,6 @@ import * as Yup from "yup";
 
 import type validationSubscriber from "helpers/validationSubscriber";
 import type validationCampaign from "helpers/validationCampaign";
-import type validationLogin from "helpers/validationLogin";
 import type validationFeedback from "helpers/validationFeedback";
 
 export type SubscriberStatus = "active" | "pending" | "blocked" | "unsubscribed";
@@ -38,7 +37,6 @@ export type Campaign = AirtableRecord<CampaignFields>;
 // form values (react-hook-form) - derived from the yup schemas so they always match
 export type SubscriberFormValues = Yup.InferType<typeof validationSubscriber>;
 export type CampaignFormValues = Yup.InferType<typeof validationCampaign>;
-export type LoginFormValues = Yup.InferType<typeof validationLogin>;
 export type FeedbackFormValues = Yup.InferType<typeof validationFeedback>;
 
 export interface SelectOption {
@@ -69,6 +67,7 @@ export interface ReceivedEmail {
 
 // GET /api/emails - one e-mail of the outbox with its campaign's title
 export interface SentEmail extends ReceivedEmail {
+  subscriberId: string;
   name: string;
   email: string;
 }

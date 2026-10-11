@@ -26,8 +26,8 @@ const campaignByTitle = async (
 test("lists the campaigns with their status", async ({ page }) => {
   await page.goto("/#/campaigns");
 
-  await expect(listRow(page, "Autumn sale")).toContainText("draft");
-  await expect(listRow(page, "Welcome")).toContainText("sent");
+  await expect(listRow(page, "Autumn sale")).toContainText("Draft");
+  await expect(listRow(page, "Welcome")).toContainText("Sent");
   // the "..." button says what it is for
   const actions = page.getByRole("button", { name: "Actions for Welcome" });
   await actions.hover();
@@ -46,20 +46,20 @@ test("saves a draft", async ({ page, request }) => {
   await page.getByRole("button", { name: "draft" }).click();
 
   await expect(
-    page.getByText('Campaign "Black friday" has been saved as a draft')
+    page.getByText('Job offer "Black friday" has been saved as a draft')
   ).toBeVisible();
   await expect(page).toHaveURL(/#\/campaigns$/);
   // the server capitalizes the first letter only
-  await expect(listRow(page, "Black friday")).toContainText("draft");
+  await expect(listRow(page, "Black friday")).toContainText("Draft");
   expect((await campaignByTitle(request, "Black friday"))?.fields.status).toBe(
     "draft"
   );
 });
 
-test("sends a campaign to all active subscribers", async ({ page, request }) => {
+test("sends a job offer to every candidate open to offers", async ({ page, request }) => {
   await page.goto("/#/campaigns/add");
 
-  await expect(page.getByText("active subscribers - 2")).toBeVisible();
+  await expect(page.getByText("Goes to 2 candidates")).toBeVisible();
   await expect(
     page.getByText("Demo mode - nobody really gets these e-mails", { exact: false })
   ).toBeVisible();
@@ -69,7 +69,7 @@ test("sends a campaign to all active subscribers", async ({ page, request }) => 
   // sending can not be undone - the app asks first
   const confirm = page.getByRole("alertdialog");
   await expect(confirm).toContainText('Send "Newsletter"?');
-  await expect(confirm).toContainText("all 2 active subscribers");
+  await expect(confirm).toContainText("It goes to 2 candidates.");
   await confirm.getByRole("button", { name: "Send", exact: true }).click();
 
   // the campaign's page shows who got it - no toast
@@ -91,7 +91,7 @@ test("sends a campaign to all active subscribers", async ({ page, request }) => 
   ]);
 });
 
-test("sends a campaign to the chosen subscribers", async ({ page }) => {
+test("sends a job offer to the candidates chosen by hand", async ({ page }) => {
   await page.goto("/#/campaigns/add");
 
   await page.getByRole("button", { name: "Choose recipients" }).click();
@@ -102,7 +102,7 @@ test("sends a campaign to the chosen subscribers", async ({ page }) => {
   await expect(popup.getByText("1 of 2 selected")).toBeVisible();
   await popup.getByRole("button", { name: "Done" }).click();
 
-  await expect(page.getByText("selected subscribers: 1 from 2")).toBeVisible();
+  await expect(page.getByText("Goes to 1 of 2 matching candidates - chosen by hand")).toBeVisible();
 });
 
 test("does not send when every subscriber is unchecked", async ({
@@ -115,14 +115,14 @@ test("does not send when every subscriber is unchecked", async ({
   const popup = page.getByRole("dialog");
   // everybody is selected - "Select all" unchecks everybody
   await popup.getByLabel("Select all").click();
-  await expect(popup.getByText("Choose at least one subscriber")).toBeVisible();
+  await expect(popup.getByText("Choose at least one candidate")).toBeVisible();
   await popup.getByRole("button", { name: "Done" }).click();
 
   await fillCampaign(page, "Nobody");
   await page.getByRole("button", { name: "send" }).click();
 
   await expect(
-    page.getByText("Please choose at least one subscriber")
+    page.getByText("Please choose at least one candidate")
   ).toBeVisible();
   expect(await campaignByTitle(request, "Nobody")).toBeUndefined();
 });
@@ -153,7 +153,7 @@ test("removes a campaign", async ({ page, request }) => {
   await page.goto("/#/campaigns");
 
   await rowAction(page, "Welcome", "Delete");
-  await expect(page.getByRole("alertdialog")).toContainText("Delete campaign?");
+  await expect(page.getByRole("alertdialog")).toContainText("Delete job offer?");
   await page.getByRole("button", { name: "Delete", exact: true }).click();
 
   await expect(listRow(page, "Welcome")).toHaveCount(0);
@@ -176,7 +176,7 @@ test("lists the campaigns newest first and filters them by status", async ({
   await expect(rows.nth(2)).toContainText("Autumn sale");
 
   await page.locator("#status-filter").click();
-  await page.getByRole("option", { name: "draft" }).click();
+  await page.getByRole("option", { name: "Draft" }).click();
 
   await expect(rows).toHaveCount(2);
   await expect(rows.nth(1)).toContainText("Autumn sale");
@@ -196,7 +196,7 @@ test("does not send when the confirmation is cancelled", async ({ page, request 
 test("asks before leaving a campaign with unsaved changes", async ({ page }) => {
   // opened from the list - "back" stays in the app
   await page.goto("/#/campaigns");
-  await page.getByRole("main").getByRole("link", { name: "New campaign" }).click();
+  await page.getByRole("main").getByRole("link", { name: "New job offer" }).click();
   await page.locator("#title").fill("Half written");
 
   await page
