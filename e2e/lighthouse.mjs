@@ -26,10 +26,10 @@ const APP = "http://localhost:5058";
 const screens = [
   ["login", "/#/login", false],
   ["dashboard", "/#/", true],
-  ["subscribers", "/#/subscribers", true],
-  ["campaigns", "/#/campaigns", true],
-  ["campaign-details", "/#/campaigns/recCampSent00002", true],
-  ["new-campaign", "/#/campaigns/add", true],
+  ["candidates", "/#/candidates", true],
+  ["jobOffers", "/#/job-offers", true],
+  ["jobOffer-details", "/#/job-offers/recCampSent00002", true],
+  ["new-jobOffer", "/#/job-offers/add", true],
   ["feedback", "/#/feedback", true],
 ];
 

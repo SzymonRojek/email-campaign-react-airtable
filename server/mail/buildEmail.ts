@@ -1,10 +1,10 @@
-// one campaign e-mail for one subscriber - the same HTML for "sending" and for the previews
+// one job offer e-mail for one candidate - the same HTML for "sending" and for the previews
 
 export interface EmailInput {
-  campaign: { title?: string; description?: string };
-  // role = the candidate's profession, e.g. "Frontend Developer"
+  jobOffer: { subject?: string; message?: string };
+  // role = the candidate's role, e.g. "Frontend Developer"
   recipient: { name?: string; surname?: string; email?: string; role?: string };
-  unsubscribeUrl: string;
+  optOutUrl: string;
 }
 
 export interface BuiltEmail {
@@ -15,9 +15,9 @@ export interface BuiltEmail {
   text: string;
 }
 
-export const SENDER = { name: "Email Campaign Dashboard", address: "campaigns@example.com" };
+export const SENDER = { name: "Talent Outreach", address: "offers@example.com" };
 
-// {{name}}, {{surname}} and {{role}} in the title and the text become the recipient's own data
+// {{name}}, {{surname}} and {{role}} in the subject and the text become the recipient's own data
 export const PLACEHOLDERS = ["name", "surname", "role"] as const;
 type Placeholder = (typeof PLACEHOLDERS)[number];
 
@@ -26,7 +26,7 @@ const placeholderPattern = /\{\{\s*([^{}]*?)\s*\}\}/g;
 const isPlaceholder = (key: string): key is Placeholder =>
   (PLACEHOLDERS as readonly string[]).includes(key);
 
-// e.g. a typo: {{nmae}} - such a campaign is not sent
+// e.g. a typo: {{nmae}} - such a job offer is not sent
 export const unknownPlaceholders = (...texts: (string | undefined)[]) => [
   ...new Set(
     texts.flatMap((text = "") =>
@@ -40,7 +40,7 @@ const fillIn = (text: string, values: Record<Placeholder, string>, encode = (val
     isPlaceholder(key) ? encode(values[key]) : match
   );
 
-// the campaign text comes from the users - it must not become HTML
+// the job offer text comes from the users - it must not become HTML
 const escapeHtml = (value = "") =>
   value
     .replace(/&/g, "&amp;")
@@ -66,17 +66,17 @@ const paragraphs = (escaped: string) =>
     .join("\n      ");
 
 // plain like a personal message - e-mail programs ignore <style> sheets, so styles are inline
-export const buildEmail = ({ campaign, recipient, unsubscribeUrl }: EmailInput): BuiltEmail => {
+export const buildEmail = ({ jobOffer, recipient, optOutUrl }: EmailInput): BuiltEmail => {
   const values = {
     name: recipient.name?.trim() ?? "",
     surname: recipient.surname?.trim() ?? "",
     role: recipient.role?.trim() ?? "",
   };
   const greeting = `Hello ${values.name || "there"},`;
-  const subject = fillIn(campaign.title?.trim() || "(no subject)", values);
-  const description = (campaign.description ?? "").replace(/\r\n/g, "\n");
+  const subject = fillIn(jobOffer.subject?.trim() || "(no subject)", values);
+  const message = (jobOffer.message ?? "").replace(/\r\n/g, "\n");
   // placeholders are filled in last, so a name never becomes a link or HTML
-  const body = fillIn(paragraphs(linkify(escapeHtml(description))), values, escapeHtml);
+  const body = fillIn(paragraphs(linkify(escapeHtml(message))), values, escapeHtml);
 
   const html = `<!doctype html>
 <html lang="en">
@@ -91,7 +91,7 @@ export const buildEmail = ({ campaign, recipient, unsubscribeUrl }: EmailInput):
       ${body}
       <p style="margin:32px 0 0;padding-top:16px;border-top:1px solid #e8eaed;font-size:12px;line-height:1.5;color:#5f6368">
         You get this e-mail because you joined our talent pool.
-        <a href="${escapeHtml(unsubscribeUrl)}" style="color:#5f6368">Unsubscribe</a>
+        <a href="${escapeHtml(optOutUrl)}" style="color:#5f6368">Opt out</a>
       </p>
     </div>
   </body>
@@ -100,10 +100,10 @@ export const buildEmail = ({ campaign, recipient, unsubscribeUrl }: EmailInput):
   const text = [
     greeting,
     "",
-    fillIn(description.trim(), values),
+    fillIn(message.trim(), values),
     "",
     "--",
-    `Unsubscribe: ${unsubscribeUrl}`,
+    `Opt out: ${optOutUrl}`,
   ].join("\n");
 
   return { from: SENDER, to: recipient.email ?? "", subject, html, text };

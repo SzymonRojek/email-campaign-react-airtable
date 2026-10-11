@@ -3,12 +3,12 @@ import * as Sentry from "@sentry/node";
 import path from "path";
 import dotenv from "dotenv";
 
-import subscribersRouter from "./routes/subscribersRoutes";
-import campaignsRouter from "./routes/campaignsRoutes";
+import candidatesRouter from "./routes/candidatesRoutes";
+import jobOffersRouter from "./routes/jobOffersRoutes";
 import authRouter from "./routes/authRoutes";
 import demoRouter from "./routes/demoRoutes";
 import feedbackRouter from "./routes/feedbackRoutes";
-import { emailsRouter, unsubscribeRouter } from "./routes/outboxRoutes";
+import { outboxRouter, optOutRouter } from "./routes/outboxRoutes";
 import { requireAuth } from "./middleware/requireAuth";
 
 dotenv.config();
@@ -30,11 +30,11 @@ app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
 app.use("/api/auth", authRouter);
 app.use("/api/demo", demoRouter);
-app.use("/api/unsubscribe", unsubscribeRouter);
+app.use("/api/opt-out", optOutRouter);
 app.use("/api/feedback", feedbackRouter);
-app.use("/api/subscribers", requireAuth, subscribersRouter);
-app.use("/api/campaigns", requireAuth, campaignsRouter);
-app.use("/api/emails", requireAuth, emailsRouter);
+app.use("/api/candidates", requireAuth, candidatesRouter);
+app.use("/api/job-offers", requireAuth, jobOffersRouter);
+app.use("/api/outbox", requireAuth, outboxRouter);
 
 // unknown api endpoint - answer with json instead of the react index.html
 app.use("/api", (req, res) =>

@@ -6,9 +6,9 @@ type Sentry = typeof import("@sentry/react");
 
 let sentry: Sentry | null = null;
 
-// the unsubscribe link works without a login - its token must not leave the browser
+// the opt-out link works without a login - its token must not leave the browser
 export const hideSecrets = (text = "") =>
-  text.replace(/(unsubscribe\/)[^/?#\s"']+/g, "$1[token]");
+  text.replace(/(opt-out\/)[^/?#\s"']+/g, "$1[token]");
 
 const cleanEvent = (event: ErrorEvent) => {
   if (event.request?.url) event.request.url = hideSecrets(event.request.url);
@@ -30,7 +30,7 @@ export const monitoringOptions = (dsn: string, environment: string): BrowserOpti
   },
   beforeSend: cleanEvent,
   beforeBreadcrumb: (breadcrumb) => {
-    // clicks and typing may name a subscriber (e.g. "View e-mail to Emma Johnson")
+    // clicks and typing may name a candidate (e.g. "View e-mail to Emma Johnson")
     if (breadcrumb.category?.startsWith("ui.")) return null;
     if (breadcrumb.message) breadcrumb.message = hideSecrets(breadcrumb.message);
     for (const key of ["url", "from", "to"]) {

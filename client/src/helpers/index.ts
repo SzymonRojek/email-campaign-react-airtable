@@ -1,6 +1,6 @@
 export { default as formattedData } from "./formattedData";
-export { default as validationSubscriber } from "./validationSubscriber";
-export { default as validationCampaign } from "./validationCampaign";
+export { default as validationCandidate } from "./validationCandidate";
+export { default as validationJobOffer } from "./validationJobOffer";
 export { default as sortByDate } from "./sortByDate";
 export { default as getFilteredDataByStatus } from "./getFilteredDataByStatus";
 export { default as formatMobileNumber } from "./formatMobileNumber";

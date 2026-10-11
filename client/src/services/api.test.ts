@@ -37,9 +37,9 @@ describe("api", () => {
   it("calls the server under /api and returns the data", async () => {
     mockedFetch.mockResolvedValue(jsonResponse(200, [{ id: "1" }]));
 
-    await expect(api.get("/subscribers")).resolves.toEqual([{ id: "1" }]);
+    await expect(api.get("/candidates")).resolves.toEqual([{ id: "1" }]);
     expect(mockedFetch).toHaveBeenCalledWith(
-      "/api/subscribers",
+      "/api/candidates",
       expect.objectContaining({ method: "GET" })
     );
     expect(requestInit()).not.toHaveProperty("body");
@@ -49,7 +49,7 @@ describe("api", () => {
     setToken("my-token");
     mockedFetch.mockResolvedValue(jsonResponse(200, {}));
 
-    await api.post("/campaigns", { fields: {} });
+    await api.post("/job-offers", { fields: {} });
 
     expect(requestInit().method).toBe("POST");
     expect(requestHeaders().Authorization).toBe("Bearer my-token");
@@ -59,7 +59,7 @@ describe("api", () => {
   it("does not send an Authorization header without a token", async () => {
     mockedFetch.mockResolvedValue(jsonResponse(200, {}));
 
-    await api.get("/subscribers");
+    await api.get("/candidates");
 
     expect(requestHeaders()).not.toHaveProperty("Authorization");
   });
@@ -67,7 +67,7 @@ describe("api", () => {
   it("throws an HttpError with the status and the server error", async () => {
     mockedFetch.mockResolvedValue(jsonResponse(404, { error: "not found" }));
 
-    const error = await rejectionOf(api.delete("/subscribers/1"));
+    const error = await rejectionOf(api.delete("/candidates/1"));
 
     expect(error).toBeInstanceOf(HttpError);
     expect(error.status).toBe(404);
@@ -77,7 +77,7 @@ describe("api", () => {
   it("does not fail on a response that is not JSON", async () => {
     mockedFetch.mockResolvedValue(new Response("<html>Bad Gateway</html>", { status: 502 }));
 
-    const error = await rejectionOf(api.get("/subscribers"));
+    const error = await rejectionOf(api.get("/candidates"));
 
     expect(error.status).toBe(502);
     expect(getErrorMessage(error)).toBe("Request failed with status code 502");
@@ -89,7 +89,7 @@ describe("api", () => {
     const onUnauthorized = vi.fn();
     window.addEventListener(UNAUTHORIZED_EVENT, onUnauthorized);
 
-    await expect(api.get("/subscribers")).rejects.toThrow();
+    await expect(api.get("/candidates")).rejects.toThrow();
 
     expect(getToken()).toBeNull();
     expect(onUnauthorized).toHaveBeenCalledTimes(1);

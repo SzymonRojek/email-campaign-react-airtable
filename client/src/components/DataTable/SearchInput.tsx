@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 interface SearchInputProps {
   value: string;
   onChange: (value: string) => void;
-  // the accessible name, e.g. "Search subscribers"
+  // the accessible name, e.g. "Search candidates"
   label: string;
   placeholder: string;
   className?: string;

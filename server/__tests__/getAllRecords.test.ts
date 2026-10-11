@@ -16,11 +16,11 @@ describe("getAllRecords", () => {
       .mockResolvedValueOnce({ data: { records: [{ id: "2" }], offset: "p3" } })
       .mockResolvedValueOnce({ data: { records: [{ id: "3" }] } });
 
-    const records = await getAllRecords("/subscribers");
+    const records = await getAllRecords("/candidates");
 
     expect(records.map((record) => record.id)).toEqual(["1", "2", "3"]);
     expect(mockedGet).toHaveBeenCalledTimes(3);
-    expect(mockedGet).toHaveBeenNthCalledWith(2, "/subscribers", {
+    expect(mockedGet).toHaveBeenNthCalledWith(2, "/candidates", {
       params: { offset: "p2" },
     });
   });

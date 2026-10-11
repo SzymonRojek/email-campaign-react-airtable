@@ -3,55 +3,55 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { fetchData, fetchDataById } from "services";
 import api from "services/api";
 import {
-  Campaign,
-  CampaignFormValues,
+  JobOffer,
+  JobOfferFormValues,
   Email,
   EmailPreview,
   Feedback,
   ReceivedEmail,
   SentEmail,
-  Subscriber,
+  Candidate,
 } from "types";
 
 // typed react-query hooks - one place for the query keys and the data types
 
-export const subscribersKey = ["/subscribers"] as [string];
-export const campaignsKey = ["/campaigns"] as [string];
-export const outboxKey = ["/emails"];
+export const candidatesKey = ["/candidates"] as [string];
+export const jobOffersKey = ["/job-offers"] as [string];
+export const outboxKey = ["/outbox"];
 
-export const useSubscribers = (errorMessage?: string) =>
+export const useCandidates = (errorMessage?: string) =>
   useQuery({
-    queryKey: subscribersKey,
-    queryFn: fetchData<Subscriber[]>,
+    queryKey: candidatesKey,
+    queryFn: fetchData<Candidate[]>,
     meta: { myMessage: errorMessage },
   });
 
-export const useCampaigns = (errorMessage?: string) =>
+export const useJobOffers = (errorMessage?: string) =>
   useQuery({
-    queryKey: campaignsKey,
-    queryFn: fetchData<Campaign[]>,
+    queryKey: jobOffersKey,
+    queryFn: fetchData<JobOffer[]>,
     meta: { myMessage: errorMessage },
   });
 
-export const useSubscriber = (id?: string, errorMessage?: string) =>
+export const useCandidate = (id?: string, errorMessage?: string) =>
   useQuery({
-    queryKey: ["/subscribers", { id }] as [string, { id?: string }],
-    queryFn: fetchDataById<Subscriber>,
+    queryKey: ["/candidates", { id }] as [string, { id?: string }],
+    queryFn: fetchDataById<Candidate>,
     meta: { myMessage: errorMessage },
   });
 
-export const useCampaign = (id?: string, errorMessage?: string) =>
+export const useJobOffer = (id?: string, errorMessage?: string) =>
   useQuery({
-    queryKey: ["/campaigns", { id }] as [string, { id?: string }],
-    queryFn: fetchDataById<Campaign>,
+    queryKey: ["/job-offers", { id }] as [string, { id?: string }],
+    queryFn: fetchDataById<JobOffer>,
     meta: { myMessage: errorMessage },
   });
 
-// the outbox of a sent campaign - who got it
-export const useCampaignEmails = (id?: string) =>
+// the outbox of a sent job offer - who got it
+export const useJobOfferEmails = (id?: string) =>
   useQuery({
-    queryKey: ["/campaigns", { id }, "emails"],
-    queryFn: () => api.get<Email[]>(`/campaigns/${id}/emails`),
+    queryKey: ["/job-offers", { id }, "emails"],
+    queryFn: () => api.get<Email[]>(`/job-offers/${id}/outbox`),
     enabled: Boolean(id),
   });
 
@@ -59,35 +59,35 @@ export const useCampaignEmails = (id?: string) =>
 export const useOutbox = () =>
   useQuery({
     queryKey: outboxKey,
-    queryFn: () => api.get<SentEmail[]>("/emails"),
+    queryFn: () => api.get<SentEmail[]>("/outbox"),
     meta: { myMessage: "Cannot get the sent e-mails." },
   });
 
-// the campaigns a subscriber got
-export const useSubscriberEmails = (id?: string) =>
+// the job offers a candidate got
+export const useCandidateEmails = (id?: string) =>
   useQuery({
-    queryKey: ["/subscribers", { id }, "emails"],
-    queryFn: () => api.get<ReceivedEmail[]>(`/subscribers/${id}/emails`),
+    queryKey: ["/candidates", { id }, "emails"],
+    queryFn: () => api.get<ReceivedEmail[]>(`/candidates/${id}/outbox`),
     enabled: Boolean(id),
   });
 
 // one e-mail as its recipient got it
 export const useEmailPreview = (id: string | null) =>
   useQuery({
-    queryKey: ["/emails", { id }, "preview"],
-    queryFn: () => api.get<EmailPreview>(`/emails/${id}/preview`),
+    queryKey: ["/outbox", { id }, "preview"],
+    queryFn: () => api.get<EmailPreview>(`/outbox/${id}/preview`),
     enabled: Boolean(id),
     // a sent e-mail never changes
     staleTime: Infinity,
   });
 
-// a campaign that is being written, as one subscriber would get it
-// (its own key - refreshing the campaigns list does not load it again)
-export const useCampaignPreview = (values: CampaignFormValues | null, subscriberId?: string) =>
+// a job offer that is being written, as one candidate would get it
+// (its own key - refreshing the job offers list does not load it again)
+export const useJobOfferPreview = (values: JobOfferFormValues | null, candidateId?: string) =>
   useQuery({
-    queryKey: ["campaign-preview", values, subscriberId],
-    queryFn: () => api.post<EmailPreview>("/campaigns/preview", { ...values, subscriberId }),
-    enabled: Boolean(values && subscriberId),
+    queryKey: ["jobOffer-preview", values, candidateId],
+    queryFn: () => api.post<EmailPreview>("/job-offers/preview", { ...values, candidateId }),
+    enabled: Boolean(values && candidateId),
     // switching the recipient keeps the last e-mail on screen until the next one is ready
     placeholderData: keepPreviousData,
     staleTime: Infinity,

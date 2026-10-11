@@ -11,7 +11,7 @@ const record = (fields: Record<string, unknown>, id = "rec1") => ({
 });
 
 describe("sortDataAlphabetically", () => {
-  it("sorts subscribers by name, case insensitive", () => {
+  it("sorts candidates by name, case insensitive", () => {
     const data = [
       record({ name: "zoe" }, "1"),
       record({ name: "Adam" }, "2"),
@@ -39,8 +39,8 @@ describe("sortDataAlphabetically", () => {
     ]);
   });
 
-  it("sorts campaigns by title when there are no names", () => {
-    const data = [record({ title: "b" }, "1"), record({ title: "A" }, "2")];
+  it("sorts job offers by subject when there are no names", () => {
+    const data = [record({ subject: "b" }, "1"), record({ subject: "A" }, "2")];
 
     expect(sortDataAlphabetically(data).map((item) => item.id)).toEqual([
       "2",
@@ -48,7 +48,7 @@ describe("sortDataAlphabetically", () => {
     ]);
   });
 
-  it("does not crash on records without name or title", () => {
+  it("does not crash on records without name or subject", () => {
     const data = [record({ name: "Bob" }, "1"), record({}, "2")];
 
     expect(() => sortDataAlphabetically(data)).not.toThrow();
