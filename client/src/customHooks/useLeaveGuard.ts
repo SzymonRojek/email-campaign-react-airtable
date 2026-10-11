@@ -2,7 +2,7 @@ import { FocusEvent, useEffect, useRef } from "react";
 import { useBlocker } from "react-router";
 
 // asks before leaving a form with unsaved changes: another page, "back",
-// closing the subscriber panel (all are navigations) or closing the browser tab
+// closing the candidate panel (all are navigations) or closing the browser tab
 export const useLeaveGuard = (isDirty: boolean) => {
   // a save that moves on (e.g. back to the list) or "Discard" must not ask
   const canLeave = useRef(false);

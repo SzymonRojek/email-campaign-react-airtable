@@ -1,21 +1,21 @@
 import { act, renderHook } from "@testing-library/react";
 
-import { Subscriber, SubscriberStatus } from "types";
+import { Candidate, CandidateStatus } from "types";
 import { useTableData } from "./useTableData";
 
 // day 1..12 of January, every third one pending
-const items: Subscriber[] = Array.from({ length: 12 }, (_, index) => ({
+const items: Candidate[] = Array.from({ length: 12 }, (_, index) => ({
   id: `day${index + 1}`,
   createdTime: new Date(Date.UTC(2022, 0, index + 1)).toISOString(),
   fields: {
     name: "Anna",
     surname: "Nowak",
     email: "a@b.pl",
-    status: (index % 3 === 0 ? "pending" : "active") as SubscriberStatus,
+    status: (index % 3 === 0 ? "awaiting consent" : "open to offers") as CandidateStatus,
   },
 }));
 
-const ids = (rows: Subscriber[]) => rows.map(({ id }) => id);
+const ids = (rows: Candidate[]) => rows.map(({ id }) => id);
 
 describe("useTableData", () => {
   it("shows all statuses, newest first", () => {
@@ -44,7 +44,7 @@ describe("useTableData", () => {
 
     act(() => result.current.toggleDirection());
     act(() => result.current.setPage(2));
-    act(() => result.current.setStatus("pending"));
+    act(() => result.current.setStatus("awaiting consent"));
 
     expect(result.current.page).toBe(1);
     expect(result.current.direction).toBe("oldest");

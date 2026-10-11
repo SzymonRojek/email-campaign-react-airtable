@@ -1,11 +1,11 @@
 import * as Yup from "yup";
 
-import type validationSubscriber from "helpers/validationSubscriber";
-import type validationCampaign from "helpers/validationCampaign";
+import type validationCandidate from "helpers/validationCandidate";
+import type validationJobOffer from "helpers/validationJobOffer";
 import type validationFeedback from "helpers/validationFeedback";
 
-export type SubscriberStatus = "active" | "pending" | "blocked" | "unsubscribed";
-export type CampaignStatus = "sent" | "draft";
+export type CandidateStatus = "open to offers" | "awaiting consent" | "do not contact" | "opted out";
+export type JobOfferStatus = "sent" | "draft";
 
 export interface AirtableRecord<Fields> {
   id: string;
@@ -13,30 +13,30 @@ export interface AirtableRecord<Fields> {
   fields: Fields;
 }
 
-export interface SubscriberFields {
+export interface CandidateFields {
   name: string;
   surname: string;
   email: string;
-  status: SubscriberStatus;
-  profession?: string;
-  salary?: string;
-  telephone?: string;
+  status: CandidateStatus;
+  role?: string;
+  expectedSalary?: string;
+  phone?: string;
   date?: string;
 }
 
-export interface CampaignFields {
-  title: string;
-  description: string;
-  status: CampaignStatus;
+export interface JobOfferFields {
+  subject: string;
+  message: string;
+  status: JobOfferStatus;
   date?: string;
 }
 
-export type Subscriber = AirtableRecord<SubscriberFields>;
-export type Campaign = AirtableRecord<CampaignFields>;
+export type Candidate = AirtableRecord<CandidateFields>;
+export type JobOffer = AirtableRecord<JobOfferFields>;
 
 // form values (react-hook-form) - derived from the yup schemas so they always match
-export type SubscriberFormValues = Yup.InferType<typeof validationSubscriber>;
-export type CampaignFormValues = Yup.InferType<typeof validationCampaign>;
+export type CandidateFormValues = Yup.InferType<typeof validationCandidate>;
+export type JobOfferFormValues = Yup.InferType<typeof validationJobOffer>;
 export type FeedbackFormValues = Yup.InferType<typeof validationFeedback>;
 
 export interface SelectOption {
@@ -45,34 +45,34 @@ export interface SelectOption {
 }
 
 
-// a row of the outbox - one e-mail of a sent campaign
+// a row of the outbox - one e-mail of a sent job offer
 export interface EmailFields {
   email: string;
   // the name and surname when the e-mail went out
   name: string;
-  subscriberId: string;
-  campaignId: string;
+  candidateId: string;
+  jobOfferId: string;
   sentAt: string;
 }
 
 export type Email = AirtableRecord<EmailFields>;
 
-// GET /api/subscribers/:id/emails - a campaign the subscriber got
+// GET /api/candidates/:id/outbox - a job offer the candidate got
 export interface ReceivedEmail {
   id: string;
-  campaignId: string;
-  title: string;
+  jobOfferId: string;
+  subject: string;
   sentAt: string;
 }
 
-// GET /api/emails - one e-mail of the outbox with its campaign's title
+// GET /api/outbox - one e-mail of the outbox with its job offer's title
 export interface SentEmail extends ReceivedEmail {
-  subscriberId: string;
+  candidateId: string;
   name: string;
   email: string;
 }
 
-// GET /api/emails/:id/preview (a sent e-mail), POST /api/campaigns/preview (a draft)
+// GET /api/outbox/:id/preview (a sent e-mail), POST /api/job-offers/preview (a draft)
 export interface EmailPreview {
   from: { name: string; address: string };
   to: string;

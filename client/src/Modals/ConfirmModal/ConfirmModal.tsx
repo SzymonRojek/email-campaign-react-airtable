@@ -13,7 +13,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-// asks before an action that can not be undone (removing a subscriber / campaign)
+// asks before an action that can not be undone (removing a candidate / job offer)
 const ConfirmModal = () => {
   const {
     isOpenConfirmModal,

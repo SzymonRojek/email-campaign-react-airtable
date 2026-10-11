@@ -10,12 +10,12 @@ test.beforeEach(async ({ page, request }) => {
 
 // the seed: "Welcome" was sent to Anna and Celina
 const openWelcome = async (page: import("@playwright/test").Page) => {
-  await page.goto("/#/campaigns");
+  await page.goto("/#/job-offers");
   await listRow(page, "Welcome").getByRole("cell").nth(2).click();
-  await expect(page).toHaveURL(/#\/campaigns\/recCampSent00002$/);
+  await expect(page).toHaveURL(/#\/job-offers\/recCampSent00002$/);
 };
 
-test("shows who got a sent campaign", async ({ page }) => {
+test("shows who got a sent job offer", async ({ page }) => {
   await openWelcome(page);
 
   await expect(page.getByRole("heading", { name: /Welcome/ })).toBeVisible();
@@ -35,13 +35,13 @@ test("opens an e-mail as its recipient got it", async ({ page }) => {
   await expect(page).toHaveURL(/\?email=recEmailAnna0001$/);
   const panel = page.getByRole("dialog");
   await expect(panel).toContainText("to Anna Nowak <anna@example.com>");
-  await expect(panel).toContainText("Email Campaign Dashboard <campaigns@example.com>");
+  await expect(panel).toContainText("Talent Outreach <offers@example.com>");
   const email = page.frameLocator('iframe[title="E-mail to anna@example.com"]');
   await expect(email.getByText("Hello Anna,")).toBeVisible();
-  await expect(email.getByText("Hello new subscribers")).toBeVisible();
-  await expect(email.getByRole("link", { name: "Unsubscribe" })).toHaveAttribute(
+  await expect(email.getByText("Hello new candidates")).toBeVisible();
+  await expect(email.getByRole("link", { name: "Opt out" })).toHaveAttribute(
     "href",
-    /#\/unsubscribe\/recSubAnna000001\.[\w-]+$/
+    /#\/opt-out\/recSubAnna000001\.[\w-]+$/
   );
 
   // "back" closes the preview
@@ -52,7 +52,7 @@ test("opens an e-mail as its recipient got it", async ({ page }) => {
 test("personalizes a draft and previews it for each recipient before sending", async ({
   page,
 }) => {
-  await page.goto("/#/campaigns/edit/recCampDraft0001");
+  await page.goto("/#/job-offers/edit/recCampDraft0001");
 
   await page.getByLabel("Subject").fill("{{name}}, autumn sale");
   await page.getByLabel("Message").fill("Dear {{name}}, 30% off for you.");
@@ -74,11 +74,11 @@ test("personalizes a draft and previews it for each recipient before sending", a
 
   // nothing was saved or sent by the preview
   await page.keyboard.press("Escape");
-  await expect(page).toHaveURL(/#\/campaigns\/edit\/recCampDraft0001$/);
+  await expect(page).toHaveURL(/#\/job-offers\/edit\/recCampDraft0001$/);
 });
 
 test("points out a mistyped placeholder", async ({ page }) => {
-  await page.goto("/#/campaigns/edit/recCampDraft0001");
+  await page.goto("/#/job-offers/edit/recCampDraft0001");
 
   await page.getByLabel("Message").fill("Dear {{nmae}}");
   await page.getByRole("button", { name: "Preview" }).click();
@@ -89,7 +89,7 @@ test("points out a mistyped placeholder", async ({ page }) => {
   await expect(page.getByRole("dialog")).toHaveCount(0);
 });
 
-test("exports who got a sent campaign as CSV", async ({ page }) => {
+test("exports who got a sent job offer as CSV", async ({ page }) => {
   await openWelcome(page);
 
   const download = page.waitForEvent("download");
@@ -105,8 +105,8 @@ test("exports who got a sent campaign as CSV", async ({ page }) => {
   ]);
 });
 
-test("exports every e-mail of the sent campaigns shown in the list", async ({ page }) => {
-  await page.goto("/#/campaigns");
+test("exports every e-mail of the sent job offers shown in the list", async ({ page }) => {
+  await page.goto("/#/job-offers");
 
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Export CSV" }).click();
@@ -115,7 +115,7 @@ test("exports every e-mail of the sent campaigns shown in the list", async ({ pa
   expect(file.suggestedFilename()).toMatch(/^sent-emails-\d{4}-\d{2}-\d{2}\.csv$/);
   const lines = fs.readFileSync(await file.path(), "utf8").trim().split(/\r?\n/);
   expect(lines).toEqual([
-    "campaign,name,email,sentAt",
+    "jobOffer,name,email,sentAt",
     "Welcome,Anna Nowak,anna@example.com,2022-09-06T10:00:00.000Z",
     "Welcome,Celina Wiśniewska,celina@example.com,2022-09-06T10:00:00.000Z",
   ]);
@@ -126,35 +126,35 @@ test("exports every e-mail of the sent campaigns shown in the list", async ({ pa
   await expect(page.getByRole("button", { name: "Export CSV" })).toBeDisabled();
 });
 
-test("a subscriber's panel lists the campaigns they got", async ({ page }) => {
-  await page.goto("/#/subscribers?view=recSubAnna000001");
+test("a candidate's panel lists the job offers they got", async ({ page }) => {
+  await page.goto("/#/candidates?view=recSubAnna000001");
 
   const received = page.getByRole("list", { name: "Job offers received" });
   await expect(received.getByRole("link")).toHaveCount(1);
   await received.getByRole("link", { name: /Welcome/ }).click();
 
   // the e-mail she got opens at once
-  await expect(page).toHaveURL(/#\/campaigns\/recCampSent00002\?email=recEmailAnna0001$/);
+  await expect(page).toHaveURL(/#\/job-offers\/recCampSent00002\?email=recEmailAnna0001$/);
   await expect(
     page.frameLocator('iframe[title="E-mail to anna@example.com"]').getByText("Hello Anna,")
   ).toBeVisible();
 });
 
-test("a subscriber who got nothing yet", async ({ page }) => {
-  await page.goto("/#/subscribers?view=recSubDarek00004");
+test("a candidate who got nothing yet", async ({ page }) => {
+  await page.goto("/#/candidates?view=recSubDarek00004");
 
   await expect(page.getByRole("dialog").getByText("No job offers yet.")).toBeVisible();
 });
 
-test("a sent campaign's menu leads to its recipients", async ({ page }) => {
-  await page.goto("/#/campaigns");
+test("a sent job offer's menu leads to its recipients", async ({ page }) => {
+  await page.goto("/#/job-offers");
 
   await rowAction(page, "Welcome", "View recipients");
 
-  await expect(page).toHaveURL(/#\/campaigns\/recCampSent00002$/);
+  await expect(page).toHaveURL(/#\/job-offers\/recCampSent00002$/);
 });
 
-test("unsubscribes with the link from an e-mail - without logging in", async ({
+test("opts out with the link from an e-mail - without logging in", async ({
   page,
   browser,
   request,
@@ -163,39 +163,39 @@ test("unsubscribes with the link from an e-mail - without logging in", async ({
   await page.getByRole("button", { name: "View e-mail to Anna Nowak" }).click();
   const link = await page
     .frameLocator('iframe[title="E-mail to anna@example.com"]')
-    .getByRole("link", { name: "Unsubscribe" })
+    .getByRole("link", { name: "Opt out" })
     .getAttribute("href");
 
   // a visitor who is not logged in
   const visitor = await (await browser.newContext()).newPage();
   await visitor.goto(link!);
 
-  await expect(visitor.getByRole("heading", { name: "Unsubscribe?" })).toBeVisible();
+  await expect(visitor.getByRole("heading", { name: "Opt out?" })).toBeVisible();
   await expect(visitor.getByText("anna@example.com")).toBeVisible();
-  await visitor.getByRole("button", { name: "Unsubscribe" }).click();
-  await expect(visitor.getByRole("heading", { name: "You are unsubscribed" })).toBeVisible();
+  await visitor.getByRole("button", { name: "Opt out" }).click();
+  await expect(visitor.getByRole("heading", { name: "You opted out" })).toBeVisible();
 
-  const anna = (await getAirtable(request)).subscribers.find(
+  const anna = (await getAirtable(request)).candidates.find(
     ({ id }) => id === "recSubAnna000001"
   );
-  expect(anna?.fields.status).toBe("unsubscribed");
+  expect(anna?.fields.status).toBe("opted out");
 
   // the same link again: already done
   await visitor.reload();
-  await expect(visitor.getByRole("heading", { name: "You are unsubscribed" })).toBeVisible();
+  await expect(visitor.getByRole("heading", { name: "You opted out" })).toBeVisible();
 
   // she is not a recipient any more
-  await page.goto("/#/campaigns/add");
+  await page.goto("/#/job-offers/add");
   await expect(page.getByText("Goes to 1 candidate", { exact: true })).toBeVisible();
-  await page.goto("/#/subscribers");
+  await page.goto("/#/candidates");
   await expect(listRow(page, "Anna")).toContainText("Opted out");
 });
 
 test("refuses a link that is not valid", async ({ browser }) => {
   const visitor = await (await browser.newContext()).newPage();
 
-  await visitor.goto("/#/unsubscribe/recSubAnna000001.forged-signature");
+  await visitor.goto("/#/opt-out/recSubAnna000001.forged-signature");
 
   await expect(visitor.getByRole("heading", { name: "This link is not valid" })).toBeVisible();
-  await expect(visitor.getByRole("button", { name: "Unsubscribe" })).toHaveCount(0);
+  await expect(visitor.getByRole("button", { name: "Opt out" })).toHaveCount(0);
 });

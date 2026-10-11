@@ -1,4 +1,4 @@
-// "1 subscriber", "7 subscribers"
+// "1 candidate", "7 candidates"
 const pluralize = (count: number, noun: string) =>
   `${count} ${noun}${count === 1 ? "" : "s"}`;
 

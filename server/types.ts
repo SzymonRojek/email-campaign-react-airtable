@@ -9,29 +9,29 @@ export interface AirtableListResponse<Fields = Record<string, unknown>> {
   offset?: string;
 }
 
-export interface CampaignFields {
-  title?: string;
-  description?: string;
+export interface JobOfferFields {
+  subject?: string;
+  message?: string;
   status?: string;
 }
 
-export interface SubscriberFields {
+export interface CandidateFields {
   name?: string;
   surname?: string;
   email?: string;
   status?: string;
-  profession?: string;
-  salary?: string;
-  telephone?: string;
+  role?: string;
+  expectedSalary?: string;
+  phone?: string;
 }
 
-// a row of the outbox ("emails" table) - one e-mail of a sent campaign
+// a row of the outbox ("emails" table) - one e-mail of a sent job offer
 export interface EmailFields {
   email?: string;
-  // the subscriber's name and surname when the e-mail went out
+  // the candidate's name and surname when the e-mail went out
   name?: string;
-  subscriberId?: string;
-  campaignId?: string;
+  candidateId?: string;
+  jobOfferId?: string;
   sentAt?: string;
 }
 

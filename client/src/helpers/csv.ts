@@ -1,4 +1,4 @@
-// CSV for the subscribers export / import - small enough to not need a library
+// CSV for the candidates export / import - small enough to not need a library
 
 // a cell starting with = + - @ would run as a formula in Excel / Google Sheets
 const FORMULA_START = /^[=+\-@\t\r]/;

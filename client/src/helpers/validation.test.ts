@@ -1,14 +1,14 @@
-import { validationCampaign, validationSubscriber } from "helpers";
+import { validationJobOffer, validationCandidate } from "helpers";
 import validationFeedback from "helpers/validationFeedback";
 
-const validSubscriber = {
+const validCandidate = {
   name: "Łukasz",
   surname: "Żółć",
   email: "lukasz@example.com",
-  status: "active",
-  profession: "tester",
-  salary: "3000",
-  telephone: "343-234-2344",
+  status: "open to offers",
+  role: "tester",
+  expectedSalary: "3000",
+  phone: "343-234-2344",
 };
 
 const errorsOf = async (
@@ -23,9 +23,9 @@ const errorsOf = async (
   }
 };
 
-describe("validationSubscriber", () => {
-  it("accepts a valid subscriber with Polish letters", async () => {
-    expect(await errorsOf(validationSubscriber, validSubscriber)).toEqual([]);
+describe("validationCandidate", () => {
+  it("accepts a valid candidate with Polish letters", async () => {
+    expect(await errorsOf(validationCandidate, validCandidate)).toEqual([]);
   });
 
   it.each([
@@ -34,11 +34,11 @@ describe("validationSubscriber", () => {
     ["surname", "[]^_`", "only letters are required"],
     ["email", "not-an-email", "email is invalid"],
     ["status", "select status", "status is required"],
-    ["salary", "12a", "only numbers are required"],
-    ["telephone", "12345", "type only 10 digits"],
+    ["expectedSalary", "12a", "only numbers are required"],
+    ["phone", "12345", "type only 10 digits"],
   ])("rejects %s = %p", async (field, value, message) => {
-    const errors = await errorsOf(validationSubscriber, {
-      ...validSubscriber,
+    const errors = await errorsOf(validationCandidate, {
+      ...validCandidate,
       [field]: value,
     });
 
@@ -46,27 +46,27 @@ describe("validationSubscriber", () => {
   });
 });
 
-describe("validationSubscriber - optional fields", () => {
+describe("validationCandidate - optional fields", () => {
   it("needs only the name, the surname, the e-mail and the status", async () => {
     expect(
-      await errorsOf(validationSubscriber, {
+      await errorsOf(validationCandidate, {
         name: "Emma",
         surname: "Johnson",
         email: "emma@example.com",
-        status: "pending",
-        profession: "",
-        salary: "",
-        telephone: "",
+        status: "awaiting consent",
+        role: "",
+        expectedSalary: "",
+        phone: "",
       })
     ).toEqual([]);
   });
 
   it("still checks an optional field when it is filled in", async () => {
-    const errors = await errorsOf(validationSubscriber, {
-      ...validSubscriber,
-      profession: "<b>QA</b>",
-      salary: "12",
-      telephone: "123",
+    const errors = await errorsOf(validationCandidate, {
+      ...validCandidate,
+      role: "<b>QA</b>",
+      expectedSalary: "12",
+      phone: "123",
     });
 
     expect(errors).toEqual([
@@ -78,50 +78,50 @@ describe("validationSubscriber - optional fields", () => {
 
   it.each(["Frontend Developer", "QA Engineer", "C++ Developer", "UX/UI Designer", "Node.js Developer"])(
     "accepts a real job title as the role: %s",
-    async (profession) => {
-      expect(await errorsOf(validationSubscriber, { ...validSubscriber, profession })).toEqual([]);
+    async (role) => {
+      expect(await errorsOf(validationCandidate, { ...validCandidate, role })).toEqual([]);
     }
   );
 
   it("limits the role to 30 characters", async () => {
     expect(
-      await errorsOf(validationSubscriber, { ...validSubscriber, profession: "x".repeat(31) })
+      await errorsOf(validationCandidate, { ...validCandidate, role: "x".repeat(31) })
     ).toEqual(["must not exceed 30 characters"]);
   });
 });
 
-describe("validationCampaign", () => {
-  it("requires a title and a description", async () => {
-    expect(await errorsOf(validationCampaign, {})).toEqual([
+describe("validationJobOffer", () => {
+  it("requires a subject and a message", async () => {
+    expect(await errorsOf(validationJobOffer, {})).toEqual([
       "subject is required",
       "message is required",
     ]);
   });
 
-  it("limits the title length", async () => {
-    const errors = await errorsOf(validationCampaign, {
-      title: "x".repeat(61),
-      description: "ok description",
+  it("limits the subject length", async () => {
+    const errors = await errorsOf(validationJobOffer, {
+      subject: "x".repeat(61),
+      message: "ok message",
     });
 
     expect(errors).toEqual(["must not exceed 60 characters"]);
   });
 
-  it("allows a 500-character description, not longer", async () => {
-    const valid = { title: "Sale", description: "x".repeat(500) };
+  it("allows a 500-character message, not longer", async () => {
+    const valid = { subject: "Sale", message: "x".repeat(500) };
 
-    expect(await errorsOf(validationCampaign, valid)).toEqual([]);
-    expect(await errorsOf(validationCampaign, { ...valid, description: "x".repeat(501) })).toEqual([
+    expect(await errorsOf(validationJobOffer, valid)).toEqual([]);
+    expect(await errorsOf(validationJobOffer, { ...valid, message: "x".repeat(501) })).toEqual([
       "must not exceed 500 characters",
     ]);
   });
 
   it("knows {{name}} and {{surname}} and points out a typo", async () => {
     expect(
-      await errorsOf(validationCampaign, { title: "{{name}}, hi", description: "Dear {{ surname }}" })
+      await errorsOf(validationJobOffer, { subject: "{{name}}, hi", message: "Dear {{ surname }}" })
     ).toEqual([]);
     expect(
-      await errorsOf(validationCampaign, { title: "Hello", description: "Dear {{nmae}}" })
+      await errorsOf(validationJobOffer, { subject: "Hello", message: "Dear {{nmae}}" })
     ).toEqual(["unknown placeholder {{nmae}} - use {{name}}, {{surname}} or {{role}}"]);
   });
 });

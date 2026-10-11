@@ -56,7 +56,7 @@ jobs:
       # collection) - a failure here fails the run, and GitHub sends an e-mail
       - name: Check the demo (read-only API tests)
         run: >
-          npx --yes newman@6 run postman/email-campaign-dashboard.postman_collection.json
+          npx --yes newman@6 run postman/talent-outreach.postman_collection.json
           -e postman/demo.postman_environment.json
           --env-var "baseUrl=$APP_URL"
           --folder "Smoke (read-only)"

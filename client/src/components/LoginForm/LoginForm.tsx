@@ -42,7 +42,7 @@ const LoginForm = () => {
 
       {/* not centred vertically: the feedback that loads below must not move the button */}
       <main className="flex flex-1 flex-col items-center px-4 pt-[14vh] pb-16">
-        <h1 className="text-2xl font-semibold tracking-tight">Email Campaign Dashboard</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Talent Outreach</h1>
         <p className="mt-1 mb-8 max-w-sm text-center text-sm text-muted-foreground">
           Send job offers to the right candidates in your talent pool - by role and
           budget, personalized, and never too often.
@@ -72,7 +72,7 @@ const LoginForm = () => {
       <footer className="flex items-center justify-center gap-3 pb-6 text-xs text-muted-foreground">
         © {new Date().getFullYear()} Szymon Rojek
         <a
-          href="https://github.com/SzymonRojek/email-campaign-dashboard"
+          href="https://github.com/SzymonRojek/talent-outreach"
           target="_blank"
           rel="noreferrer"
           aria-label="Source code on GitHub"

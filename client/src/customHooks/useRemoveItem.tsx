@@ -9,11 +9,12 @@ import { AirtableRecord } from "types";
 type Item = AirtableRecord<unknown>;
 
 export const useRemoveItem = (
-  query: "subscribers" | "campaigns",
-  // shown in the question, e.g. "Emma Johnson" or the campaign title
+  // the API path - also the key of the list in the cache
+  query: "candidates" | "job-offers",
+  // shown in the question, e.g. "Emma Johnson" or the job offer title
   name: string | undefined,
   id: string,
-  // e.g. close the details panel of the removed subscriber
+  // e.g. close the details panel of the removed candidate
   onRemoved?: () => void
 ) => {
   const queryClient = useQueryClient();
@@ -49,7 +50,7 @@ export const useRemoveItem = (
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey });
       // a deleted job offer takes its e-mails along - "last contacted" changes
-      if (query === "campaigns") queryClient.invalidateQueries({ queryKey: ["/emails"] });
+      if (query === "job-offers") queryClient.invalidateQueries({ queryKey: ["/outbox"] });
     },
   });
 
@@ -67,7 +68,7 @@ export const useRemoveItem = (
       isOpenConfirmModal: true,
     });
     setConfirmModalText({
-      title: `Delete ${query === "subscribers" ? "candidate" : "job offer"}?`,
+      title: `Delete ${query === "candidates" ? "candidate" : "job offer"}?`,
       description: (
         <>
           <strong className="font-medium text-foreground">{name}</strong> will be

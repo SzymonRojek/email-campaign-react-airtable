@@ -1,6 +1,6 @@
 import { AirtableRecord } from "../types";
 
-type Record = AirtableRecord<{ name?: unknown; title?: unknown }>;
+type Record = AirtableRecord<{ name?: unknown; subject?: unknown }>;
 
 export const sortDataAlphabetically = <T extends Record>(data: T[]): T[] => {
   const copyData = [...data];
@@ -10,7 +10,7 @@ export const sortDataAlphabetically = <T extends Record>(data: T[]): T[] => {
 
   const nestedPropertyRetriever = (obj: T) =>
     String(
-      (isName ? obj?.fields?.name : obj?.fields?.title) ?? ""
+      (isName ? obj?.fields?.name : obj?.fields?.subject) ?? ""
     ).toLowerCase();
 
   // localeCompare - Polish letters (Ł, Ś...) next to their base letters, not after "z"

@@ -20,7 +20,7 @@ test.describe("login", () => {
     await page.getByRole("button", { name: "Log out" }).click();
 
     await expect(
-      page.getByRole("heading", { name: "Email Campaign Dashboard" })
+      page.getByRole("heading", { name: "Talent Outreach" })
     ).toBeVisible({ timeout: 10_000 });
   });
 
@@ -29,7 +29,7 @@ test.describe("login", () => {
     request,
   }) => {
     await loginByApi(page, request);
-    await page.goto("/#/subscribers");
+    await page.goto("/#/candidates");
     await expect(page.getByRole("heading", { name: "Candidates" })).toBeVisible();
 
     // e.g. the token expired or the server secret changed
@@ -37,14 +37,14 @@ test.describe("login", () => {
     await mainNavLink(page, "Job offers").click();
 
     await expect(
-      page.getByRole("heading", { name: "Email Campaign Dashboard" })
+      page.getByRole("heading", { name: "Talent Outreach" })
     ).toBeVisible();
   });
 });
 
 test.describe("api", () => {
   test("requires a token", async ({ request }) => {
-    const res = await request.get("/api/subscribers");
+    const res = await request.get("/api/candidates");
 
     expect(res.status()).toBe(401);
   });

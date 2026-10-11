@@ -34,7 +34,7 @@ const run = (): Promise<boolean> =>
   new Promise((resolve, reject) =>
     newman.run(
       {
-        collection: path.join(root, "postman/email-campaign-dashboard.postman_collection.json"),
+        collection: path.join(root, "postman/talent-outreach.postman_collection.json"),
         envVar: [
           { key: "baseUrl", value: `http://localhost:${APP_PORT}` },
           { key: "password", value: ADMIN_PASSWORD },

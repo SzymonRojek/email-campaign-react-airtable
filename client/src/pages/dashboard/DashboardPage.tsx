@@ -10,13 +10,13 @@ import {
 } from "lucide-react";
 
 import { formattedData, pluralize, sortByDate } from "helpers";
-import { useCampaigns, useSubscribers } from "customHooks/queries";
-import { subscriberPanelLink } from "customHooks/useSubscriberPanel";
+import { useJobOffers, useCandidates } from "customHooks/queries";
+import { candidatePanelLink } from "customHooks/useCandidatePanel";
 import { Error, Loader } from "components/DisplayMessage";
 import { PageHeader } from "components/PageHeader";
 import { StyledContainer } from "components/StyledContainer";
 import StatusBadge from "components/StatusBadge";
-import SubscriberIdentity from "components/subscribers/SubscriberIdentity";
+import CandidateIdentity from "components/candidates/CandidateIdentity";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -59,7 +59,7 @@ interface ListCardProps {
   children: ReactNode[];
 }
 
-// "Recent campaigns" / "Newest subscribers" with a link to the full list
+// "Recent job offers" / "Newest candidates" with a link to the full list
 const ListCard = ({ title, to, emptyMessage, children }: ListCardProps) => (
   <Card className="gap-0 py-0">
     <CardHeader className="flex items-center justify-between border-b py-4">
@@ -84,29 +84,29 @@ const ListCard = ({ title, to, emptyMessage, children }: ListCardProps) => (
 );
 
 const DashboardPage = () => {
-  const subscribersQuery = useSubscribers("Cannot get the candidates list.");
-  const campaignsQuery = useCampaigns("Cannot get the job offers list.");
+  const candidatesQuery = useCandidates("Cannot get the candidates list.");
+  const jobOffersQuery = useJobOffers("Cannot get the job offers list.");
 
-  if (subscribersQuery.isLoading || campaignsQuery.isLoading) return <Loader />;
-  if (!subscribersQuery.data || !campaignsQuery.data)
+  if (candidatesQuery.isLoading || jobOffersQuery.isLoading) return <Loader />;
+  if (!candidatesQuery.data || !jobOffersQuery.data)
     return (
       <Error
         error="Cannot load the data - please try again later."
         onRetry={() => {
-          subscribersQuery.refetch();
-          campaignsQuery.refetch();
+          candidatesQuery.refetch();
+          jobOffersQuery.refetch();
         }}
-        isRetrying={subscribersQuery.isFetching || campaignsQuery.isFetching}
+        isRetrying={candidatesQuery.isFetching || jobOffersQuery.isFetching}
       />
     );
 
-  const subscribers = subscribersQuery.data;
-  const campaigns = campaignsQuery.data;
+  const candidates = candidatesQuery.data;
+  const jobOffers = jobOffersQuery.data;
   const count = (status: string, items: { fields: { status: string } }[]) =>
     items.filter(({ fields }) => fields.status === status).length;
 
-  const active = count("active", subscribers);
-  const sent = count("sent", campaigns);
+  const active = count("open to offers", candidates);
+  const sent = count("sent", jobOffers);
 
   return (
     <StyledContainer>
@@ -116,13 +116,13 @@ const DashboardPage = () => {
         actions={
           <>
             <Button asChild variant="outline">
-              <Link {...subscriberPanelLink(undefined, "new")}>
+              <Link {...candidatePanelLink(undefined, "new")}>
                 <Plus />
                 Add candidate
               </Link>
             </Button>
             <Button asChild variant="brand">
-              <Link to="/campaigns/add">
+              <Link to="/job-offers/add">
                 <Send />
                 New job offer
               </Link>
@@ -134,44 +134,44 @@ const DashboardPage = () => {
       <div className="grid gap-4 sm:grid-cols-3">
         <StatCard
           label="Candidates"
-          value={subscribers.length}
+          value={candidates.length}
           hint={[
-            `${count("pending", subscribers)} awaiting consent`,
-            `${count("blocked", subscribers)} do not contact`,
-            count("unsubscribed", subscribers) &&
-              `${count("unsubscribed", subscribers)} opted out`,
+            `${count("awaiting consent", candidates)} awaiting consent`,
+            `${count("do not contact", candidates)} do not contact`,
+            count("opted out", candidates) &&
+              `${count("opted out", candidates)} opted out`,
           ]
             .filter(Boolean)
             .join(" · ")}
           icon={Users}
-          to="/subscribers"
+          to="/candidates"
         />
         <StatCard
           label="Open to offers"
           value={active}
           hint="can get your next job offer"
           icon={UserCheck}
-          to="/subscribers"
+          to="/candidates"
         />
         <StatCard
           label="Job offers sent"
           value={sent}
-          hint={`${pluralize(campaigns.length - sent, "draft")} waiting`}
+          hint={`${pluralize(jobOffers.length - sent, "draft")} waiting`}
           icon={Send}
-          to="/campaigns"
+          to="/job-offers"
         />
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <ListCard
           title="Recent job offers"
-          to="/campaigns"
+          to="/job-offers"
           emptyMessage="No job offers yet."
         >
-          {sortByDate(campaigns, "newest")
+          {sortByDate(jobOffers, "newest")
             .slice(0, RECENT_COUNT)
-            .map((campaign) => {
-              const { id, fields, createdTime } = campaign;
+            .map((jobOffer) => {
+              const { id, fields, createdTime } = jobOffer;
 
               return (
                 <li
@@ -180,7 +180,7 @@ const DashboardPage = () => {
                 >
                   <div className="min-w-0">
                     <p className="truncate font-medium">
-                      {fields.title}
+                      {fields.subject}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {formattedData.getFormattedDateTime(
@@ -196,18 +196,18 @@ const DashboardPage = () => {
 
         <ListCard
           title="Newest candidates"
-          to="/subscribers"
+          to="/candidates"
           emptyMessage="No candidates yet."
         >
-          {sortByDate(subscribers, "newest")
+          {sortByDate(candidates, "newest")
             .slice(0, RECENT_COUNT)
-            .map((subscriber) => (
+            .map((candidate) => (
               <li
-                key={subscriber.id}
+                key={candidate.id}
                 className="flex items-center justify-between gap-3 px-6 py-3"
               >
-                <SubscriberIdentity subscriber={subscriber} />
-                <StatusBadge status={subscriber.fields.status} />
+                <CandidateIdentity candidate={candidate} />
+                <StatusBadge status={candidate.fields.status} />
               </li>
             ))}
         </ListCard>

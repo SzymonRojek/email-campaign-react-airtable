@@ -3,19 +3,19 @@ import {
   contactedAgo,
   daysSince,
   isRecentlyContacted,
-  lastContactedBySubscriber,
+  lastContactedByCandidate,
 } from "helpers/lastContacted";
 import { SentEmail } from "types";
 
 const now = new Date(2026, 9, 11, 9, 0); // 11 Oct 2026, 9:00 local time
 const at = (day: number, hour = 12) => new Date(2026, 9, day, hour, 0).toISOString();
 
-const email = (subscriberId: string, sentAt: string) =>
-  ({ id: `${subscriberId}-${sentAt}`, subscriberId, sentAt }) as SentEmail;
+const email = (candidateId: string, sentAt: string) =>
+  ({ id: `${candidateId}-${sentAt}`, candidateId, sentAt }) as SentEmail;
 
-describe("lastContactedBySubscriber", () => {
+describe("lastContactedByCandidate", () => {
   it("keeps the newest e-mail of every candidate", () => {
-    const last = lastContactedBySubscriber([
+    const last = lastContactedByCandidate([
       email("anna", at(1)),
       email("anna", at(6)),
       email("bartek", at(3)),
@@ -48,10 +48,10 @@ describe("contacted ago", () => {
 
 describe("recruiter words", () => {
   it("names the statuses the way a recruiter does", () => {
-    expect(statusLabel("active")).toBe("Open to offers");
-    expect(statusLabel("pending")).toBe("Awaiting consent");
-    expect(statusLabel("blocked")).toBe("Do not contact");
-    expect(statusLabel("unsubscribed")).toBe("Opted out");
+    expect(statusLabel("open to offers")).toBe("Open to offers");
+    expect(statusLabel("awaiting consent")).toBe("Awaiting consent");
+    expect(statusLabel("do not contact")).toBe("Do not contact");
+    expect(statusLabel("opted out")).toBe("Opted out");
     expect(statusLabel("draft")).toBe("Draft");
   });
 

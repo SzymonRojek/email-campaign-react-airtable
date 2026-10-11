@@ -4,13 +4,13 @@ import {
   getFilteredDataByStatus,
   sortByDate,
 } from "helpers";
-import { Subscriber } from "types";
+import { Candidate } from "types";
 
-const subscriber = (
+const candidate = (
   id: string,
-  status: Subscriber["fields"]["status"],
+  status: Candidate["fields"]["status"],
   createdTime: string
-): Subscriber => ({
+): Candidate => ({
   id,
   createdTime,
   fields: { name: "Anna", surname: "Nowak", email: "a@b.pl", status },
@@ -56,27 +56,27 @@ describe("formattedData", () => {
 describe("getFilteredDataByStatus", () => {
   it("keeps only items with the status", () => {
     const data = [
-      subscriber("1", "active", "2022-01-01"),
-      subscriber("2", "blocked", "2022-01-02"),
+      candidate("1", "open to offers", "2022-01-01"),
+      candidate("2", "do not contact", "2022-01-02"),
     ];
 
-    expect(getFilteredDataByStatus(data, "active").map(({ id }) => id)).toEqual(
+    expect(getFilteredDataByStatus(data, "open to offers").map(({ id }) => id)).toEqual(
       ["1"]
     );
   });
 
   it("returns an empty array without data", () => {
-    expect(getFilteredDataByStatus(undefined, "active")).toEqual([]);
+    expect(getFilteredDataByStatus(undefined, "open to offers")).toEqual([]);
   });
 });
 
 describe("sortByDate", () => {
   const data = [
-    subscriber("old", "active", "2022-01-01T00:00:00.000Z"),
-    subscriber("new", "active", "2022-03-01T00:00:00.000Z"),
-    subscriber("mid", "active", "2022-02-01T00:00:00.000Z"),
+    candidate("old", "open to offers", "2022-01-01T00:00:00.000Z"),
+    candidate("new", "open to offers", "2022-03-01T00:00:00.000Z"),
+    candidate("mid", "open to offers", "2022-02-01T00:00:00.000Z"),
   ];
-  const ids = (items: Subscriber[]) => items.map(({ id }) => id);
+  const ids = (items: Candidate[]) => items.map(({ id }) => id);
 
   it("puts the newest first without changing the input", () => {
     expect(ids(sortByDate(data, "newest"))).toEqual(["new", "mid", "old"]);
@@ -89,7 +89,7 @@ describe("sortByDate", () => {
 
   it("uses the date field before the Airtable creation time", () => {
     const withDate = {
-      ...subscriber("dated", "active", "2022-01-01T00:00:00.000Z"),
+      ...candidate("dated", "open to offers", "2022-01-01T00:00:00.000Z"),
     };
     withDate.fields = { ...withDate.fields, date: "2022-04-01T00:00:00.000Z" };
 

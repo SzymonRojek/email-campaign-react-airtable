@@ -59,13 +59,13 @@ const SidebarContent = ({
       >
         <LogoMark />
         <span className="leading-tight">
-          <span className="block font-semibold tracking-tight">Email Campaign</span>
-          <span className="block text-xs text-muted-foreground">Dashboard</span>
+          <span className="block font-semibold tracking-tight">Talent Outreach</span>
+          <span className="block text-xs text-muted-foreground">job offers for recruiters</span>
         </span>
       </Link>
 
       <Button asChild variant="brand" className="h-9 justify-start">
-        <Link to="/campaigns/add" onClick={onNavigate}>
+        <Link to="/job-offers/add" onClick={onNavigate}>
           <Plus />
           New job offer
         </Link>
@@ -102,7 +102,7 @@ const SidebarContent = ({
         <div className="flex items-center justify-between border-t px-1 pt-3 text-xs text-muted-foreground">
           <span>© {new Date().getFullYear()} Szymon Rojek</span>
           <a
-            href="https://github.com/SzymonRojek/email-campaign-dashboard"
+            href="https://github.com/SzymonRojek/talent-outreach"
             target="_blank"
             rel="noreferrer"
             aria-label="Source code on GitHub"

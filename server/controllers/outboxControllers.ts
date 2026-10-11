@@ -6,11 +6,11 @@ import { getAllRecords } from "../helpers/getAllRecords";
 import { getErrorMessage } from "../helpers/getErrorMessage";
 import { buildEmail, unknownPlaceholders } from "../mail/buildEmail";
 import { deliver } from "../mail/deliver";
-import { readUnsubscribeToken, unsubscribeUrl } from "../mail/unsubscribeToken";
-import { AirtableRecord, CampaignFields, EmailFields, SubscriberFields } from "../types";
+import { readOptOutToken, optOutUrl } from "../mail/optOutToken";
+import { AirtableRecord, JobOfferFields, EmailFields, CandidateFields } from "../types";
 
-// the outbox: one row in the "emails" table per e-mail of a sent campaign
-const emailsEndpoint = "/emails";
+// the outbox: one row in the "emails" table per e-mail of a sent job offer
+const emailsEndpoint = "/outbox";
 
 // Airtable record ids only - they go into a formula, nothing else may get there
 const isRecordId = (id: unknown): id is string =>
@@ -19,53 +19,53 @@ const isRecordId = (id: unknown): id is string =>
 // the address of the app the links in the e-mails lead to (behind Render's proxy too)
 const appOrigin = (req: Request) => `${req.protocol}://${req.get("host")}`;
 
-const fullName = ({ name = "", surname = "" }: SubscriberFields) =>
+const fullName = ({ name = "", surname = "" }: CandidateFields) =>
   `${name} ${surname}`.trim();
 
 // e.g. "Unknown placeholder: {{nmae}}" - or null when the texts are fine
-const placeholderError = ({ title, description }: CampaignFields) => {
-  const unknown = unknownPlaceholders(title, description);
+const placeholderError = ({ subject, message }: JobOfferFields) => {
+  const unknown = unknownPlaceholders(subject, message);
   if (unknown.length === 0) return null;
 
   const list = unknown.map((key) => `{{${key}}}`).join(", ");
   return `Unknown placeholder${unknown.length > 1 ? "s" : ""}: ${list} - use {{name}}, {{surname}} or {{role}}`;
 };
 
-const emailsOf = async (campaignId: string) =>
+const emailsOf = async (jobOfferId: string) =>
   (
     await getAllRecords(emailsEndpoint, {
-      filterByFormula: `{campaignId}='${campaignId}'`,
+      filterByFormula: `{jobOfferId}='${jobOfferId}'`,
     })
-  ).filter(({ fields }) => fields.campaignId === campaignId) as AirtableRecord<EmailFields>[];
+  ).filter(({ fields }) => fields.jobOfferId === jobOfferId) as AirtableRecord<EmailFields>[];
 
-// POST /api/campaigns/:id/send  { recipientIds?: [...] }
-// a draft goes to its recipients (only active subscribers; all of them without recipientIds)
-export const sendCampaign = async (req: Request, res: Response) => {
+// POST /api/job-offers/:id/send  { recipientIds?: [...] }
+// a draft goes to its recipients (only active candidates; all of them without recipientIds)
+export const sendJobOffer = async (req: Request, res: Response) => {
   const { id } = req.params;
   const recipientIds: unknown = req.body?.recipientIds;
 
   if (!isRecordId(id)) {
-    return res.status(404).json({ status: "fail", error: "Campaign does not exist" });
+    return res.status(404).json({ status: "fail", error: "Job offer does not exist" });
   }
 
   try {
-    const { data: campaign } = await axiosInstance.get<AirtableRecord<CampaignFields>>(
-      `/campaigns/${id}`
+    const { data: jobOffer } = await axiosInstance.get<AirtableRecord<JobOfferFields>>(
+      `/jobOffers/${id}`
     );
 
-    if (campaign.fields.status === "sent") {
-      return res.status(409).json({ status: "fail", error: "This campaign has already been sent" });
+    if (jobOffer.fields.status === "sent") {
+      return res.status(409).json({ status: "fail", error: "This job offer has already been sent" });
     }
 
-    const invalidText = placeholderError(campaign.fields);
+    const invalidText = placeholderError(jobOffer.fields);
     if (invalidText) return res.status(400).json({ status: "fail", error: invalidText });
 
     const chosen = Array.isArray(recipientIds) ? new Set(recipientIds.map(String)) : null;
     const recipients = (
-      (await getAllRecords("/subscribers")) as AirtableRecord<SubscriberFields>[]
+      (await getAllRecords("/candidates")) as AirtableRecord<CandidateFields>[]
     ).filter(
-      ({ id: subscriberId, fields }) =>
-        fields.status === "active" && (!chosen || chosen.has(subscriberId))
+      ({ id: candidateId, fields }) =>
+        fields.status === "open to offers" && (!chosen || chosen.has(candidateId))
     );
 
     if (recipients.length === 0) {
@@ -76,48 +76,48 @@ export const sendCampaign = async (req: Request, res: Response) => {
     const origin = appOrigin(req);
 
     await deliver(
-      recipients.map(({ id: subscriberId, fields }) =>
+      recipients.map(({ id: candidateId, fields }) =>
         buildEmail({
-          campaign: campaign.fields,
+          jobOffer: jobOffer.fields,
           recipient: {
             name: fields.name,
             surname: fields.surname,
             email: fields.email,
-            role: fields.profession,
+            role: fields.role,
           },
-          unsubscribeUrl: unsubscribeUrl(origin, subscriberId),
+          optOutUrl: optOutUrl(origin, candidateId),
         })
       )
     );
 
-    // the outbox first - the campaign is "sent" only when its e-mails are saved
+    // the outbox first - the job offer is "sent" only when its e-mails are saved
     for (const [i, batch] of chunks(recipients).entries()) {
       if (i > 0) await wait(250);
       await axiosInstance.post(emailsEndpoint, {
-        records: batch.map(({ id: subscriberId, fields }) => ({
+        records: batch.map(({ id: candidateId, fields }) => ({
           fields: {
             email: fields.email,
             name: fullName(fields),
-            subscriberId,
-            campaignId: id,
+            candidateId,
+            jobOfferId: id,
             sentAt,
           },
         })),
       });
     }
 
-    const { data } = await axiosInstance.patch(`/campaigns/${id}`, {
+    const { data } = await axiosInstance.patch(`/jobOffers/${id}`, {
       fields: { status: "sent", date: sentAt },
     });
 
-    res.status(200).json({ status: "ok", sent: recipients.length, sentAt, campaign: data });
+    res.status(200).json({ status: "ok", sent: recipients.length, sentAt, jobOffer: data });
   } catch (error) {
     res.status(400).json({ status: "fail", error: getErrorMessage(error) });
   }
 };
 
-// GET /api/campaigns/:id/emails - who got the campaign
-export const getCampaignEmails = async (req: Request, res: Response) => {
+// GET /api/job-offers/:id/outbox - who got the job offer
+export const getJobOfferEmails = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   if (!isRecordId(id)) return res.status(200).json([]);
@@ -132,25 +132,25 @@ export const getCampaignEmails = async (req: Request, res: Response) => {
   }
 };
 
-// GET /api/emails - every e-mail of the outbox with its campaign's title, newest first
+// GET /api/outbox - every e-mail of the outbox with its job offer's subject, newest first
 // (the client counts "last contacted" of every candidate from it)
 export const getAllEmails = async (req: Request, res: Response) => {
   try {
-    const [emails, campaigns] = await Promise.all([
+    const [emails, jobOffers] = await Promise.all([
       getAllRecords(emailsEndpoint),
-      getAllRecords("/campaigns"),
+      getAllRecords("/jobOffers"),
     ]);
-    const titles = new Map(
-      (campaigns as AirtableRecord<CampaignFields>[]).map(({ id, fields }) => [id, fields.title ?? ""])
+    const subjects = new Map(
+      (jobOffers as AirtableRecord<JobOfferFields>[]).map(({ id, fields }) => [id, fields.subject ?? ""])
     );
 
     const sent = (emails as AirtableRecord<EmailFields>[])
-      .filter(({ fields }) => titles.has(fields.campaignId ?? ""))
+      .filter(({ fields }) => subjects.has(fields.jobOfferId ?? ""))
       .map(({ id, fields }) => ({
         id,
-        campaignId: fields.campaignId,
-        subscriberId: fields.subscriberId,
-        title: titles.get(fields.campaignId ?? ""),
+        jobOfferId: fields.jobOfferId,
+        candidateId: fields.candidateId,
+        subject: subjects.get(fields.jobOfferId ?? ""),
         name: fields.name,
         email: fields.email,
         sentAt: fields.sentAt,
@@ -167,30 +167,30 @@ export const getAllEmails = async (req: Request, res: Response) => {
   }
 };
 
-// GET /api/subscribers/:id/emails - the campaigns a subscriber got, newest first
-export const getSubscriberEmails = async (req: Request, res: Response) => {
+// GET /api/candidates/:id/outbox - the job offers a candidate got, newest first
+export const getCandidateEmails = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   if (!isRecordId(id)) return res.status(200).json([]);
 
   try {
-    const [emails, campaigns] = await Promise.all([
-      getAllRecords(emailsEndpoint, { filterByFormula: `{subscriberId}='${id}'` }),
-      getAllRecords("/campaigns"),
+    const [emails, jobOffers] = await Promise.all([
+      getAllRecords(emailsEndpoint, { filterByFormula: `{candidateId}='${id}'` }),
+      getAllRecords("/jobOffers"),
     ]);
-    const titles = new Map(
-      (campaigns as AirtableRecord<CampaignFields>[]).map(({ id: campaignId, fields }) => [
-        campaignId,
-        fields.title ?? "",
+    const subjects = new Map(
+      (jobOffers as AirtableRecord<JobOfferFields>[]).map(({ id: jobOfferId, fields }) => [
+        jobOfferId,
+        fields.subject ?? "",
       ])
     );
 
     const received = (emails as AirtableRecord<EmailFields>[])
-      .filter(({ fields }) => fields.subscriberId === id && titles.has(fields.campaignId ?? ""))
+      .filter(({ fields }) => fields.candidateId === id && subjects.has(fields.jobOfferId ?? ""))
       .map(({ id: emailId, fields }) => ({
         id: emailId,
-        campaignId: fields.campaignId,
-        title: titles.get(fields.campaignId ?? ""),
+        jobOfferId: fields.jobOfferId,
+        subject: subjects.get(fields.jobOfferId ?? ""),
         sentAt: fields.sentAt,
       }))
       .sort((a, b) => (b.sentAt ?? "").localeCompare(a.sentAt ?? ""));
@@ -201,7 +201,7 @@ export const getSubscriberEmails = async (req: Request, res: Response) => {
   }
 };
 
-// GET /api/emails/:id/preview - the e-mail exactly as its recipient got it
+// GET /api/outbox/:id/preview - the e-mail exactly as its recipient got it
 export const getEmailPreview = async (req: Request, res: Response) => {
   const { id } = req.params;
 
@@ -209,23 +209,23 @@ export const getEmailPreview = async (req: Request, res: Response) => {
     const { data: email } = await axiosInstance.get<AirtableRecord<EmailFields>>(
       `${emailsEndpoint}/${id}`
     );
-    const { campaignId = "", subscriberId = "", name, sentAt } = email.fields;
-    const { data: campaign } = await axiosInstance.get<AirtableRecord<CampaignFields>>(
-      `/campaigns/${campaignId}`
+    const { jobOfferId = "", candidateId = "", name, sentAt } = email.fields;
+    const { data: jobOffer } = await axiosInstance.get<AirtableRecord<JobOfferFields>>(
+      `/jobOffers/${jobOfferId}`
     );
 
-    // the e-mail uses the name the subscriber had when it went out; the outbox keeps no
+    // the e-mail uses the name the candidate had when it went out; the outbox keeps no
     // role, so it is the candidate's current one (none when they have been deleted)
     const [firstName, ...surname] = (name ?? "").split(" ");
-    const role = isRecordId(subscriberId)
+    const role = isRecordId(candidateId)
       ? await axiosInstance
-          .get<AirtableRecord<SubscriberFields>>(`/subscribers/${subscriberId}`)
-          .then(({ data }) => data.fields.profession ?? "", () => "")
+          .get<AirtableRecord<CandidateFields>>(`/candidates/${candidateId}`)
+          .then(({ data }) => data.fields.role ?? "", () => "")
       : "";
     const built = buildEmail({
-      campaign: campaign.fields,
+      jobOffer: jobOffer.fields,
       recipient: { name: firstName, surname: surname.join(" "), email: email.fields.email, role },
-      unsubscribeUrl: unsubscribeUrl(appOrigin(req), subscriberId),
+      optOutUrl: optOutUrl(appOrigin(req), candidateId),
     });
 
     res.status(200).json({ ...built, toName: name ?? "", sentAt });
@@ -234,41 +234,41 @@ export const getEmailPreview = async (req: Request, res: Response) => {
   }
 };
 
-// POST /api/campaigns/preview  { title, description, subscriberId }
-// a campaign that is being written, as this subscriber would get it
-export const previewCampaign = async (req: Request, res: Response) => {
-  const { title = "", description = "", subscriberId } = req.body ?? {};
-  const campaign = { title: String(title), description: String(description) };
+// POST /api/job-offers/preview  { subject, message, candidateId }
+// a job offer that is being written, as this candidate would get it
+export const previewJobOffer = async (req: Request, res: Response) => {
+  const { subject = "", message = "", candidateId } = req.body ?? {};
+  const jobOffer = { subject: String(subject), message: String(message) };
 
-  const invalidText = placeholderError(campaign);
+  const invalidText = placeholderError(jobOffer);
   if (invalidText) return res.status(400).json({ status: "fail", error: invalidText });
 
-  if (!isRecordId(subscriberId)) {
-    return res.status(404).json({ status: "fail", error: "Subscriber does not exist" });
+  if (!isRecordId(candidateId)) {
+    return res.status(404).json({ status: "fail", error: "Candidate does not exist" });
   }
 
   try {
-    const { data: subscriber } = await axiosInstance.get<AirtableRecord<SubscriberFields>>(
-      `/subscribers/${subscriberId}`
+    const { data: candidate } = await axiosInstance.get<AirtableRecord<CandidateFields>>(
+      `/candidates/${candidateId}`
     );
-    const { name, surname, email, profession } = subscriber.fields;
+    const { name, surname, email, role } = candidate.fields;
     const built = buildEmail({
-      campaign,
-      recipient: { name, surname, email, role: profession },
-      unsubscribeUrl: unsubscribeUrl(appOrigin(req), subscriberId),
+      jobOffer,
+      recipient: { name, surname, email, role: role },
+      optOutUrl: optOutUrl(appOrigin(req), candidateId),
     });
 
-    res.status(200).json({ ...built, toName: fullName(subscriber.fields) });
+    res.status(200).json({ ...built, toName: fullName(candidate.fields) });
   } catch (error) {
-    res.status(404).json({ status: "fail", error: "Subscriber does not exist" });
+    res.status(404).json({ status: "fail", error: "Candidate does not exist" });
   }
 };
 
-// deleting a campaign also empties its outbox
-export const deleteCampaignEmails = async (campaignId: string) => {
-  if (!isRecordId(campaignId)) return;
+// deleting a job offer also empties its outbox
+export const deleteJobOfferEmails = async (jobOfferId: string) => {
+  if (!isRecordId(jobOfferId)) return;
 
-  const ids = (await emailsOf(campaignId)).map(({ id }) => id);
+  const ids = (await emailsOf(jobOfferId)).map(({ id }) => id);
 
   for (const [i, batch] of chunks(ids).entries()) {
     if (i > 0) await wait(250);
@@ -276,46 +276,46 @@ export const deleteCampaignEmails = async (campaignId: string) => {
   }
 };
 
-const subscriberFromToken = async (token: unknown) => {
-  const subscriberId = readUnsubscribeToken(token);
-  if (!subscriberId) return null;
+const candidateFromToken = async (token: unknown) => {
+  const candidateId = readOptOutToken(token);
+  if (!candidateId) return null;
 
-  const { data } = await axiosInstance.get<AirtableRecord<SubscriberFields>>(
-    `/subscribers/${subscriberId}`
+  const { data } = await axiosInstance.get<AirtableRecord<CandidateFields>>(
+    `/candidates/${candidateId}`
   );
   return data;
 };
 
-const invalidLink = { status: "fail", error: "This unsubscribe link is not valid" };
+const invalidLink = { status: "fail", error: "This opt-out link is not valid" };
 
-// GET /api/unsubscribe/:token - public: who the link belongs to (for the confirmation page)
-export const getUnsubscribe = async (req: Request, res: Response) => {
+// GET /api/opt-out/:token - public: who the link belongs to (for the confirmation page)
+export const getOptOut = async (req: Request, res: Response) => {
   try {
-    const subscriber = await subscriberFromToken(req.params.token);
-    if (!subscriber) return res.status(404).json(invalidLink);
+    const candidate = await candidateFromToken(req.params.token);
+    if (!candidate) return res.status(404).json(invalidLink);
 
     res.status(200).json({
-      email: subscriber.fields.email,
-      isUnsubscribed: subscriber.fields.status === "unsubscribed",
+      email: candidate.fields.email,
+      isOptedOut: candidate.fields.status === "opted out",
     });
   } catch (error) {
     res.status(404).json(invalidLink);
   }
 };
 
-// POST /api/unsubscribe/:token - public: the subscriber stops getting campaigns
-export const postUnsubscribe = async (req: Request, res: Response) => {
+// POST /api/opt-out/:token - public: the candidate stops getting job offers
+export const postOptOut = async (req: Request, res: Response) => {
   try {
-    const subscriber = await subscriberFromToken(req.params.token);
-    if (!subscriber) return res.status(404).json(invalidLink);
+    const candidate = await candidateFromToken(req.params.token);
+    if (!candidate) return res.status(404).json(invalidLink);
 
-    // typecast: Airtable adds the "unsubscribed" choice to the status field if it is missing
-    await axiosInstance.patch(`/subscribers/${subscriber.id}`, {
-      fields: { status: "unsubscribed" },
+    // typecast: Airtable adds the "opted out" choice to the status field if it is missing
+    await axiosInstance.patch(`/candidates/${candidate.id}`, {
+      fields: { status: "opted out" },
       typecast: true,
     });
 
-    res.status(200).json({ status: "ok", email: subscriber.fields.email });
+    res.status(200).json({ status: "ok", email: candidate.fields.email });
   } catch (error) {
     res.status(404).json(invalidLink);
   }
