@@ -19,7 +19,7 @@ test("shows who got a sent campaign", async ({ page }) => {
   await openWelcome(page);
 
   await expect(page.getByRole("heading", { name: /Welcome/ })).toBeVisible();
-  await expect(page.getByText("2 subscribers", { exact: true })).toBeVisible();
+  await expect(page.getByText("2 candidates", { exact: true })).toBeVisible();
   const recipients = page.getByRole("list", { name: "Recipients" }).getByRole("listitem");
   await expect(recipients).toHaveCount(2);
   await expect(recipients.nth(0)).toContainText("anna@example.com");
@@ -54,8 +54,8 @@ test("personalizes a draft and previews it for each recipient before sending", a
 }) => {
   await page.goto("/#/campaigns/edit/recCampDraft0001");
 
-  await page.getByLabel("Title").fill("{{name}}, autumn sale");
-  await page.getByLabel("Description").fill("Dear {{name}}, 30% off for you.");
+  await page.getByLabel("Subject").fill("{{name}}, autumn sale");
+  await page.getByLabel("Message").fill("Dear {{name}}, 30% off for you.");
 
   await page.getByRole("button", { name: "Preview" }).click();
 
@@ -80,11 +80,11 @@ test("personalizes a draft and previews it for each recipient before sending", a
 test("points out a mistyped placeholder", async ({ page }) => {
   await page.goto("/#/campaigns/edit/recCampDraft0001");
 
-  await page.getByLabel("Description").fill("Dear {{nmae}}");
+  await page.getByLabel("Message").fill("Dear {{nmae}}");
   await page.getByRole("button", { name: "Preview" }).click();
 
   await expect(
-    page.getByText("unknown placeholder {{nmae}} - use {{name}} or {{surname}}")
+    page.getByText("unknown placeholder {{nmae}} - use {{name}}, {{surname}} or {{role}}")
   ).toBeVisible();
   await expect(page.getByRole("dialog")).toHaveCount(0);
 });
@@ -122,14 +122,14 @@ test("exports every e-mail of the sent campaigns shown in the list", async ({ pa
 
   // only drafts in the list - nothing to export
   await page.locator("#status-filter").click();
-  await page.getByRole("option", { name: "draft" }).click();
+  await page.getByRole("option", { name: "Draft" }).click();
   await expect(page.getByRole("button", { name: "Export CSV" })).toBeDisabled();
 });
 
 test("a subscriber's panel lists the campaigns they got", async ({ page }) => {
   await page.goto("/#/subscribers?view=recSubAnna000001");
 
-  const received = page.getByRole("list", { name: "Campaigns received" });
+  const received = page.getByRole("list", { name: "Job offers received" });
   await expect(received.getByRole("link")).toHaveCount(1);
   await received.getByRole("link", { name: /Welcome/ }).click();
 
@@ -143,7 +143,7 @@ test("a subscriber's panel lists the campaigns they got", async ({ page }) => {
 test("a subscriber who got nothing yet", async ({ page }) => {
   await page.goto("/#/subscribers?view=recSubDarek00004");
 
-  await expect(page.getByRole("dialog").getByText("No campaigns yet.")).toBeVisible();
+  await expect(page.getByRole("dialog").getByText("No job offers yet.")).toBeVisible();
 });
 
 test("a sent campaign's menu leads to its recipients", async ({ page }) => {
@@ -186,9 +186,9 @@ test("unsubscribes with the link from an e-mail - without logging in", async ({
 
   // she is not a recipient any more
   await page.goto("/#/campaigns/add");
-  await expect(page.getByText("active subscribers - 1")).toBeVisible();
+  await expect(page.getByText("Goes to 1 candidate", { exact: true })).toBeVisible();
   await page.goto("/#/subscribers");
-  await expect(listRow(page, "Anna")).toContainText("unsubscribed");
+  await expect(listRow(page, "Anna")).toContainText("Opted out");
 });
 
 test("refuses a link that is not valid", async ({ browser }) => {

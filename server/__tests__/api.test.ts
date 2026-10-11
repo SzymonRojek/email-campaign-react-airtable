@@ -119,6 +119,53 @@ describe("POST /api/auth/login", () => {
   });
 });
 
+describe("POST /api/auth/demo", () => {
+  afterEach(() => {
+    delete process.env.DEMO_LOGIN;
+  });
+
+  it("returns a token without the password on the demo server", async () => {
+    process.env.DEMO_LOGIN = "true";
+
+    const res = await request(app).post("/api/auth/demo");
+
+    expect(res.status).toBe(200);
+    // the token opens the app like a normal login
+    airtable.get.mockResolvedValue({ data: { records: [] } });
+    const subscribers = await request(app)
+      .get("/api/subscribers")
+      .set("Authorization", `Bearer ${res.body.token}`);
+    expect(subscribers.status).toBe(200);
+  });
+
+  it("does not exist without DEMO_LOGIN", async () => {
+    const res = await request(app).post("/api/auth/demo");
+
+    expect(res.status).toBe(404);
+    expect(res.body.token).toBeUndefined();
+  });
+
+  it("does not exist with another DEMO_LOGIN value", async () => {
+    process.env.DEMO_LOGIN = "1";
+
+    const res = await request(app).post("/api/auth/demo");
+
+    expect(res.status).toBe(404);
+  });
+
+  it("fails when login is not configured", async () => {
+    process.env.DEMO_LOGIN = "true";
+    const { AUTH_SECRET } = process.env;
+    delete process.env.AUTH_SECRET;
+
+    const res = await request(app).post("/api/auth/demo");
+
+    process.env.AUTH_SECRET = AUTH_SECRET;
+
+    expect(res.status).toBe(500);
+  });
+});
+
 describe("GET /api/health", () => {
   it("answers without a token", async () => {
     const res = await request(app).get("/api/health");

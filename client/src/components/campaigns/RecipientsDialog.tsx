@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
-import { useSubscribers } from "customHooks/queries";
+import { useRecipients } from "customHooks/useRecipients";
 import Avatar from "components/Avatar";
-import { Subscriber } from "types";
+import { contactedAgo, isRecentlyContacted, RECENT_CONTACT_DAYS } from "helpers/lastContacted";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -15,68 +15,55 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import {
-  areSomeTruthy,
-  countStateTruthy,
-  handleCheckedAll,
-  handleUncheckedAll,
-} from "./recipientsUtilities";
 
 interface RecipientsDialogProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-// choose which active subscribers get the campaign (all of them by default)
+// fine-tune who gets the job offer - among the candidates the role and the budget found
 const RecipientsDialog = ({ isOpen, onClose }: RecipientsDialogProps) => {
-  const { data: subscribers } = useSubscribers("Cannot get subscribers list:");
-  const { setFinalSelectedActiveSubscribers } = useGlobalStoreContext();
-  const [checkedState, setCheckedState] = useState<boolean[]>([]);
+  const { matching, receivers, suggested, lastContacted } = useRecipients();
+  const { setChosenRecipientIds } = useGlobalStoreContext();
+  const [checked, setChecked] = useState<Set<string>>(new Set());
 
-  const activeSubscribers = useMemo(
-    () => (subscribers ?? []).filter(({ fields }) => fields.status === "active"),
-    [subscribers]
-  );
-
-  const allChecked = useCallback(
-    () => new Array<boolean>(activeSubscribers.length).fill(true),
-    [activeSubscribers]
-  );
-
+  // every opening starts from the people who would get the offer now
   useEffect(() => {
-    setCheckedState(allChecked());
-  }, [allChecked]);
+    if (isOpen) setChecked(new Set(receivers.map(({ id }) => id)));
+    // only when it opens - not on every change of the lists behind it
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
-  const updateSelection = (updatedCheckedState: boolean[]) => {
-    setCheckedState(updatedCheckedState);
-    setFinalSelectedActiveSubscribers(
-      activeSubscribers.filter((_, index) => updatedCheckedState[index])
-    );
-  };
+  const toggle = (id: string) =>
+    setChecked((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
 
-  const toggle = (position: number) =>
-    updateSelection(
-      checkedState.map((item, index) => (index === position ? !item : item))
-    );
+  const total = matching.length;
+  const checkedCount = matching.filter(({ id }) => checked.has(id)).length;
+  const isEveryoneChecked = total > 0 && checkedCount === total;
 
-  // Cancel / X / Escape drop the choice - back to all active subscribers
-  const cancel = () => {
-    setFinalSelectedActiveSubscribers(null);
-    setCheckedState(allChecked());
+  // the same people the filter suggests = nothing chosen by hand
+  const done = () => {
+    const ids = matching.filter(({ id }) => checked.has(id)).map(({ id }) => id);
+    const isSuggestion =
+      ids.length === suggested.length && suggested.every(({ id }) => checked.has(id));
+
+    setChosenRecipientIds(isSuggestion ? null : ids);
     onClose();
   };
 
-  const checkedCount = countStateTruthy(checkedState);
-  const total = activeSubscribers.length;
-  const isEveryoneChecked = total > 0 && checkedCount === total;
-
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && cancel()}>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Choose recipients</DialogTitle>
           <DialogDescription>
-            Only active subscribers can get a campaign.
+            Candidates open to offers who match the role and the budget. The ones who got an
+            offer in the last {RECENT_CONTACT_DAYS} days are not checked.
           </DialogDescription>
         </DialogHeader>
 
@@ -85,17 +72,9 @@ const RecipientsDialog = ({ isOpen, onClose }: RecipientsDialogProps) => {
             <div className="flex items-center gap-2">
               <Checkbox
                 id="recipients-select-all"
-                checked={
-                  isEveryoneChecked
-                    ? true
-                    : areSomeTruthy(checkedState)
-                      ? "indeterminate"
-                      : false
-                }
+                checked={isEveryoneChecked ? true : checkedCount > 0 ? "indeterminate" : false}
                 onCheckedChange={() =>
-                  isEveryoneChecked
-                    ? handleUncheckedAll(updateSelection, checkedState)
-                    : handleCheckedAll(updateSelection, checkedState)
+                  setChecked(isEveryoneChecked ? new Set() : new Set(matching.map(({ id }) => id)))
                 }
               />
               <Label htmlFor="recipients-select-all">Select all</Label>
@@ -106,28 +85,34 @@ const RecipientsDialog = ({ isOpen, onClose }: RecipientsDialogProps) => {
           </div>
 
           <ul className="max-h-72 divide-y overflow-y-auto">
-            {activeSubscribers.map((subscriber: Subscriber, index) => {
-              const id = `recipient-${subscriber.id}`;
-              const { name, surname, email } = subscriber.fields;
+            {matching.map(({ id, fields }) => {
+              const inputId = `recipient-${id}`;
+              const contacted = lastContacted.get(id);
 
               return (
-                <li key={subscriber.id}>
+                <li key={id}>
                   <label
-                    htmlFor={id}
+                    htmlFor={inputId}
                     className="flex cursor-pointer items-center gap-3 px-3 py-2.5 transition-colors hover:bg-muted/50"
                   >
                     <Checkbox
-                      id={id}
-                      checked={checkedState[index] ?? false}
-                      onCheckedChange={() => toggle(index)}
+                      id={inputId}
+                      checked={checked.has(id)}
+                      onCheckedChange={() => toggle(id)}
                     />
-                    <Avatar name={name} surname={surname} />
+                    <Avatar name={fields.name} surname={fields.surname} />
                     <span className="min-w-0">
                       <span className="block truncate text-sm font-medium">
-                        {name} {surname}
+                        {fields.name} {fields.surname}
                       </span>
                       <span className="block truncate text-xs text-muted-foreground">
-                        {email}
+                        {fields.profession || fields.email}
+                        {contacted && isRecentlyContacted(contacted) && (
+                          <span className="text-amber-700 dark:text-amber-300">
+                            {" "}
+                            · contacted {contactedAgo(contacted)}
+                          </span>
+                        )}
                       </span>
                     </span>
                   </label>
@@ -144,14 +129,14 @@ const RecipientsDialog = ({ isOpen, onClose }: RecipientsDialogProps) => {
             }
           >
             {checkedCount === 0
-              ? "Choose at least one subscriber"
-              : "The campaign goes to the selected people."}
+              ? "Choose at least one candidate"
+              : "The job offer goes to the selected people."}
           </p>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={cancel}>
+            <Button variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button variant="brand" onClick={onClose}>
+            <Button variant="brand" onClick={done}>
               Done
             </Button>
           </div>

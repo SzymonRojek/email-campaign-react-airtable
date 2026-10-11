@@ -41,12 +41,8 @@ const renderLoginForm = () =>
     </QueryClientProvider>
   );
 
-const logIn = async (password?: string) => {
-  const user = userEvent.setup();
-
-  if (password) await user.type(screen.getByLabelText("Password"), password);
-  await user.click(screen.getByRole("button", { name: /log in/i }));
-};
+const tryDemo = () =>
+  userEvent.setup().click(screen.getByRole("button", { name: "Try the demo" }));
 
 describe("LoginForm", () => {
   beforeEach(() => {
@@ -54,60 +50,37 @@ describe("LoginForm", () => {
     mockedPost.mockReset();
   });
 
-  it("logs in with the token returned by the server", async () => {
-    mockedPost.mockResolvedValue({ token: "server-token" });
+  it("opens the demo with one click - no password", async () => {
+    mockedPost.mockResolvedValue({ token: "demo-token" });
     renderLoginForm();
 
-    await logIn("secret-password");
+    await tryDemo();
 
     await waitFor(() =>
       expect(screen.getByTestId("login-state")).toHaveTextContent("true")
     );
-    expect(mockedPost).toHaveBeenCalledWith("/auth/login", {
-      password: "secret-password",
-    });
-    expect(getToken()).toBe("server-token");
+    expect(mockedPost).toHaveBeenCalledWith("/auth/demo", {});
+    expect(getToken()).toBe("demo-token");
   });
 
-  it("shows the error from the server for a wrong password", async () => {
+  it("shows the error when the demo can not be opened", async () => {
     mockedPost.mockRejectedValue(
-      new HttpError(401, { error: "password is not correct" })
+      new HttpError(404, { error: "Endpoint does not exist" })
     );
     renderLoginForm();
 
-    await logIn("wrong");
+    await tryDemo();
 
-    expect(
-      await screen.findByText("password is not correct")
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Endpoint does not exist"
+    );
     expect(screen.getByTestId("login-state")).toHaveTextContent("false");
-    expect(getToken()).toBeNull();
+    expect(screen.getByRole("button", { name: "Try the demo" })).toBeEnabled();
   });
 
-  it("asks for a password before calling the server", async () => {
+  it("asks for no password - the demo is the only way in from the browser", () => {
     renderLoginForm();
 
-    await logIn();
-
-    expect(
-      await screen.findByText("please enter your password")
-    ).toBeInTheDocument();
-    expect(mockedPost).not.toHaveBeenCalled();
-  });
-
-  it("asks only for the password - no confirmation on a login form", () => {
-    renderLoginForm();
-
-    expect(screen.getByLabelText("Password")).toBeInTheDocument();
-    expect(screen.queryByLabelText("Confirm password")).not.toBeInTheDocument();
-  });
-
-  it("does not let a phone keyboard change the password", () => {
-    renderLoginForm();
-    const password = screen.getByLabelText("Password");
-
-    expect(password).toHaveAttribute("autocapitalize", "none");
-    expect(password).toHaveAttribute("autocorrect", "off");
-    expect(password).toHaveAttribute("spellcheck", "false");
+    expect(screen.queryByLabelText(/password/i)).not.toBeInTheDocument();
   });
 });

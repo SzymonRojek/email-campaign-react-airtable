@@ -57,3 +57,22 @@ export const login = (req: Request, res: Response) => {
 
   res.status(200).json({ token: createToken() });
 };
+
+// POST /api/auth/demo - the public demo: one click instead of typing the password
+// (on only with DEMO_LOGIN=true - without it a server keeps no door without a password)
+export const demoLogin = (req: Request, res: Response) => {
+  if (process.env.DEMO_LOGIN !== "true") {
+    return res
+      .status(404)
+      .json({ status: "fail", error: "Endpoint does not exist" });
+  }
+
+  if (!isAuthConfigured()) {
+    return res.status(500).json({
+      status: "fail",
+      error: "Login is not configured on the server",
+    });
+  }
+
+  res.status(200).json({ token: createToken() });
+};

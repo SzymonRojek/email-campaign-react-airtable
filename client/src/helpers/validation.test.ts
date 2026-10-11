@@ -1,4 +1,4 @@
-import { validationCampaign, validationLogin, validationSubscriber } from "helpers";
+import { validationCampaign, validationSubscriber } from "helpers";
 import validationFeedback from "helpers/validationFeedback";
 
 const validSubscriber = {
@@ -64,34 +64,47 @@ describe("validationSubscriber - optional fields", () => {
   it("still checks an optional field when it is filled in", async () => {
     const errors = await errorsOf(validationSubscriber, {
       ...validSubscriber,
-      profession: "QA2",
+      profession: "<b>QA</b>",
       salary: "12",
       telephone: "123",
     });
 
     expect(errors).toEqual([
-      "only letters are required",
+      "use letters, digits and - + / . # &",
       "must be at least 3 numbers",
       "type only 10 digits",
     ]);
+  });
+
+  it.each(["Frontend Developer", "QA Engineer", "C++ Developer", "UX/UI Designer", "Node.js Developer"])(
+    "accepts a real job title as the role: %s",
+    async (profession) => {
+      expect(await errorsOf(validationSubscriber, { ...validSubscriber, profession })).toEqual([]);
+    }
+  );
+
+  it("limits the role to 30 characters", async () => {
+    expect(
+      await errorsOf(validationSubscriber, { ...validSubscriber, profession: "x".repeat(31) })
+    ).toEqual(["must not exceed 30 characters"]);
   });
 });
 
 describe("validationCampaign", () => {
   it("requires a title and a description", async () => {
     expect(await errorsOf(validationCampaign, {})).toEqual([
-      "title is required",
-      "description is required",
+      "subject is required",
+      "message is required",
     ]);
   });
 
   it("limits the title length", async () => {
     const errors = await errorsOf(validationCampaign, {
-      title: "x".repeat(31),
+      title: "x".repeat(61),
       description: "ok description",
     });
 
-    expect(errors).toEqual(["must not exceed 30 characters"]);
+    expect(errors).toEqual(["must not exceed 60 characters"]);
   });
 
   it("allows a 500-character description, not longer", async () => {
@@ -109,19 +122,7 @@ describe("validationCampaign", () => {
     ).toEqual([]);
     expect(
       await errorsOf(validationCampaign, { title: "Hello", description: "Dear {{nmae}}" })
-    ).toEqual(["unknown placeholder {{nmae}} - use {{name}} or {{surname}}"]);
-  });
-});
-
-describe("validationLogin", () => {
-  it("requires a password", async () => {
-    expect(await errorsOf(validationLogin, { password: "" })).toEqual([
-      "please enter your password",
-    ]);
-  });
-
-  it("does not check the password itself (the server does)", async () => {
-    expect(await errorsOf(validationLogin, { password: "anything" })).toEqual([]);
+    ).toEqual(["unknown placeholder {{nmae}} - use {{name}}, {{surname}} or {{role}}"]);
   });
 });
 

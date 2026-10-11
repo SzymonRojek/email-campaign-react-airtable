@@ -63,7 +63,7 @@ const CampaignPreviewPanel = ({ values, recipients, onClose }: CampaignPreviewPa
                 ? `The preview is not available: ${getErrorMessage(error)}`
                 : recipients.length
                   ? ""
-                  : "There is nobody to preview the e-mail for - add an active subscriber first."}
+                  : "There is nobody to preview the e-mail for - no candidate open to offers matches."}
             </SheetDescription>
           </SheetHeader>
         )}

@@ -24,7 +24,7 @@ export const getToken = async (request: APIRequestContext) => {
   return ((await res.json()) as { token: string }).token;
 };
 
-// skips the login form (and its 3s loader) - the UI login has its own tests
+// skips the start page (and its 3s loader) - the "Try the demo" button has its own tests
 export const loginByApi = async (page: Page, request: APIRequestContext) => {
   const token = await getToken(request);
 
@@ -32,11 +32,6 @@ export const loginByApi = async (page: Page, request: APIRequestContext) => {
     localStorage.setItem("authToken", authToken);
     localStorage.setItem("login", "true");
   }, token);
-};
-
-export const loginByForm = async (page: Page, password = ADMIN_PASSWORD) => {
-  await page.getByLabel("Password", { exact: true }).fill(password);
-  await page.getByRole("button", { name: "Log in" }).click();
 };
 
 // a row of the list table

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 
 import { toastMessage } from "helpers";
 import { useGlobalStoreContext } from "contexts/GlobalStoreContextProvider";
-import { campaignsKey } from "customHooks/queries";
+import { campaignsKey, outboxKey } from "customHooks/queries";
 import { useRecipients } from "customHooks/useRecipients";
 import { getErrorMessage, sendCampaign } from "services";
 import { CampaignFormValues } from "types";
@@ -14,11 +14,11 @@ export const useSendCampaign = (id?: string) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { receivers } = useRecipients();
-  const { setFinalSelectedActiveSubscribers } = useGlobalStoreContext();
+  const { resetRecipients } = useGlobalStoreContext();
 
   return async (values: CampaignFormValues) => {
     if (!receivers.length) {
-      toastMessage("Please choose at least one subscriber");
+      toastMessage("Please choose at least one candidate");
       return;
     }
 
@@ -29,12 +29,16 @@ export const useSendCampaign = (id?: string) => {
         recipientIds: receivers.map((subscriber) => subscriber.id),
       });
 
-      // the next campaign starts with all active subscribers again
-      setFinalSelectedActiveSubscribers(null);
-      await queryClient.invalidateQueries({ queryKey: campaignsKey });
+      // the next job offer starts with no filter again
+      resetRecipients();
+      // "last contacted" changes for everybody who got it
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: campaignsKey }),
+        queryClient.invalidateQueries({ queryKey: outboxKey }),
+      ]);
       navigate(`/campaigns/${campaignId}`);
     } catch (error) {
-      toastMessage(`The campaign has not been sent: ${getErrorMessage(error)}`);
+      toastMessage(`The job offer has not been sent: ${getErrorMessage(error)}`);
     }
   };
 };

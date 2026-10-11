@@ -1,3 +1,4 @@
+import { statusLabel } from "helpers";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -27,13 +28,13 @@ const StatusFilter = <Status extends string>({
       value={value}
       onValueChange={(next) => onChange(next as Status | typeof ALL_STATUSES)}
     >
-      <SelectTrigger id="status-filter" className="w-32">
+      <SelectTrigger id="status-filter" className="w-40">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
         {[ALL_STATUSES, ...statuses].map((status) => (
           <SelectItem key={status} value={status}>
-            {status}
+            {status === ALL_STATUSES ? "All" : statusLabel(status)}
           </SelectItem>
         ))}
       </SelectContent>

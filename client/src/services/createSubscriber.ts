@@ -31,7 +31,7 @@ const createSubscriber = async ({
     callback(response);
   } catch (error) {
     toastMessage(
-      `The subscriber has not been added: ${getErrorMessage(error)}`
+      `The candidate has not been added: ${getErrorMessage(error)}`
     );
   }
 };

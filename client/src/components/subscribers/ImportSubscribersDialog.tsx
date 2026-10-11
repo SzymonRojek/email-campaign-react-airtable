@@ -29,8 +29,8 @@ import {
 } from "./subscribersCsv";
 
 const statusChoices: { value: ImportStatus; label: string; hint: string }[] = [
-  { value: "pending", label: "Pending", hint: "they get no campaigns until you activate them" },
-  { value: "active", label: "Active", hint: "they get the next campaign" },
+  { value: "pending", label: "Awaiting consent", hint: "they get no job offers until they agree" },
+  { value: "active", label: "Open to offers", hint: "they can get the next job offer" },
 ];
 
 interface ImportSubscribersDialogProps {
@@ -101,13 +101,13 @@ const ImportSubscribersDialog = ({ isOpen, onOpenChange }: ImportSubscribersDial
       );
 
       toastSuccess(
-        `${pluralize(created, "subscriber")} imported` +
+        `${pluralize(created, "candidate")} imported` +
           (skipped.length ? ` - ${skipped.length} skipped (${skipped[0].reason})` : "")
       );
       await queryClient.invalidateQueries({ queryKey: subscribersKey });
       close(false);
     } catch (error) {
-      toastMessage(`The subscribers have not been imported: ${getErrorMessage(error)}`);
+      toastMessage(`The candidates have not been imported: ${getErrorMessage(error)}`);
     } finally {
       setIsImporting(false);
     }
@@ -117,7 +117,7 @@ const ImportSubscribersDialog = ({ isOpen, onOpenChange }: ImportSubscribersDial
     <Dialog open={isOpen} onOpenChange={close}>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Import subscribers</DialogTitle>
+          <DialogTitle>Import candidates</DialogTitle>
           <DialogDescription>
             A CSV file with the columns {IMPORT_COLUMNS.join(", ")} - name, surname and
             e-mail are required, at most {MAX_IMPORT_ROWS} rows.
@@ -151,7 +151,7 @@ const ImportSubscribersDialog = ({ isOpen, onOpenChange }: ImportSubscribersDial
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => downloadCsv("subscribers-template.csv", templateCsv())}
+            onClick={() => downloadCsv("candidates-template.csv", templateCsv())}
           >
             <Download />
             Template
@@ -170,7 +170,7 @@ const ImportSubscribersDialog = ({ isOpen, onOpenChange }: ImportSubscribersDial
 
         {rows.length > 0 && (
           <fieldset className="grid gap-2">
-            <legend className="mb-2 text-sm font-medium">Add the new subscribers as</legend>
+            <legend className="mb-2 text-sm font-medium">Add the new candidates as</legend>
             {statusChoices.map(({ value, label, hint }) => (
               <label key={value} className="flex items-start gap-2 text-sm">
                 <input
@@ -195,7 +195,7 @@ const ImportSubscribersDialog = ({ isOpen, onOpenChange }: ImportSubscribersDial
                   onCheckedChange={(checked) => setHasPermission(checked === true)}
                 />
                 <Label htmlFor="import-permission" className="font-normal">
-                  I have permission to e-mail these people
+                  They agreed to get job offers from me
                 </Label>
               </div>
             )}
@@ -250,7 +250,7 @@ const ImportSubscribersDialog = ({ isOpen, onOpenChange }: ImportSubscribersDial
           >
             {isImporting
               ? "Importing..."
-              : `Import ${pluralize(ready.length, "subscriber")}`}
+              : `Import ${pluralize(ready.length, "candidate")}`}
           </Button>
         </DialogFooter>
       </DialogContent>

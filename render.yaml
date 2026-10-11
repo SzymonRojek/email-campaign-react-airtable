@@ -13,9 +13,12 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      # demo app - the password is shown on the login form
+      # the password for the API (Postman) - the README shows it
       - key: ADMIN_PASSWORD
         value: admin
+      # "Try the demo" on the start page - the only way into the app from the browser
+      - key: DEMO_LOGIN
+        value: "true"
       # random secret that signs the login tokens - Render generates it
       - key: AUTH_SECRET
         generateValue: true
@@ -47,9 +50,12 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      # demo app - the password is shown on the login form
+      # the password for the API (Postman) - the README shows it
       - key: ADMIN_PASSWORD
         value: admin
+      # "Try the demo" on the start page - the only way into the app from the browser
+      - key: DEMO_LOGIN
+        value: "true"
       # random secret that signs the login tokens - Render generates it
       - key: AUTH_SECRET
         generateValue: true

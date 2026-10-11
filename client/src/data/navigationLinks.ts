@@ -11,8 +11,8 @@ export interface NavigationLink {
 // the sidebar (desktop) and the menu (phone)
 export const mainLinks: NavigationLink[] = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
-  { to: "/subscribers", label: "Subscribers", icon: Users },
-  { to: "/campaigns", label: "Campaigns", icon: Mail },
+  { to: "/subscribers", label: "Candidates", icon: Users },
+  { to: "/campaigns", label: "Job offers", icon: Mail },
 ];
 
 // about the project, not a part of it - below a line

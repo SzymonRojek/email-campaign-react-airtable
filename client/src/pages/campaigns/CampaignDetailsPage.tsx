@@ -39,7 +39,7 @@ const CampaignDetailsPage = () => {
     );
 
   if (isLoading) return <Loader />;
-  if (isError || !campaign) return <Error error="Campaign does not exist!" />;
+  if (isError || !campaign) return <Error error="Job offer does not exist!" />;
 
   // a draft has no recipients yet - it opens in the editor
   if (campaign.fields.status === "draft") {
@@ -60,7 +60,7 @@ const CampaignDetailsPage = () => {
         }
         // known at once - the number of recipients is in their card (no jump when it loads)
         description={`Sent ${sentAt}`}
-        back={{ to: "/campaigns", label: "Campaigns" }}
+        back={{ to: "/campaigns", label: "Job offers" }}
         actions={
           <Button variant="outline" onClick={() => duplicate(campaign)}>
             <Copy />
@@ -86,7 +86,7 @@ const CampaignDetailsPage = () => {
               Recipients
               {emails && (
                 <span className="ml-2 font-normal text-muted-foreground">
-                  {pluralize(emails.length, "subscriber")}
+                  {pluralize(emails.length, "candidate")}
                 </span>
               )}
             </CardTitle>
@@ -94,7 +94,7 @@ const CampaignDetailsPage = () => {
               <Button
                 variant="outline"
                 size="sm"
-                title="Download the recipients of this campaign"
+                title="Download the recipients of this job offer"
                 onClick={() =>
                   downloadCsv(
                     recipientsFileName(fields.title),
@@ -112,7 +112,7 @@ const CampaignDetailsPage = () => {
           ) : !emails?.length ? (
             // e.g. sent before the outbox existed
             <p className="px-6 py-10 text-center text-sm text-muted-foreground">
-              No e-mails are saved for this campaign.
+              No e-mails are saved for this job offer.
             </p>
           ) : (
             <ul aria-label="Recipients" className="divide-y">

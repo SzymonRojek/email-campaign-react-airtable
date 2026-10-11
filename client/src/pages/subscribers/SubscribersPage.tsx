@@ -16,14 +16,14 @@ const SubscribersPage = () => {
   const [isImportOpen, setIsImportOpen] = useState(false);
   const panel = useSubscriberPanel();
   const { data: subscribers, isLoading, isError, refetch, isFetching } = useSubscribers(
-    "Cannot get subscribers list."
+    "Cannot get the candidates list."
   );
 
   if (isLoading) return <Loader />;
   if (isError || !subscribers)
     return (
       <Error
-        error="Cannot load the subscribers - please try again later."
+        error="Cannot load the candidates - please try again later."
         onRetry={() => refetch()}
         isRetrying={isFetching}
       />
@@ -34,8 +34,8 @@ const SubscribersPage = () => {
   return (
     <StyledContainer>
       <PageHeader
-        title="Subscribers"
-        description={`${pluralize(subscribers.length, "subscriber")} · ${active.length} active`}
+        title="Candidates"
+        description={`${pluralize(subscribers.length, "candidate")} · ${active.length} open to offers`}
         actions={
           <>
             <Button variant="outline" onClick={() => setIsImportOpen(true)}>
@@ -44,7 +44,7 @@ const SubscribersPage = () => {
             </Button>
             <Button variant="brand" onClick={panel.create}>
               <Plus />
-              Add subscriber
+              Add candidate
             </Button>
           </>
         }
@@ -53,7 +53,7 @@ const SubscribersPage = () => {
       <SubscriberDetailsPanel />
       <SubscribersTable
         subscribers={subscribers}
-        emptyMessage="There are no subscribers yet - add the first one."
+        emptyMessage="There are no candidates yet - add the first one."
       />
     </StyledContainer>
   );

@@ -67,7 +67,7 @@ const SidebarContent = ({
       <Button asChild variant="brand" className="h-9 justify-start">
         <Link to="/campaigns/add" onClick={onNavigate}>
           <Plus />
-          New campaign
+          New job offer
         </Link>
       </Button>
 

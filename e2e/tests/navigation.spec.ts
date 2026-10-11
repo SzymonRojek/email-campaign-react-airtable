@@ -10,11 +10,11 @@ test.beforeEach(async ({ page, request }) => {
 test("navigates with the main tabs", async ({ page }) => {
   await page.goto("/");
 
-  await mainNavLink(page, "Subscribers").click();
-  await expect(page.getByRole("heading", { name: "Subscribers" })).toBeVisible();
+  await mainNavLink(page, "Candidates").click();
+  await expect(page.getByRole("heading", { name: "Candidates" })).toBeVisible();
 
-  await mainNavLink(page, "Campaigns").click();
-  await expect(page.getByRole("heading", { name: "Campaigns" })).toBeVisible();
+  await mainNavLink(page, "Job offers").click();
+  await expect(page.getByRole("heading", { name: "Job offers" })).toBeVisible();
 
   await mainNavLink(page, "Dashboard").click();
   await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
@@ -24,21 +24,21 @@ test("keeps the page after a reload", async ({ page }) => {
   await page.goto("/#/campaigns/add");
   await page.reload();
 
-  await expect(page.getByRole("heading", { name: "New campaign" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "New job offer" })).toBeVisible();
 });
 
 test("opens the add forms from the lists", async ({ page }) => {
   await page.goto("/#/subscribers");
-  await page.getByRole("main").getByRole("button", { name: "Add subscriber" }).click();
-  await expect(page.getByRole("heading", { name: "New subscriber" })).toBeVisible();
+  await page.getByRole("main").getByRole("button", { name: "Add candidate" }).click();
+  await expect(page.getByRole("heading", { name: "New candidate" })).toBeVisible();
 
   // an untouched form closes without a question
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toHaveCount(0);
 
   await page.goto("/#/campaigns");
-  await page.getByRole("main").getByRole("link", { name: "New campaign" }).click();
-  await expect(page.getByRole("heading", { name: "New campaign" })).toBeVisible();
+  await page.getByRole("main").getByRole("link", { name: "New job offer" }).click();
+  await expect(page.getByRole("heading", { name: "New job offer" })).toBeVisible();
 });
 
 test("shows the not found page for an unknown address", async ({ page }) => {
@@ -52,7 +52,7 @@ test("shows an error for a missing subscriber", async ({ page }) => {
   await page.goto("/#/subscribers/details/recDoesNotExist0");
   await expect(page).toHaveURL(/#\/subscribers\?view=recDoesNotExist0$/);
 
-  await expect(page.getByText("Subscriber does not exist!").first()).toBeVisible({
+  await expect(page.getByText("Candidate does not exist!").first()).toBeVisible({
     timeout: 15_000,
   });
 });
@@ -64,10 +64,10 @@ test("navigates with the mobile menu", async ({ page }) => {
   await page.getByRole("button", { name: "open menu" }).click();
   await page
     .getByRole("navigation", { name: "Mobile" })
-    .getByRole("link", { name: "Subscribers" })
+    .getByRole("link", { name: "Candidates" })
     .click();
 
-  await expect(page.getByRole("heading", { name: "Subscribers" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Candidates" })).toBeVisible();
   // the menu closes after choosing a page
   await expect(page.getByRole("navigation", { name: "Mobile" })).toHaveCount(0);
 });
@@ -78,12 +78,12 @@ test("shows the numbers on the dashboard", async ({ page }) => {
   const stat = (label: string) =>
     page.getByRole("main").getByRole("link").filter({ hasText: label });
 
-  // 4 subscribers (Anna, Celina active), 1 of 2 campaigns sent
-  await expect(stat("Active subscribers")).toContainText("2");
-  await expect(stat("Campaigns sent")).toContainText("1");
-  await expect(stat("Campaigns sent")).toContainText("1 draft waiting");
+  // 4 candidates (Anna, Celina open to offers), 1 of 2 job offers sent
+  await expect(stat("Open to offers")).toContainText("2");
+  await expect(stat("Job offers sent")).toContainText("1");
+  await expect(stat("Job offers sent")).toContainText("1 draft waiting");
   await expect(
-    page.getByRole("list", { name: "Newest subscribers" }).getByRole("listitem").first()
+    page.getByRole("list", { name: "Newest candidates" }).getByRole("listitem").first()
   ).toContainText("Darek");
 });
 

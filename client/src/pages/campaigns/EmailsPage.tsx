@@ -11,14 +11,14 @@ import { Button } from "@/components/ui/button";
 
 const EmailsPage = () => {
   const { data: campaigns, isLoading, isError, refetch, isFetching } = useCampaigns(
-    "Can not get campaigns list"
+    "Cannot get the job offers list."
   );
 
   if (isLoading) return <Loader />;
   if (isError || !campaigns)
     return (
       <Error
-        error="Cannot load the campaigns - please try again later."
+        error="Cannot load the job offers - please try again later."
         onRetry={() => refetch()}
         isRetrying={isFetching}
       />
@@ -29,20 +29,20 @@ const EmailsPage = () => {
   return (
     <StyledContainer>
       <PageHeader
-        title="Campaigns"
-        description={`${pluralize(campaigns.length, "campaign")} · ${sent.length} sent · ${pluralize(campaigns.length - sent.length, "draft")}`}
+        title="Job offers"
+        description={`${pluralize(campaigns.length, "job offer")} · ${sent.length} sent · ${pluralize(campaigns.length - sent.length, "draft")}`}
         actions={
           <Button asChild variant="brand">
             <Link to="/campaigns/add">
               <Plus />
-              New campaign
+              New job offer
             </Link>
           </Button>
         }
       />
       <CampaignsTable
         campaigns={campaigns}
-        emptyMessage="There are no campaigns yet - write the first one."
+        emptyMessage="There are no job offers yet - write the first one."
       />
     </StyledContainer>
   );

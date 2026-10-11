@@ -10,21 +10,21 @@ const knownPlaceholders = (schema: Yup.StringSchema) =>
     return unknown.length === 0
       ? true
       : context.createError({
-          message: `unknown placeholder ${unknown.map((key) => `{{${key}}}`).join(", ")} - use {{name}} or {{surname}}`,
+          message: `unknown placeholder ${unknown.map((key) => `{{${key}}}`).join(", ")} - use {{name}}, {{surname}} or {{role}}`,
         });
   });
 
 const validationCampaign = Yup.object({
   title: knownPlaceholders(
     Yup.string()
-      .required("title is required")
+      .required("subject is required")
       .trim()
       .min(3, "must be at least 3 characters")
-      .max(30, "must not exceed 30 characters")
+      .max(60, "must not exceed 60 characters")
   ),
   description: knownPlaceholders(
     Yup.string()
-      .required("description is required")
+      .required("message is required")
       .trim()
       .min(3, "must be at least 3 characters")
       .max(DESCRIPTION_MAX, `must not exceed ${DESCRIPTION_MAX} characters`)

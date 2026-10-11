@@ -84,8 +84,8 @@ const ListCard = ({ title, to, emptyMessage, children }: ListCardProps) => (
 );
 
 const DashboardPage = () => {
-  const subscribersQuery = useSubscribers("Cannot get subscribers list.");
-  const campaignsQuery = useCampaigns("Can not get campaigns list");
+  const subscribersQuery = useSubscribers("Cannot get the candidates list.");
+  const campaignsQuery = useCampaigns("Cannot get the job offers list.");
 
   if (subscribersQuery.isLoading || campaignsQuery.isLoading) return <Loader />;
   if (!subscribersQuery.data || !campaignsQuery.data)
@@ -112,19 +112,19 @@ const DashboardPage = () => {
     <StyledContainer>
       <PageHeader
         title="Dashboard"
-        description="Your subscribers and campaigns at a glance."
+        description="Your candidates and job offers at a glance."
         actions={
           <>
             <Button asChild variant="outline">
               <Link {...subscriberPanelLink(undefined, "new")}>
                 <Plus />
-                Add subscriber
+                Add candidate
               </Link>
             </Button>
             <Button asChild variant="brand">
               <Link to="/campaigns/add">
                 <Send />
-                New campaign
+                New job offer
               </Link>
             </Button>
           </>
@@ -133,13 +133,13 @@ const DashboardPage = () => {
 
       <div className="grid gap-4 sm:grid-cols-3">
         <StatCard
-          label="Subscribers"
+          label="Candidates"
           value={subscribers.length}
           hint={[
-            `${count("pending", subscribers)} pending`,
-            `${count("blocked", subscribers)} blocked`,
+            `${count("pending", subscribers)} awaiting consent`,
+            `${count("blocked", subscribers)} do not contact`,
             count("unsubscribed", subscribers) &&
-              `${count("unsubscribed", subscribers)} unsubscribed`,
+              `${count("unsubscribed", subscribers)} opted out`,
           ]
             .filter(Boolean)
             .join(" · ")}
@@ -147,14 +147,14 @@ const DashboardPage = () => {
           to="/subscribers"
         />
         <StatCard
-          label="Active subscribers"
+          label="Open to offers"
           value={active}
-          hint="receive your next campaign"
+          hint="can get your next job offer"
           icon={UserCheck}
           to="/subscribers"
         />
         <StatCard
-          label="Campaigns sent"
+          label="Job offers sent"
           value={sent}
           hint={`${pluralize(campaigns.length - sent, "draft")} waiting`}
           icon={Send}
@@ -164,9 +164,9 @@ const DashboardPage = () => {
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <ListCard
-          title="Recent campaigns"
+          title="Recent job offers"
           to="/campaigns"
-          emptyMessage="No campaigns yet."
+          emptyMessage="No job offers yet."
         >
           {sortByDate(campaigns, "newest")
             .slice(0, RECENT_COUNT)
@@ -195,9 +195,9 @@ const DashboardPage = () => {
         </ListCard>
 
         <ListCard
-          title="Newest subscribers"
+          title="Newest candidates"
           to="/subscribers"
-          emptyMessage="No subscribers yet."
+          emptyMessage="No candidates yet."
         >
           {sortByDate(subscribers, "newest")
             .slice(0, RECENT_COUNT)
@@ -220,12 +220,17 @@ const DashboardPage = () => {
         <CardContent className="text-sm text-muted-foreground">
           <ul className="grid list-disc gap-1.5 pl-5">
             <li>
+              Built for a small recruitment agency: pick a role and a budget, and the job
+              offer goes to the matching candidates - personalized, and not to anyone who
+              got an offer in the last 14 days.
+            </li>
+            <li>
               React 19 + TypeScript app with an Express API in front of Airtable
               - the Airtable token never reaches the browser.
             </li>
             <li>
               Demo mode: nobody really gets the e-mails - each one is saved in
-              the campaign&apos;s outbox, where you can open it.
+              the offer&apos;s outbox, where you can open it.
             </li>
             <li>
               Feel free to add, edit and remove anything - the example data

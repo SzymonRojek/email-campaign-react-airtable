@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, CircleAlert, Pencil, Trash2, UserCheck } from "lucide-react";
 
-import { formatMobileNumber, formattedData, toastMessage } from "helpers";
+import { formatMobileNumber, formatSalary, formattedData, toastMessage } from "helpers";
 import { subscribersKey, useSubscriberEmails, useSubscribers } from "customHooks/queries";
 import { useRemoveItem } from "customHooks/useRemoveItem";
 import { useSubscriberPanel } from "customHooks/useSubscriberPanel";
@@ -25,20 +25,20 @@ import { cn } from "@/lib/utils";
 
 const notices = {
   pending: {
-    text: "Waiting for a confirmation - a pending subscriber does not get campaigns yet.",
+    text: "Awaiting consent - the candidate gets no job offers until they agree to them.",
     className: "bg-amber-500/10 text-amber-800 dark:text-amber-200",
   },
   blocked: {
-    text: "Blocked - this subscriber does not get any campaigns.",
+    text: "Do not contact - this candidate gets no job offers.",
     className: "bg-red-500/10 text-red-800 dark:text-red-200",
   },
   unsubscribed: {
-    text: "Unsubscribed with the link in an e-mail - does not get campaigns any more.",
+    text: "Opted out with the link in an e-mail - gets no job offers any more.",
     className: "bg-muted text-muted-foreground",
   },
 };
 
-// the campaigns the subscriber got - each one opens the e-mail itself
+// the job offers the candidate got - each one opens the e-mail itself
 const ReceivedCampaigns = ({ subscriberId }: { subscriberId: string }) => {
   const { data: emails, isLoading, isError } = useSubscriberEmails(subscriberId);
 
@@ -48,16 +48,16 @@ const ReceivedCampaigns = ({ subscriberId }: { subscriberId: string }) => {
         id="received-heading"
         className="text-xs font-medium tracking-wide text-muted-foreground uppercase"
       >
-        Campaigns received
+        Job offers received
       </h3>
       {isLoading ? (
         <p className="text-sm text-muted-foreground">Loading...</p>
       ) : isError ? (
-        <p className="text-sm text-muted-foreground">The campaigns could not be loaded.</p>
+        <p className="text-sm text-muted-foreground">The job offers could not be loaded.</p>
       ) : !emails?.length ? (
-        <p className="text-sm text-muted-foreground">No campaigns yet.</p>
+        <p className="text-sm text-muted-foreground">No job offers yet.</p>
       ) : (
-        <ul aria-label="Campaigns received" className="-mx-2 grid">
+        <ul aria-label="Job offers received" className="-mx-2 grid">
           {emails.map(({ id, campaignId, title, sentAt }) => (
             <li key={id}>
               <Link
@@ -101,8 +101,8 @@ const Details = ({ subscriber, onEdit, onRemoved }: DetailsProps) => {
   });
 
   const details = [
-    { label: "Profession", value: fields.profession },
-    { label: "Salary", value: fields.salary },
+    { label: "Role", value: fields.profession },
+    { label: "Expected salary", value: formatSalary(fields.salary) },
     {
       label: "Telephone",
       value: fields.telephone && `+44 ${formatMobileNumber(fields.telephone)}`,
@@ -204,7 +204,7 @@ const Edit = ({ subscriber, onDone }: { subscriber: Subscriber; onDone: () => vo
       <SheetHeader className="flex-row items-center gap-3 border-b p-6">
         <Avatar name={fields.name} surname={fields.surname} className="size-10" />
         <div className="min-w-0">
-          <SheetTitle className="text-xl">Edit subscriber</SheetTitle>
+          <SheetTitle className="text-xl">Edit candidate</SheetTitle>
           <SheetDescription className="truncate">
             {fields.name} {fields.surname}
           </SheetDescription>
@@ -251,11 +251,11 @@ const SubscriberDetailsPanel = () => {
       return (
         <>
           <SheetHeader className="border-b p-6">
-            <SheetTitle className="text-xl">New subscriber</SheetTitle>
-            <SheetDescription>Add a person to your mailing list.</SheetDescription>
+            <SheetTitle className="text-xl">New candidate</SheetTitle>
+            <SheetDescription>Add a person to your talent pool.</SheetDescription>
           </SheetHeader>
           <SubscriberForm
-            submitLabel="Add subscriber"
+            submitLabel="Add candidate"
             onCancel={panel.close}
             onSubmit={(data) =>
               createSubscriber({
@@ -275,9 +275,9 @@ const SubscriberDetailsPanel = () => {
     if (!subscriber) {
       return (
         <SheetHeader className="p-6">
-          <SheetTitle>{isLoading ? "Loading..." : "Subscriber not found"}</SheetTitle>
+          <SheetTitle>{isLoading ? "Loading..." : "Candidate not found"}</SheetTitle>
           <SheetDescription>
-            {isLoading ? "" : "Subscriber does not exist! Maybe it has just been removed."}
+            {isLoading ? "" : "Candidate does not exist! Maybe they have just been removed."}
           </SheetDescription>
         </SheetHeader>
       );
