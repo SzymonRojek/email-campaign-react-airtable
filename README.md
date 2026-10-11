@@ -289,5 +289,6 @@ The project started in 2021 as a CRUD app that sent e-mails through EmailJS stra
 ---
 
 <div align="center">
-<sub>Built by <a href="https://github.com/SzymonRojek">Szymon Rojek</a></sub>
+<sub>Built by <a href="https://github.com/SzymonRojek">Szymon Rojek</a></sub><br>
+<sub>© 2021-2026 Szymon Rojek - shared for review, all rights reserved</sub>
 </div>
