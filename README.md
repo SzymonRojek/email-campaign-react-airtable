@@ -24,6 +24,10 @@ A side project from 2021, rebuilt in 2026 to production standard: full-stack Typ
 
 </div>
 
+<p align="center">
+  <img src="./docs/screenshots/job-offer-flow.gif" alt="A job offer from a draft to the outbox: pick a role and a budget, the candidates contacted lately are skipped, preview, send, and the e-mail as it was sent" width="900">
+</p>
+
 <table>
   <tr>
     <td width="39%"><img src="./docs/screenshots/dashboard.png" alt="Dashboard"><br><sub><b>Dashboard</b> - the numbers, recent campaigns, newest subscribers</sub></td>
