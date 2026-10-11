@@ -1,9 +1,9 @@
 import { axiosInstance } from "../controllers/axiosInstance";
 import { resetDemoData } from "../demo/resetDemoData";
 import {
-  seedCampaigns,
+  seedJobOffers,
   seedOutbox,
-  seedSubscribers,
+  seedCandidates,
   toAirtableFields,
 } from "../demo/seedData";
 
@@ -34,20 +34,20 @@ const outboxRecords = (count = seedOutbox().length) =>
   }));
 
 const tables = (
-  subscribers: unknown[],
-  campaigns: unknown[],
+  candidates: unknown[],
+  jobOffers: unknown[],
   emails: unknown[] = outboxRecords()
 ) =>
   airtable.get.mockImplementation((endpoint: string) =>
     Promise.resolve({
       data: {
         records:
-          endpoint === "/subscribers" ? subscribers : endpoint === "/campaigns" ? campaigns : emails,
+          endpoint === "/candidates" ? candidates : endpoint === "/jobOffers" ? jobOffers : emails,
       },
     })
   );
 
-const untouched = () => tables(asRecords(seedSubscribers, "recS"), asRecords(seedCampaigns, "recC"));
+const untouched = () => tables(asRecords(seedCandidates, "recS"), asRecords(seedJobOffers, "recC"));
 
 const reset = (options = {}) => resetDemoData({ now, pauseMs: 0, ...options });
 
@@ -83,39 +83,39 @@ describe("resetDemoData", () => {
   });
 
   it("ignores the order of the records and of the fields", async () => {
-    const reversed = asRecords(seedSubscribers, "recS")
+    const reversed = asRecords(seedCandidates, "recS")
       .reverse()
       .map((record) => ({
         ...record,
         fields: Object.fromEntries(Object.entries(record.fields).reverse()),
       }));
-    tables(reversed, asRecords(seedCampaigns, "recC"));
+    tables(reversed, asRecords(seedJobOffers, "recC"));
 
     await expect(reset()).resolves.toBe("skipped");
   });
 
   it("ignores extra Airtable columns like Last Modified", async () => {
-    const subscribers = asRecords(seedSubscribers, "recS");
-    subscribers.forEach((record) => {
+    const candidates = asRecords(seedCandidates, "recS");
+    candidates.forEach((record) => {
       record.fields["Last Modified"] = "2026-10-07T08:17:52.000Z";
     });
-    tables(subscribers, asRecords(seedCampaigns, "recC"));
+    tables(candidates, asRecords(seedJobOffers, "recC"));
 
     await expect(reset()).resolves.toBe("skipped");
   });
 
   it("resets when a column of the examples was emptied", async () => {
-    const subscribers = asRecords(seedSubscribers, "recS");
-    delete subscribers[0].fields.profession;
-    tables(subscribers, asRecords(seedCampaigns, "recC"));
+    const candidates = asRecords(seedCandidates, "recS");
+    delete candidates[0].fields.role;
+    tables(candidates, asRecords(seedJobOffers, "recC"));
 
     await expect(reset()).resolves.toBe("reset");
   });
 
-  it("resets when the outbox changed (e.g. a campaign was sent)", async () => {
+  it("resets when the outbox changed (e.g. a job offer was sent)", async () => {
     tables(
-      asRecords(seedSubscribers, "recS"),
-      asRecords(seedCampaigns, "recC"),
+      asRecords(seedCandidates, "recS"),
+      asRecords(seedJobOffers, "recC"),
       outboxRecords(seedOutbox().length + 3)
     );
 
@@ -141,29 +141,29 @@ describe("resetDemoData", () => {
   });
 
   it("deletes everything and creates the examples again after a change", async () => {
-    const subscribers = asRecords(seedSubscribers, "recS");
-    subscribers[0].fields.name = "Changed";
+    const candidates = asRecords(seedCandidates, "recS");
+    candidates[0].fields.name = "Changed";
     tables(
-      [...subscribers, { id: "recNew", createdTime: daysBefore(0), fields: { name: "Tomek" } }],
-      asRecords(seedCampaigns, "recC")
+      [...candidates, { id: "recNew", createdTime: daysBefore(0), fields: { name: "Tomek" } }],
+      asRecords(seedJobOffers, "recC")
     );
 
     await expect(reset()).resolves.toBe("reset");
 
     // the examples, with their dates counted back from now
-    expect(created("/subscribers")).toEqual(
-      seedSubscribers.map((record) => toAirtableFields(record, now))
+    expect(created("/candidates")).toEqual(
+      seedCandidates.map((record) => toAirtableFields(record, now))
     );
-    expect(created("/campaigns")).toHaveLength(seedCampaigns.length);
+    expect(created("/jobOffers")).toHaveLength(seedJobOffers.length);
 
-    // 11 subscribers = 2 delete requests (max 10 records each), 4 campaigns and the outbox 1 each
+    // 11 candidates = 2 delete requests (max 10 records each), 4 job offers and the outbox 1 each
     const deleted = (endpoint: string) =>
       airtable.delete.mock.calls
         .filter(([path]) => path === endpoint)
         .flatMap(([, { params }]) => params.records);
-    expect(deleted("/subscribers")).toEqual([...subscribers.map(({ id }) => id), "recNew"]);
-    expect(deleted("/campaigns")).toHaveLength(seedCampaigns.length);
-    expect(deleted("/emails")).toHaveLength(seedOutbox().length);
+    expect(deleted("/candidates")).toEqual([...candidates.map(({ id }) => id), "recNew"]);
+    expect(deleted("/jobOffers")).toHaveLength(seedJobOffers.length);
+    expect(deleted("/outbox")).toHaveLength(seedOutbox().length);
   });
 
   it("fills the outbox of the sent examples with the new ids", async () => {
@@ -171,27 +171,27 @@ describe("resetDemoData", () => {
 
     await reset();
 
-    const emails = created("/emails");
+    const emails = created("/outbox");
 
     expect(emails).toHaveLength(seedOutbox().length);
     // Emma got the first sent example ("Welcome")
     expect(emails[0]).toMatchObject({
       email: "emma.johnson@example.com",
       name: "Emma Johnson",
-      subscriberId: "new/subscribers0",
-      campaignId: `new/campaigns${seedSubscribers.length}`,
+      candidateId: "new/candidates0",
+      jobOfferId: `new/jobOffers${seedCandidates.length}`,
     });
     // only ids of the records created now
-    emails.forEach(({ subscriberId, campaignId }: Record<string, string>) => {
-      expect(subscriberId).toMatch(/^new\/subscribers/);
-      expect(campaignId).toMatch(/^new\/campaigns/);
+    emails.forEach(({ candidateId, jobOfferId }: Record<string, string>) => {
+      expect(candidateId).toMatch(/^new\/candidates/);
+      expect(jobOfferId).toMatch(/^new\/jobOffers/);
     });
   });
 
   it("resets untouched examples older than 7 days (fresh dates)", async () => {
     tables(
-      asRecords(seedSubscribers, "recS", daysBefore(8)),
-      asRecords(seedCampaigns, "recC", daysBefore(8))
+      asRecords(seedCandidates, "recS", daysBefore(8)),
+      asRecords(seedJobOffers, "recC", daysBefore(8))
     );
 
     await expect(reset()).resolves.toBe("reset");
@@ -201,7 +201,7 @@ describe("resetDemoData", () => {
     untouched();
 
     await expect(reset({ force: true })).resolves.toBe("reset");
-    expect(created("/subscribers")).toHaveLength(seedSubscribers.length);
+    expect(created("/candidates")).toHaveLength(seedCandidates.length);
   });
 
   it("never touches the feedback of the reviewers - only the three demo tables", async () => {
@@ -211,7 +211,7 @@ describe("resetDemoData", () => {
     await reset({ force: true });
 
     const touchedTables = (mock: jest.Mock) => new Set(mock.mock.calls.map(([path]) => path));
-    const demoTables = new Set(["/subscribers", "/campaigns", "/emails"]);
+    const demoTables = new Set(["/candidates", "/jobOffers", "/outbox"]);
     expect(airtable.delete).toHaveBeenCalled();
     expect(touchedTables(airtable.get)).toEqual(demoTables);
     expect(touchedTables(airtable.post)).toEqual(demoTables);
@@ -228,9 +228,9 @@ describe("resetDemoData", () => {
 
 describe("seedOutbox", () => {
   it("sends the examples only to active candidates in the offer's roles who had joined before", () => {
-    const outbox = seedOutbox().map(({ campaignIndex, subscriberIndex }) => [
-      seedCampaigns[campaignIndex].fields.title,
-      seedSubscribers[subscriberIndex].fields.name,
+    const outbox = seedOutbox().map(({ jobOfferIndex, candidateIndex }) => [
+      seedJobOffers[jobOfferIndex].fields.subject,
+      seedCandidates[candidateIndex].fields.name,
     ]);
 
     expect(outbox).toEqual([
@@ -248,9 +248,9 @@ describe("seedOutbox", () => {
   });
 
   it("keeps the example texts within the limits of the form", () => {
-    for (const { fields } of seedCampaigns) {
-      expect((fields.title ?? "").length).toBeLessThanOrEqual(60);
-      expect((fields.description ?? "").length).toBeLessThanOrEqual(500);
+    for (const { fields } of seedJobOffers) {
+      expect((fields.subject ?? "").length).toBeLessThanOrEqual(60);
+      expect((fields.message ?? "").length).toBeLessThanOrEqual(500);
     }
   });
 });

@@ -26,10 +26,10 @@ const airtableError = (status: number, error: unknown) =>
     response: { status, data: { error } },
   });
 
-const subscriber = (id: string, name: string) => ({
+const candidate = (id: string, name: string) => ({
   id,
   createdTime: "2022-09-05T16:34:10.000Z",
-  fields: { name, surname: "Kowalski", status: "active" },
+  fields: { name, surname: "Kowalski", status: "open to offers" },
 });
 
 let token: string;
@@ -132,10 +132,10 @@ describe("POST /api/auth/demo", () => {
     expect(res.status).toBe(200);
     // the token opens the app like a normal login
     airtable.get.mockResolvedValue({ data: { records: [] } });
-    const subscribers = await request(app)
-      .get("/api/subscribers")
+    const candidates = await request(app)
+      .get("/api/candidates")
       .set("Authorization", `Bearer ${res.body.token}`);
-    expect(subscribers.status).toBe(200);
+    expect(candidates.status).toBe(200);
   });
 
   it("does not exist without DEMO_LOGIN", async () => {
@@ -183,7 +183,7 @@ describe("GET /api/health", () => {
 });
 
 describe("protected endpoints", () => {
-  it.each(["/api/subscribers", "/api/campaigns", "/api/campaigns/rec1"])(
+  it.each(["/api/candidates", "/api/job-offers", "/api/job-offers/rec1"])(
     "%s requires a token",
     async (url) => {
       const res = await request(app).get(url);
@@ -195,7 +195,7 @@ describe("protected endpoints", () => {
 
   it("rejects an invalid token", async () => {
     const res = await request(app)
-      .get("/api/subscribers")
+      .get("/api/candidates")
       .set({ Authorization: "Bearer abc.def" });
 
     expect(res.status).toBe(401);
@@ -209,42 +209,42 @@ describe("protected endpoints", () => {
   });
 });
 
-describe("/api/subscribers", () => {
-  it("returns all subscribers sorted by name", async () => {
+describe("/api/candidates", () => {
+  it("returns all candidates sorted by name", async () => {
     airtable.get.mockResolvedValue({
-      data: { records: [subscriber("1", "zoe"), subscriber("2", "Adam")] },
+      data: { records: [candidate("1", "zoe"), candidate("2", "Adam")] },
     });
 
-    const res = await request(app).get("/api/subscribers").set(auth());
+    const res = await request(app).get("/api/candidates").set(auth());
 
     expect(res.status).toBe(200);
     expect(res.body.map((item: { id: string }) => item.id)).toEqual(["2", "1"]);
   });
 
-  it("creates a subscriber only with the known fields", async () => {
-    airtable.post.mockResolvedValue({ data: subscriber("3", "Ewa") });
+  it("creates a candidate only with the known fields", async () => {
+    airtable.post.mockResolvedValue({ data: candidate("3", "Ewa") });
 
     const res = await request(app)
-      .post("/api/subscribers")
+      .post("/api/candidates")
       .set(auth())
-      .send({ fields: { name: "Ewa", status: "active", isAdmin: true } });
+      .send({ fields: { name: "Ewa", status: "open to offers", isAdmin: true } });
 
     expect(res.status).toBe(200);
     expect(airtable.post.mock.calls[0][1].fields).not.toHaveProperty("isAdmin");
   });
 
-  it("returns 404 for a missing subscriber", async () => {
+  it("returns 404 for a missing candidate", async () => {
     airtable.get.mockRejectedValue(airtableError(404, "NOT_FOUND"));
 
-    const res = await request(app).get("/api/subscribers/recX").set(auth());
+    const res = await request(app).get("/api/candidates/recX").set(auth());
 
     expect(res.status).toBe(404);
   });
 
-  it("deletes a subscriber", async () => {
+  it("deletes a candidate", async () => {
     airtable.delete.mockResolvedValue({ data: { id: "1", deleted: true } });
 
-    const res = await request(app).delete("/api/subscribers/1").set(auth());
+    const res = await request(app).delete("/api/candidates/1").set(auth());
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ id: "1", deleted: true });
@@ -253,41 +253,41 @@ describe("/api/subscribers", () => {
   it("answers 404 instead of crashing when Airtable fails on delete", async () => {
     airtable.delete.mockRejectedValue(airtableError(404, "NOT_FOUND"));
 
-    const res = await request(app).delete("/api/subscribers/recX").set(auth());
+    const res = await request(app).delete("/api/candidates/recX").set(auth());
 
     expect(res.status).toBe(404);
   });
 });
 
-describe("/api/campaigns", () => {
-  it("capitalizes the title and description of a new campaign", async () => {
+describe("/api/job-offers", () => {
+  it("capitalizes the subject and message of a new job offer", async () => {
     airtable.post.mockResolvedValue({ data: { id: "1" } });
 
     await request(app)
-      .post("/api/campaigns")
+      .post("/api/job-offers")
       .set(auth())
       .send({
-        fields: { title: "black Friday", description: "sale", status: "draft" },
+        fields: { subject: "black Friday", message: "sale", status: "draft" },
       });
 
     expect(airtable.post.mock.calls[0][1].fields).toEqual({
-      title: "Black Friday",
-      description: "Sale",
+      subject: "Black Friday",
+      message: "Sale",
       status: "draft",
     });
   });
 
-  it("updates a campaign", async () => {
+  it("updates a job offer", async () => {
     airtable.patch.mockResolvedValue({ data: { id: "1" } });
 
     const body = { fields: { status: "sent" } };
     const res = await request(app)
-      .patch("/api/campaigns/1")
+      .patch("/api/job-offers/1")
       .set(auth())
       .send(body);
 
     expect(res.status).toBe(200);
-    expect(airtable.patch).toHaveBeenCalledWith("/campaigns/1", body);
+    expect(airtable.patch).toHaveBeenCalledWith("/jobOffers/1", body);
   });
 });
 
@@ -298,9 +298,9 @@ describe("error responses", () => {
       airtableError(422, { message: "Unknown field" })
     );
 
-    const list = await request(app).get("/api/campaigns").set(auth());
+    const list = await request(app).get("/api/job-offers").set(auth());
     const create = await request(app)
-      .post("/api/subscribers")
+      .post("/api/candidates")
       .set(auth())
       .send({ fields: {} });
 

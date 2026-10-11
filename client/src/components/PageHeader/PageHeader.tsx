@@ -4,7 +4,7 @@ import { ChevronLeft } from "lucide-react";
 
 interface PageHeaderProps {
   title: ReactNode;
-  // e.g. "10 subscribers · 7 active"
+  // e.g. "10 candidates · 7 active"
   description?: ReactNode;
   // the main buttons of the page, on the right
   actions?: ReactNode;

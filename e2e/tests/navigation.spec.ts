@@ -21,14 +21,14 @@ test("navigates with the main tabs", async ({ page }) => {
 });
 
 test("keeps the page after a reload", async ({ page }) => {
-  await page.goto("/#/campaigns/add");
+  await page.goto("/#/job-offers/add");
   await page.reload();
 
   await expect(page.getByRole("heading", { name: "New job offer" })).toBeVisible();
 });
 
 test("opens the add forms from the lists", async ({ page }) => {
-  await page.goto("/#/subscribers");
+  await page.goto("/#/candidates");
   await page.getByRole("main").getByRole("button", { name: "Add candidate" }).click();
   await expect(page.getByRole("heading", { name: "New candidate" })).toBeVisible();
 
@@ -36,7 +36,7 @@ test("opens the add forms from the lists", async ({ page }) => {
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toHaveCount(0);
 
-  await page.goto("/#/campaigns");
+  await page.goto("/#/job-offers");
   await page.getByRole("main").getByRole("link", { name: "New job offer" }).click();
   await expect(page.getByRole("heading", { name: "New job offer" })).toBeVisible();
 });
@@ -47,10 +47,10 @@ test("shows the not found page for an unknown address", async ({ page }) => {
   await expect(page.getByText("Page Not Found")).toBeVisible();
 });
 
-test("shows an error for a missing subscriber", async ({ page }) => {
+test("shows an error for a missing candidate", async ({ page }) => {
   // the old details address opens the panel
-  await page.goto("/#/subscribers/details/recDoesNotExist0");
-  await expect(page).toHaveURL(/#\/subscribers\?view=recDoesNotExist0$/);
+  await page.goto("/#/candidates/details/recDoesNotExist0");
+  await expect(page).toHaveURL(/#\/candidates\?view=recDoesNotExist0$/);
 
   await expect(page.getByText("Candidate does not exist!").first()).toBeVisible({
     timeout: 15_000,
@@ -105,7 +105,7 @@ test("shows one error with 'Try again' when the data can not be loaded", async (
   page,
 }) => {
   let isDown = true;
-  await page.route(/\/api\/(subscribers|campaigns)$/, (route) =>
+  await page.route(/\/api\/(candidates|jobOffers)$/, (route) =>
     isDown
       ? route.fulfill({ status: 500, json: { status: "fail", error: "Airtable is down" } })
       : route.fallback()

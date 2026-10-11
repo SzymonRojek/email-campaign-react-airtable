@@ -27,7 +27,7 @@ const AppShell = ({ children }: { children: ReactNode }) => {
         <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b bg-background/80 px-4 backdrop-blur md:hidden">
           <Link to="/" className="flex items-center gap-2">
             <LogoMark className="size-7" />
-            <span className="font-semibold tracking-tight">Email Campaign Dashboard</span>
+            <span className="font-semibold tracking-tight">Talent Outreach</span>
           </Link>
 
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>

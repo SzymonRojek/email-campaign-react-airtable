@@ -12,70 +12,70 @@ const record = (id: string, day: number, fields: Record<string, unknown>) => ({
 });
 
 export const seed = {
-  subscribers: [
+  candidates: [
     record("recSubAnna000001", 1, {
       name: "Anna",
       surname: "Nowak",
       email: "anna@example.com",
-      status: "active",
-      profession: "tester",
-      salary: "5000",
-      telephone: "3432342344",
+      status: "open to offers",
+      role: "tester",
+      expectedSalary: "5000",
+      phone: "3432342344",
     }),
     record("recSubBartek0002", 2, {
       name: "Bartek",
       surname: "Kowalski",
       email: "bartek@example.com",
-      status: "blocked",
-      profession: "developer",
-      salary: "7000",
-      telephone: "3432342345",
+      status: "do not contact",
+      role: "developer",
+      expectedSalary: "7000",
+      phone: "3432342345",
     }),
     record("recSubCelina0003", 3, {
       name: "Celina",
       surname: "Wiśniewska",
       email: "celina@example.com",
-      status: "active",
-      profession: "designer",
-      salary: "6000",
-      telephone: "3432342346",
+      status: "open to offers",
+      role: "designer",
+      expectedSalary: "6000",
+      phone: "3432342346",
     }),
     record("recSubDarek00004", 4, {
       name: "Darek",
       surname: "Lis",
       email: "darek@example.com",
-      status: "pending",
-      profession: "manager",
-      salary: "8000",
-      telephone: "3432342347",
+      status: "awaiting consent",
+      role: "manager",
+      expectedSalary: "8000",
+      phone: "3432342347",
     }),
   ],
-  campaigns: [
+  jobOffers: [
     record("recCampDraft0001", 5, {
-      title: "Autumn sale",
-      description: "Discounts for everybody",
+      subject: "Autumn sale",
+      message: "Discounts for everybody",
       status: "draft",
     }),
     record("recCampSent00002", 6, {
-      title: "Welcome",
-      description: "Hello new subscribers",
+      subject: "Welcome",
+      message: "Hello new candidates",
       status: "sent",
     }),
   ],
-  // the outbox of "Welcome" - the active subscribers when it went out
-  emails: [
+  // the outbox of "Welcome" - the active candidates when it went out
+  outbox: [
     record("recEmailAnna0001", 6, {
       email: "anna@example.com",
       name: "Anna Nowak",
-      subscriberId: "recSubAnna000001",
-      campaignId: "recCampSent00002",
+      candidateId: "recSubAnna000001",
+      jobOfferId: "recCampSent00002",
       sentAt: "2022-09-06T10:00:00.000Z",
     }),
     record("recEmailCeli0002", 6, {
       email: "celina@example.com",
       name: "Celina Wiśniewska",
-      subscriberId: "recSubCelina0003",
-      campaignId: "recCampSent00002",
+      candidateId: "recSubCelina0003",
+      jobOfferId: "recCampSent00002",
       sentAt: "2022-09-06T10:00:00.000Z",
     }),
   ],

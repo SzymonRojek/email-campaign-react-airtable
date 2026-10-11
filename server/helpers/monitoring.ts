@@ -2,9 +2,9 @@ import type { ErrorEvent, NodeOptions } from "@sentry/node";
 
 // error monitoring (Sentry) - on only where SENTRY_DSN is set (Render); never locally or in tests
 
-// the unsubscribe link works without a login - its token must not leave the server
+// the opt-out link works without a login - its token must not leave the server
 export const hideSecrets = (text = "") =>
-  text.replace(/(unsubscribe\/)[^/?#\s"']+/g, "$1[token]");
+  text.replace(/(opt-out\/)[^/?#\s"']+/g, "$1[token]");
 
 const cleanEvent = (event: ErrorEvent) => {
   if (event.request?.url) event.request.url = hideSecrets(event.request.url);

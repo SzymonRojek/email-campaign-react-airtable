@@ -2,12 +2,12 @@ import { axiosInstance } from "../controllers/axiosInstance";
 import { chunks, wait } from "../helpers/batches";
 import { getAllRecords } from "../helpers/getAllRecords";
 import { AirtableRecord } from "../types";
-import { seedCampaigns, seedOutbox, seedSubscribers, toAirtableFields } from "./seedData";
+import { seedJobOffers, seedOutbox, seedCandidates, toAirtableFields } from "./seedData";
 
 const MAX_SEED_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
 // the outbox ("emails") refers to the ids of the other two - it is created after them
-const endpoints = ["/subscribers", "/campaigns", "/emails"] as const;
+const endpoints = ["/candidates", "/jobOffers", "/outbox"] as const;
 
 type Fields = Record<string, unknown>;
 
@@ -33,7 +33,7 @@ const isUntouched = (records: AirtableRecord[], seed: { fields: object }[]) => {
 export type ResetResult = "reset" | "skipped";
 
 /**
- * Brings the demo data back: creates the seed again (subscribers, campaigns and the
+ * Brings the demo data back: creates the seed again (candidates, job offers and the
  * outbox of the sent ones) and deletes the old records.
  * Skipped when nobody changed the data (saves Airtable API calls), unless the
  * examples are older than 7 days (their dates would start to look old).
@@ -43,19 +43,19 @@ export const resetDemoData = async ({
   force = false,
   pauseMs = 250,
 } = {}): Promise<ResetResult> => {
-  const [subscribers, campaigns, emails] = await Promise.all(
+  const [candidates, jobOffers, emails] = await Promise.all(
     endpoints.map((endpoint) => getAllRecords(endpoint))
   );
   const outbox = seedOutbox();
 
-  // sending a campaign changes the campaigns, deleting one empties its outbox -
+  // sending a job offer changes the job offers, deleting one empties its outbox -
   // the number of e-mails is enough to see that the outbox is untouched
   const untouched =
-    isUntouched(subscribers, seedSubscribers) &&
-    isUntouched(campaigns, seedCampaigns) &&
+    isUntouched(candidates, seedCandidates) &&
+    isUntouched(jobOffers, seedJobOffers) &&
     emails.length === outbox.length;
   const oldest = Math.min(
-    ...[...subscribers, ...campaigns].map((record) => Date.parse(record.createdTime))
+    ...[...candidates, ...jobOffers].map((record) => Date.parse(record.createdTime))
   );
   const tooOld = now.getTime() - oldest > MAX_SEED_AGE_MS;
 
@@ -78,30 +78,30 @@ export const resetDemoData = async ({
     return ids;
   };
 
-  const subscriberIds = await create(
-    "/subscribers",
-    seedSubscribers.map((record) => toAirtableFields(record, now))
+  const candidateIds = await create(
+    "/candidates",
+    seedCandidates.map((record) => toAirtableFields(record, now))
   );
-  const campaignFields = seedCampaigns.map((record) => toAirtableFields(record, now));
-  const campaignIds = await create("/campaigns", campaignFields);
+  const jobOfferFields = seedJobOffers.map((record) => toAirtableFields(record, now));
+  const jobOfferIds = await create("/jobOffers", jobOfferFields);
 
   await create(
-    "/emails",
-    outbox.map(({ campaignIndex, subscriberIndex }) => {
-      const { name, surname, email } = seedSubscribers[subscriberIndex].fields;
+    "/outbox",
+    outbox.map(({ jobOfferIndex, candidateIndex }) => {
+      const { name, surname, email } = seedCandidates[candidateIndex].fields;
 
       return {
         email,
         name: `${name} ${surname}`,
-        subscriberId: subscriberIds[subscriberIndex],
-        campaignId: campaignIds[campaignIndex],
-        sentAt: campaignFields[campaignIndex].date,
+        candidateId: candidateIds[candidateIndex],
+        jobOfferId: jobOfferIds[jobOfferIndex],
+        sentAt: jobOfferFields[jobOfferIndex].date,
       };
     })
   );
 
   for (const [i, endpoint] of endpoints.entries()) {
-    const old = [subscribers, campaigns, emails][i];
+    const old = [candidates, jobOffers, emails][i];
 
     for (const ids of chunks(old.map((record) => record.id))) {
       await axiosInstance.delete(endpoint, { params: { records: ids } });

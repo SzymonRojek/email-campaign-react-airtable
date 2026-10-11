@@ -6,14 +6,14 @@ export const RECENT_CONTACT_DAYS = 14;
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-// subscriber id -> when they got their newest job offer
-export const lastContactedBySubscriber = (emails: SentEmail[]) => {
+// candidate id -> when they got their newest job offer
+export const lastContactedByCandidate = (emails: SentEmail[]) => {
   const newest = new Map<string, string>();
 
-  for (const { subscriberId, sentAt } of emails) {
-    if (!subscriberId || !sentAt) continue;
-    const known = newest.get(subscriberId);
-    if (!known || sentAt > known) newest.set(subscriberId, sentAt);
+  for (const { candidateId, sentAt } of emails) {
+    if (!candidateId || !sentAt) continue;
+    const known = newest.get(candidateId);
+    if (!known || sentAt > known) newest.set(candidateId, sentAt);
   }
 
   return newest;

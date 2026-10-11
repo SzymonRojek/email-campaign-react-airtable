@@ -1,10 +1,10 @@
 export { default as fetchData } from "./fetchData";
 export { default as fetchDataById } from "./fetchDataById";
-export { default as updateEmail } from "./updateEmail";
-export { default as updateSubscriber } from "./updateSubscriber";
-export { default as createSubscriber } from "./createSubscriber";
-export { default as createEmail } from "./createEmail";
+export { default as updateJobOffer } from "./updateJobOffer";
+export { default as updateCandidate } from "./updateCandidate";
+export { default as createCandidate } from "./createCandidate";
+export { default as createJobOffer } from "./createJobOffer";
 export { default as getErrorMessage } from "./getErrorMessage";
 export { default as HttpError } from "./HttpError";
-export { default as importSubscribers } from "./importSubscribers";
-export { default as sendCampaign } from "./sendCampaign";
+export { default as importCandidates } from "./importCandidates";
+export { default as sendJobOffer } from "./sendJobOffer";

@@ -17,13 +17,13 @@ const dots = {
 };
 
 const toneOf: Record<string, keyof typeof tones> = {
-  active: "green",
+  "open to offers": "green",
   sent: "green",
-  pending: "amber",
+  "awaiting consent": "amber",
   draft: "amber",
-  blocked: "red",
-  // left by themselves - grey, not an error like "blocked"
-  unsubscribed: "grey",
+  "do not contact": "red",
+  // left by themselves - grey, not an error like "do not contact"
+  "opted out": "grey",
 };
 
 const StatusBadge = ({ status }: { status: string }) => {

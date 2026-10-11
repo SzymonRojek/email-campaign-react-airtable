@@ -5,24 +5,24 @@ import "App.css";
 import { SectionLayout } from "components/Navigation";
 import { NotFoundPage } from "pages/notFoundPage";
 
-// the subscribers and campaigns pages are loaded on demand - the home page does not need them
+// the candidates and job offers pages are loaded on demand - the home page does not need them
 // (the Suspense boundary is in SectionLayout)
 const DashboardPage = lazy(() => import("pages/dashboard/DashboardPage"));
-const SubscribersPage = lazy(() => import("pages/subscribers/SubscribersPage"));
-const EmailsPage = lazy(() => import("pages/campaigns/EmailsPage"));
-const CreateEmailPage = lazy(() => import("pages/campaigns/CreateEmailPage"));
-const UpdateEmailsPage = lazy(() => import("pages/campaigns/UpdateEmailsPage"));
-const CampaignDetailsPage = lazy(() => import("pages/campaigns/CampaignDetailsPage"));
+const CandidatesPage = lazy(() => import("pages/candidates/CandidatesPage"));
+const JobOffersPage = lazy(() => import("pages/jobOffers/JobOffersPage"));
+const CreateJobOfferPage = lazy(() => import("pages/jobOffers/CreateJobOfferPage"));
+const UpdateJobOfferPage = lazy(() => import("pages/jobOffers/UpdateJobOfferPage"));
+const JobOfferDetailsPage = lazy(() => import("pages/jobOffers/JobOfferDetailsPage"));
 const FeedbackPage = lazy(() => import("pages/feedback/FeedbackPage"));
 
-// a subscriber is shown, added and edited in a panel over the list now -
+// a candidate is shown, added and edited in a panel over the list now -
 // the old addresses still work
-const SubscriberPanelRedirect = ({ mode }: { mode?: "edit" }) => {
+const CandidatePanelRedirect = ({ mode }: { mode?: "edit" }) => {
   const { id } = useParams();
 
   return (
     <Navigate
-      to={`/subscribers?view=${id}${mode ? `&mode=${mode}` : ""}`}
+      to={`/candidates?view=${id}${mode ? `&mode=${mode}` : ""}`}
       replace
     />
   );
@@ -37,31 +37,35 @@ export const appRoutes: RouteObject[] = [
   },
 
   {
-    path: "subscribers",
+    path: "candidates",
     element: <SectionLayout />,
     children: [
-      { index: true, element: <SubscribersPage /> },
+      { index: true, element: <CandidatesPage /> },
       // the status filter is on the list now
-      { path: "status", element: <Navigate to="/subscribers" replace /> },
-      { path: "add", element: <Navigate to="/subscribers?mode=new" replace /> },
-      { path: "details/:id", element: <SubscriberPanelRedirect /> },
-      { path: "edit/:id", element: <SubscriberPanelRedirect mode="edit" /> },
+      { path: "status", element: <Navigate to="/candidates" replace /> },
+      { path: "add", element: <Navigate to="/candidates?mode=new" replace /> },
+      { path: "details/:id", element: <CandidatePanelRedirect /> },
+      { path: "edit/:id", element: <CandidatePanelRedirect mode="edit" /> },
       { path: "*", element: <NotFoundPage /> },
     ],
   },
 
   {
-    path: "campaigns",
+    path: "job-offers",
     element: <SectionLayout />,
     children: [
-      { index: true, element: <EmailsPage /> },
-      { path: "status", element: <Navigate to="/campaigns" replace /> },
-      { path: "add", element: <CreateEmailPage /> },
-      { path: "edit/:id", element: <UpdateEmailsPage /> },
-      // a sent campaign: who got it and every e-mail
-      { path: ":id", element: <CampaignDetailsPage /> },
+      { index: true, element: <JobOffersPage /> },
+      { path: "status", element: <Navigate to="/job-offers" replace /> },
+      { path: "add", element: <CreateJobOfferPage /> },
+      { path: "edit/:id", element: <UpdateJobOfferPage /> },
+      // a sent job offer: who got it and every e-mail
+      { path: ":id", element: <JobOfferDetailsPage /> },
     ],
   },
+
+  // the addresses from before the rename to Talent Outreach
+  { path: "subscribers/*", element: <Navigate to="/candidates" replace /> },
+  { path: "campaigns/*", element: <Navigate to="/job-offers" replace /> },
 
   // what the reviewers of the project think
   {
@@ -73,14 +77,14 @@ export const appRoutes: RouteObject[] = [
 ];
 
 // public pages - outside the login (the link in every e-mail)
-const UnsubscribePage = lazy(() => import("pages/unsubscribe/UnsubscribePage"));
+const OptOutPage = lazy(() => import("pages/optOut/OptOutPage"));
 
 export const publicRoutes: RouteObject[] = [
   {
-    path: "/unsubscribe/:token",
+    path: "/opt-out/:token",
     element: (
       <Suspense fallback={null}>
-        <UnsubscribePage />
+        <OptOutPage />
       </Suspense>
     ),
   },

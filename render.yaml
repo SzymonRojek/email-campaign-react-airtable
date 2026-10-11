@@ -3,7 +3,7 @@
 services:
   # production
   - type: web
-    name: email-campaign-dashboard-app
+    name: talent-outreach
     runtime: node
     plan: free
     branch: main
@@ -40,7 +40,7 @@ services:
 
   # staging - to check the changes before the PR dev -> main
   - type: web
-    name: email-campaign-dashboard-staging
+    name: talent-outreach-staging
     runtime: node
     plan: free
     branch: dev

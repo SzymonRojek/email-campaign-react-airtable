@@ -1,12 +1,12 @@
-import { CampaignStatus, SubscriberStatus } from "types";
+import { JobOfferStatus, CandidateStatus } from "types";
 
-// the words a recruiter uses - Airtable keeps the stored values
-// ("pending" = the candidate has not agreed to get job offers yet)
-const statusLabels: Record<SubscriberStatus | CampaignStatus, string> = {
-  active: "Open to offers",
-  pending: "Awaiting consent",
-  blocked: "Do not contact",
-  unsubscribed: "Opted out",
+// the stored values, written for people ("awaiting consent" = the candidate has not
+// agreed to get job offers yet)
+const statusLabels: Record<CandidateStatus | JobOfferStatus, string> = {
+  "open to offers": "Open to offers",
+  "awaiting consent": "Awaiting consent",
+  "do not contact": "Do not contact",
+  "opted out": "Opted out",
   sent: "Sent",
   draft: "Draft",
 };

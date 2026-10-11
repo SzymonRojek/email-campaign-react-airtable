@@ -19,21 +19,21 @@ test("sends a job offer to one role, then skips the ones contacted lately", asyn
   page,
   request,
 }) => {
-  await page.goto("/#/campaigns/add");
+  await page.goto("/#/job-offers/add");
   await expect(page.getByText("Goes to 2 candidates")).toBeVisible();
 
   await pickRole(page, "tester");
   await expect(page.getByText("Goes to 1 candidate", { exact: true })).toBeVisible();
 
-  await page.locator("#title").fill("QA Engineer - remote");
-  await page.locator("#description").fill("An offer for you as a {{role}}.");
+  await page.locator("#subject").fill("QA Engineer - remote");
+  await page.locator("#message").fill("An offer for you as a {{role}}.");
   await page.getByRole("button", { name: "Send email" }).click();
   const confirm = page.getByRole("alertdialog");
   await expect(confirm).toContainText("It goes to 1 candidate.");
   await confirm.getByRole("button", { name: "Send", exact: true }).click();
 
   // only the tester got it, with the role filled in
-  await expect(page).toHaveURL(/#\/campaigns\/recE2E\d+$/);
+  await expect(page).toHaveURL(/#\/job-offers\/recE2E\d+$/);
   const recipients = page.getByRole("list", { name: "Recipients" }).getByRole("listitem");
   await expect(recipients).toHaveCount(1);
   await expect(recipients.first()).toContainText("Anna Nowak");
@@ -44,17 +44,17 @@ test("sends a job offer to one role, then skips the ones contacted lately", asyn
       .getByText("An offer for you as a tester.")
   ).toBeVisible();
 
-  const { campaigns, emails } = await getAirtable(request);
-  const offer = campaigns.find(({ fields }) => fields.title === "QA Engineer - remote");
-  expect(emails.filter(({ fields }) => fields.campaignId === offer?.id)).toHaveLength(1);
+  const { jobOffers, outbox } = await getAirtable(request);
+  const offer = jobOffers.find(({ fields }) => fields.subject === "QA Engineer - remote");
+  expect(outbox.filter(({ fields }) => fields.jobOfferId === offer?.id)).toHaveLength(1);
 
   // the list shows who was contacted
-  await page.goto("/#/subscribers");
+  await page.goto("/#/candidates");
   await expect(listRow(page, "Anna Nowak")).toContainText("today");
   await expect(listRow(page, "Celina")).not.toContainText("today");
 
   // the next offer for testers does not reach Anna again - unless the recruiter says so
-  await page.goto("/#/campaigns/add");
+  await page.goto("/#/job-offers/add");
   await pickRole(page, "tester");
   const skip = page.getByLabel("Skip 1 candidate contacted in the last 14 days");
   await expect(skip).toBeChecked();
@@ -65,7 +65,7 @@ test("sends a job offer to one role, then skips the ones contacted lately", asyn
 });
 
 test("finds the candidates within the budget", async ({ page }) => {
-  await page.goto("/#/campaigns/add");
+  await page.goto("/#/job-offers/add");
 
   // Anna expects 5000, Celina 6000
   await page.getByLabel("Budget per month").fill("5500");
@@ -79,7 +79,7 @@ test("finds the candidates within the budget", async ({ page }) => {
 });
 
 test("shows the role and the expected salary of every candidate", async ({ page }) => {
-  await page.goto("/#/subscribers");
+  await page.goto("/#/candidates");
 
   await expect(listRow(page, "Anna Nowak")).toContainText("tester");
   await expect(listRow(page, "Anna Nowak")).toContainText("5,000 / month");
